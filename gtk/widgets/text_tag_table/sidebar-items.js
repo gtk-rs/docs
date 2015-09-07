@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["TextTagTable","GtkTextTagTable — Collection of tags that can be used together"]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"type":[["Device","Object representing an input device"],["Type",""]]});

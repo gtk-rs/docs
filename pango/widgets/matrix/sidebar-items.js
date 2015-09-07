@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["Matrix","A structure specifying a transformation between user-space coordinates and device coordinates. The transformation is given by:"]]});

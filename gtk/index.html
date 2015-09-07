@@ -1,0 +1,1941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `gtk` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, gtk">
+
+    <title>gtk - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'gtk', ty: 'mod', relpath: '../'};</script>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>gtk</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span><a id='src-0' class='srclink' href='../src/gtk/lib.rs.html#5-366' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Bindings and wrappers for <strong>GTK</strong></p>
+
+<p>To implement <strong>GTK+</strong> inheritance in rust, we implemented gtk superclasses as traits
+located in <code>rgtk::self::traits::*</code>. The various widgets implement these traits and
+live in <code>rgtk::gtk::widgets::*</code> and are rexported into <code>rgtk::gtk::*</code>.</p>
+
+<h1 id="gtk-inheritance-in-rgtk" class='section-header'><a
+                           href="#gtk-inheritance-in-rgtk">GTK Inheritance in rgtk</a></h1>
+<p>You probably know but <strong>Gtk+</strong> uses its own GObject system: inherited class and interface.</p>
+
+<p>To respect this design I follow a special design on <strong>rgtk</strong>:</p>
+
+<ul>
+<li>Interface -&gt; Implement them on a trait with only default methods.</li>
+<li>Class -&gt; Implement the construct on the class impl and other methods on a traits.</li>
+<li>Sub-class -&gt; Implement all the methods on the class.</li>
+</ul>
+
+<p>Exemple for GtkOrientable, GtkBox, GtkButtonBox:</p>
+
+<p>GtkOrientable is an interface with all the methods implemented as default method of the trait self::traits::Orientable.</p>
+
+<p>GtkBox is a class with constructors implemented on the struct <code>gtk::Box</code>, and the other method as default methods of the trait <code>self::traits::Box</code>. So <code>gtk::Box</code> implements <code>self::traits::Orientable</code> and <code>self::traits::Box</code>.</p>
+
+<p>GtkButtonBox is a sub-class of GtkBox, the struct <code>gtk::ButtonBox</code> implements all the methods of GtkButtonBox and the traits <code>self::traits::Orientable</code> and <code>self::traits::Box</code>.</p>
+
+<p>Finally all the gtk widgets implement the trait self::traits::Widget.</p>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/trait.FFIWidget.html' title='gtk::traits::FFIWidget'>FFIWidget</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/style_provider/trait.StyleProviderTrait.html' title='gtk::traits::style_provider::StyleProviderTrait'>StyleProviderTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/gobject/trait.GObjectTrait.html' title='gtk::traits::gobject::GObjectTrait'>GObjectTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/_box/trait.BoxTrait.html' title='gtk::traits::_box::BoxTrait'>BoxTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/actionable/trait.ActionableTrait.html' title='gtk::traits::actionable::ActionableTrait'>ActionableTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/app_chooser/trait.AppChooserTrait.html' title='gtk::traits::app_chooser::AppChooserTrait'>AppChooserTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/bin/trait.BinTrait.html' title='gtk::traits::bin::BinTrait'>BinTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/button/trait.ButtonTrait.html' title='gtk::traits::button::ButtonTrait'>ButtonTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/signal/trait.ButtonSignals.html' title='gtk::signal::ButtonSignals'>ButtonSignals</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/cell_editable/trait.CellEditableTrait.html' title='gtk::traits::cell_editable::CellEditableTrait'>CellEditableTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/cell_layout/trait.CellLayoutTrait.html' title='gtk::traits::cell_layout::CellLayoutTrait'>CellLayoutTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/cell_renderer/trait.CellRendererTrait.html' title='gtk::traits::cell_renderer::CellRendererTrait'>CellRendererTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/check_menu_item/trait.CheckMenuItemTrait.html' title='gtk::traits::check_menu_item::CheckMenuItemTrait'>CheckMenuItemTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/color_chooser/trait.ColorChooserTrait.html' title='gtk::traits::color_chooser::ColorChooserTrait'>ColorChooserTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/combo_box/trait.ComboBoxTrait.html' title='gtk::traits::combo_box::ComboBoxTrait'>ComboBoxTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/container/trait.ContainerTrait.html' title='gtk::traits::container::ContainerTrait'>ContainerTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/dialog/trait.DialogButtons.html' title='gtk::traits::dialog::DialogButtons'>DialogButtons</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/dialog/trait.DialogTrait.html' title='gtk::traits::dialog::DialogTrait'>DialogTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/editable/trait.EditableTrait.html' title='gtk::traits::editable::EditableTrait'>EditableTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/entry/trait.EntryTrait.html' title='gtk::traits::entry::EntryTrait'>EntryTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/file_chooser/trait.FileChooserTrait.html' title='gtk::traits::file_chooser::FileChooserTrait'>FileChooserTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/font_chooser/trait.FontChooserTrait.html' title='gtk::traits::font_chooser::FontChooserTrait'>FontChooserTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/frame/trait.FrameTrait.html' title='gtk::traits::frame::FrameTrait'>FrameTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/label/trait.LabelTrait.html' title='gtk::traits::label::LabelTrait'>LabelTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/menu_item/trait.MenuItemTrait.html' title='gtk::traits::menu_item::MenuItemTrait'>MenuItemTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/menu_shell/trait.MenuShellTrait.html' title='gtk::traits::menu_shell::MenuShellTrait'>MenuShellTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/misc/trait.MiscTrait.html' title='gtk::traits::misc::MiscTrait'>MiscTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/orientable/trait.OrientableTrait.html' title='gtk::traits::orientable::OrientableTrait'>OrientableTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/range/trait.RangeTrait.html' title='gtk::traits::range::RangeTrait'>RangeTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/recent_chooser/trait.RecentChooserTrait.html' title='gtk::traits::recent_chooser::RecentChooserTrait'>RecentChooserTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/scale_button/trait.ScaleButtonTrait.html' title='gtk::traits::scale_button::ScaleButtonTrait'>ScaleButtonTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/scrollable/trait.ScrollableTrait.html' title='gtk::traits::scrollable::ScrollableTrait'>ScrollableTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/scrolled_window/trait.ScrolledWindowTrait.html' title='gtk::traits::scrolled_window::ScrolledWindowTrait'>ScrolledWindowTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/text_buffer/trait.TextBufferTrait.html' title='gtk::traits::text_buffer::TextBufferTrait'>TextBufferTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/toggle_button/trait.ToggleButtonTrait.html' title='gtk::traits::toggle_button::ToggleButtonTrait'>ToggleButtonTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/toggle_tool_button/trait.ToggleToolButtonTrait.html' title='gtk::traits::toggle_tool_button::ToggleToolButtonTrait'>ToggleToolButtonTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/tool_button/trait.ToolButtonTrait.html' title='gtk::traits::tool_button::ToolButtonTrait'>ToolButtonTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/signal/trait.ToolButtonSignals.html' title='gtk::signal::ToolButtonSignals'>ToolButtonSignals</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/tool_item/trait.ToolItemTrait.html' title='gtk::traits::tool_item::ToolItemTrait'>ToolItemTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/tool_shell/trait.ToolShellTrait.html' title='gtk::traits::tool_shell::ToolShellTrait'>ToolShellTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/signal/trait.WidgetSignals.html' title='gtk::signal::WidgetSignals'>WidgetSignals</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
+                                            href='./traits/index.html'>traits</a>::<a class='trait' href='../gtk/traits/window/trait.WindowTrait.html' title='gtk::traits::window::WindowTrait'>WindowTrait</a>;</code></td></tr><tr><td><code>pub use self::traits::style_provider::{STYLE_PROVIDER_PRIORITY_FALLBACK, STYLE_PROVIDER_PRIORITY_THEME, STYLE_PROVIDER_PRIORITY_SETTINGS, STYLE_PROVIDER_PRIORITY_APPLICATION, STYLE_PROVIDER_PRIORITY_USER};</code></td></tr><tr><td><code>pub use self::types::{<a class='struct' href='../gtk/types/struct.Tooltip.html' title='gtk::types::Tooltip'>Tooltip</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='mod' href='signal/index.html'
+                               title='gtk::signal'>signal</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='mod' href='traits/index.html'
+                               title='gtk::traits'>traits</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='mod' href='types/index.html'
+                               title='gtk::types'>types</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='mod' href='widgets/index.html'
+                               title='gtk::widgets'>widgets</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.AboutDialog.html'
+                               title='gtk::AboutDialog'>AboutDialog</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.AccelFlags.html'
+                               title='gtk::AccelFlags'>AccelFlags</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ActionBar.html'
+                               title='gtk::ActionBar'>ActionBar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Adjustment.html'
+                               title='gtk::Adjustment'>Adjustment</a></td>
+                        <td class='docblock short'>
+                             <p>A representation of an adjustable bounded value</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Alignment.html'
+                               title='gtk::Alignment'>Alignment</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.AppChooserDialog.html'
+                               title='gtk::AppChooserDialog'>AppChooserDialog</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.AppChooserWidget.html'
+                               title='gtk::AppChooserWidget'>AppChooserWidget</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.AppInfo.html'
+                               title='gtk::AppInfo'>AppInfo</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.AppLaunchContext.html'
+                               title='gtk::AppLaunchContext'>AppLaunchContext</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Arrow.html'
+                               title='gtk::Arrow'>Arrow</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.AspectFrame.html'
+                               title='gtk::AspectFrame'>AspectFrame</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.AttachOptions.html'
+                               title='gtk::AttachOptions'>AttachOptions</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Box.html'
+                               title='gtk::Box'>Box</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Button.html'
+                               title='gtk::Button'>Button</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ButtonBox.html'
+                               title='gtk::ButtonBox'>ButtonBox</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Calendar.html'
+                               title='gtk::Calendar'>Calendar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.CalendarDisplayOptions.html'
+                               title='gtk::CalendarDisplayOptions'>CalendarDisplayOptions</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.CellRendererState.html'
+                               title='gtk::CellRendererState'>CellRendererState</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.CellRendererText.html'
+                               title='gtk::CellRendererText'>CellRendererText</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.CellRendererToggle.html'
+                               title='gtk::CellRendererToggle'>CellRendererToggle</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.CheckButton.html'
+                               title='gtk::CheckButton'>CheckButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.CheckMenuItem.html'
+                               title='gtk::CheckMenuItem'>CheckMenuItem</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ColorButton.html'
+                               title='gtk::ColorButton'>ColorButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ColorChooserDialog.html'
+                               title='gtk::ColorChooserDialog'>ColorChooserDialog</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ColorChooserWidget.html'
+                               title='gtk::ColorChooserWidget'>ColorChooserWidget</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ComboBox.html'
+                               title='gtk::ComboBox'>ComboBox</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ComboBoxText.html'
+                               title='gtk::ComboBoxText'>ComboBoxText</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.CssProvider.html'
+                               title='gtk::CssProvider'>CssProvider</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.DestDefaults.html'
+                               title='gtk::DestDefaults'>DestDefaults</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Dialog.html'
+                               title='gtk::Dialog'>Dialog</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.DialogFlags.html'
+                               title='gtk::DialogFlags'>DialogFlags</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.DrawingArea.html'
+                               title='gtk::DrawingArea'>DrawingArea</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Entry.html'
+                               title='gtk::Entry'>Entry</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.EntryBuffer.html'
+                               title='gtk::EntryBuffer'>EntryBuffer</a></td>
+                        <td class='docblock short'>
+                             <p>EntryBuffer — Text buffer for ::Entry</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.EntryCompletion.html'
+                               title='gtk::EntryCompletion'>EntryCompletion</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.EventBox.html'
+                               title='gtk::EventBox'>EventBox</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Expander.html'
+                               title='gtk::Expander'>Expander</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.FileChooserDialog.html'
+                               title='gtk::FileChooserDialog'>FileChooserDialog</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.FileChooserWidget.html'
+                               title='gtk::FileChooserWidget'>FileChooserWidget</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.FileFilter.html'
+                               title='gtk::FileFilter'>FileFilter</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.FileFilterFlags.html'
+                               title='gtk::FileFilterFlags'>FileFilterFlags</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Fixed.html'
+                               title='gtk::Fixed'>Fixed</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.FlowBox.html'
+                               title='gtk::FlowBox'>FlowBox</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.FlowBoxChild.html'
+                               title='gtk::FlowBoxChild'>FlowBoxChild</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.FontButton.html'
+                               title='gtk::FontButton'>FontButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.FontChooserDialog.html'
+                               title='gtk::FontChooserDialog'>FontChooserDialog</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.FontChooserWidget.html'
+                               title='gtk::FontChooserWidget'>FontChooserWidget</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Frame.html'
+                               title='gtk::Frame'>Frame</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Grid.html'
+                               title='gtk::Grid'>Grid</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.HeaderBar.html'
+                               title='gtk::HeaderBar'>HeaderBar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.IconView.html'
+                               title='gtk::IconView'>IconView</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Image.html'
+                               title='gtk::Image'>Image</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.InfoBar.html'
+                               title='gtk::InfoBar'>InfoBar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.InputHints.html'
+                               title='gtk::InputHints'>InputHints</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.JunctionSides.html'
+                               title='gtk::JunctionSides'>JunctionSides</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Label.html'
+                               title='gtk::Label'>Label</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Layout.html'
+                               title='gtk::Layout'>Layout</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.LevelBar.html'
+                               title='gtk::LevelBar'>LevelBar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.LinkButton.html'
+                               title='gtk::LinkButton'>LinkButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ListBox.html'
+                               title='gtk::ListBox'>ListBox</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ListBoxRow.html'
+                               title='gtk::ListBoxRow'>ListBoxRow</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ListStore.html'
+                               title='gtk::ListStore'>ListStore</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.LockButton.html'
+                               title='gtk::LockButton'>LockButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.MenuButton.html'
+                               title='gtk::MenuButton'>MenuButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.MenuItem.html'
+                               title='gtk::MenuItem'>MenuItem</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.MenuToolButton.html'
+                               title='gtk::MenuToolButton'>MenuToolButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.MessageDialog.html'
+                               title='gtk::MessageDialog'>MessageDialog</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.NoteBook.html'
+                               title='gtk::NoteBook'>NoteBook</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Overlay.html'
+                               title='gtk::Overlay'>Overlay</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.PageSetup.html'
+                               title='gtk::PageSetup'>PageSetup</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Paned.html'
+                               title='gtk::Paned'>Paned</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.PaperSize.html'
+                               title='gtk::PaperSize'>PaperSize</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.PlacesOpenFlags.html'
+                               title='gtk::PlacesOpenFlags'>PlacesOpenFlags</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.PlacesSidebar.html'
+                               title='gtk::PlacesSidebar'>PlacesSidebar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Popover.html'
+                               title='gtk::Popover'>Popover</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.PrintSettings.html'
+                               title='gtk::PrintSettings'>PrintSettings</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ProgressBar.html'
+                               title='gtk::ProgressBar'>ProgressBar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RadioButton.html'
+                               title='gtk::RadioButton'>RadioButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Range.html'
+                               title='gtk::Range'>Range</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RecentChooserDialog.html'
+                               title='gtk::RecentChooserDialog'>RecentChooserDialog</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RecentChooserWidget.html'
+                               title='gtk::RecentChooserWidget'>RecentChooserWidget</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RecentData.html'
+                               title='gtk::RecentData'>RecentData</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RecentFilter.html'
+                               title='gtk::RecentFilter'>RecentFilter</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RecentFilterFlags.html'
+                               title='gtk::RecentFilterFlags'>RecentFilterFlags</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RecentFilterInfo.html'
+                               title='gtk::RecentFilterInfo'>RecentFilterInfo</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RecentInfo.html'
+                               title='gtk::RecentInfo'>RecentInfo</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RecentManager.html'
+                               title='gtk::RecentManager'>RecentManager</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RegionFlags.html'
+                               title='gtk::RegionFlags'>RegionFlags</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Revealer.html'
+                               title='gtk::Revealer'>Revealer</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Scale.html'
+                               title='gtk::Scale'>Scale</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ScaleButton.html'
+                               title='gtk::ScaleButton'>ScaleButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ScrollBar.html'
+                               title='gtk::ScrollBar'>ScrollBar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ScrolledWindow.html'
+                               title='gtk::ScrolledWindow'>ScrolledWindow</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SearchBar.html'
+                               title='gtk::SearchBar'>SearchBar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SearchEntry.html'
+                               title='gtk::SearchEntry'>SearchEntry</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Separator.html'
+                               title='gtk::Separator'>Separator</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SeparatorMenuItem.html'
+                               title='gtk::SeparatorMenuItem'>SeparatorMenuItem</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SeparatorToolItem.html'
+                               title='gtk::SeparatorToolItem'>SeparatorToolItem</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SizeGroup.html'
+                               title='gtk::SizeGroup'>SizeGroup</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Socket.html'
+                               title='gtk::Socket'>Socket</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SpinButton.html'
+                               title='gtk::SpinButton'>SpinButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Spinner.html'
+                               title='gtk::Spinner'>Spinner</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Stack.html'
+                               title='gtk::Stack'>Stack</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.StackSwitcher.html'
+                               title='gtk::StackSwitcher'>StackSwitcher</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.StateFlags.html'
+                               title='gtk::StateFlags'>StateFlags</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.StatusBar.html'
+                               title='gtk::StatusBar'>StatusBar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.StyleContext.html'
+                               title='gtk::StyleContext'>StyleContext</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Switch.html'
+                               title='gtk::Switch'>Switch</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TextAttributes.html'
+                               title='gtk::TextAttributes'>TextAttributes</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TextBuffer.html'
+                               title='gtk::TextBuffer'>TextBuffer</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TextChildAnchor.html'
+                               title='gtk::TextChildAnchor'>TextChildAnchor</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TextIter.html'
+                               title='gtk::TextIter'>TextIter</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TextMark.html'
+                               title='gtk::TextMark'>TextMark</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TextSearchFlags.html'
+                               title='gtk::TextSearchFlags'>TextSearchFlags</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TextTag.html'
+                               title='gtk::TextTag'>TextTag</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TextTagTable.html'
+                               title='gtk::TextTagTable'>TextTagTable</a></td>
+                        <td class='docblock short'>
+                             <p>GtkTextTagTable — Collection of tags that can be used together</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TextView.html'
+                               title='gtk::TextView'>TextView</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ToggleButton.html'
+                               title='gtk::ToggleButton'>ToggleButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ToggleToolButton.html'
+                               title='gtk::ToggleToolButton'>ToggleToolButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ToolButton.html'
+                               title='gtk::ToolButton'>ToolButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ToolItem.html'
+                               title='gtk::ToolItem'>ToolItem</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ToolItemGroup.html'
+                               title='gtk::ToolItemGroup'>ToolItemGroup</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ToolPalette.html'
+                               title='gtk::ToolPalette'>ToolPalette</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.ToolPaletteDragTargets.html'
+                               title='gtk::ToolPaletteDragTargets'>ToolPaletteDragTargets</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Toolbar.html'
+                               title='gtk::Toolbar'>Toolbar</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TreeIter.html'
+                               title='gtk::TreeIter'>TreeIter</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TreeModel.html'
+                               title='gtk::TreeModel'>TreeModel</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TreeModelFlags.html'
+                               title='gtk::TreeModelFlags'>TreeModelFlags</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TreePath.html'
+                               title='gtk::TreePath'>TreePath</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TreeSelection.html'
+                               title='gtk::TreeSelection'>TreeSelection</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TreeStore.html'
+                               title='gtk::TreeStore'>TreeStore</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TreeView.html'
+                               title='gtk::TreeView'>TreeView</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.TreeViewColumn.html'
+                               title='gtk::TreeViewColumn'>TreeViewColumn</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Viewport.html'
+                               title='gtk::Viewport'>Viewport</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.VolumeButton.html'
+                               title='gtk::VolumeButton'>VolumeButton</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Widget.html'
+                               title='gtk::Widget'>Widget</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Window.html'
+                               title='gtk::Window'>Window</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.Align.html'
+                               title='gtk::Align'>Align</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ArrowPlacement.html'
+                               title='gtk::ArrowPlacement'>ArrowPlacement</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ArrowType.html'
+                               title='gtk::ArrowType'>ArrowType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.BorderStyle.html'
+                               title='gtk::BorderStyle'>BorderStyle</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.BuilderError.html'
+                               title='gtk::BuilderError'>BuilderError</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ButtonBoxStyle.html'
+                               title='gtk::ButtonBoxStyle'>ButtonBoxStyle</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ButtonsType.html'
+                               title='gtk::ButtonsType'>ButtonsType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.CornerType.html'
+                               title='gtk::CornerType'>CornerType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.DeleteType.html'
+                               title='gtk::DeleteType'>DeleteType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.DirectionType.html'
+                               title='gtk::DirectionType'>DirectionType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.DragResult.html'
+                               title='gtk::DragResult'>DragResult</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.EntryIconPosition.html'
+                               title='gtk::EntryIconPosition'>EntryIconPosition</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ExpanderStyle.html'
+                               title='gtk::ExpanderStyle'>ExpanderStyle</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.FileChooserAction.html'
+                               title='gtk::FileChooserAction'>FileChooserAction</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.IMPreeditStyle.html'
+                               title='gtk::IMPreeditStyle'>IMPreeditStyle</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.IMStatusStyle.html'
+                               title='gtk::IMStatusStyle'>IMStatusStyle</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.IconSize.html'
+                               title='gtk::IconSize'>IconSize</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.IconViewDropPosition.html'
+                               title='gtk::IconViewDropPosition'>IconViewDropPosition</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ImageType.html'
+                               title='gtk::ImageType'>ImageType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.InputPurpose.html'
+                               title='gtk::InputPurpose'>InputPurpose</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.Justification.html'
+                               title='gtk::Justification'>Justification</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.LevelBarMode.html'
+                               title='gtk::LevelBarMode'>LevelBarMode</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.License.html'
+                               title='gtk::License'>License</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.MessageType.html'
+                               title='gtk::MessageType'>MessageType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.MovementStep.html'
+                               title='gtk::MovementStep'>MovementStep</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.NumberUpLayout.html'
+                               title='gtk::NumberUpLayout'>NumberUpLayout</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.Orientation.html'
+                               title='gtk::Orientation'>Orientation</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.PackType.html'
+                               title='gtk::PackType'>PackType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.PageOrientation.html'
+                               title='gtk::PageOrientation'>PageOrientation</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.PageSet.html'
+                               title='gtk::PageSet'>PageSet</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.PathPriorityType.html'
+                               title='gtk::PathPriorityType'>PathPriorityType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.PathType.html'
+                               title='gtk::PathType'>PathType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.PolicyType.html'
+                               title='gtk::PolicyType'>PolicyType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.PositionType.html'
+                               title='gtk::PositionType'>PositionType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.PrintPages.html'
+                               title='gtk::PrintPages'>PrintPages</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.RecentSortType.html'
+                               title='gtk::RecentSortType'>RecentSortType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ReliefStyle.html'
+                               title='gtk::ReliefStyle'>ReliefStyle</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ResizeMode.html'
+                               title='gtk::ResizeMode'>ResizeMode</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ResponseType.html'
+                               title='gtk::ResponseType'>ResponseType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.RevealerTransitionType.html'
+                               title='gtk::RevealerTransitionType'>RevealerTransitionType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ScrollStep.html'
+                               title='gtk::ScrollStep'>ScrollStep</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ScrollType.html'
+                               title='gtk::ScrollType'>ScrollType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ScrollablePolicy.html'
+                               title='gtk::ScrollablePolicy'>ScrollablePolicy</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.SelectionMode.html'
+                               title='gtk::SelectionMode'>SelectionMode</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.SensitivityType.html'
+                               title='gtk::SensitivityType'>SensitivityType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ShadowType.html'
+                               title='gtk::ShadowType'>ShadowType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.SizeGroupMode.html'
+                               title='gtk::SizeGroupMode'>SizeGroupMode</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.SizeRequestMode.html'
+                               title='gtk::SizeRequestMode'>SizeRequestMode</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.SortType.html'
+                               title='gtk::SortType'>SortType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.SpinButtonUpdatePolicy.html'
+                               title='gtk::SpinButtonUpdatePolicy'>SpinButtonUpdatePolicy</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.SpinType.html'
+                               title='gtk::SpinType'>SpinType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.StackTransitionType.html'
+                               title='gtk::StackTransitionType'>StackTransitionType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.StateType.html'
+                               title='gtk::StateType'>StateType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.TextDirection.html'
+                               title='gtk::TextDirection'>TextDirection</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.TextWindowType.html'
+                               title='gtk::TextWindowType'>TextWindowType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.ToolbarStyle.html'
+                               title='gtk::ToolbarStyle'>ToolbarStyle</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.TreeViewColumnSizing.html'
+                               title='gtk::TreeViewColumnSizing'>TreeViewColumnSizing</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.TreeViewGridLines.html'
+                               title='gtk::TreeViewGridLines'>TreeViewGridLines</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.Unit.html'
+                               title='gtk::Unit'>Unit</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.WidgetHelpType.html'
+                               title='gtk::WidgetHelpType'>WidgetHelpType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.WindowPosition.html'
+                               title='gtk::WindowPosition'>WindowPosition</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.WindowType.html'
+                               title='gtk::WindowType'>WindowType</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.WrapMode.html'
+                               title='gtk::WrapMode'>WrapMode</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.DIALOG_MODAL.html'
+                               title='gtk::DIALOG_MODAL'>DIALOG_MODAL</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='trait' href='trait.ValuePublic.html'
+                               title='gtk::ValuePublic'>ValuePublic</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.check_version.html'
+                               title='gtk::check_version'>check_version</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.events_pending.html'
+                               title='gtk::events_pending'>events_pending</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.get_binary_age.html'
+                               title='gtk::get_binary_age'>get_binary_age</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.get_interface_age.html'
+                               title='gtk::get_interface_age'>get_interface_age</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.get_major_version.html'
+                               title='gtk::get_major_version'>get_major_version</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.get_micro_version.html'
+                               title='gtk::get_micro_version'>get_micro_version</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.get_minor_version.html'
+                               title='gtk::get_minor_version'>get_minor_version</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.init.html'
+                               title='gtk::init'>init</a></td>
+                        <td class='docblock short'>
+                             <p>Call this function before using any other GTK+ functions.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.main.html'
+                               title='gtk::main'>main</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.main_iteration.html'
+                               title='gtk::main_iteration'>main_iteration</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.main_iteration_do.html'
+                               title='gtk::main_iteration_do'>main_iteration_do</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.main_level.html'
+                               title='gtk::main_level'>main_level</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.main_quit.html'
+                               title='gtk::main_quit'>main_quit</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div>
+            <div class="shortcuts">
+                <h1>Keyboard Shortcuts</h1>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h1>Search Tricks</h1>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gtk";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script async src="../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+initSidebarItems({"type":[["Display","Display — Controls a set of GdkScreens and their associated input devices"]]});

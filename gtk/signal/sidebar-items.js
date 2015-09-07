@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Inhibit","Whether to propagate the signal to other handlers"]],"trait":[["ButtonSignals",""],["ComboBoxSignals",""],["DialogSignals",""],["EntrySignals",""],["RangeSignals",""],["SpinButtonSignals",""],["ToolButtonSignals",""],["TreeViewSignals",""],["WidgetSignals",""]]});

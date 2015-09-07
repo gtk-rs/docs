@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["OK",""],["OK_CANCEL",""],["YES_NO",""]]});

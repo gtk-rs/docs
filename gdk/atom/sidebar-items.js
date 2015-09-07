@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["NONE",""]],"struct":[["Atom","Atoms — Functions to manipulate properties on windows"]]});

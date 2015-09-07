@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Item","The PangoItem structure stores information about a segment of text."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["check_version",""],["events_pending",""],["get_binary_age",""],["get_interface_age",""],["get_major_version",""],["get_micro_version",""],["get_minor_version",""],["init","Call this function before using any other GTK+ functions."],["main",""],["main_iteration",""],["main_iteration_do",""],["main_level",""],["main_quit",""]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["MenuItemTrait","The widget used for item in menus"]]});

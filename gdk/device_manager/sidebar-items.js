@@ -1,0 +1,1 @@
+initSidebarItems({"type":[["DeviceManager","GdkDeviceManager — Functions for handling input devices"]]});

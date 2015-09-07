@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["MeshCorner",""]],"struct":[["LinearGradient",""],["Mesh",""],["RadialGradient",""],["SolidPattern",""],["SurfacePattern",""]],"trait":[["Gradient",""],["Pattern",""]]});

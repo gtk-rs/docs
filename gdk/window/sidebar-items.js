@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Attributes","Attributes to use for a newly-created window."]],"type":[["Window",""]]});
