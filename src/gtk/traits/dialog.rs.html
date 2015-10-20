@@ -24,10 +24,10 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
@@ -296,9 +296,6 @@
 <span id="254">254</span>
 <span id="255">255</span>
 <span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -309,6 +306,7 @@
 <span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
 <span class='kw'>use</span> <span class='ident'>cast</span>::<span class='ident'>GTK_DIALOG</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
+<span class='kw'>use</span> <span class='ident'>Box</span>;
 
 <span class='doccomment'>/// Pseudo-variadic array of buttons</span>
 <span class='doccomment'>///</span>
@@ -538,14 +536,10 @@
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>get_content_area</span><span class='op'>&lt;</span><span class='ident'>T</span>: ::<span class='ident'>WidgetTrait</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>get_content_area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span> {
         <span class='kw'>let</span> <span class='ident'>tmp_pointer</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_dialog_get_content_area</span>(<span class='ident'>GTK_DIALOG</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>())) };
 
-        <span class='kw'>if</span> <span class='ident'>tmp_pointer</span>.<span class='ident'>is_null</span>() {
-            <span class='prelude-val'>None</span>
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>Some</span>(::<span class='ident'>FFIWidget</span>::<span class='ident'>wrap_widget</span>(<span class='ident'>tmp_pointer</span>))
-        }
+        <span class='macro'>check_pointer</span><span class='macro'>!</span>(<span class='ident'>tmp_pointer</span>, <span class='ident'>Box</span>).<span class='ident'>unwrap</span>()
     }
 
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gtk_3_12</span>)]</span>
@@ -565,10 +559,12 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
+    <aside id="help" class="hidden">
         <div>
+            <h1 class="hidden">Help</h1>
+
             <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
+                <h2>Keyboard Shortcuts</h2>
 
                 <dl>
                     <dt>?</dt>
@@ -585,7 +581,7 @@
             </div>
 
             <div class="infos">
-                <h1>Search Tricks</h1>
+                <h2>Search Tricks</h2>
 
                 <p>
                     Prefix searches with a type followed by a colon (e.g.
@@ -605,7 +601,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </aside>
 
     
 

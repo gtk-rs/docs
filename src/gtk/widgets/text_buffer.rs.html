@@ -24,10 +24,10 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
@@ -70,6 +70,19 @@
 <span id="28">28</span>
 <span id="29">29</span>
 <span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -79,7 +92,10 @@
 
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
 <span class='kw'>use</span> <span class='ident'>FFIWidget</span>;
+<span class='kw'>use</span> <span class='ident'>TextIter</span>;
 
+<span class='kw'>use</span> <span class='ident'>cast</span>::<span class='ident'>GTK_TEXT_BUFFER</span>;
+<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='ident'>ToGlibPtrMut</span>;
 <span class='doccomment'>/// GtkTextBuffer — Stores attributed text for display in a GtkTextView</span>
 
 <span class='macro'>struct_Widget</span><span class='macro'>!</span>(<span class='ident'>TextBuffer</span>);
@@ -95,6 +111,16 @@
 
         <span class='macro'>check_pointer</span><span class='macro'>!</span>(<span class='ident'>tmp_pointer</span>, <span class='ident'>TextBuffer</span>)
     }
+
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_start_iter</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>TextIter</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>target_iter</span> <span class='op'>=</span> <span class='ident'>TextIter</span>::<span class='ident'>uninitialized</span>();
+            <span class='ident'>ffi</span>::<span class='ident'>gtk_text_buffer_get_start_iter</span>(
+                <span class='ident'>GTK_TEXT_BUFFER</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), 
+                <span class='ident'>target_iter</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>);
+            <span class='ident'>target_iter</span>
+        }
+    }
 }
 
 <span class='macro'>impl_drop</span><span class='macro'>!</span>(<span class='ident'>TextBuffer</span>);
@@ -107,10 +133,12 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
+    <aside id="help" class="hidden">
         <div>
+            <h1 class="hidden">Help</h1>
+
             <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
+                <h2>Keyboard Shortcuts</h2>
 
                 <dl>
                     <dt>?</dt>
@@ -127,7 +155,7 @@
             </div>
 
             <div class="infos">
-                <h1>Search Tricks</h1>
+                <h2>Search Tricks</h2>
 
                 <p>
                     Prefix searches with a type followed by a colon (e.g.
@@ -147,7 +175,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </aside>
 
     
 

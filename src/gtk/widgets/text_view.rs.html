@@ -24,10 +24,10 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
@@ -305,6 +305,22 @@
 <span id="263">263</span>
 <span id="264">264</span>
 <span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -317,6 +333,8 @@
 <span class='kw'>use</span> <span class='ident'>FFIWidget</span>;
 <span class='kw'>use</span> <span class='ident'>cast</span>::{<span class='ident'>GTK_TEXT_VIEW</span>, <span class='ident'>GTK_TEXT_BUFFER</span>};
 <span class='kw'>use</span> <span class='ident'>glib</span>::{<span class='ident'>to_bool</span>, <span class='ident'>to_gboolean</span>};
+<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::{<span class='ident'>ToGlibPtr</span>, <span class='ident'>ToGlibPtrMut</span>};
+<span class='kw'>use</span> <span class='ident'>TextIter</span>;
 
 <span class='macro'>struct_Widget</span><span class='macro'>!</span>(<span class='ident'>TextView</span>);
 
@@ -356,8 +374,8 @@
             <span class='ident'>to_gboolean</span>(<span class='ident'>use_align</span>), <span class='ident'>xalign</span>, <span class='ident'>yalign</span>) }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>scroll_to_iter</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span>::<span class='ident'>TextIter</span>, <span class='ident'>within_margin</span>: <span class='ident'>f64</span>, <span class='ident'>use_align</span>: <span class='ident'>bool</span>, <span class='ident'>xalign</span>: <span class='ident'>f64</span>, <span class='ident'>yalign</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_scroll_to_iter</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>unwrap_pointer</span>(), <span class='ident'>within_margin</span>,
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>scroll_to_iter</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TextIter</span>, <span class='ident'>within_margin</span>: <span class='ident'>f64</span>, <span class='ident'>use_align</span>: <span class='ident'>bool</span>, <span class='ident'>xalign</span>: <span class='ident'>f64</span>, <span class='ident'>yalign</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_scroll_to_iter</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>within_margin</span>,
             <span class='ident'>to_gboolean</span>(<span class='ident'>use_align</span>), <span class='ident'>xalign</span>, <span class='ident'>yalign</span>)) }
     }
 
@@ -373,13 +391,23 @@
         <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_place_cursor_onscreen</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()))) }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_line_at_y</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>target_iter</span>: <span class='kw-2'>&amp;</span>::<span class='ident'>TextIter</span>, <span class='ident'>y</span>: <span class='ident'>i32</span>, <span class='ident'>line_top</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>i32</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_get_line_at_y</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>target_iter</span>.<span class='ident'>unwrap_pointer</span>(), <span class='ident'>y</span> <span class='kw'>as</span> ::<span class='ident'>libc</span>::<span class='ident'>c_int</span>,
-            <span class='ident'>line_top</span>) }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_line_at_y</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>y</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> (<span class='ident'>TextIter</span>, <span class='ident'>i32</span>) {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>target_iter</span> <span class='op'>=</span> <span class='ident'>TextIter</span>::<span class='ident'>uninitialized</span>();
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>line_top</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_get_line_at_y</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()),
+                <span class='ident'>target_iter</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>y</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>line_top</span>);
+            (<span class='ident'>target_iter</span>, <span class='ident'>line_top</span>)
+        }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_iter_at_location</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>target_iter</span>: <span class='kw-2'>&amp;</span>::<span class='ident'>TextIter</span>, <span class='ident'>x</span>: <span class='ident'>i32</span>, <span class='ident'>y</span>: <span class='ident'>i32</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_get_iter_at_location</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>target_iter</span>.<span class='ident'>unwrap_pointer</span>(), <span class='ident'>x</span>, <span class='ident'>y</span>) }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_iter_at_location</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>x</span>: <span class='ident'>i32</span>, <span class='ident'>y</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>TextIter</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>target_iter</span> <span class='op'>=</span> <span class='ident'>TextIter</span>::<span class='ident'>uninitialized</span>();
+            <span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_get_iter_at_location</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()),
+                <span class='ident'>target_iter</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>x</span>, <span class='ident'>y</span>);
+            <span class='ident'>target_iter</span>
+        }
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>buffer_to_window_coords</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>win</span>: ::<span class='ident'>TextWindowType</span>, <span class='ident'>buffer_x</span>: <span class='ident'>i32</span>, <span class='ident'>buffer_y</span>: <span class='ident'>i32</span>, <span class='ident'>window_x</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>i32</span>, <span class='ident'>window_y</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>i32</span>) {
@@ -400,29 +428,29 @@
         <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_get_border_window_size</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>_type</span>) }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>forward_display_line</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span>::<span class='ident'>TextIter</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_forward_display_line</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>unwrap_pointer</span>())) }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>forward_display_line</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TextIter</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_forward_display_line</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>)) }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>backward_display_line</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span>::<span class='ident'>TextIter</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_forward_display_line</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>unwrap_pointer</span>())) }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>backward_display_line</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TextIter</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_forward_display_line</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>)) }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>forward_display_line_end</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span>::<span class='ident'>TextIter</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_forward_display_line_end</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>unwrap_pointer</span>())) }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>forward_display_line_end</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TextIter</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_forward_display_line_end</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>)) }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>backward_display_line_start</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span>::<span class='ident'>TextIter</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_backward_display_line_start</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>unwrap_pointer</span>())) }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>backward_display_line_start</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TextIter</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_backward_display_line_start</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>)) }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>starts_display_line</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span>::<span class='ident'>TextIter</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>starts_display_line</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span><span class='ident'>TextIter</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_starts_display_line</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()),
-            <span class='ident'>iter</span>.<span class='ident'>unwrap_pointer</span>())) }
+            <span class='ident'>iter</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)) }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>move_visually</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span>::<span class='ident'>TextIter</span>, <span class='ident'>count</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_move_visually</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>unwrap_pointer</span>(),
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>move_visually</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>iter</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TextIter</span>, <span class='ident'>count</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_move_visually</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>iter</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>,
             <span class='ident'>count</span> <span class='kw'>as</span> ::<span class='ident'>libc</span>::<span class='ident'>c_int</span>)) }
     }
 
@@ -550,18 +578,22 @@
         <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_reset_im_context</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>())) }
     }
 
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gtk_3_6</span>)]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_input_purpose</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>purpose</span>: ::<span class='ident'>InputPurpose</span>) {
         <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_set_input_purpose</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>purpose</span>) }
     }
 
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gtk_3_6</span>)]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_input_purpose</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> ::<span class='ident'>InputPurpose</span> {
         <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_get_input_purpose</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>())) }
     }
 
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gtk_3_6</span>)]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_input_hints</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>hints</span>: ::<span class='ident'>InputHints</span>) {
         <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_set_input_hints</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>()), <span class='ident'>hints</span>) }
     }
 
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gtk_3_6</span>)]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_input_hints</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> ::<span class='ident'>InputHints</span> {
         <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_text_view_get_input_hints</span>(<span class='ident'>GTK_TEXT_VIEW</span>(<span class='self'>self</span>.<span class='ident'>unwrap_widget</span>())) }
     }
@@ -577,10 +609,12 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
+    <aside id="help" class="hidden">
         <div>
+            <h1 class="hidden">Help</h1>
+
             <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
+                <h2>Keyboard Shortcuts</h2>
 
                 <dl>
                     <dt>?</dt>
@@ -597,7 +631,7 @@
             </div>
 
             <div class="infos">
-                <h1>Search Tricks</h1>
+                <h2>Search Tricks</h2>
 
                 <p>
                     Prefix searches with a type followed by a colon (e.g.
@@ -617,7 +651,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </aside>
 
     
 

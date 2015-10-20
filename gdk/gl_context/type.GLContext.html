@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `GLContext` type in crate `gdk`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, GLContext">
+
+    <title>gdk::gl_context::GLContext - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>gdk</a>::<wbr><a href='index.html'>gl_context</a></p><script>window.sidebarCurrent = {name: 'GLContext', ty: 'type', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content type">
+<h1 class='fqn'><span class='in-band'><a href='../index.html'>gdk</a>::<wbr><a href='index.html'>gl_context</a>::<wbr><a class='type' href=''>GLContext</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span><a id='src-4446' class='srclink' href='../../src/gdk/gl_context.rs.html#56' title='goto source code'>[src]</a></span></h1>
+<pre class='rust typedef'>type GLContext = Object&lt;<a class='struct' href='../../gdk/ffi/struct.GdkGLContext.html' title='gdk::ffi::GdkGLContext'>GdkGLContext</a>&gt;;</pre><div class='docblock'><p>GLContext is an object representing the platform-specific OpenGL drawing context.</p>
+
+<p>GLContexts are created for a GdkWindow using gdk_window_create_gl_context(), and the context
+will match the GdkVisual of the window.</p>
+
+<p>A GLContext is not tied to any particular normal framebuffer. For instance, it cannot draw to
+the GdkWindow back buffer. The GDK repaint system is in full control of the painting to that.
+Instead, you can create render buffers or textures and use gdk_cairo_draw_from_gl() in the draw
+function of your widget to draw them. Then GDK will handle the integration of your rendering
+with that of other widgets.</p>
+
+<p>Support for GLContext is platform-specific, context creation can fail, returning None context.</p>
+
+<p>A GLContext has to be made &quot;current&quot; in order to start using it, otherwise any OpenGL call will
+be ignored.</p>
+
+<h2 id='creating-a-new-opengl-context' class='section-header'><a href='#creating-a-new-opengl-context'>Creating a new OpenGL context</a></h2>
+<p>In order to create a new GLContext instance you need a GdkWindow, which you typically get during
+the realize call of a widget.</p>
+
+<p>A GLContext is not realized until either gdk_gl_context_make_current(), or until it is realized
+using gdk_gl_context_realize(). It is possible to specify details of the GL context like the
+OpenGL version to be used, or whether the GL context should have extra state validation enabled
+after calling gdk_window_create_gl_context() by calling gdk_gl_context_realize(). If the
+realization fails you have the option to change the settings of the GLContext and try again.</p>
+
+<h2 id='using-a-glcontext' class='section-header'><a href='#using-a-glcontext'>Using a GLContext</a></h2>
+<p>You will need to make the GLContext the current context before issuing OpenGL calls; the system
+sends OpenGL commands to whichever context is current. It is possible to have multiple contexts,
+so you always need to ensure that the one which you want to draw with is the current one before
+issuing commands:</p>
+<pre class='rust rust-example-rendered'>
+<span class='ident'>GLContext</span>::<span class='ident'>make_current</span>(<span class='ident'>context</span>);</pre>
+
+<p>You can now perform your drawing using OpenGL commands.</p>
+
+<p>You can check which GLContext is the current one by using gdk_gl_context_get_current(); you can
+also unset any GLContext that is currently set by calling gdk_gl_context_clear_current().</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "gdk";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script async src="../../search-index.js"></script>
+</body>
+</html>
