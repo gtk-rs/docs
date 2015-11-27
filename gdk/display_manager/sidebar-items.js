@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["DisplayManager","Maintains a list of all open GdkDisplays"]]});
+initSidebarItems({"struct":[["DisplayManager","Maintains a list of all open `Display`s."]]});

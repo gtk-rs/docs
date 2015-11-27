@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["AppInfoExt",""]],"type":[["AppInfo",""]]});
+initSidebarItems({"struct":[["AppInfo",""]]});

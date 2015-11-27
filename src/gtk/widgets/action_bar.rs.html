@@ -94,7 +94,6 @@
 <span id="52">52</span>
 <span id="53">53</span>
 <span id="54">54</span>
-<span id="55">55</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -109,14 +108,13 @@
 
 <span class='kw'>impl</span> <span class='ident'>ActionBar</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>ActionBar</span><span class='op'>&gt;</span> {
+        <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
         <span class='kw'>let</span> <span class='ident'>tmp_pointer</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_action_bar_new</span>() };
         <span class='macro'>check_pointer</span><span class='macro'>!</span>(<span class='ident'>tmp_pointer</span>, <span class='ident'>ActionBar</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_center_widget</span><span class='op'>&lt;</span><span class='ident'>T</span>: ::<span class='ident'>WidgetTrait</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>tmp_pointer</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>gtk_action_bar_get_center_widget</span>(<span class='ident'>GTK_ACTION_BAR</span>(<span class='self'>self</span>.<span class='ident'>pointer</span>))
-        };
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_center_widget</span><span class='op'>&lt;</span><span class='ident'>T</span>: ::<span class='ident'>WidgetTrait</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>tmp_pointer</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>gtk_action_bar_get_center_widget</span>(<span class='ident'>GTK_ACTION_BAR</span>(<span class='self'>self</span>.<span class='ident'>pointer</span>));
         <span class='kw'>if</span> <span class='ident'>tmp_pointer</span>.<span class='ident'>is_null</span>() {
             <span class='prelude-val'>None</span>
         } <span class='kw'>else</span> {
@@ -211,6 +209,6 @@
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     
-    <script async src="../../../search-index.js"></script>
+    <script defer src="../../../search-index.js"></script>
 </body>
 </html>

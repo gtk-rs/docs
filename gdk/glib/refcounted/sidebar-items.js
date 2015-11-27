@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Refcounted","Encapsulates memory management logic for refcounted types."]],"trait":[["RefcountedMemoryManager",""]]});

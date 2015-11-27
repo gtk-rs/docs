@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["TextIter",""]]});
+initSidebarItems({"struct":[["TextIter","Text buffer iterator"]]});

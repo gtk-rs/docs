@@ -408,105 +408,25 @@
 <span id="366">366</span>
 <span id="367">367</span>
 <span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
-<span id="383">383</span>
-<span id="384">384</span>
-<span id="385">385</span>
-<span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
-<span id="389">389</span>
-<span id="390">390</span>
-<span id="391">391</span>
-<span id="392">392</span>
-<span id="393">393</span>
-<span id="394">394</span>
-<span id="395">395</span>
-<span id="396">396</span>
-<span id="397">397</span>
-<span id="398">398</span>
-<span id="399">399</span>
-<span id="400">400</span>
-<span id="401">401</span>
-<span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
-<span id="408">408</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='doccomment'>//! GtkTextIter — Text buffer iterator</span>
-
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>boxed</span>::{<span class='ident'>Boxed</span>, <span class='ident'>BoxedMemoryManager</span>};
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::{<span class='ident'>Stash</span>, <span class='ident'>StashMut</span>, <span class='ident'>ToGlib</span>, <span class='ident'>ToGlibPtr</span>, <span class='ident'>ToGlibPtrMut</span>, <span class='ident'>from_glib</span>, <span class='ident'>from_glib_none</span>};
+<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::{<span class='ident'>ToGlib</span>, <span class='ident'>ToGlibPtr</span>, <span class='ident'>ToGlibPtrMut</span>, <span class='ident'>from_glib</span>, <span class='ident'>from_glib_none</span>};
 
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MM</span>;
+<span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
+    <span class='doccomment'>/// Text buffer iterator</span>
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TextIter</span>(<span class='ident'>Boxed</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span><span class='op'>&gt;</span>);
 
-<span class='kw'>impl</span> <span class='ident'>BoxedMemoryManager</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>MM</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>copy</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>gtk_text_iter_copy</span>(<span class='ident'>ptr</span>)
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>free</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span>) {
-        <span class='ident'>ffi</span>::<span class='ident'>gtk_text_iter_free</span>(<span class='ident'>ptr</span>)
-    }
-}
-
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TextIter</span>(<span class='ident'>Boxed</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span>, <span class='ident'>MM</span><span class='op'>&gt;</span>);
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>TextIter</span> {
-    <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Boxed</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span>, <span class='ident'>MM</span><span class='op'>&gt;</span>;
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>stash</span> <span class='op'>=</span> (<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>).<span class='ident'>to_glib_none</span>();
-        <span class='ident'>Stash</span>(<span class='ident'>stash</span>.<span class='number'>0</span>, <span class='ident'>stash</span>.<span class='number'>1</span>)
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToGlibPtrMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TextIter</span> {
-    <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Boxed</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span>, <span class='ident'>MM</span><span class='op'>&gt;</span>;
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_glib_none_mut</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>StashMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>stash</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_glib_none_mut</span>();
-        <span class='ident'>StashMut</span>(<span class='ident'>stash</span>.<span class='number'>0</span>, <span class='ident'>stash</span>.<span class='number'>1</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>TextIter</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
-        <span class='ident'>TextIter</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>())
+    <span class='kw'>match</span> <span class='kw'>fn</span> {
+        <span class='ident'>copy</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>ptr</span><span class='op'>|</span> <span class='ident'>ffi</span>::<span class='ident'>gtk_text_iter_copy</span>(<span class='ident'>ptr</span>),
+        <span class='ident'>free</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>ptr</span><span class='op'>|</span> <span class='ident'>ffi</span>::<span class='ident'>gtk_text_iter_free</span>(<span class='ident'>ptr</span>),
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>TextIter</span> {
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>uninitialized</span>() <span class='op'>-&gt;</span> <span class='ident'>TextIter</span> {
-        <span class='ident'>TextIter</span>(<span class='ident'>Boxed</span>::<span class='ident'>uninitialized</span>())
-    }
-
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_buffer</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>::<span class='ident'>TextBuffer</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>tmp_pointer</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gtk_text_iter_get_buffer</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) };
 
@@ -917,6 +837,6 @@
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     
-    <script async src="../../../search-index.js"></script>
+    <script defer src="../../../search-index.js"></script>
 </body>
 </html>

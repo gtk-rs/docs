@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/.multirust/toolchains/nightly/cargo/registry/src/github.com-0a35038f75765ae4/gdk-0.1.4/src/display_manager.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/gdk/src/display_manager.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>display_manager.rs.html -- source</title>
@@ -83,6 +83,7 @@
 <span id="41">41</span>
 <span id="42">42</span>
 <span id="43">43</span>
+<span id="44">44</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -90,20 +91,21 @@
 
 
 <span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>types</span>::{<span class='ident'>StaticType</span>, <span class='ident'>Type</span>};
 <span class='kw'>use</span> <span class='ident'>display</span>::<span class='ident'>Display</span>;
-<span class='kw'>use</span> <span class='ident'>object</span>::<span class='ident'>Object</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
 
-<span class='doccomment'>/// Maintains a list of all open GdkDisplays</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>DisplayManager</span> <span class='op'>=</span> <span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkDisplayManager</span><span class='op'>&gt;</span>;
+<span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
+    <span class='doccomment'>/// Maintains a list of all open `Display`s.</span>
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DisplayManager</span>(<span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkDisplayManager</span><span class='op'>&gt;</span>);
 
-<span class='kw'>impl</span> <span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='ident'>DisplayManager</span> {
-    <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span> { <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_display_manager_get_type</span>()) } }
+    <span class='kw'>match</span> <span class='kw'>fn</span> {
+        <span class='ident'>get_type</span> <span class='op'>=&gt;</span> <span class='op'>||</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_display_manager_get_type</span>(),
+    }
 }
 
 <span class='kw'>impl</span> <span class='ident'>DisplayManager</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span>() <span class='op'>-&gt;</span> <span class='ident'>DisplayManager</span> {
+        <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
         <span class='kw'>unsafe</span> { <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_display_manager_get</span>()) }
     }
 
@@ -187,6 +189,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/.multirust/toolchains/nightly/cargo/registry/src/github.com-0a35038f75765ae4/gdk-0.1.4/src/pixbuf/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/gdk/src/pixbuf/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -336,6 +336,8 @@
 <span id="294">294</span>
 <span id="295">295</span>
 <span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -348,9 +350,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
 <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_void</span>, <span class='ident'>c_uchar</span>};
 <span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>types</span>::{<span class='ident'>StaticType</span>, <span class='ident'>Type</span>};
 <span class='kw'>use</span> <span class='ident'>glib</span>::{<span class='ident'>Error</span>, <span class='ident'>to_gboolean</span>, <span class='ident'>GlibContainer</span>};
-<span class='kw'>use</span> <span class='ident'>object</span>::<span class='ident'>Object</span>;
 <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
 
 <span class='kw'>use</span> {
@@ -366,13 +366,17 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>format</span>::<span class='ident'>PixbufFormat</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>loader</span>::<span class='ident'>PixbufLoader</span>;
 
-<span class='doccomment'>/// This is the main structure in the &amp;gdk-pixbuf; library. It is used to represent images. It contains information about the image&#39;s pixel </span>
-<span class='doccomment'>/// data, its color space, bits per sample, width and height, and the rowstride (the number of bytes between the start of one row and the </span>
+<span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
+    <span class='doccomment'>/// Represents an image.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// This is the main structure in the `gdk-pixbuf` library. It is used to represent images. It contains information about the image&#39;s pixel</span>
+    <span class='doccomment'>/// data, its color space, bits per sample, width and height, and the rowstride (the number of bytes between the start of one row and the</span>
 <span class='doccomment'>/// start of the next).</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Pixbuf</span> <span class='op'>=</span> <span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkPixbuf</span><span class='op'>&gt;</span>;
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Pixbuf</span>(<span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkPixbuf</span><span class='op'>&gt;</span>);
 
-<span class='kw'>impl</span> <span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='ident'>Pixbuf</span> {
-    <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span> { <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_type</span>()) } }
+    <span class='kw'>match</span> <span class='kw'>fn</span> {
+        <span class='ident'>get_type</span> <span class='op'>=&gt;</span> <span class='op'>||</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_type</span>(),
+    }
 }
 
 <span class='kw'>impl</span> <span class='ident'>Pixbuf</span> {
@@ -494,7 +498,7 @@
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_subpixbuf</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>src_x</span>: <span class='ident'>i32</span>, <span class='ident'>src_y</span>: <span class='ident'>i32</span>, <span class='ident'>width</span>: <span class='ident'>i32</span>, <span class='ident'>height</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>Pixbuf</span> {
-        <span class='kw'>unsafe</span> { 
+        <span class='kw'>unsafe</span> {
             <span class='ident'>from_glib_full</span>(
                 <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_new_subpixbuf</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>src_x</span>, <span class='ident'>src_y</span>, <span class='ident'>width</span>, <span class='ident'>height</span>))
         }
@@ -586,13 +590,13 @@
                                   <span class='ident'>interp_type</span>);
         }
     }
-    
+
     <span class='doccomment'>/// Creates a transformation of the calling pixbuf by scaling by `scale_x`</span>
     <span class='doccomment'>/// and `scale_y` then translating by `offset_x` and `offset_y`. This gives</span>
     <span class='doccomment'>/// an image in the coordinates of the destination pixbuf. The rectangle</span>
     <span class='doccomment'>/// (`dest_x`, `dest_y`, `dest_width`, `dest_height`) is then composited</span>
     <span class='doccomment'>/// onto the corresponding rectangle of the original destination image.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// ![Diagram of `composite` process](https://developer.gnome.org/gdk-pixbuf/unstable/composite.png)</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// When the destination rectangle contains parts not in the source image,</span>
@@ -693,6 +697,6 @@
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     
-    <script async src="../../../search-index.js"></script>
+    <script defer src="../../../search-index.js"></script>
 </body>
 </html>

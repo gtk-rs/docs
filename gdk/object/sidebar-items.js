@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Object","The generic type for `GObject` descendants in GDK."]],"trait":[["Downcast","A complement to `Upcast` that allows downcasting."],["Upcast","Declares the \"is a\" relationship."]]});

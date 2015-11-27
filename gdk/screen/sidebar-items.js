@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["Screen",""]]});
+initSidebarItems({"struct":[["Screen","Object representing a physical screen."]]});

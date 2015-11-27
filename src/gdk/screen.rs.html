@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/.multirust/toolchains/nightly/cargo/registry/src/github.com-0a35038f75765ae4/gdk-0.1.4/src/screen.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/gdk/src/screen.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>screen.rs.html -- source</title>
@@ -186,26 +186,26 @@
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='doccomment'>//! GdkScreen — Object representing a physical screen</span>
-
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>types</span>::{<span class='ident'>StaticType</span>, <span class='ident'>Type</span>};
 <span class='kw'>use</span> <span class='ident'>cairo</span>;
 <span class='kw'>use</span> <span class='ident'>display</span>::<span class='ident'>Display</span>;
-<span class='kw'>use</span> <span class='ident'>object</span>::<span class='ident'>Object</span>;
 <span class='kw'>use</span> <span class='ident'>visual</span>::<span class='ident'>Visual</span>;
 <span class='kw'>use</span> <span class='ident'>window</span>::<span class='ident'>Window</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
 
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Screen</span> <span class='op'>=</span> <span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkScreen</span><span class='op'>&gt;</span>;
+<span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
+    <span class='doccomment'>/// Object representing a physical screen.</span>
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Screen</span>(<span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkScreen</span><span class='op'>&gt;</span>);
 
-<span class='kw'>impl</span> <span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='ident'>Screen</span> {
-    <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span> { <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_screen_get_type</span>()) } }
+    <span class='kw'>match</span> <span class='kw'>fn</span> {
+        <span class='ident'>get_type</span> <span class='op'>=&gt;</span> <span class='op'>||</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_screen_get_type</span>(),
+    }
 }
 
 <span class='kw'>impl</span> <span class='ident'>Screen</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_default</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Screen</span><span class='op'>&gt;</span> {
+        <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
         <span class='kw'>unsafe</span> { <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_screen_get_default</span>()) }
     }
 
@@ -383,6 +383,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["FrameClock",""],["Phase",""]]});
+initSidebarItems({"struct":[["FrameClock","Frame clock syncs painting to a window or display."]],"type":[["Phase",""]]});

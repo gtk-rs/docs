@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/.multirust/toolchains/nightly/cargo/registry/src/github.com-0a35038f75765ae4/gdk-0.1.4/src/gl_context.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/gdk/src/gl_context.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>gl_context.rs.html -- source</title>
@@ -196,61 +196,59 @@
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='doccomment'>//! OpenGL context</span>
-
 <span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>types</span>;
 <span class='kw'>use</span> <span class='ident'>display</span>::<span class='ident'>Display</span>;
-<span class='kw'>use</span> <span class='ident'>object</span>::<span class='ident'>Object</span>;
 <span class='kw'>use</span> <span class='ident'>window</span>::<span class='ident'>Window</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
 
-<span class='doccomment'>/// GLContext is an object representing the platform-specific OpenGL drawing context.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// GLContexts are created for a GdkWindow using gdk_window_create_gl_context(), and the context</span>
-<span class='doccomment'>/// will match the GdkVisual of the window.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// A GLContext is not tied to any particular normal framebuffer. For instance, it cannot draw to</span>
-<span class='doccomment'>/// the GdkWindow back buffer. The GDK repaint system is in full control of the painting to that.</span>
-<span class='doccomment'>/// Instead, you can create render buffers or textures and use gdk_cairo_draw_from_gl() in the draw</span>
-<span class='doccomment'>/// function of your widget to draw them. Then GDK will handle the integration of your rendering</span>
-<span class='doccomment'>/// with that of other widgets.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Support for GLContext is platform-specific, context creation can fail, returning None context.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// A GLContext has to be made &quot;current&quot; in order to start using it, otherwise any OpenGL call will</span>
-<span class='doccomment'>/// be ignored.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ##Creating a new OpenGL context</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// In order to create a new GLContext instance you need a GdkWindow, which you typically get during</span>
-<span class='doccomment'>/// the realize call of a widget.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// A GLContext is not realized until either gdk_gl_context_make_current(), or until it is realized</span>
-<span class='doccomment'>/// using gdk_gl_context_realize(). It is possible to specify details of the GL context like the</span>
-<span class='doccomment'>/// OpenGL version to be used, or whether the GL context should have extra state validation enabled</span>
-<span class='doccomment'>/// after calling gdk_window_create_gl_context() by calling gdk_gl_context_realize(). If the</span>
-<span class='doccomment'>/// realization fails you have the option to change the settings of the GLContext and try again.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ##Using a GLContext</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// You will need to make the GLContext the current context before issuing OpenGL calls; the system</span>
-<span class='doccomment'>/// sends OpenGL commands to whichever context is current. It is possible to have multiple contexts,</span>
-<span class='doccomment'>/// so you always need to ensure that the one which you want to draw with is the current one before</span>
-<span class='doccomment'>/// issuing commands:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```Rust,ignore</span>
-<span class='doccomment'>/// GLContext::make_current(context);</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// You can now perform your drawing using OpenGL commands.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// You can check which GLContext is the current one by using gdk_gl_context_get_current(); you can</span>
-<span class='doccomment'>/// also unset any GLContext that is currently set by calling gdk_gl_context_clear_current().</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>GLContext</span> <span class='op'>=</span> <span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkGLContext</span><span class='op'>&gt;</span>;
+<span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
+    <span class='doccomment'>/// An object representing the platform-specific OpenGL drawing context.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// GLContexts are created for a GdkWindow using gdk_window_create_gl_context(), and the context</span>
+    <span class='doccomment'>/// will match the GdkVisual of the window.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// A GLContext is not tied to any particular normal framebuffer. For instance, it cannot draw to</span>
+    <span class='doccomment'>/// the GdkWindow back buffer. The GDK repaint system is in full control of the painting to that.</span>
+    <span class='doccomment'>/// Instead, you can create render buffers or textures and use gdk_cairo_draw_from_gl() in the draw</span>
+    <span class='doccomment'>/// function of your widget to draw them. Then GDK will handle the integration of your rendering</span>
+    <span class='doccomment'>/// with that of other widgets.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Support for GLContext is platform-specific, context creation can fail, returning None context.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// A GLContext has to be made &quot;current&quot; in order to start using it, otherwise any OpenGL call will</span>
+    <span class='doccomment'>/// be ignored.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ##Creating a new OpenGL context</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// In order to create a new GLContext instance you need a GdkWindow, which you typically get during</span>
+    <span class='doccomment'>/// the realize call of a widget.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// A GLContext is not realized until either gdk_gl_context_make_current(), or until it is realized</span>
+    <span class='doccomment'>/// using gdk_gl_context_realize(). It is possible to specify details of the GL context like the</span>
+    <span class='doccomment'>/// OpenGL version to be used, or whether the GL context should have extra state validation enabled</span>
+    <span class='doccomment'>/// after calling gdk_window_create_gl_context() by calling gdk_gl_context_realize(). If the</span>
+    <span class='doccomment'>/// realization fails you have the option to change the settings of the GLContext and try again.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ##Using a GLContext</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// You will need to make the GLContext the current context before issuing OpenGL calls; the system</span>
+    <span class='doccomment'>/// sends OpenGL commands to whichever context is current. It is possible to have multiple contexts,</span>
+    <span class='doccomment'>/// so you always need to ensure that the one which you want to draw with is the current one before</span>
+    <span class='doccomment'>/// issuing commands:</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```Rust,ignore</span>
+    <span class='doccomment'>/// GLContext::make_current(context);</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// You can now perform your drawing using OpenGL commands.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// You can check which GLContext is the current one by using gdk_gl_context_get_current(); you can</span>
+    <span class='doccomment'>/// also unset any GLContext that is currently set by calling gdk_gl_context_clear_current().</span>
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>GLContext</span>(<span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkGLContext</span><span class='op'>&gt;</span>);
 
-<span class='kw'>impl</span> <span class='ident'>types</span>::<span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='ident'>GLContext</span> {
-    <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>types</span>::<span class='ident'>Type</span> { <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_gl_context_get_type</span>()) } }
+    <span class='kw'>match</span> <span class='kw'>fn</span> {
+        <span class='ident'>get_type</span> <span class='op'>=&gt;</span> <span class='op'>||</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_gl_context_get_type</span>(),
+    }
 }
 
 <span class='kw'>impl</span> <span class='ident'>GLContext</span> {
@@ -332,6 +330,7 @@
 
     <span class='doccomment'>/// Retrieves the current GLContext.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_current</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>GLContext</span><span class='op'>&gt;</span> {
+        <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
         <span class='kw'>unsafe</span> { <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_gl_context_get_current</span>()) }
     }
 
@@ -340,6 +339,7 @@
     <span class='doccomment'>/// Any OpenGL call after this function returns will be ignored until GLContext::make_current()</span>
     <span class='doccomment'>/// is called.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clear_current</span>() {
+        <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
         <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_gl_context_clear_current</span>() }
     }
 }
@@ -403,6 +403,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

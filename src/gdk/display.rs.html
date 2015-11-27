@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/.multirust/toolchains/nightly/cargo/registry/src/github.com-0a35038f75765ae4/gdk-0.1.4/src/display.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/gdk/src/display.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>display.rs.html -- source</title>
@@ -309,47 +309,47 @@
 
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
 <span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>types</span>::{<span class='ident'>StaticType</span>, <span class='ident'>Type</span>};
 <span class='kw'>use</span> <span class='ident'>atom</span>::<span class='ident'>Atom</span>;
 <span class='kw'>use</span> <span class='ident'>app_launch_context</span>::<span class='ident'>AppLaunchContext</span>;
 <span class='kw'>use</span> <span class='ident'>device</span>::<span class='ident'>Device</span>;
 <span class='kw'>use</span> <span class='ident'>device_manager</span>::<span class='ident'>DeviceManager</span>;
-<span class='kw'>use</span> <span class='ident'>object</span>::<span class='ident'>Object</span>;
 <span class='kw'>use</span> <span class='ident'>screen</span>::<span class='ident'>Screen</span>;
 <span class='kw'>use</span> <span class='ident'>window</span>::<span class='ident'>Window</span>;
 
-<span class='doccomment'>/// Display — Controls a set of GdkScreens and their associated input devices</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// #Description</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Display objects purpose are two fold:</span>
-<span class='doccomment'>/// * To manage and provide information about input devices (pointers and keyboards)</span>
-<span class='doccomment'>/// * To manage and provide information about the available Screens</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Display objects are the GDK representation of an X Display, which can be described as</span>
-<span class='doccomment'>/// a workstation consisting of a keyboard, a pointing device (such as a mouse) and one or</span>
-<span class='doccomment'>/// more screens. It is used to open and keep track of various GdkScreen objects currently</span>
-<span class='doccomment'>/// instantiated by the application. It is also used to access the keyboard(s) and mouse</span>
-<span class='doccomment'>/// pointer(s) of the display.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Most of the input device handling has been factored out into the separate `DeviceManager`</span>
-<span class='doccomment'>/// object. Every display has a device manager, which you can obtain using</span>
-<span class='doccomment'>/// `Display::get_device_manager()`.</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Display</span> <span class='op'>=</span> <span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkDisplay</span><span class='op'>&gt;</span>;
+<span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
+    <span class='doccomment'>/// Controls a set of `Screen`s and their associated input devices.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Display objects purpose are two fold:</span>
+    <span class='doccomment'>/// * To manage and provide information about input devices (pointers and keyboards)</span>
+    <span class='doccomment'>/// * To manage and provide information about the available Screens</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Display objects are the GDK representation of an X Display, which can be described as</span>
+    <span class='doccomment'>/// a workstation consisting of a keyboard, a pointing device (such as a mouse) and one or</span>
+    <span class='doccomment'>/// more screens. It is used to open and keep track of various GdkScreen objects currently</span>
+    <span class='doccomment'>/// instantiated by the application. It is also used to access the keyboard(s) and mouse</span>
+    <span class='doccomment'>/// pointer(s) of the display.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Most of the input device handling has been factored out into the separate `DeviceManager`</span>
+    <span class='doccomment'>/// object. Every display has a device manager, which you can obtain using</span>
+    <span class='doccomment'>/// `Display::get_device_manager()`.</span>
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Display</span>(<span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkDisplay</span><span class='op'>&gt;</span>);
 
-<span class='kw'>impl</span> <span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='ident'>Display</span> {
-    <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span> { <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_display_get_type</span>()) } }
+    <span class='kw'>match</span> <span class='kw'>fn</span> {
+        <span class='ident'>get_type</span> <span class='op'>=&gt;</span> <span class='op'>||</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_display_get_type</span>(),
+    }
 }
 
 <span class='kw'>impl</span> <span class='ident'>Display</span> {
     <span class='doccomment'>/// Opens a display.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>open</span>(<span class='ident'>display_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Display</span><span class='op'>&gt;</span> {
+        <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
         <span class='kw'>unsafe</span> { <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_display_open</span>(<span class='ident'>display_name</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)) }
     }
 
     <span class='doccomment'>/// Gets the default `Display`. This is a convenience function for:</span>
     <span class='doccomment'>/// `DisplayManager::get_default_display(DisplayManager::get())`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_default</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Display</span><span class='op'>&gt;</span> {
+        <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
         <span class='kw'>unsafe</span> { <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_display_get_default</span>()) }
     }
 
@@ -625,6 +625,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

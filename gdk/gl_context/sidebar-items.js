@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["GLContext","GLContext is an object representing the platform-specific OpenGL drawing context."]]});
+initSidebarItems({"struct":[["GLContext","An object representing the platform-specific OpenGL drawing context."]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["Cursor","Cursors — Standard and pixmap cursors"],["Type",""]]});
+initSidebarItems({"struct":[["Cursor","Standard and pixmap cursors."]],"type":[["Type",""]]});

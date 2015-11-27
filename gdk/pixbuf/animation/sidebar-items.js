@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["PixbufAnimationExt",""]],"type":[["PixbufAnimation",""],["PixbufAnimationIter",""],["PixbufSimpleAnim",""]]});
+initSidebarItems({"struct":[["PixbufAnimation",""],["PixbufAnimationIter",""],["PixbufSimpleAnim",""]],"trait":[["PixbufAnimationExt",""]]});

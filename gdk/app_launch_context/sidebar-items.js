@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["AppLaunchContext","Application launching — Startup notification for applications"]]});
+initSidebarItems({"struct":[["AppLaunchContext","Application launching — startup notification for applications."]]});

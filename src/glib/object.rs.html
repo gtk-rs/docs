@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/.multirust/toolchains/nightly/cargo/registry/src/github.com-0a35038f75765ae4/glib-0.0.5/src/object.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/glib/src/object.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>object.rs.html -- source</title>
@@ -258,34 +258,6 @@
 <span id="216">216</span>
 <span id="217">217</span>
 <span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
-<span id="221">221</span>
-<span id="222">222</span>
-<span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
-<span id="227">227</span>
-<span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -293,216 +265,211 @@
 
 <span class='doccomment'>//! Types that facilitate representing `GObject` descendants.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
 <span class='kw'>use</span> <span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>types</span>::{<span class='self'>self</span>, <span class='ident'>Type</span>, <span class='ident'>StaticType</span>};
+<span class='kw'>use</span> <span class='ident'>types</span>::{<span class='self'>self</span>, <span class='ident'>StaticType</span>};
+<span class='kw'>use</span> <span class='ident'>wrapper</span>::{<span class='ident'>UnsafeFrom</span>, <span class='ident'>Wrapper</span>};
 <span class='kw'>use</span> <span class='ident'>gobject_ffi</span>;
-
-<span class='doccomment'>/// A reference to any GObject descendant.</span>
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>raw_pointer_derive</span>)]</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Ref</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GObject</span>);
-
-<span class='kw'>impl</span> <span class='ident'>Ref</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>add_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) { <span class='kw'>unsafe</span> { <span class='ident'>gobject_ffi</span>::<span class='ident'>g_object_ref_sink</span>(<span class='self'>self</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _); } }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>unref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) { <span class='kw'>unsafe</span> { <span class='ident'>gobject_ffi</span>::<span class='ident'>g_object_unref</span>(<span class='self'>self</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _); } }
-
-    <span class='doccomment'>/// Transfer: none constructor.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_glib_none</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GObject</span>) <span class='op'>-&gt;</span> <span class='ident'>Ref</span> {
-        <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>Ref</span>(<span class='ident'>ptr</span>);
-        <span class='ident'>r</span>.<span class='ident'>add_ref</span>();
-        <span class='ident'>r</span>
-    }
-
-    <span class='doccomment'>/// Transfer: full constructor.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GObject</span>) <span class='op'>-&gt;</span> <span class='ident'>Ref</span> {
-        <span class='ident'>Ref</span>(<span class='ident'>ptr</span>)
-    }
-
-    <span class='doccomment'>/// Returns a transfer: none raw pointer.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GObject</span> {
-        <span class='self'>self</span>.<span class='number'>0</span>
-    }
-
-    <span class='doccomment'>/// Returns a transfer: full raw pointer.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_glib_full</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GObject</span> {
-        <span class='self'>self</span>.<span class='ident'>add_ref</span>();
-        <span class='self'>self</span>.<span class='number'>0</span>
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>Ref</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Ref</span> {
-        <span class='self'>self</span>.<span class='ident'>add_ref</span>();
-        <span class='ident'>Ref</span>(<span class='self'>self</span>.<span class='number'>0</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>Ref</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='self'>self</span>.<span class='ident'>unref</span>();
-    }
-}
-
-<span class='doccomment'>/// A helper type holding a reference to a specific object or interface.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// `T` is the foreign `struct` type corresponding to the object.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>VirtualRef</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> (<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Ref</span>, <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>);
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>VirtualRef</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>r</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Ref</span>) <span class='op'>-&gt;</span> <span class='ident'>VirtualRef</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> { <span class='ident'>VirtualRef</span>(<span class='ident'>r</span>, <span class='ident'>PhantomData</span>) }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>VirtualRef</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Ref</span>;
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>VirtualRef</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
-        <span class='ident'>Stash</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_glib_none</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='self'>self</span>.<span class='number'>0</span>)
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_glib_full</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_glib_full</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>VirtualRef</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
-    <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Ref</span><span class='op'>&gt;</span>;
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>VirtualRef</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>s</span>) <span class='op'>=</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Stash</span>(<span class='ident'>s</span>.<span class='number'>0</span>.<span class='ident'>to_glib_none</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='prelude-val'>Some</span>(<span class='ident'>s</span>.<span class='number'>0</span>))
-        }
-        <span class='kw'>else</span> {
-            <span class='ident'>Stash</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='prelude-val'>None</span>)
-        }
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_glib_full</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        <span class='self'>self</span>.<span class='ident'>as_ref</span>().<span class='ident'>map_or</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>.<span class='number'>0</span>.<span class='ident'>to_glib_full</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)
-    }
-}
-
-<span class='doccomment'>/// A wrapper around the `Ref`.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Wrapper</span>: <span class='ident'>StaticType</span> {
-    <span class='doccomment'>/// The foreign `struct` type corresponding to the object.</span>
-    <span class='kw'>type</span> <span class='ident'>GlibType</span>: <span class='lifetime'>&#39;static</span>;
-    <span class='doccomment'>/// Wraps a `Ref`.</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>wrap</span>(<span class='ident'>r</span>: <span class='ident'>Ref</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
-    <span class='doccomment'>/// Returns a reference to the inner `Ref`.</span>
-    <span class='kw'>fn</span> <span class='ident'>as_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Ref</span>;
-    <span class='doccomment'>/// Transforms into the inner `Ref`.</span>
-    <span class='kw'>fn</span> <span class='ident'>unwrap</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Ref</span>;
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;static</span>, <span class='ident'>W</span>: <span class='ident'>Wrapper</span><span class='op'>&lt;</span><span class='ident'>GlibType</span> <span class='op'>=</span> <span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>W</span> {
-    <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Ref</span>;
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>W</span><span class='op'>&gt;</span> {
-        <span class='ident'>Stash</span>(<span class='self'>self</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_glib_none</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='self'>self</span>.<span class='ident'>as_ref</span>())
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_glib_full</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        <span class='self'>self</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_glib_full</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _
-    }
-}
-
-<span class='kw'>impl</span> <span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Wrapper</span><span class='op'>&gt;</span> <span class='ident'>FromGlibPtr</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>&lt;</span><span class='ident'>T</span> <span class='kw'>as</span> <span class='ident'>Wrapper</span><span class='op'>&gt;</span>::<span class='ident'>GlibType</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>T</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_glib_none</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>&lt;</span><span class='ident'>T</span> <span class='kw'>as</span> <span class='ident'>Wrapper</span><span class='op'>&gt;</span>::<span class='ident'>GlibType</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>ptr</span>.<span class='ident'>is_null</span>());
-        <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _));
-        <span class='ident'>T</span>::<span class='ident'>wrap</span>(<span class='ident'>Ref</span>::<span class='ident'>from_glib_none</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>&lt;</span><span class='ident'>T</span> <span class='kw'>as</span> <span class='ident'>Wrapper</span><span class='op'>&gt;</span>::<span class='ident'>GlibType</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>ptr</span>.<span class='ident'>is_null</span>());
-        <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _));
-        <span class='ident'>T</span>::<span class='ident'>wrap</span>(<span class='ident'>Ref</span>::<span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
-    }
-}
 
 <span class='doccomment'>/// Declares the &quot;is a&quot; relationship.</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// `Self` is said to implement `T` and can be `upcast` to a corresponding type.</span>
+<span class='doccomment'>/// `Self` is said to implement `T`. The trait can only be implemented if the appropriate</span>
+<span class='doccomment'>/// `ToGlibPtr` implementations exist.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// `T` always implements `Upcast&lt;T&gt;`.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Wrapper</span><span class='op'>&gt;</span>: <span class='ident'>Wrapper</span> {
-    <span class='doccomment'>/// Upcasts to a helper type corresponding to `T`.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>upcast</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>VirtualRef</span><span class='op'>&lt;&lt;</span><span class='ident'>T</span> <span class='kw'>as</span> <span class='ident'>Wrapper</span><span class='op'>&gt;</span>::<span class='ident'>GlibType</span><span class='op'>&gt;</span> {
-        <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='self'>self</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_glib_none</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _));
-        <span class='ident'>VirtualRef</span>::<span class='op'>&lt;&lt;</span><span class='ident'>T</span> <span class='kw'>as</span> <span class='ident'>Wrapper</span><span class='op'>&gt;</span>::<span class='ident'>GlibType</span><span class='op'>&gt;</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>as_ref</span>())
-    }
-}
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>StaticType</span> <span class='op'>+</span> <span class='ident'>Wrapper</span><span class='op'>&gt;</span>: <span class='ident'>StaticType</span> <span class='op'>+</span> <span class='ident'>Wrapper</span> <span class='op'>+</span>
+    <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>ObjectRef</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>UnsafeFrom</span><span class='op'>&lt;</span><span class='ident'>ObjectRef</span><span class='op'>&gt;</span> <span class='op'>+</span>
+    <span class='kw'>for</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>&lt;</span><span class='ident'>T</span> <span class='kw'>as</span> <span class='ident'>Wrapper</span><span class='op'>&gt;</span>::<span class='ident'>GlibType</span><span class='op'>&gt;</span> { }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Wrapper</span><span class='op'>&gt;</span> <span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>T</span> { }
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>T</span>
+<span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>StaticType</span> <span class='op'>+</span> <span class='ident'>Wrapper</span> <span class='op'>+</span> <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>ObjectRef</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>UnsafeFrom</span><span class='op'>&lt;</span><span class='ident'>ObjectRef</span><span class='op'>&gt;</span> <span class='op'>+</span>
+    <span class='kw'>for</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>&lt;</span><span class='ident'>T</span> <span class='kw'>as</span> <span class='ident'>Wrapper</span><span class='op'>&gt;</span>::<span class='ident'>GlibType</span><span class='op'>&gt;</span> { }
 
-<span class='doccomment'>/// A complement to `Upcast` that allows downcasting.</span>
+<span class='doccomment'>/// Downcasts support.</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Downcast</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Tries to downcast to `T`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `Ok(T)` if the instance implements `T` and `Err(Self)` otherwise.</span>
-    <span class='kw'>fn</span> <span class='ident'>downcast</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='kw'>Self</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='kw'>Self</span>: <span class='ident'>Sized</span>;
+    <span class='kw'>fn</span> <span class='ident'>downcast</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='kw'>Self</span>: <span class='ident'>Sized</span>;
     <span class='doccomment'>/// Downcasts to `T` unconditionally.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Panics if the instance doesn&#39;t implement `T`.</span>
-    <span class='kw'>fn</span> <span class='ident'>downcast_unchecked</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span>;
+    <span class='doccomment'>/// Panics if compiled with `debug_assertions` and the instance doesn&#39;t implement `T`.</span>
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>downcast_unchecked</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span>;
 }
 
-<span class='kw'>impl</span> <span class='op'>&lt;</span><span class='ident'>Super</span>, <span class='ident'>Sub</span><span class='op'>&gt;</span> <span class='ident'>Downcast</span><span class='op'>&lt;</span><span class='ident'>Sub</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Super</span>
-<span class='kw'>where</span> <span class='ident'>Super</span>: <span class='ident'>Wrapper</span>, <span class='ident'>Sub</span>: <span class='ident'>Wrapper</span> <span class='op'>+</span> <span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='ident'>Super</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>Super</span>: <span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='ident'>Super</span><span class='op'>&gt;</span>, <span class='ident'>Sub</span>: <span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='ident'>Super</span><span class='op'>&gt;&gt;</span> <span class='ident'>Downcast</span><span class='op'>&lt;</span><span class='ident'>Sub</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Super</span> {
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>downcast</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Sub</span>, <span class='ident'>Super</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='ident'>Sub</span><span class='op'>&gt;</span>(<span class='self'>self</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_glib_none</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _) {
-            <span class='kw'>unsafe</span> { <span class='prelude-val'>Ok</span>(<span class='ident'>Sub</span>::<span class='ident'>wrap</span>(<span class='self'>self</span>.<span class='ident'>unwrap</span>())) }
-        }
-        <span class='kw'>else</span> {
-            <span class='prelude-val'>Err</span>(<span class='self'>self</span>)
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='ident'>Sub</span><span class='op'>&gt;</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _) {
+                <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>);
+            }
+            <span class='prelude-val'>Ok</span>(<span class='ident'>Sub</span>::<span class='ident'>from</span>(<span class='self'>self</span>.<span class='ident'>into</span>()))
         }
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>downcast_unchecked</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Sub</span> {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='ident'>Sub</span><span class='op'>&gt;</span>(<span class='self'>self</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_glib_none</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _));
-        <span class='kw'>unsafe</span> { <span class='ident'>Sub</span>::<span class='ident'>wrap</span>(<span class='self'>self</span>.<span class='ident'>unwrap</span>()) }
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>downcast_unchecked</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Sub</span> {
+        <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='ident'>Sub</span><span class='op'>&gt;</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _));
+        <span class='ident'>Sub</span>::<span class='ident'>from</span>(<span class='self'>self</span>.<span class='ident'>into</span>())
     }
 }
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Object</span>(<span class='ident'>Ref</span>);
+<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GObject</span>;
 
-<span class='kw'>impl</span> <span class='ident'>Wrapper</span> <span class='kw'>for</span> <span class='ident'>Object</span> {
-    <span class='kw'>type</span> <span class='ident'>GlibType</span> <span class='op'>=</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GObject</span>;
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>wrap</span>(<span class='ident'>r</span>: <span class='ident'>Ref</span>) <span class='op'>-&gt;</span> <span class='ident'>Object</span> { <span class='ident'>Object</span>(<span class='ident'>r</span>) }
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>as_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Ref</span> { <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span> }
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>unwrap</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Ref</span> { <span class='self'>self</span>.<span class='number'>0</span> }
+<span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
+    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ObjectRef</span>(<span class='ident'>Refcounted</span><span class='op'>&lt;</span><span class='ident'>GObject</span><span class='op'>&gt;</span>);
+
+    <span class='kw'>match</span> <span class='kw'>fn</span> {
+        <span class='kw-2'>ref</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>ptr</span><span class='op'>|</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>g_object_ref</span>(<span class='ident'>ptr</span>),
+        <span class='ident'>unref</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>ptr</span><span class='op'>|</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>g_object_unref</span>(<span class='ident'>ptr</span>),
+    }
 }
 
-<span class='kw'>impl</span> <span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='ident'>Object</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span> { <span class='ident'>Type</span>::<span class='ident'>BaseObject</span> }
+<span class='doccomment'>/// Wrapper implementations for Object types. See `glib_wrapper!`.</span>
+<span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>glib_object_wrapper</span> {
+    ([$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>:<span class='ident'>meta</span>)<span class='op'>*</span>] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>:<span class='ident'>path</span>, <span class='kw-2'>@</span><span class='ident'>get_type</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get_type_expr</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> {
+        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>]</span>)<span class='op'>*</span>
+        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>ObjectRef</span>, ::<span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span><span class='op'>&gt;</span>);
+
+        <span class='kw'>impl</span> <span class='ident'>Into</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>ObjectRef</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>fn</span> <span class='ident'>into</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>ObjectRef</span> {
+                <span class='self'>self</span>.<span class='number'>0</span>
+            }
+        }
+
+        <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>wrapper</span>::<span class='ident'>UnsafeFrom</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>ObjectRef</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>t</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>ObjectRef</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>(<span class='ident'>t</span>, ::<span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>)
+            }
+        }
+
+        <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>wrapper</span>::<span class='ident'>Wrapper</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>type</span> <span class='ident'>GlibType</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>;
+        }
+
+        <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw'>const</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>ObjectRef</span> <span class='kw'>as</span>
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>GObject</span><span class='op'>&gt;&gt;</span>::<span class='ident'>Storage</span>;
+
+            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+            <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw'>const</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> {
+                <span class='kw'>let</span> <span class='ident'>stash</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_glib_none</span>();
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>Stash</span>(<span class='ident'>stash</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _, <span class='ident'>stash</span>.<span class='number'>1</span>)
+            }
+
+            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+            <span class='kw'>fn</span> <span class='ident'>to_glib_full</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span> {
+                <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_glib_full</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _
+            }
+        }
+
+        <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>ObjectRef</span> <span class='kw'>as</span>
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>GObject</span><span class='op'>&gt;&gt;</span>::<span class='ident'>Storage</span>;
+
+            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+            <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> {
+                <span class='kw'>let</span> <span class='ident'>stash</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_glib_none</span>();
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>Stash</span>(<span class='ident'>stash</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>stash</span>.<span class='number'>1</span>)
+            }
+
+            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+            <span class='kw'>fn</span> <span class='ident'>to_glib_full</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span> {
+                <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_glib_full</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _
+            }
+        }
+
+        <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>FromGlibPtr</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_glib_none</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _));
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>from_glib_none</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _), ::<span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>)
+            }
+
+            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _));
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _), ::<span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>)
+            }
+
+            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_glib_borrow</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _));
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>from_glib_borrow</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _),
+                      ::<span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>)
+            }
+        }
+
+        <span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>(), ::<span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>)
+            }
+        }
+
+        <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>types</span>::<span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>types</span>::<span class='ident'>Type</span> {
+                <span class='kw'>unsafe</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>from_glib</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get_type_expr</span>) }
+            }
+        }
+    };
+
+    ([$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>:<span class='ident'>meta</span>)<span class='op'>*</span>] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>:<span class='ident'>path</span>, <span class='kw-2'>@</span><span class='ident'>get_type</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get_type_expr</span>:<span class='ident'>expr</span>,
+     [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>implements</span>:<span class='ident'>path</span>),<span class='op'>*</span>]) <span class='op'>=&gt;</span> {
+        <span class='macro'>glib_object_wrapper</span><span class='macro'>!</span>([$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>)<span class='op'>*</span>] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>, <span class='kw-2'>@</span><span class='ident'>get_type</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get_type_expr</span>);
+
+        <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>GObject</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>ObjectRef</span> <span class='kw'>as</span>
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>GObject</span><span class='op'>&gt;&gt;</span>::<span class='ident'>Storage</span>;
+
+            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+            <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>)
+                    <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>GObject</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> {
+                <span class='kw'>let</span> <span class='ident'>stash</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_glib_none</span>();
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>Stash</span>(<span class='ident'>stash</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>stash</span>.<span class='number'>1</span>)
+            }
+
+            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+            <span class='kw'>fn</span> <span class='ident'>to_glib_full</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>GObject</span> {
+                (<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>).<span class='ident'>to_glib_full</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _
+            }
+        }
+
+        <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>Object</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> { }
+
+        $(
+            <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>,
+                    <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>implements</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>wrapper</span>::<span class='ident'>Wrapper</span><span class='op'>&gt;</span>::<span class='ident'>GlibType</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+                <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>ObjectRef</span> <span class='kw'>as</span>
+                    <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>GObject</span><span class='op'>&gt;&gt;</span>::<span class='ident'>Storage</span>;
+
+                <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+                <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>,
+                        <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>implements</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>wrapper</span>::<span class='ident'>Wrapper</span><span class='op'>&gt;</span>::<span class='ident'>GlibType</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> {
+                    <span class='kw'>let</span> <span class='ident'>stash</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_glib_none</span>();
+                    <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>implements</span><span class='op'>&gt;</span>(<span class='ident'>stash</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _));
+                    <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>translate</span>::<span class='ident'>Stash</span>(<span class='ident'>stash</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>stash</span>.<span class='number'>1</span>)
+                }
+
+                <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+                <span class='kw'>fn</span> <span class='ident'>to_glib_full</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>)
+                        <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>implements</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>wrapper</span>::<span class='ident'>Wrapper</span><span class='op'>&gt;</span>::<span class='ident'>GlibType</span> {
+                    <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_glib_full</span>();
+                    <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>types</span>::<span class='ident'>instance_of</span>::<span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>implements</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _));
+                    <span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _
+                }
+            }
+
+            <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>object</span>::<span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>implements</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> { }
+        )<span class='op'>*</span>
+    }
+}
+
+<span class='macro'>glib_object_wrapper</span><span class='macro'>!</span> {
+    [<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;The base class in the object hierarchy.&quot;</span>]
+    <span class='ident'>Object</span>, <span class='ident'>GObject</span>, <span class='kw-2'>@</span><span class='ident'>get_type</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>g_object_get_type</span>()
 }
 
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ObjectExt</span> {
@@ -510,29 +477,6 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='ident'>Object</span><span class='op'>&gt;&gt;</span> <span class='ident'>ObjectExt</span> <span class='kw'>for</span> <span class='ident'>T</span> {
 }
-
-<span class='doccomment'>/// The crate-local generic type for `GObject` descendants in GLib.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>GenericObject</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>Ref</span>, <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>);
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='ident'>Wrapper</span> <span class='kw'>for</span> <span class='ident'>GenericObject</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>GenericObject</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>: <span class='ident'>StaticType</span> {
-    <span class='kw'>type</span> <span class='ident'>GlibType</span> <span class='op'>=</span> <span class='ident'>T</span>;
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>wrap</span>(<span class='ident'>r</span>: <span class='ident'>Ref</span>) <span class='op'>-&gt;</span> <span class='ident'>GenericObject</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> { <span class='ident'>GenericObject</span>(<span class='ident'>r</span>, <span class='ident'>PhantomData</span>) }
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>as_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Ref</span> { <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span> }
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>unwrap</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Ref</span> { <span class='self'>self</span>.<span class='number'>0</span> }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>GenericObject</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>GenericObject</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='ident'>GenericObject</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>(), <span class='ident'>PhantomData</span>)
-    }
-}
-
-<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='ident'>Upcast</span><span class='op'>&lt;</span><span class='ident'>Object</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>GenericObject</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>GenericObject</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>: <span class='ident'>StaticType</span> { }
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -593,6 +537,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

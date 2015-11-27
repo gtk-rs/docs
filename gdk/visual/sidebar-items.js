@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["Visual",""]]});
+initSidebarItems({"struct":[["Visual","Low-level display hardware information."]]});

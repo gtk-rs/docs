@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["Device","Object representing an input device"],["Type",""]]});
+initSidebarItems({"struct":[["Device","Object representing an input device."]],"type":[["Type",""]]});
