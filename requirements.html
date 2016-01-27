@@ -11,7 +11,7 @@
 ">
 
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="http://gtk-rs.org/docs-src/">
+    <link rel="canonical" href="http://gtk-rs.org/docs-src/requirements.html">
 </head>
 
 
@@ -60,35 +60,94 @@
 
     <div class="page-content">
       <div class="wrapper">
-        <h1 id="gtk-rs-documentation">Gtk-rs documentation</h1>
+        <h1 id="requirements">Requirements</h1>
 
-<h3 id="requirementsrequirementshtml"><a href="requirements.html">Requirements</a></h3>
+<p>The <strong>gtk</strong> crate expects <strong>GTK+</strong>, <strong>GLib</strong> and <strong>Cairo</strong> development files to be installed on your system.</p>
 
-<h3 id="crate-api-docs">Crate API docs</h3>
+<h2 id="debian-and-ubuntu">Debian and Ubuntu</h2>
+
+<p><code>Shell
+&gt; sudo apt-get install libgtk-3-dev
+</code></p>
+
+<h2 id="fedora">Fedora</h2>
+
+<p>```Shell
+&gt; sudo dnf install gtk3-devel glib2-devel</p>
+
+<h3 id="fedora-21-and-earlier">Fedora 21 and earlier</h3>
+<blockquote>
+  <p>sudo yum install gtk3-devel glib2-devel
+```</p>
+</blockquote>
+
+<h2 id="os-x">OS X</h2>
+
+<p><code>Shell
+&gt; brew install gtk+3
+</code></p>
+
+<h2 id="windows">Windows</h2>
+
+<p>Make sure you have the <a href="https://www.rust-lang.org/downloads.html#win-foot">GNU
+ABI</a> version of the rust
+compiler installed. Since we need our own toolchain make sure to uncheck
+“Linker and platform libraries” in the Rust setup.
+<img src="rust_setup.png" alt="Screenshot" /></p>
+
+<p>If you already have installed Rust, check if your Rust installation has
+<code>gcc.exe</code> and <code>ld.exe</code> in its <code>bin</code> directory. In that case remove those
+executables, they will be provided by mingw instead. If you won’t you’ll
+probably get a linking error <code>ld: cannot find -limm32</code>.</p>
+
+<p>For the toolchain one has two possibilities:</p>
 
 <ul>
-  <li><a href="cairo/"><strong>cairo</strong></a></li>
-  <li><a href="gdk/"><strong>gdk</strong></a></li>
-  <li><a href="glib/"><strong>glib</strong></a></li>
-  <li><a href="gtk/"><strong>gtk</strong></a></li>
-  <li><a href="pango/"><strong>pango</strong></a></li>
+  <li>
+    <p>Install msys2 with a mingw toolchain and the gtk3 package</p>
+  </li>
+  <li>
+    <p>Install the mingw-w64 toolchain separately and then install a GTK+ SDK</p>
+  </li>
 </ul>
 
-<h3 id="versions">Versions</h3>
+<h3 id="msys2-toolchain">msys2 toolchain</h3>
 
-<p>The build script will query the installed library versions from <code>pkg-config</code>
-and instruct <code>rustc</code> via <code>cfg</code> arguments to compile the appropriate set of APIs.</p>
+<p>This method is recommended according to the [GTK+ project]
+(http://www.gtk.org/download/windows.php). You can follow [this guide]
+(https://blogs.gnome.org/nacho/2014/08/01/how-to-build-your-gtk-application-on-windows/)
+or follow these steps:</p>
 
-<p>All the APIs available in the installed library will just work but if you
-attempt to use newer ones, the build will fail. Presently, Rust doesn’t allow
-to generate custom error messages so there doesn’t appear to be a way to make
-such errors more friendly.</p>
+<ul>
+  <li>Install and update <a href="https://msys2.github.io/">msys2</a></li>
+  <li>Install the mingw toolchain:</li>
+</ul>
 
-<h3 id="examples">Examples</h3>
+<p><code>Shell
+ $ pacman -S mingw-w64-x86_64-toolchain
+</code></p>
 
-<p>See the <a href="https://github.com/gtk-rs/examples">examples repository</a>.</p>
+<ul>
+  <li>Install the gtk3 package:</li>
+</ul>
 
-<h3 id="the-gtk-project-documentationhttpwwwgtkorgdocumentationphp"><a href="http://www.gtk.org/documentation.php">The GTK+ Project documentation</a></h3>
+<p><code>Shell
+ $ pacman -S mingw-w64-x86_64-gtk3
+</code></p>
+
+<p>Make sure that either <code>&lt;your msys installation folder&gt;\mingw32\bin</code> or <code>&lt;your msys installation folder&gt;\mingw64\bin</code> is in your <code>PATH</code> e.g. (if you have msys32 installed at <code>c:\msys32</code>, add <code>c:\msys32\mingw32\bin</code> or <code>c:\msys32\mingw64\bin</code> to your <code>PATH</code>).</p>
+
+<h3 id="separate-mingw-toolchain">Separate mingw toolchain</h3>
+
+<p>Install <a href="http://mingw-w64.yaxm.org/">mingw-w64</a> (select the win32 threading model) and download a <strong>GTK+</strong> SDK:
+ * The GNOME project hosts <a href="http://win32builder.gnome.org/">distributions</a> of GTK+ 3.4 upto 3.10
+ * <a href="https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer">GTK+ for Windows Runtime Environment Installer: 64-bit</a> supports GTK+ 3.14, its SDK download links can currently be found <a href="http://lvserver.ugent.be/gtk-win64/sdk/">here</a>.</p>
+
+<p>Make sure both mingw’s and the sdk’s <code>bin</code> directories are in your <code>PATH</code> e.g. (assuming mingw is installed in <code>C:\mingw-w64</code> and the SDK unpacked into <code>C:\gtk</code>)</p>
+
+<p><code>
+C:\&gt; set PATH="C:\mingw-w64\bin;C:\gtk\bin;%PATH%"
+</code></p>
 
       </div>
     </div>
