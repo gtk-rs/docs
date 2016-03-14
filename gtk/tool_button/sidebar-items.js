@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ToolButton","``GtkToolButtons`` are ``GtkToolItems`` containing buttons."]],"trait":[["ToolButtonExt","Trait containing all `ToolButton` methods."]]});

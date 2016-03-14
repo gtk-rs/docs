@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ColorChooserDialog","The `ColorChooserDialog` widget is a dialog for choosing a color. It implements the `ColorChooser` interface."]]});

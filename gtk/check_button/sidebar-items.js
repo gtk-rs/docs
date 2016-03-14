@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["CheckButton","A `CheckButton` places a discrete `ToggleButton` next to a widget, (usually a `Label`). See the section on `ToggleButton` widgets for more information about toggle/check buttons."]],"trait":[["CheckButtonExt","Trait containing all `CheckButton` methods."]]});

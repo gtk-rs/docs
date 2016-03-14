@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `GLContext` struct in crate `gdk`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, GLContext">
+
+    <title>gdk::GLContext - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>gdk</a></p><script>window.sidebarCurrent = {name: 'GLContext', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>gdk</a>::<wbr><a class='struct' href=''>GLContext</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span></span></h1>
+<pre class='rust struct'>pub struct GLContext(_, _);</pre><div class='docblock'><p><code>GLContext</code> is an object representing the platform-specific
+OpenGL drawing context.</p>
+
+<p><code>GdkGLContexts</code> are created for a <code>Window</code> using
+<code>Window::create_gl_context</code>, and the context will match
+the <code>Visual</code> of the window.</p>
+
+<p>A <code>GLContext</code> is not tied to any particular normal framebuffer.
+For instance, it cannot draw to the <code>Window</code> back buffer. The GDK
+repaint system is in full control of the painting to that. Instead,
+you can create render buffers or textures and use <code>gdk_cairo_draw_from_gl</code>
+in the draw function of your widget to draw them. Then GDK will handle
+the integration of your rendering with that of other widgets.</p>
+
+<p>Support for <code>GLContext</code> is platform-specific, context creation
+can fail, returning <code>None</code> context.</p>
+
+<p>A <code>GLContext</code> has to be made &quot;current&quot; in order to start using
+it, otherwise any OpenGL call will be ignored.</p>
+
+<h2 id='creating-a-new-opengl-context' class='section-header'><a href='#creating-a-new-opengl-context'>Creating a new OpenGL context</a></h2>
+<p>In order to create a new <code>GLContext</code> instance you need a
+<code>Window</code>, which you typically get during the realize call
+of a widget.</p>
+
+<p>A <code>GLContext</code> is not realized until either <code>GLContext::make_current</code>,
+or until it is realized using <code>GLContext::realize</code>. It is possible to
+specify details of the GL context like the OpenGL version to be used, or
+whether the GL context should have extra state validation enabled after
+calling <code>Window::create_gl_context</code> by calling <code>GLContext::realize</code>.
+If the realization fails you have the option to change the settings of the
+<code>GLContext</code> and try again.</p>
+
+<h2 id='using-a-glcontext' class='section-header'><a href='#using-a-glcontext'>Using a <code>GLContext</code></a></h2>
+<p>You will need to make the <code>GLContext</code> the current context
+before issuing OpenGL calls; the system sends OpenGL commands to
+whichever context is current. It is possible to have multiple
+contexts, so you always need to ensure that the one which you
+want to draw with is the current one before issuing commands:</p>
+
+<pre><code class="language-C">  gdk_gl_context_make_current (context);
+</code></pre>
+
+<p>You can now perform your drawing using OpenGL commands.</p>
+
+<p>You can check which <code>GLContext</code> is the current one by using
+<code>GLContext::get_current</code>; you can also unset any <code>GLContext</code>
+that is currently set by calling <code>GLContext::clear_current</code>.</p>
+
+<p>Since: 3.16</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a></code></h3><div class='impl-items'><h4 id='method.get_display' class='method'><code>fn <a href='#method.get_display' class='fnname'>get_display</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gdk/struct.Display.html' title='gdk::Display'>Display</a>&gt;</code></h4>
+<div class='docblock'><p>Retrieves the <code>Display</code> the <code>self</code> is created for</p>
+
+<p>Since: 3.16</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a <code>Display</code> or <code>None</code></p>
+</div><h4 id='method.get_window' class='method'><code>fn <a href='#method.get_window' class='fnname'>get_window</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gdk/struct.Window.html' title='gdk::Window'>Window</a>&gt;</code></h4>
+<div class='docblock'><p>Retrieves the <code>Window</code> used by the <code>self</code>.</p>
+
+<p>Since: 3.16</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>a <code>Window</code> or <code>None</code></p>
+</div><h4 id='method.get_shared_context' class='method'><code>fn <a href='#method.get_shared_context' class='fnname'>get_shared_context</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a>&gt;</code></h4>
+<div class='docblock'><p>Retrieves the <code>GLContext</code> that this <code>self</code> share data with.</p>
+
+<p>Since: 3.16</p>
+
+<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<p>a <code>GLContext</code> or <code>None</code></p>
+</div><h4 id='method.get_version' class='method'><code>fn <a href='#method.get_version' class='fnname'>get_version</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></h4>
+<div class='docblock'><p>Retrieves the OpenGL version of the <code>self</code>.</p>
+
+<p>The <code>self</code> must be realized prior to calling this function.</p>
+
+<p>Since: 3.16</p>
+
+<h2 id='major' class='section-header'><a href='#major'><code>major</code></a></h2>
+<p>return location for the major version</p>
+
+<h2 id='minor' class='section-header'><a href='#minor'><code>minor</code></a></h2>
+<p>return location for the minor version</p>
+</div><h4 id='method.set_required_version' class='method'><code>fn <a href='#method.set_required_version' class='fnname'>set_required_version</a>(&amp;self, major: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, minor: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
+<div class='docblock'><p>Sets the major and minor version of OpenGL to request.</p>
+
+<p>Setting <code>major</code> and <code>minor</code> to zero will use the default values.</p>
+
+<p>The <code>GLContext</code> must not be realized or made current prior to calling
+this function.</p>
+
+<p>Since: 3.16</p>
+
+<h2 id='major-1' class='section-header'><a href='#major-1'><code>major</code></a></h2>
+<p>the major version to request</p>
+
+<h2 id='minor-1' class='section-header'><a href='#minor-1'><code>minor</code></a></h2>
+<p>the minor version to request</p>
+</div><h4 id='method.set_debug_enabled' class='method'><code>fn <a href='#method.set_debug_enabled' class='fnname'>set_debug_enabled</a>(&amp;self, enabled: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
+<div class='docblock'><p>Sets whether the <code>GLContext</code> should perform extra validations and
+run time checking. This is useful during development, but has
+additional overhead.</p>
+
+<p>The <code>GLContext</code> must not be realized or made current prior to
+calling this function.</p>
+
+<p>Since: 3.16</p>
+
+<h2 id='enabled' class='section-header'><a href='#enabled'><code>enabled</code></a></h2>
+<p>whether to enable debugging in the context</p>
+</div><h4 id='method.get_debug_enabled' class='method'><code>fn <a href='#method.get_debug_enabled' class='fnname'>get_debug_enabled</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Retrieves the value set using <code>GLContext::set_debug_enabled</code>.</p>
+
+<p>Since: 3.16</p>
+
+<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
+<p><code>true</code> if debugging is enabled</p>
+</div><h4 id='method.set_forward_compatible' class='method'><code>fn <a href='#method.set_forward_compatible' class='fnname'>set_forward_compatible</a>(&amp;self, compatible: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
+<div class='docblock'><p>Sets whether the <code>GLContext</code> should be forward compatible.</p>
+
+<p>Forward compatibile contexts must not support OpenGL functionality that
+has been marked as deprecated in the requested version; non-forward
+compatible contexts, on the other hand, must support both deprecated and
+non deprecated functionality.</p>
+
+<p>The <code>GLContext</code> must not be realized or made current prior to calling
+this function.</p>
+
+<p>Since: 3.16</p>
+
+<h2 id='compatible' class='section-header'><a href='#compatible'><code>compatible</code></a></h2>
+<p>whether the context should be forward compatible</p>
+</div><h4 id='method.get_forward_compatible' class='method'><code>fn <a href='#method.get_forward_compatible' class='fnname'>get_forward_compatible</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Retrieves the value set using <code>GLContext::set_forward_compatible</code>.</p>
+
+<p>Since: 3.16</p>
+
+<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
+<p><code>true</code> if the context should be forward compatible</p>
+</div><h4 id='method.make_current' class='method'><code>fn <a href='#method.make_current' class='fnname'>make_current</a>(&amp;self)</code></h4>
+<div class='docblock'><p>Makes the <code>self</code> the current one.</p>
+
+<p>Since: 3.16</p>
+</div><h4 id='method.get_current' class='method'><code>fn <a href='#method.get_current' class='fnname'>get_current</a>() -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a>&gt;</code></h4>
+<div class='docblock'><p>Retrieves the current <code>GLContext</code>.</p>
+
+<p>Since: 3.16</p>
+
+<h1 id='returns-5' class='section-header'><a href='#returns-5'>Returns</a></h1>
+<p>the current <code>GLContext</code>, or <code>None</code></p>
+</div><h4 id='method.clear_current' class='method'><code>fn <a href='#method.clear_current' class='fnname'>clear_current</a>()</code></h4>
+<div class='docblock'><p>Clears the current <code>GLContext</code>.</p>
+
+<p>Any OpenGL call after this function returns will be ignored
+until <code>GLContext::make_current</code> is called.</p>
+
+<p>Since: 3.16</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../glib/types/trait.StaticType.html' title='glib::types::StaticType'>StaticType</a> for <a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a></code></h3><div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../glib/types/trait.StaticType.html#method.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../glib/types/enum.Type.html' title='glib::types::Type'>Type</a></code></h4>
+</div><h3 class='impl'><code>impl&lt;T: <a class='trait' href='../glib/object/trait.IsA.html' title='glib::object::IsA'>IsA</a>&lt;<a class='struct' href='../glib/object/struct.Object.html' title='glib::object::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../glib/object/trait.IsA.html' title='glib::object::IsA'>IsA</a>&lt;<a class='struct' href='../glib/object/struct.Object.html' title='glib::object::Object'>Object</a>&gt; for <a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a></code></h3><div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a></code></h3><div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
+<h4 id='method.hash_slice' class='method'><span class="since">1.3.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gdk/struct.GLContext.html' title='gdk::GLContext'>GLContext</a></code></h4>
+<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gdk";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

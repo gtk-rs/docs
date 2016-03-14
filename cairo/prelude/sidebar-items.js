@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["SurfaceExt",""]]});
+initSidebarItems({"trait":[["Gradient",""],["MatrixTrait",""],["Pattern",""],["SurfaceExt",""]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Button","The `Button` widget is generally used to trigger a callback function that is called when the button is pressed. The various signals and how to use them are outlined below."]],"trait":[["ButtonExt","Trait containing all `Button` methods."]]});

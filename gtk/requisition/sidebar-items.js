@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Requisition","A `Requisition`-struct represents the desired size of a widget. See [`Widget`’s geometry management section][geometry-management] for more information."]]});

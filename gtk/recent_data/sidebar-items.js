@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["RecentData","Meta-data to be passed to `RecentManager::add_full` when registering a recently used resource."]]});

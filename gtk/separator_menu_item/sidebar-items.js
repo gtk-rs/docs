@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["SeparatorMenuItem","The `SeparatorMenuItem` is a separator used to group items within a menu. It displays a horizontal line with a shadow to make it appear sunken into the interface."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["EventButton","Used for button press and button release events. The `type` field will be one of `EventType::ButtonPress`, `EventType::2buttonPress`, `EventType::3buttonPress` or `EventType::ButtonRelease`,"]]});

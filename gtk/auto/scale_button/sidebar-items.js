@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ScaleButton","`ScaleButton` provides a button which pops up a scale widget. This kind of widget is commonly used for volume controls in multimedia applications, and GTK+ provides a `VolumeButton` subclass that is tailored for this use case."]],"trait":[["ScaleButtonExt","Trait containing all `ScaleButton` methods."]]});

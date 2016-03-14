@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["GesturePan","`GesturePan` is a `Gesture` implementation able to recognize pan gestures, those are drags that are locked to happen along one axis. The axis that a `GesturePan` handles is defined at construct time, and can be changed through `GesturePan::set_orientation`."]]});

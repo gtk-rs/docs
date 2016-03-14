@@ -9,6 +9,7 @@
 
     <title>gtk::Widget - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -45,157 +46,318 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-5649' class='srclink' href='../src/gtk/macros.rs.html#27-29' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Widget {
-    pub pointer: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../ffi/struct.GtkWidget.html' title='ffi::GtkWidget'>GtkWidget</a></a>,
-}</pre><h2 class='fields'>Fields</h2>
-<table><tr class='stab '>
-                                  <td id='structfield.pointer'><code>pointer</code></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#method.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+        </span></span></h1>
+<pre class='rust struct'>pub struct Widget(_, _);</pre><div class='docblock'><p><code>Widget</code> is the base class all widgets in GTK+ derive from. It manages the
+widget lifecycle, states and style.</p>
+
+<h1 id='height-for-width-geometry-management--geometry-management' class='section-header'><a href='#height-for-width-geometry-management--geometry-management'>Height-for-width Geometry Management # {<code>geometry</code>-management}</a></h1>
+<p>GTK+ uses a height-for-width (and width-for-height) geometry management
+system. Height-for-width means that a widget can change how much
+vertical space it needs, depending on the amount of horizontal space
+that it is given (and similar for width-for-height). The most common
+example is a label that reflows to fill up the available width, wraps
+to fewer lines, and therefore needs less height.</p>
+
+<p>Height-for-width geometry management is implemented in GTK+ by way
+of five virtual methods:</p>
+
+<ul>
+<li><code>WidgetClass.get_request_mode</code>()</li>
+<li><code>WidgetClass.get_preferred_width</code>()</li>
+<li><code>WidgetClass.get_preferred_height</code>()</li>
+<li><code>WidgetClass.get_preferred_height_for_width</code>()</li>
+<li><code>WidgetClass.get_preferred_width_for_height</code>()</li>
+<li><code>WidgetClass.get_preferred_height_and_baseline_for_width</code>()</li>
+</ul>
+
+<p>There are some important things to keep in mind when implementing
+height-for-width and when using it in container implementations.</p>
+
+<p>The geometry management system will query a widget hierarchy in
+only one orientation at a time. When widgets are initially queried
+for their minimum sizes it is generally done in two initial passes
+in the <code>SizeRequestMode</code> chosen by the toplevel.</p>
+
+<p>For example, when queried in the normal
+<code>SizeRequestMode::HeightForWidth</code> mode:
+First, the default minimum and natural width for each widget
+in the interface will be computed using <code>WidgetExt::get_preferred_width</code>.
+Because the preferred widths for each container depend on the preferred
+widths of their children, this information propagates up the hierarchy,
+and finally a minimum and natural width is determined for the entire
+toplevel. Next, the toplevel will use the minimum width to query for the
+minimum height contextual to that width using
+<code>WidgetExt::get_preferred_height_for_width</code>, which will also be a highly
+recursive operation. The minimum height for the minimum width is normally
+used to set the minimum size constraint on the toplevel
+(unless <code>Window::set_geometry_hints</code> is explicitly used instead).</p>
+
+<p>After the toplevel window has initially requested its size in both
+dimensions it can go on to allocate itself a reasonable size (or a size
+previously specified with <code>Window::set_default_size</code>). During the
+recursive allocation process it’s important to note that request cycles
+will be recursively executed while container widgets allocate their children.
+Each container widget, once allocated a size, will go on to first share the
+space in one orientation among its children and then request each child&#39;s
+height for its target allocated width or its width for allocated height,
+depending. In this way a <code>Widget</code> will typically be requested its size
+a number of times before actually being allocated a size. The size a
+widget is finally allocated can of course differ from the size it has
+requested. For this reason, <code>Widget</code> caches a small number of results
+to avoid re-querying for the same sizes in one allocation cycle.</p>
+
+<p>See
+[<code>Container</code>’s geometry management section][container-geometry-management]
+to learn more about how height-for-width allocations are performed
+by container widgets.</p>
+
+<p>If a widget does move content around to intelligently use up the
+allocated size then it must support the request in both
+<code>GtkSizeRequestModes</code> even if the widget in question only
+trades sizes in a single orientation.</p>
+
+<p>For instance, a <code>Label</code> that does height-for-width word wrapping
+will not expect to have <code>WidgetClass.get_preferred_height</code>() called
+because that call is specific to a width-for-height request. In this
+case the label must return the height required for its own minimum
+possible width. By following this rule any widget that handles
+height-for-width or width-for-height requests will always be allocated
+at least enough space to fit its own content.</p>
+
+<p>Here are some examples of how a <code>SizeRequestMode::HeightForWidth</code> widget
+generally deals with width-for-height requests, for <code>WidgetClass.get_preferred_height</code>()
+it will do:</p>
+
+<pre><code class="language-C">static void
+foo_widget_get_preferred_height (GtkWidget *widget,
+                                 gint *min_height,
+                                 gint *nat_height)
+{
+   if (i_am_in_height_for_width_mode)
+     {
+       gint min_width, nat_width;
+
+       GTK_WIDGET_GET_CLASS (widget)-&gt;get_preferred_width (widget,
+                                                           &amp;min_width,
+                                                           &amp;nat_width);
+       GTK_WIDGET_GET_CLASS (widget)-&gt;get_preferred_height_for_width
+                                                          (widget,
+                                                           min_width,
+                                                           min_height,
+                                                           nat_height);
+     }
+   else
+     {
+        ... some widgets do both. For instance, if a GtkLabel is
+        rotated to 90 degrees it will return the minimum and
+        natural height for the rotated label here.
+     }
+}
+</code></pre>
+
+<p>And in <code>WidgetClass.get_preferred_width_for_height</code>() it will simply return
+the minimum and natural width:</p>
+
+<pre><code class="language-C">static void
+foo_widget_get_preferred_width_for_height (GtkWidget *widget,
+                                           gint for_height,
+                                           gint *min_width,
+                                           gint *nat_width)
+{
+   if (i_am_in_height_for_width_mode)
+     {
+       GTK_WIDGET_GET_CLASS (widget)-&gt;get_preferred_width (widget,
+                                                           min_width,
+                                                           nat_width);
+     }
+   else
+     {
+        ... again if a widget is sometimes operating in
+        width-for-height mode (like a rotated GtkLabel) it can go
+        ahead and do its real width for height calculation here.
+     }
+}
+</code></pre>
+
+<p>Often a widget needs to get its own request during size request or
+allocation. For example, when computing height it may need to also
+compute width. Or when deciding how to use an allocation, the widget
+may need to know its natural size. In these cases, the widget should
+be careful to call its virtual methods directly, like this:</p>
+
+<pre><code class="language-C">GTK_WIDGET_GET_CLASS(widget)-&gt;get_preferred_width (widget,
+                                                   &amp;min,
+                                                   &amp;natural);
+</code></pre>
+
+<p>It will not work to use the wrapper functions, such as
+<code>WidgetExt::get_preferred_width</code> inside your own size request
+implementation. These return a request adjusted by <code>SizeGroup</code>
+and by the <code>WidgetClass.adjust_size_request</code>() virtual method. If a
+widget used the wrappers inside its virtual method implementations,
+then the adjustments (such as widget margins) would be applied
+twice. GTK+ therefore does not allow this and will warn if you try
+to do it.</p>
+
+<p>Of course if you are getting the size request for
+another widget, such as a child of a
+container, you must use the wrapper APIs.
+Otherwise, you would not properly consider widget margins,
+<code>SizeGroup</code>, and so forth.</p>
+
+<p>Since 3.10 Gtk+ also supports baseline vertical alignment of widgets. This
+means that widgets are positioned such that the typographical baseline of
+widgets in the same row are aligned. This happens if a widget supports baselines,
+has a vertical alignment of <code>Align::Baseline</code>, and is inside a container
+that supports baselines and has a natural “row” that it aligns to the baseline,
+or a baseline assigned to it by the grandparent.</p>
+
+<p>Baseline alignment support for a widget is done by the <code>WidgetClass.get_preferred_height_and_baseline_for_width</code>()
+virtual function. It allows you to report a baseline in combination with the
+minimum and natural height. If there is no baseline you can return -1 to indicate
+this. The default implementation of this virtual function calls into the
+<code>WidgetClass.get_preferred_height</code>() and <code>WidgetClass.get_preferred_height_for_width</code>(),
+so if baselines are not supported it doesn’t need to be implemented.</p>
+
+<p>If a widget ends up baseline aligned it will be allocated all the space in the parent
+as if it was <code>Align::Fill</code>, but the selected baseline can be found via <code>WidgetExt::get_allocated_baseline</code>.
+If this has a value other than -1 you need to align the widget such that the baseline
+appears at the position.</p>
+
+<h1 id='style-properties' class='section-header'><a href='#style-properties'>Style Properties</a></h1>
+<p><code>Widget</code> introduces “style
+properties” - these are basically object properties that are stored
+not on the object, but in the style object associated to the widget. Style
+properties are set in [resource files][gtk3-Resource-Files].
+This mechanism is used for configuring such things as the location of the
+scrollbar arrows through the theme, giving theme authors more control over the
+look of applications without the need to write a theme engine in C.</p>
+
+<p>Use <code>WidgetClass::install_style_property</code> to install style properties for
+a widget class, <code>WidgetClass::find_style_property</code> or
+<code>WidgetClass::list_style_properties</code> to get information about existing
+style properties and <code>WidgetExt::style_get_property</code>, <code>WidgetExt::style_get</code> or
+<code>WidgetExt::style_get_valist</code> to obtain the value of a style property.</p>
+
+<h1 id='widget-as-buildable' class='section-header'><a href='#widget-as-buildable'><code>Widget</code> as <code>Buildable</code></a></h1>
+<p>The <code>Widget</code> implementation of the <code>Buildable</code> interface supports a
+custom <code>&lt;accelerator&gt;</code> element, which has attributes named ”key”, ”modifiers”
+and ”signal” and allows to specify accelerators.</p>
+
+<p>An example of a UI definition fragment specifying an accelerator:</p>
+
+<pre><code class="language-C">static void
+foo_widget_class_init (FooWidgetClass *klass)
+{
+  // ...
+
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass),
+                                               &quot;/com/example/ui/foowidget.ui&quot;);
+}
+</code></pre>
+
+<p>You will also need to call <code>WidgetExt::init_template</code> from the instance
+initialization function:</p>
+
+<pre><code class="language-C">static void
+foo_widget_init (FooWidget *self)
+{
+  // ...
+  gtk_widget_init_template (GTK_WIDGET (self));
+}
+</code></pre>
+
+<p>You can access widgets defined in the template using the
+<code>WidgetExt::get_template_child</code> function, but you will typically declare
+a pointer in the instance private data structure of your type using the same
+name as the widget in the template definition, and call
+<code>gtk_widget_class_bind_template_child_private</code> with that name, e.g.</p>
+
+<pre><code class="language-C">typedef struct {
+  GtkWidget *hello_button;
+  GtkWidget *goodbye_button;
+} FooWidgetPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (FooWidget, foo_widget, GTK_TYPE_BOX)
+
+static void
+foo_widget_class_init (FooWidgetClass *klass)
+{
+  // ...
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass),
+                                               &quot;/com/example/ui/foowidget.ui&quot;);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass),
+                                                FooWidget, hello_button);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass),
+                                                FooWidget, goodbye_button);
+}
+</code></pre>
+
+<p>You can also use <code>gtk_widget_class_bind_template_callback</code> to connect a signal
+callback defined in the template with a function visible in the scope of the
+class, e.g.</p>
+
+<pre><code class="language-C">// the signal handler has the instance and user data swapped
+// because of the swapped=&quot;yes&quot; attribute in the template XML
+static void
+hello_button_clicked (FooWidget *self,
+                      GtkButton *button)
+{
+  g_print (&quot;Hello, world!\n&quot;);
+}
+
+static void
+foo_widget_class_init (FooWidgetClass *klass)
+{
+  // ...
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass),
+                                               &quot;/com/example/ui/foowidget.ui&quot;);
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), hello_button_clicked);
+}
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.BuildableExt.html"><code>BuildableExt</code></a></p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'><h4 id='method.get_default_direction' class='method'><code>fn <a href='#method.get_default_direction' class='fnname'>get_default_direction</a>() -&gt; <a class='enum' href='../gtk/enum.TextDirection.html' title='gtk::TextDirection'>TextDirection</a></code></h4>
+<div class='docblock'><p>Obtains the current default reading direction. See
+<code>Widget::set_default_direction</code>.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>the current default direction.</p>
+</div><h4 id='method.pop_composite_child' class='method'><code>fn <a href='#method.pop_composite_child' class='fnname'>pop_composite_child</a>()</code></h4>
+<div class='docblock'><p>Cancels the effect of a previous call to <code>Widget::push_composite_child</code>.</p>
+
+<h1 id='deprecated-since-310' class='section-header'><a href='#deprecated-since-310'>Deprecated since 3.10</a></h1>
+<p>Use <code>WidgetClass::set_template</code>, or don’t use this API at all.</p>
+</div><h4 id='method.push_composite_child' class='method'><code>fn <a href='#method.push_composite_child' class='fnname'>push_composite_child</a>()</code></h4>
+<div class='docblock'><p>Makes all newly-created widgets as composite children until
+the corresponding <code>Widget::pop_composite_child</code> call.</p>
+
+<p>A composite child is a child that’s an implementation detail of the
+container it’s inside and should not be visible to people using the
+container. Composite children aren’t treated differently by GTK (but
+see <code>ContainerExt::foreach</code> vs. <code>ContainerExt::forall</code>), but e.g. GUI
+builders might want to treat them in a different way.</p>
+
+<h1 id='deprecated-since-310-1' class='section-header'><a href='#deprecated-since-310-1'>Deprecated since 3.10</a></h1>
+<p>This API never really worked well and was mostly unused, now
+we have a more complete mechanism for composite children, see <code>WidgetClass::set_template</code>.</p>
+</div><h4 id='method.set_default_direction' class='method'><code>fn <a href='#method.set_default_direction' class='fnname'>set_default_direction</a>(dir: <a class='enum' href='../gtk/enum.TextDirection.html' title='gtk::TextDirection'>TextDirection</a>)</code></h4>
+<div class='docblock'><p>Sets the default reading direction for widgets where the
+direction has not been explicitly set by <code>WidgetExt::set_direction</code>.</p>
+
+<h2 id='dir' class='section-header'><a href='#dir'><code>dir</code></a></h2>
+<p>the new default direction. This cannot be
+ <code>TextDirection::None</code>.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.StaticType.html' title='gtk::StaticType'>StaticType</a> for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../gtk/trait.StaticType.html#method.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../gtk/enum.Type.html' title='gtk::Type'>Type</a></code></h4>
+</div><h3 class='impl'><code>impl&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt; for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Buildable.html' title='gtk::Buildable'>Buildable</a>&gt; for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
+<h4 id='method.hash_slice' class='method'><span class="since">1.3.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 </div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h4>
-<h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../gtk/traits/trait.FFIWidget.html' title='gtk::traits::FFIWidget'>FFIWidget</a> for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'><h4 id='method.unwrap_widget' class='method'><code>fn <a href='../gtk/traits/trait.FFIWidget.html#method.unwrap_widget' class='fnname'>unwrap_widget</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../ffi/struct.GtkWidget.html' title='ffi::GtkWidget'>GtkWidget</a></a></code></h4>
-<h4 id='method.wrap_widget' class='method'><code>fn <a href='../gtk/traits/trait.FFIWidget.html#method.wrap_widget' class='fnname'>wrap_widget</a>(widget: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../ffi/struct.GtkWidget.html' title='ffi::GtkWidget'>GtkWidget</a></a>) -&gt; <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a> for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'><h4 id='method.show_all' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.show_all' class='fnname'>show_all</a>(&amp;self)</code></h4>
-<h4 id='method.show_now' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.show_now' class='fnname'>show_now</a>(&amp;self)</code></h4>
-<h4 id='method.hide' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.hide' class='fnname'>hide</a>(&amp;self)</code></h4>
-<h4 id='method.map' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.map' class='fnname'>map</a>(&amp;self)</code></h4>
-<h4 id='method.unmap' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.unmap' class='fnname'>unmap</a>(&amp;self)</code></h4>
-<h4 id='method.realize' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.realize' class='fnname'>realize</a>(&amp;self)</code></h4>
-<h4 id='method.unrealize' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.unrealize' class='fnname'>unrealize</a>(&amp;self)</code></h4>
-<h4 id='method.queue_draw' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.queue_draw' class='fnname'>queue_draw</a>(&amp;self)</code></h4>
-<h4 id='method.queue_resize' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.queue_resize' class='fnname'>queue_resize</a>(&amp;self)</code></h4>
-<h4 id='method.queue_resize_no_redraw' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.queue_resize_no_redraw' class='fnname'>queue_resize_no_redraw</a>(&amp;self)</code></h4>
-<h4 id='method.get_scale_factor' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_scale_factor' class='fnname'>get_scale_factor</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.activate' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.activate' class='fnname'>activate</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.reparent' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.reparent' class='fnname'>reparent</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, new_parent: &amp;T)</code></h4>
-<h4 id='method.is_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_focus' class='fnname'>is_focus</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.grab_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.grab_focus' class='fnname'>grab_focus</a>(&amp;self)</code></h4>
-<h4 id='method.grab_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.grab_default' class='fnname'>grab_default</a>(&amp;self)</code></h4>
-<h4 id='method.set_name' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_name' class='fnname'>set_name</a>(&amp;self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.get_name' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_name' class='fnname'>get_name</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
-<h4 id='method.set_sensitive' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_sensitive' class='fnname'>set_sensitive</a>(&amp;self, sensitive: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.set_parent' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_parent' class='fnname'>set_parent</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, parent: &amp;T)</code></h4>
-<h4 id='method.get_toplevel' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_toplevel' class='fnname'>get_toplevel</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h4>
-<h4 id='method.get_ancestor' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_ancestor' class='fnname'>get_ancestor</a>(&amp;self, widget_type: <a class='enum' href='../glib/types/enum.Type.html' title='glib::types::Type'>Type</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h4>
-<h4 id='method.is_ancestor' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_ancestor' class='fnname'>is_ancestor</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, ancestor: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.hide_on_delete' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.hide_on_delete' class='fnname'>hide_on_delete</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_direction' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_direction' class='fnname'>set_direction</a>(&amp;self, dir: <a class='enum' href='../gtk/enum.TextDirection.html' title='gtk::TextDirection'>TextDirection</a>)</code></h4>
-<h4 id='method.get_direction' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_direction' class='fnname'>get_direction</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.TextDirection.html' title='gtk::TextDirection'>TextDirection</a></code></h4>
-<h4 id='method.set_default_direction' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_default_direction' class='fnname'>set_default_direction</a>(dir: <a class='enum' href='../gtk/enum.TextDirection.html' title='gtk::TextDirection'>TextDirection</a>)</code></h4>
-<h4 id='method.get_default_direction' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_default_direction' class='fnname'>get_default_direction</a>() -&gt; <a class='enum' href='../gtk/enum.TextDirection.html' title='gtk::TextDirection'>TextDirection</a></code></h4>
-<h4 id='method.in_destruction' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.in_destruction' class='fnname'>in_destruction</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.unparent' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.unparent' class='fnname'>unparent</a>(&amp;self)</code></h4>
-<h4 id='method.translate_coordinates' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.translate_coordinates' class='fnname'>translate_coordinates</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, dest_widget: &amp;T, src_x: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, src_y: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a>&gt;</code></h4>
-<h4 id='method.override_background_color' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.override_background_color' class='fnname'>override_background_color</a>(&amp;self, state: <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a>, color: &amp;<a class='struct' href='../gdk_ffi/struct.GdkRGBA.html' title='gdk_ffi::GdkRGBA'>GdkRGBA</a>)</code></h4>
-<h4 id='method.override_color' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.override_color' class='fnname'>override_color</a>(&amp;self, state: <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a>, color: &amp;<a class='struct' href='../gdk_ffi/struct.GdkRGBA.html' title='gdk_ffi::GdkRGBA'>GdkRGBA</a>)</code></h4>
-<h4 id='method.override_symbolic_color' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.override_symbolic_color' class='fnname'>override_symbolic_color</a>(&amp;self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, color: &amp;<a class='struct' href='../gdk_ffi/struct.GdkRGBA.html' title='gdk_ffi::GdkRGBA'>GdkRGBA</a>)</code></h4>
-<h4 id='method.override_cursor' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.override_cursor' class='fnname'>override_cursor</a>(&amp;self, cursor: &amp;<a class='struct' href='../gdk_ffi/struct.GdkRGBA.html' title='gdk_ffi::GdkRGBA'>GdkRGBA</a>, secondary_cursor: &amp;<a class='struct' href='../gdk_ffi/struct.GdkRGBA.html' title='gdk_ffi::GdkRGBA'>GdkRGBA</a>)</code></h4>
-<h4 id='method.override_font' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.override_font' class='fnname'>override_font</a>(&amp;self, font: &amp;<a class='struct' href='../pango/widgets/font_description/struct.FontDescription.html' title='pango::widgets::font_description::FontDescription'>FontDescription</a>)</code></h4>
-<h4 id='method.queue_draw_area' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.queue_draw_area' class='fnname'>queue_draw_area</a>(&amp;self, x: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, y: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, width: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, height: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.set_app_paintable' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_app_paintable' class='fnname'>set_app_paintable</a>(&amp;self, app_paintable: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.set_double_buffered' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_double_buffered' class='fnname'>set_double_buffered</a>(&amp;self, double_buffered: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.set_redraw_on_allocate' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_redraw_on_allocate' class='fnname'>set_redraw_on_allocate</a>(&amp;self, redraw_on_allocate: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.mnemonic_activate' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.mnemonic_activate' class='fnname'>mnemonic_activate</a>(&amp;self, group_cycling: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.child_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.child_focus' class='fnname'>child_focus</a>(&amp;self, direction: <a class='enum' href='../gtk/enum.DirectionType.html' title='gtk::DirectionType'>DirectionType</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_child_visible' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_child_visible' class='fnname'>get_child_visible</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_parent' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_parent' class='fnname'>get_parent</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h4>
-<h4 id='method.has_screen' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.has_screen' class='fnname'>has_screen</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_screen' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_screen' class='fnname'>get_screen</a>(&amp;self) -&gt; <a class='struct' href='../gdk/screen/struct.Screen.html' title='gdk::screen::Screen'>Screen</a></code></h4>
-<h4 id='method.get_size_request' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_size_request' class='fnname'>get_size_request</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.set_child_visible' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_child_visible' class='fnname'>set_child_visible</a>(&amp;self, is_visible: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.set_size_request' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_size_request' class='fnname'>set_size_request</a>(&amp;self, width: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, height: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.set_no_show_all' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_no_show_all' class='fnname'>set_no_show_all</a>(&amp;self, no_show_all: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_no_show_all' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_no_show_all' class='fnname'>get_no_show_all</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.list_mnemonic_labels' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.list_mnemonic_labels' class='fnname'>list_mnemonic_labels</a>(&amp;self) -&gt; <a class='struct' href='../glib/list/struct.List.html' title='glib::list::List'>List</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;Self&gt;&gt;</code></h4>
-<h4 id='method.add_mnemonic_label' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.add_mnemonic_label' class='fnname'>add_mnemonic_label</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, label: &amp;T)</code></h4>
-<h4 id='method.remove_mnemonic_label' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.remove_mnemonic_label' class='fnname'>remove_mnemonic_label</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, label: &amp;T)</code></h4>
-<h4 id='method.is_composited' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_composited' class='fnname'>is_composited</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.error_bell' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.error_bell' class='fnname'>error_bell</a>(&amp;self)</code></h4>
-<h4 id='method.keynav_failed' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.keynav_failed' class='fnname'>keynav_failed</a>(&amp;self, direction: <a class='enum' href='../gtk/enum.DirectionType.html' title='gtk::DirectionType'>DirectionType</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_tooltip_markup' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_tooltip_markup' class='fnname'>get_tooltip_markup</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
-<h4 id='method.set_tooltip_markup' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_tooltip_markup' class='fnname'>set_tooltip_markup</a>(&amp;self, markup: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.get_tooltip_text' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_tooltip_text' class='fnname'>get_tooltip_text</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
-<h4 id='method.set_tooltip_text' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_tooltip_text' class='fnname'>set_tooltip_text</a>(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.get_has_tooltip' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_has_tooltip' class='fnname'>get_has_tooltip</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_has_tooltip' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_has_tooltip' class='fnname'>set_has_tooltip</a>(&amp;self, has_tooltip: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.trigger_tooltip_query' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.trigger_tooltip_query' class='fnname'>trigger_tooltip_query</a>(&amp;self)</code></h4>
-<h4 id='method.get_allocated_baseline' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_allocated_baseline' class='fnname'>get_allocated_baseline</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_app_paintable' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_app_paintable' class='fnname'>get_app_paintable</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_can_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_can_default' class='fnname'>get_can_default</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_can_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_can_default' class='fnname'>set_can_default</a>(&amp;self, can_default: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_can_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_can_focus' class='fnname'>get_can_focus</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_can_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_can_focus' class='fnname'>set_can_focus</a>(&amp;self, can_focus: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_double_buffered' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_double_buffered' class='fnname'>get_double_buffered</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_window' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_window' class='fnname'>get_window</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gdk/window/struct.Window.html' title='gdk::window::Window'>Window</a>&gt;</code></h4>
-<h4 id='method.get_has_window' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_has_window' class='fnname'>get_has_window</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_has_window' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_has_window' class='fnname'>set_has_window</a>(&amp;self, has_window: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_sensitive' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_sensitive' class='fnname'>get_sensitive</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.is_sensitive' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_sensitive' class='fnname'>is_sensitive</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_visible' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_visible' class='fnname'>get_visible</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.is_visible' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_visible' class='fnname'>is_visible</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_visible' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_visible' class='fnname'>set_visible</a>(&amp;self, visible: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.set_state_flags' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_state_flags' class='fnname'>set_state_flags</a>(&amp;self, flags: <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a>, clear: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.unset_state_flags' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.unset_state_flags' class='fnname'>unset_state_flags</a>(&amp;self, flags: <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a>)</code></h4>
-<h4 id='method.get_state_flags' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_state_flags' class='fnname'>get_state_flags</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a></code></h4>
-<h4 id='method.has_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.has_default' class='fnname'>has_default</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.has_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.has_focus' class='fnname'>has_focus</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.has_visible_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.has_visible_focus' class='fnname'>has_visible_focus</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.has_grab' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.has_grab' class='fnname'>has_grab</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.is_drawable' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_drawable' class='fnname'>is_drawable</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.is_toplevel' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_toplevel' class='fnname'>is_toplevel</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_receives_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_receives_default' class='fnname'>set_receives_default</a>(&amp;self, receives_default: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_receives_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_receives_default' class='fnname'>get_receives_default</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_support_multidevice' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_support_multidevice' class='fnname'>set_support_multidevice</a>(&amp;self, support_multidevice: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_support_multidevice' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_support_multidevice' class='fnname'>get_support_multidevice</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_realized' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_realized' class='fnname'>set_realized</a>(&amp;self, realized: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_realized' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_realized' class='fnname'>get_realized</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_mapped' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_mapped' class='fnname'>set_mapped</a>(&amp;self, mapped: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_mapped' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_mapped' class='fnname'>get_mapped</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_modifier_mask' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_modifier_mask' class='fnname'>get_modifier_mask</a>(&amp;self, intent: <a class='enum' href='../gdk_ffi/enum.GdkModifierIntent.html' title='gdk_ffi::GdkModifierIntent'>ModifierIntent</a>) -&gt; <a class='struct' href='../gdk_ffi/struct.GdkModifierType.html' title='gdk_ffi::GdkModifierType'>ModifierType</a></code></h4>
-<h4 id='method.set_opacity' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_opacity' class='fnname'>set_opacity</a>(&amp;self, opacity: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a>)</code></h4>
-<h4 id='method.get_opacity' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_opacity' class='fnname'>get_opacity</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></h4>
-<h4 id='method.set_margin_top' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_margin_top' class='fnname'>set_margin_top</a>(&amp;self, margin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.set_margin_bottom' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_margin_bottom' class='fnname'>set_margin_bottom</a>(&amp;self, margin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.get_margin_top' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_margin_top' class='fnname'>get_margin_top</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_margin_bottom' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_margin_bottom' class='fnname'>get_margin_bottom</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_allocated_width' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_allocated_width' class='fnname'>get_allocated_width</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_allocated_height' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_allocated_height' class='fnname'>get_allocated_height</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.reset_style' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.reset_style' class='fnname'>reset_style</a>(&amp;self)</code></h4>
-<h4 id='method.get_preferred_height' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_preferred_height' class='fnname'>get_preferred_height</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_preferred_width' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_preferred_width' class='fnname'>get_preferred_width</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_preferred_height_for_width' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_preferred_height_for_width' class='fnname'>get_preferred_height_for_width</a>(&amp;self, width: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_preferred_width_for_height' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_preferred_width_for_height' class='fnname'>get_preferred_width_for_height</a>(&amp;self, height: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_preferred_height_and_baseline_for_width' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_preferred_height_and_baseline_for_width' class='fnname'>get_preferred_height_and_baseline_for_width</a>(&amp;self, width: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_request_mode' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_request_mode' class='fnname'>get_request_mode</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.SizeRequestMode.html' title='gtk::SizeRequestMode'>SizeRequestMode</a></code></h4>
-<h4 id='method.get_halign' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_halign' class='fnname'>get_halign</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.Align.html' title='gtk::Align'>Align</a></code></h4>
-<h4 id='method.set_halign' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_halign' class='fnname'>set_halign</a>(&amp;self, align: <a class='enum' href='../gtk/enum.Align.html' title='gtk::Align'>Align</a>)</code></h4>
-<h4 id='method.get_valign' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_valign' class='fnname'>get_valign</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.Align.html' title='gtk::Align'>Align</a></code></h4>
-<h4 id='method.get_valign_with_baseline' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_valign_with_baseline' class='fnname'>get_valign_with_baseline</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.Align.html' title='gtk::Align'>Align</a></code></h4>
-<h4 id='method.set_valign' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_valign' class='fnname'>set_valign</a>(&amp;self, align: <a class='enum' href='../gtk/enum.Align.html' title='gtk::Align'>Align</a>)</code></h4>
-<h4 id='method.get_margin_start' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_margin_start' class='fnname'>get_margin_start</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.set_margin_start' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_margin_start' class='fnname'>set_margin_start</a>(&amp;self, margin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.get_margin_end' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_margin_end' class='fnname'>get_margin_end</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.set_margin_end' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_margin_end' class='fnname'>set_margin_end</a>(&amp;self, margin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.get_hexpand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_hexpand' class='fnname'>get_hexpand</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_hexpand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_hexpand' class='fnname'>set_hexpand</a>(&amp;self, expand: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_hexpand_set' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_hexpand_set' class='fnname'>get_hexpand_set</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_hexpand_set' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_hexpand_set' class='fnname'>set_hexpand_set</a>(&amp;self, expand: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_vexpand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_vexpand' class='fnname'>get_vexpand</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_vexpand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_vexpand' class='fnname'>set_vexpand</a>(&amp;self, expand: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_vexpand_set' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_vexpand_set' class='fnname'>get_vexpand_set</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_vexpand_set' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_vexpand_set' class='fnname'>set_vexpand_set</a>(&amp;self, expand: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_style_context' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_style_context' class='fnname'>get_style_context</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h4>
-<h4 id='method.queue_compute_expand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.queue_compute_expand' class='fnname'>queue_compute_expand</a>(&amp;self)</code></h4>
-<h4 id='method.compute_expand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.compute_expand' class='fnname'>compute_expand</a>(&amp;self, orientation: <a class='enum' href='../gtk/enum.Orientation.html' title='gtk::Orientation'>Orientation</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.init_template' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.init_template' class='fnname'>init_template</a>(&amp;self)</code></h4>
-<h4 id='method.thaw_child_notify' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.thaw_child_notify' class='fnname'>thaw_child_notify</a>(&amp;self)</code></h4>
-<h4 id='method.freeze_child_notify' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.freeze_child_notify' class='fnname'>freeze_child_notify</a>(&amp;self)</code></h4>
-<h4 id='method.child_notify' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.child_notify' class='fnname'>child_notify</a>(&amp;self, child_property: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.destroy' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.destroy' class='fnname'>destroy</a>(&amp;self)</code></h4>
-<h4 id='method.destroyed' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.destroyed' class='fnname'>destroyed</a>(&amp;self, other: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../glib/traits/trait.FFIGObject.html' title='glib::traits::FFIGObject'>FFIGObject</a> for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'><h4 id='method.unwrap_gobject' class='method'><code>fn <a href='../glib/traits/trait.FFIGObject.html#method.unwrap_gobject' class='fnname'>unwrap_gobject</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../gobject_ffi/struct.GObject.html' title='gobject_ffi::GObject'>GObject</a></a></code></h4>
-<h4 id='method.wrap_object' class='method'><code>unsafe fn <a href='../glib/traits/trait.FFIGObject.html#method.wrap_object' class='fnname'>wrap_object</a>(object: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../gobject_ffi/struct.GObject.html' title='gobject_ffi::GObject'>GObject</a></a>) -&gt; <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../gtk/traits/gobject/trait.GObjectTrait.html' title='gtk::traits::gobject::GObjectTrait'>GObjectTrait</a> for <a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a></code></h3><div class='impl-items'></div></section>
+<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -238,7 +400,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

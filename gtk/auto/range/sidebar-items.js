@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Range","`Range` is the common base class for widgets which visualize an adjustment, e.g `Scale` or `Scrollbar`."]],"trait":[["RangeExt","Trait containing all `Range` methods."]]});

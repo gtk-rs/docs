@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Stack","The `Stack` widget is a container which only shows one of its children at a time. In contrast to `Notebook`, `Stack` does not provide a means for users to change the visible child. Instead, the `StackSwitcher` widget can be used with `Stack` to provide this functionality."]]});

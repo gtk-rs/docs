@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/cairo/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gtk-rs-release/cairo/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -131,39 +132,34 @@
 <span id="89">89</span>
 <span id="90">90</span>
 </pre><pre class='rust '>
-<span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
+<span class='comment'>// Copyright 2013-2016, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='doccomment'>/*!
-    Bindings and wrappers for __Cairo__
-*/</span>
+<span class='doccomment'>//! </span>
+<span class='doccomment'>//! </span>
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>cairo_sys</span> <span class='kw'>as</span> <span class='ident'>cairo_ffi</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>cairo_sys</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>glib</span> <span class='kw'>as</span> <span class='ident'>glib_main</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>glib</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>c_vec</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>glib_main</span> <span class='kw'>as</span> <span class='ident'>glib</span>;
-
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>cairo_ffi</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>enums</span>;
-
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>cairo_rectangle_t</span> <span class='kw'>as</span> <span class='ident'>Rectangle</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>cairo_rectangle_int_t</span> <span class='kw'>as</span> <span class='ident'>RectangleInt</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>context</span>::{
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>context</span>::{
     <span class='ident'>Context</span>,
     <span class='ident'>RectangleVec</span>,
 };
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>paths</span>::{
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>paths</span>::{
     <span class='ident'>Path</span>,
     <span class='ident'>PathSegments</span>,
     <span class='ident'>PathSegment</span>
 };
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>enums</span>::{
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>enums</span>::{
     <span class='ident'>Status</span>,
     <span class='ident'>Antialias</span>,
     <span class='ident'>FillRule</span>,
@@ -175,7 +171,9 @@
     <span class='ident'>SurfaceType</span>,
 };
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>patterns</span>::{
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>error</span>::<span class='ident'>IoError</span>;
+
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>patterns</span>::{
     <span class='comment'>//Traits</span>
     <span class='ident'>Pattern</span>,
     <span class='ident'>Gradient</span>,
@@ -187,13 +185,13 @@
     <span class='ident'>SurfacePattern</span>,
 };
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>cairo_1_12</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>patterns</span>::{
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;1.12&quot;</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>patterns</span>::{
     <span class='ident'>Mesh</span>,
     <span class='ident'>MeshCorner</span>,
 };
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>fonts</span>::{
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>fonts</span>::{
     <span class='ident'>FontFace</span>,
     <span class='ident'>ScaledFont</span>,
     <span class='ident'>FontOptions</span>,
@@ -204,7 +202,7 @@
     <span class='ident'>TextCluster</span>,
 };
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>matrices</span>::{
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>matrices</span>::{
     <span class='ident'>Matrix</span>,
     <span class='ident'>MatrixTrait</span>,
 };
@@ -216,7 +214,10 @@
 
 <span class='kw'>mod</span> <span class='ident'>fonts</span>;
 <span class='kw'>mod</span> <span class='ident'>context</span>;
+<span class='kw'>mod</span> <span class='ident'>error</span>;
 <span class='kw'>mod</span> <span class='ident'>image_surface</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;png&quot;</span>)]</span>
+<span class='kw'>mod</span> <span class='ident'>image_surface_png</span>;
 <span class='kw'>mod</span> <span class='ident'>paths</span>;
 <span class='kw'>mod</span> <span class='ident'>patterns</span>;
 <span class='kw'>mod</span> <span class='ident'>surface</span>;
@@ -265,7 +266,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

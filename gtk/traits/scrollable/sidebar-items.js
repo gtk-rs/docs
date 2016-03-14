@@ -1,1 +1,0 @@
-initSidebarItems({"trait":[["ScrollableTrait","GtkScrollable — An interface for scrollable widgets"]]});

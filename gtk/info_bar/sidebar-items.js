@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["InfoBar","`InfoBar` is a widget that can be used to show messages to the user without showing a dialog. It is often temporarily shown at the top or bottom of a document. In contrast to `Dialog`, which has a action area at the bottom, `InfoBar` has an action area at the side."]]});

@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/glib/src/value.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gtk-rs-release/glib/src/value.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>value.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -421,388 +422,708 @@
 <span id="379">379</span>
 <span id="380">380</span>
 <span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
 </pre><pre class='rust '>
-<span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
+<span class='comment'>// Copyright 2013-2016, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='doccomment'>//! Generic values — A polymorphic type that can hold values of any other type</span>
+<span class='doccomment'>//! `Value` binding and helper traits.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! The type of a [`Value`](struct.Value.html) is dynamic in that it generally</span>
+<span class='doccomment'>//! isn&#39;t known at compile time but once created a `Value` can&#39;t change its</span>
+<span class='doccomment'>//! type.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! [`TypedValue`](struct.TypedValue.html) has a statically known type and</span>
+<span class='doccomment'>//! dereferences to `Value` so it can be used everywhere `Value` references are</span>
+<span class='doccomment'>//! accepted.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Supported types are `bool`, `i8`, `u8`, `i32`, `u32`, `i64`, `u64`, `f32`,</span>
+<span class='doccomment'>//! `f64`, `String` and objects (`T: IsA&lt;Object&gt;`).</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! # Examples</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! use glib::{TypedValue, ToValue, Value};</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // Value and TypedValue implement From&lt;&amp;i32&gt;, From&lt;&amp;str&gt;</span>
+<span class='doccomment'>//! // and From&lt;Option&lt;&amp;str&gt;&gt;. Another option is the `ToValue` trait.</span>
+<span class='doccomment'>//! let mut num = 10.to_value();</span>
+<span class='doccomment'>//! let mut hello = Value::from(&quot;Hello!&quot;);</span>
+<span class='doccomment'>//! let none: Option&lt;&amp;str&gt; = None;</span>
+<span class='doccomment'>//! let str_none = Value::from(none.clone());</span>
+<span class='doccomment'>//! let typed_str_none = TypedValue::from(none);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // `is` tests the type of the value.</span>
+<span class='doccomment'>//! assert!(num.is::&lt;i32&gt;());</span>
+<span class='doccomment'>//! assert!(hello.is::&lt;String&gt;());</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // `get` tries to get a value of specific type and returns None</span>
+<span class='doccomment'>//! // if the type doesn&#39;t match or the value is None.</span>
+<span class='doccomment'>//! assert_eq!(num.get(), Some(10));</span>
+<span class='doccomment'>//! assert_eq!(num.get::&lt;String&gt;(), None);</span>
+<span class='doccomment'>//! assert_eq!(hello.get(), Some(String::from(&quot;Hello!&quot;)));</span>
+<span class='doccomment'>//! assert_eq!(hello.get::&lt;String&gt;(), Some(String::from(&quot;Hello!&quot;)));</span>
+<span class='doccomment'>//! assert_eq!(str_none.get::&lt;String&gt;(), None);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // `typed` tries to convert a `Value` to `TypedValue`.</span>
+<span class='doccomment'>//! let mut typed_num = num.downcast::&lt;i32&gt;().unwrap();</span>
+<span class='doccomment'>//! let mut typed_hello = hello.downcast::&lt;String&gt;().unwrap();</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // `str_none` is not an `i32`</span>
+<span class='doccomment'>//! assert!(str_none.downcast::&lt;i32&gt;().is_err());</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // `get`</span>
+<span class='doccomment'>//! assert!(typed_hello.get().unwrap() == &quot;Hello!&quot;);</span>
+<span class='doccomment'>//! assert!(typed_str_none.get() == None);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // Numeric types can&#39;t have value `None`, `get` always returns `Some`.</span>
+<span class='doccomment'>//! // Such types have `get_some`, which avoids unnecessary `unwrap`ping.</span>
+<span class='doccomment'>//! assert_eq!(typed_num.get().unwrap(), 10);</span>
+<span class='doccomment'>//! assert_eq!(typed_num.get_some(), 10);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // `set_none` sets the value to `None` if the type supports it.</span>
+<span class='doccomment'>//! typed_hello.set_none();</span>
+<span class='doccomment'>//! assert!(typed_hello.get().is_none());</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // `set` takes an optional reference for types that support `None`.</span>
+<span class='doccomment'>//! typed_hello.set(Some(&quot;Hello again!&quot;));</span>
+<span class='doccomment'>//! assert!(typed_hello.get().unwrap() == &quot;Hello again!&quot;);</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // `set_some` is the only setter for types that don&#39;t support `None`.</span>
+<span class='doccomment'>//! typed_num.set_some(&amp;20);</span>
+<span class='doccomment'>//! assert_eq!(typed_num.get_some(), 20);</span>
+<span class='doccomment'>//! ```</span>
 
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Borrow</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>;
-<span class='kw'>use</span> <span class='ident'>gobject_ffi</span>;
-<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>to_bool</span>, <span class='ident'>to_gboolean</span>};
-<span class='kw'>use</span> <span class='ident'>types</span>::<span class='ident'>Type</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Deref</span>, <span class='ident'>DerefMut</span>};
+
+<span class='kw'>use</span> <span class='ident'>object</span>::{<span class='ident'>Downcast</span>, <span class='ident'>IsA</span>, <span class='ident'>Object</span>};
 <span class='kw'>use</span> <span class='ident'>translate</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='ident'>types</span>::{<span class='ident'>StaticType</span>, <span class='ident'>Type</span>};
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ValuePublic</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>);
-}
+<span class='kw'>use</span> <span class='ident'>glib_ffi</span>;
+<span class='kw'>use</span> <span class='ident'>gobject_ffi</span>;
 
-<span class='doccomment'>/// Possible improvement : store a function pointer inside the struct and make the struct</span>
-<span class='doccomment'>/// templated</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Value</span> {
-    <span class='ident'>inner</span>: <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span>,
-}
+<span class='doccomment'>/// A generic value capable of carrying various types.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Once created the type of the value can&#39;t be changed.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Some types (e.g. `String` and objects) support `None` values while others</span>
+<span class='doccomment'>/// (e.g. numeric types) don&#39;t.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See the [module documentation](index.html) for more details.</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Value</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span>);
 
 <span class='kw'>impl</span> <span class='ident'>Value</span> {
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Value</span> {
-        <span class='ident'>Value</span> { <span class='ident'>inner</span>: <span class='ident'>mem</span>::<span class='ident'>zeroed</span>() }
-    }
-
-    <span class='doccomment'>/// Initializes value with the default value of type .</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>_type</span>: <span class='ident'>Type</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_init</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>_type</span>.<span class='ident'>to_glib</span>()); }
-    }
-
-    <span class='doccomment'>/// Clears the current value in value and resets it to the default value (as if the</span>
-    <span class='doccomment'>/// value had just been initialized).</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>reset</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_reset</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>); }
-    }
-
-    <span class='doccomment'>/// Clears the current value in value and &quot;unsets&quot; the type, this releases all resources</span>
-    <span class='doccomment'>/// associated with this GValue. An unset value is the same as an uninitialized (zero-filled)</span>
-    <span class='doccomment'>/// GValue structure.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>unset</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_unset</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>)
-    }
-
-    <span class='doccomment'>/// Return a newly allocated string, which describes the contents of a GValue. The main</span>
-    <span class='doccomment'>/// purpose of this function is to describe GValue contents for debugging output, the way</span>
-    <span class='doccomment'>/// in which the contents are described may change between different GLib versions.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>strdup_value_contents</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
+    <span class='doccomment'>/// Tries to downcast to a `TypedValue`.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Returns `Ok(TypedValue&lt;T&gt;)` if the value carries a type corresponding</span>
+    <span class='doccomment'>/// to `T` and `Err(self)` otherwise.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>downcast</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>FromValueOptional</span> <span class='op'>+</span> <span class='ident'>SetValue</span><span class='op'>&gt;</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_full</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_strdup_value_contents</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>)
+            <span class='kw'>let</span> <span class='ident'>ok</span> <span class='op'>=</span> <span class='ident'>from_glib</span>(
+                <span class='ident'>gobject_ffi</span>::<span class='ident'>g_type_check_value_holds</span>(<span class='ident'>mut_override</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>),
+                    <span class='ident'>T</span>::<span class='ident'>static_type</span>().<span class='ident'>to_glib</span>()));
+            <span class='kw'>if</span> <span class='ident'>ok</span> {
+                <span class='prelude-val'>Ok</span>(<span class='ident'>TypedValue</span>(<span class='self'>self</span>, <span class='ident'>PhantomData</span>))
+            }
+            <span class='kw'>else</span> {
+                <span class='prelude-val'>Err</span>(<span class='self'>self</span>)
+            }
         }
     }
 
-    <span class='doccomment'>/// Set the contents of a G_TYPE_BOOLEAN GValue to v_boolean.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_boolean</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_boolean</span>: <span class='ident'>bool</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_boolean</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>to_gboolean</span>(<span class='ident'>v_boolean</span>))
+    <span class='doccomment'>/// Tries to get a value of type `T`.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Returns `Some` if the type is correct and the value is not `None`.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// This function doesn&#39;t distinguish between type mismatches and correctly</span>
+    <span class='doccomment'>/// typed `None` values. Use `downcast` or `is` for that.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>FromValueOptional</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='kw'>unsafe</span> {
+           <span class='kw'>let</span> <span class='ident'>ok</span> <span class='op'>=</span> <span class='ident'>from_glib</span>(
+               <span class='ident'>gobject_ffi</span>::<span class='ident'>g_type_check_value_holds</span>(<span class='ident'>mut_override</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>),
+                   <span class='ident'>T</span>::<span class='ident'>static_type</span>().<span class='ident'>to_glib</span>()));
+           <span class='kw'>if</span> <span class='ident'>ok</span> {
+               <span class='ident'>T</span>::<span class='ident'>from_value_optional</span>(<span class='self'>self</span>)
+           }
+           <span class='kw'>else</span> {
+               <span class='prelude-val'>None</span>
+           }
+        }
     }
 
-    <span class='doccomment'>/// Get the contents of a G_TYPE_BOOLEAN GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_boolean</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='ident'>to_bool</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_boolean</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>))
+    <span class='doccomment'>/// Returns `true` if the type of the value corresponds to `T`.</span>
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>FromValueOptional</span> <span class='op'>+</span> <span class='ident'>SetValue</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='self'>self</span>.<span class='ident'>type_</span>() <span class='op'>==</span> <span class='ident'>T</span>::<span class='ident'>static_type</span>()
     }
 
-    <span class='doccomment'>/// Set the contents of a G_TYPE_CHAR GValue to v_char .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_schar</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_char</span>: <span class='ident'>i8</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_schar</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_char</span>)
+    <span class='doccomment'>/// Returns the type of the value.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>type_</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='comment'>// FIXME: make this safe by making GValue::g_type public</span>
+            <span class='kw'>let</span> <span class='ident'>type_</span> <span class='op'>=</span> <span class='op'>*</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>glib_ffi</span>::<span class='ident'>GType</span>);
+            <span class='ident'>from_glib</span>(<span class='ident'>type_</span>)
+        }
     }
 
-    <span class='doccomment'>/// Get the contents of a G_TYPE_CHAR GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_schar</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i8</span> {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_schar</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>)
+    <span class='doccomment'>/// Returns whether `Value`s of type `src` can be transformed to type `dst`.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>type_transformable</span>(<span class='ident'>src</span>: <span class='ident'>Type</span>, <span class='ident'>dst</span>: <span class='ident'>Type</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>from_glib</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_type_transformable</span>(<span class='ident'>src</span>.<span class='ident'>to_glib</span>(), <span class='ident'>dst</span>.<span class='ident'>to_glib</span>()))
+        }
     }
 
-    <span class='doccomment'>/// Set the contents of a G_TYPE_UCHAR GValue to v_uchar .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_uchar</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_uchar</span>: <span class='ident'>u8</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_uchar</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_uchar</span>)
+    <span class='kw'>fn</span> <span class='ident'>into_raw</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>());
+            <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='self'>self</span>);
+            <span class='ident'>ret</span>
+        }
     }
+}
 
-    <span class='doccomment'>/// Get the contents of a G_TYPE_UCHAR GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_uchar</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u8</span> {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_uchar</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>)
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_INT GValue to v_int.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_int</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_int</span>: <span class='ident'>i32</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_int</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_int</span>)
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_INT GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_int</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_int</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>)
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_UINT GValue to v_uint .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_uint</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_uint</span>: <span class='ident'>u32</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_uint</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_uint</span>)
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_UINT GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_uint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_uint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>)
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_LONG GValue to v_long .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_long</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_long</span>: <span class='ident'>i64</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_long</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_long</span> <span class='kw'>as</span> ::<span class='ident'>libc</span>::<span class='ident'>c_long</span>)
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_LONG GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_long</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i64</span> {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_long</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>) <span class='kw'>as</span> <span class='ident'>i64</span>
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_ULONG GValue to v_ulong .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_ulong</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_ulong</span>: <span class='ident'>u64</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_ulong</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_ulong</span> <span class='kw'>as</span> ::<span class='ident'>libc</span>::<span class='ident'>c_ulong</span>)
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_ULONG GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_ulong</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_ulong</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>) <span class='kw'>as</span> <span class='ident'>u64</span>
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_INT64 GValue to v_int64 .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_int64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_int64</span>: <span class='ident'>i64</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_int64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_int64</span>)
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_INT64 GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_int64</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i64</span> {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_int64</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>)
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_UINT64 GValue to v_uint64 .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_uint64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_uint64</span>: <span class='ident'>u64</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_uint64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_uint64</span>)
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_UINT64 GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_uint64</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_uint64</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>)
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_FLOAT GValue to v_float .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_float</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_float</span>: <span class='ident'>f32</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_float</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_float</span>)
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_FLOAT GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_float</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f32</span> {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_float</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>)
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_DOUBLE GValue to v_double .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_double</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_double</span>: <span class='ident'>f64</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_double</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_double</span>)
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_DOUBLE GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_double</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_double</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>)
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_STRING GValue to v_string .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_string</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_string</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_string</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_string</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>);
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_STRING GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_string</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='ident'>from_glib_none</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_string</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>))
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_BOXED derived GValue to v_boxed .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_boxed</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_box</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_boxed</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, ::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>v_box</span>))
-    }
-
-    <span class='comment'>/*pub fn take_boxed&lt;T&gt;(&amp;self, v_box: &amp;T) {
-        gobject_ffi::g_value_take_boxed(&amp;mut self.inner, ::std::mem::transmute(v_box))
-    }*/</span>
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_BOXED derived GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_boxed</span><span class='op'>&lt;</span><span class='lifetime'>&#39;r</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span> {
-        ::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_boxed</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>))
-    }
-
-    <span class='comment'>/*pub unsafe fn dup_boxed&lt;&#39;r, T&gt;(&amp;&#39;r self) -&gt; &amp;&#39;r T {
-        ::std::mem::transmute(gobject_ffi::g_value_dup_boxed(&amp;mut self.inner))
-    }*/</span>
-
-    <span class='doccomment'>/// Set the contents of a pointer GValue to v_pointer .</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_pointer</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_pointer</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_pointer</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, ::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>v_pointer</span>))
-    }
-
-    <span class='doccomment'>/// Get the contents of a pointer GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_pointer</span><span class='op'>&lt;</span><span class='lifetime'>&#39;r</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span> {
-        ::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_pointer</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>))
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_OBJECT derived GValue to v_object .</span>
-    <span class='doccomment'>/// </span>
-    <span class='doccomment'>/// g_value_set_object() increases the reference count of v_object (the GValue holds a reference</span>
-    <span class='doccomment'>/// to v_object ). If you do not wish to increase the reference count of the object (i.e. you</span>
-    <span class='doccomment'>/// wish to pass your current reference to the GValue because you no longer need it), use</span>
-    <span class='doccomment'>/// g_value_take_object() instead.</span>
-    <span class='doccomment'>/// </span>
-    <span class='doccomment'>/// It is important that your GValue holds a reference to v_object (either its own, or one it</span>
-    <span class='doccomment'>/// has taken) to ensure that the object won&#39;t be destroyed while the GValue still exists).</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_object</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_object</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_object</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, ::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>v_object</span>))
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_OBJECT derived GValue.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_object</span><span class='op'>&lt;</span><span class='lifetime'>&#39;r</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span> {
-        ::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_object</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>))
-    }
-
-    <span class='doccomment'>/// Set the contents of a G_TYPE_GTYPE GValue to v_gtype .</span>
-    <span class='comment'>// FIXME shouldn&#39;t be like that</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_gtype</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v_gtype</span>: <span class='ident'>Type</span>) {
-        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_gtype</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>, <span class='ident'>v_gtype</span>.<span class='ident'>to_glib</span>())
-    }
-
-    <span class='doccomment'>/// Get the contents of a G_TYPE_GTYPE GValue.</span>
-    <span class='comment'>// FIXME shouldn&#39;t be like that</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_gtype</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
-        <span class='ident'>from_glib</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_gtype</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>))
-    }
-
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ValuePublic</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>val</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) {
-        <span class='ident'>val</span>.<span class='ident'>set</span>(<span class='self'>self</span>);
-    }
-
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ValuePublic</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span> {
-        <span class='ident'>ValuePublic</span>::<span class='ident'>get</span>(<span class='self'>self</span>)
-    }
-
-    <span class='doccomment'>/// Returns whether a GValue of type src_type can be copied into a GValue of type dest_type .</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>compatible</span>(<span class='ident'>src_type</span>: <span class='ident'>Type</span>, <span class='ident'>dest_type</span>: <span class='ident'>Type</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_type_compatible</span>(<span class='ident'>src_type</span>.<span class='ident'>to_glib</span>(), <span class='ident'>dest_type</span>.<span class='ident'>to_glib</span>())) }
-    }
-
-    <span class='doccomment'>/// Check whether g_value_transform() is able to transform values of type src_type into</span>
-    <span class='doccomment'>/// values of type dest_type . Note that for the types to be transformable, they must be</span>
-    <span class='doccomment'>/// compatible and a transform function must be registered.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>transformable</span>(<span class='ident'>src_type</span>: <span class='ident'>Type</span>, <span class='ident'>dest_type</span>: <span class='ident'>Type</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>to_bool</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_type_transformable</span>(<span class='ident'>src_type</span>.<span class='ident'>to_glib</span>(), <span class='ident'>dest_type</span>.<span class='ident'>to_glib</span>())) }
-    }
-
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>
-    }
-
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_mut_ptr</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span> {
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>
+<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
+    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='comment'>// FIXME: make this safer by making GValue::g_type public</span>
+            <span class='kw'>let</span> <span class='ident'>type_</span> <span class='op'>=</span> <span class='op'>*</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>glib_ffi</span>::<span class='ident'>GType</span>);
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>Value</span>::<span class='ident'>uninitialized</span>();
+            <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_init</span>(<span class='ident'>ret</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>type_</span>);
+            <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_copy</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>ret</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>);
+            <span class='ident'>ret</span>
+        }
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
     <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> { <span class='self'>self</span>.<span class='ident'>unset</span>(); }
+        <span class='kw'>unsafe</span> { <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_unset</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>) }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>i32</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='ident'>gvalue</span>.<span class='ident'>get_int</span>()
-    }
-
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_int</span>(<span class='op'>*</span><span class='self'>self</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>u32</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='ident'>gvalue</span>.<span class='ident'>get_uint</span>()
-    }
-
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_uint</span>(<span class='op'>*</span><span class='self'>self</span>)
+<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
+    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>fmt</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='ident'>s</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='ident'>from_glib_full</span>(
+                <span class='ident'>gobject_ffi</span>::<span class='ident'>g_strdup_value_contents</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>));
+            <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;Value({})&quot;</span>, <span class='ident'>s</span>)
+        }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>i64</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>i64</span> {
-        <span class='ident'>gvalue</span>.<span class='ident'>get_int64</span>()
-    }
-
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_int64</span>(<span class='op'>*</span><span class='self'>self</span>)
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>SetValueOptional</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>value</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='ident'>value</span>.<span class='ident'>to_value</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>u64</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-        <span class='ident'>gvalue</span>.<span class='ident'>get_uint64</span>()
-    }
-
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_uint64</span>(<span class='op'>*</span><span class='self'>self</span>)
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>SetValue</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='ident'>value</span>.<span class='ident'>to_value</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>bool</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='ident'>gvalue</span>.<span class='ident'>get_boolean</span>()
-    }
-
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_boolean</span>(<span class='op'>*</span><span class='self'>self</span>)
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>value</span>: <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='ident'>value</span>.<span class='number'>0</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>i8</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>i8</span> {
-        <span class='ident'>gvalue</span>.<span class='ident'>get_schar</span>()
-    }
-
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_schar</span>(<span class='op'>*</span><span class='self'>self</span>)
+<span class='kw'>impl</span> <span class='ident'>Uninitialized</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>uninitialized</span>() <span class='op'>-&gt;</span> <span class='ident'>Value</span> {
+        <span class='ident'>Value</span>(<span class='ident'>mem</span>::<span class='ident'>zeroed</span>())
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>u8</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>u8</span> {
-        <span class='ident'>gvalue</span>.<span class='ident'>get_uchar</span>()
-    }
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
+    <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Value</span>;
 
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_uchar</span>(<span class='op'>*</span><span class='self'>self</span>)
+    <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> {
+        <span class='ident'>Stash</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='self'>self</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>f32</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>f32</span> {
-        <span class='ident'>gvalue</span>.<span class='ident'>get_float</span>()
-    }
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToGlibPtrMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
+    <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Value</span>;
 
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_float</span>(<span class='op'>*</span><span class='self'>self</span>)
+    <span class='kw'>fn</span> <span class='ident'>to_glib_none_mut</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>StashMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> {
+        <span class='ident'>StashMut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='number'>0</span>, <span class='self'>self</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>f64</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
-        <span class='ident'>gvalue</span>.<span class='ident'>get_double</span>()
-    }
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>ToValue</span>] {
+    <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> <span class='ident'>ValueArray</span>;
 
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_double</span>(<span class='op'>*</span><span class='self'>self</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>Type</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
-        <span class='ident'>gvalue</span>.<span class='ident'>get_gtype</span>()
-    }
-
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_gtype</span>(<span class='op'>*</span><span class='self'>self</span>)
+    <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span>, <span class='kw'>Self</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>values</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>iter</span>()
+            .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>v</span><span class='op'>|</span> <span class='ident'>v</span>.<span class='ident'>to_value</span>().<span class='ident'>into_raw</span>())
+            .<span class='ident'>collect</span>();
+        <span class='ident'>Stash</span>(<span class='ident'>values</span>.<span class='ident'>as_mut_ptr</span>(), <span class='ident'>ValueArray</span>(<span class='ident'>values</span>))
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ValuePublic</span> <span class='kw'>for</span> <span class='ident'>String</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='kw'>match</span> <span class='ident'>gvalue</span>.<span class='ident'>get_string</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='ident'>s</span>,
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>String</span>::<span class='ident'>new</span>()
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ValueArray</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>gobject_ffi</span>::<span class='ident'>GValue</span><span class='op'>&gt;</span>);
+
+<span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>ValueArray</span> {
+    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>for</span> <span class='ident'>value</span> <span class='kw'>in</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='number'>0</span> {
+                <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_unset</span>(<span class='ident'>value</span>);
+            }
+        }
+    }
+}
+
+<span class='doccomment'>/// A statically typed [`Value`](struct.Value.html).</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// It dereferences to `Value` and can be used everywhere `Value` references are</span>
+<span class='doccomment'>/// accepted.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See the [module documentation](index.html) for more details.</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>Value</span>, <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span><span class='op'>&gt;</span>);
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>FromValueOptional</span> <span class='op'>+</span> <span class='ident'>SetValue</span><span class='op'>&gt;</span> <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='doccomment'>/// Returns the value.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Types that don&#39;t support a `None` value always return `Some`. See</span>
+    <span class='doccomment'>/// `get_some`.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>T</span>::<span class='ident'>from_value_optional</span>(<span class='self'>self</span>) }
+    }
+
+    <span class='doccomment'>/// Returns the value.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// This method is only available for types that don&#39;t support a `None`</span>
+    <span class='doccomment'>/// value.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_some</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>FromValue</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>T</span>::<span class='ident'>from_value</span>(<span class='self'>self</span>) }
+    }
+
+    <span class='doccomment'>/// Sets the value.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// This method is only available for types that support a `None` value.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set</span><span class='op'>&lt;</span><span class='ident'>U</span>: ?<span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>SetValueOptional</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>U</span><span class='op'>&gt;</span>) <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>U</span><span class='op'>&gt;</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>SetValueOptional</span>::<span class='ident'>set_value_optional</span>(<span class='self'>self</span>, <span class='ident'>value</span>) }
+    }
+
+    <span class='doccomment'>/// Sets the value to `None`.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// This method is only available for types that support a `None` value.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_none</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>SetValueOptional</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>T</span>::<span class='ident'>set_value_optional</span>(<span class='self'>self</span>, <span class='prelude-val'>None</span>) }
+    }
+
+    <span class='doccomment'>/// Sets the value.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_some</span><span class='op'>&lt;</span><span class='ident'>U</span>: ?<span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>SetValue</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>U</span>) <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>U</span><span class='op'>&gt;</span> {
+        <span class='kw'>unsafe</span> { <span class='ident'>SetValue</span>::<span class='ident'>set_value</span>(<span class='self'>self</span>, <span class='ident'>value</span>) }
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='ident'>TypedValue</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>(), <span class='ident'>PhantomData</span>)
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>fmt</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;TypedValue({:?})&quot;</span>, <span class='self'>self</span>.<span class='number'>0</span>)
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>Value</span>;
+
+    <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Value</span> {
+        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>DerefMut</span> <span class='kw'>for</span> <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>deref_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span> {
+        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='number'>0</span>
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='ident'>FromValueOptional</span> <span class='op'>+</span> <span class='ident'>SetValueOptional</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>value</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='ident'>TypedValue</span>(<span class='ident'>Value</span>::<span class='ident'>from</span>(<span class='ident'>value</span>), <span class='ident'>PhantomData</span>)
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='ident'>FromValueOptional</span> <span class='op'>+</span> <span class='ident'>SetValue</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='ident'>TypedValue</span>(<span class='ident'>Value</span>::<span class='ident'>from</span>(<span class='ident'>value</span>), <span class='ident'>PhantomData</span>)
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>value</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='ident'>TypedValue</span>(<span class='ident'>Value</span>::<span class='ident'>from</span>(<span class='ident'>value</span>), <span class='ident'>PhantomData</span>)
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>TypedValue</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='ident'>TypedValue</span>(<span class='ident'>Value</span>::<span class='ident'>from</span>(<span class='ident'>value</span>), <span class='ident'>PhantomData</span>)
+    }
+}
+
+<span class='doccomment'>/// Converts to `Value`.</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ToValue</span> {
+    <span class='doccomment'>/// Returns a `Value` clone of `self`.</span>
+    <span class='kw'>fn</span> <span class='ident'>to_value</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Value</span>;
+
+    <span class='doccomment'>/// Returns the type identifer of `self`.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// This is the type of the value to be returned by `to_value`.</span>
+    <span class='kw'>fn</span> <span class='ident'>to_value_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span>;
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>SetValueOptional</span><span class='op'>&gt;</span> <span class='ident'>ToValue</span> <span class='kw'>for</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>to_value</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Value</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>Value</span>::<span class='ident'>uninitialized</span>();
+            <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_init</span>(<span class='ident'>ret</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>T</span>::<span class='ident'>static_type</span>().<span class='ident'>to_glib</span>());
+            <span class='ident'>T</span>::<span class='ident'>set_value_optional</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ret</span>, <span class='self'>self</span>.<span class='ident'>as_ref</span>());
+            <span class='ident'>ret</span>
         }
     }
 
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>gvalue</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>) {
-        <span class='ident'>gvalue</span>.<span class='ident'>set_string</span>(<span class='self'>self</span>.<span class='ident'>as_ref</span>())
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>to_value_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
+        <span class='ident'>T</span>::<span class='ident'>static_type</span>()
     }
 }
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: ?<span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>SetValue</span><span class='op'>&gt;</span> <span class='ident'>ToValue</span> <span class='kw'>for</span> <span class='ident'>T</span> {
+    <span class='kw'>fn</span> <span class='ident'>to_value</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Value</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>Value</span>::<span class='ident'>uninitialized</span>();
+            <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_init</span>(<span class='ident'>ret</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>T</span>::<span class='ident'>static_type</span>().<span class='ident'>to_glib</span>());
+            <span class='ident'>T</span>::<span class='ident'>set_value</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ret</span>, <span class='self'>self</span>);
+            <span class='ident'>ret</span>
+        }
+    }
+
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>to_value_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
+        <span class='ident'>T</span>::<span class='ident'>static_type</span>()
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>ToValue</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
+    <span class='kw'>fn</span> <span class='ident'>to_value</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Value</span> {
+        <span class='self'>self</span>.<span class='ident'>clone</span>()
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>to_value_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
+        <span class='self'>self</span>.<span class='ident'>type_</span>()
+    }
+}
+
+<span class='doccomment'>/// Extracts a value.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Types that don&#39;t support a `None` value always return `Some`.</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>FromValueOptional</span>: <span class='ident'>StaticType</span> <span class='op'>+</span> <span class='ident'>Sized</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_value_optional</span>(<span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+}
+
+<span class='doccomment'>/// Extracts a value.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Only implemented for types that don&#39;t support a `None` value.</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>FromValue</span>: <span class='ident'>FromValueOptional</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_value</span>(<span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
+}
+
+<span class='doccomment'>/// Sets a value.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Only implemented for types that support a `None` value.</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SetValueOptional</span>: <span class='ident'>SetValue</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value_optional</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw'>Self</span><span class='op'>&gt;</span>);
+}
+
+<span class='doccomment'>/// Sets a value.</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SetValue</span>: <span class='ident'>StaticType</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='kw-2'>&amp;</span><span class='kw'>Self</span>);
+}
+
+<span class='kw'>impl</span> <span class='ident'>FromValueOptional</span> <span class='kw'>for</span> <span class='ident'>String</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_value_optional</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+        <span class='ident'>from_glib_none</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_string</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>SetValue</span> <span class='kw'>for</span> <span class='ident'>str</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='ident'>this</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) {
+        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_take_string</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>this</span>.<span class='ident'>to_glib_full</span>())
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>SetValueOptional</span> <span class='kw'>for</span> <span class='ident'>str</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value_optional</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='ident'>this</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw'>Self</span><span class='op'>&gt;</span>) {
+        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_take_string</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>this</span>.<span class='ident'>to_glib_full</span>())
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>SetValue</span><span class='op'>&gt;</span> <span class='ident'>SetValue</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='ident'>this</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) {
+        <span class='ident'>SetValue</span>::<span class='ident'>set_value</span>(<span class='ident'>value</span>, <span class='op'>*</span><span class='ident'>this</span>)
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>SetValueOptional</span><span class='op'>&gt;</span> <span class='ident'>SetValueOptional</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value_optional</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='ident'>this</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw'>Self</span><span class='op'>&gt;</span>) {
+        <span class='ident'>SetValueOptional</span>::<span class='ident'>set_value_optional</span>(<span class='ident'>value</span>, <span class='ident'>this</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>v</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>v</span>))
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>SetValue</span> <span class='kw'>for</span> <span class='ident'>String</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='ident'>this</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) {
+        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_take_string</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>this</span>.<span class='ident'>to_glib_full</span>())
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>SetValueOptional</span> <span class='kw'>for</span> <span class='ident'>String</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value_optional</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='ident'>this</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw'>Self</span><span class='op'>&gt;</span>) {
+        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_take_string</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>this</span>.<span class='ident'>to_glib_full</span>())
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>IsA</span><span class='op'>&lt;</span><span class='ident'>Object</span><span class='op'>&gt;&gt;</span> <span class='ident'>FromValueOptional</span> <span class='kw'>for</span> <span class='ident'>T</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_value_optional</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+        <span class='prelude-ty'>Option</span>::<span class='op'>&lt;</span><span class='ident'>Object</span><span class='op'>&gt;</span>::<span class='ident'>from_glib_full</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_dup_object</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+            .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>o</span><span class='op'>|</span> <span class='ident'>o</span>.<span class='ident'>downcast_unchecked</span>())
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>IsA</span><span class='op'>&lt;</span><span class='ident'>Object</span><span class='op'>&gt;&gt;</span> <span class='ident'>SetValue</span> <span class='kw'>for</span> <span class='ident'>T</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='ident'>this</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) {
+        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_object</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>this</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>IsA</span><span class='op'>&lt;</span><span class='ident'>Object</span><span class='op'>&gt;&gt;</span> <span class='ident'>SetValueOptional</span> <span class='kw'>for</span> <span class='ident'>T</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value_optional</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='ident'>this</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw'>Self</span><span class='op'>&gt;</span>) {
+        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_object</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>this</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>FromValueOptional</span> <span class='kw'>for</span> <span class='ident'>bool</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_value_optional</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+        <span class='prelude-val'>Some</span>(<span class='ident'>from_glib</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_boolean</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)))
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>FromValue</span> <span class='kw'>for</span> <span class='ident'>bool</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_value</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='ident'>from_glib</span>(<span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_get_boolean</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>SetValue</span> <span class='kw'>for</span> <span class='ident'>bool</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='ident'>this</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) {
+        <span class='ident'>gobject_ffi</span>::<span class='ident'>g_value_set_boolean</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='ident'>this</span>.<span class='ident'>to_glib</span>())
+    }
+}
+
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>numeric</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>set</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> {
+        <span class='kw'>impl</span> <span class='ident'>FromValueOptional</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_value_optional</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+                <span class='prelude-val'>Some</span>(<span class='ident'>gobject_ffi</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+            }
+        }
+
+        <span class='kw'>impl</span> <span class='ident'>FromValue</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_value</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>Value</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+                <span class='ident'>gobject_ffi</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)
+            }
+        }
+
+        <span class='kw'>impl</span> <span class='ident'>SetValue</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_value</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Value</span>, <span class='ident'>this</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) {
+                <span class='ident'>gobject_ffi</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>set</span>(<span class='ident'>value</span>.<span class='ident'>to_glib_none_mut</span>().<span class='number'>0</span>, <span class='op'>*</span><span class='ident'>this</span>)
+            }
+        }
+    }
+}
+
+<span class='macro'>numeric</span><span class='macro'>!</span>(<span class='ident'>i8</span>, <span class='ident'>g_value_get_schar</span>, <span class='ident'>g_value_set_schar</span>);
+<span class='macro'>numeric</span><span class='macro'>!</span>(<span class='ident'>u8</span>, <span class='ident'>g_value_get_uchar</span>, <span class='ident'>g_value_set_uchar</span>);
+<span class='macro'>numeric</span><span class='macro'>!</span>(<span class='ident'>i32</span>, <span class='ident'>g_value_get_int</span>, <span class='ident'>g_value_set_int</span>);
+<span class='macro'>numeric</span><span class='macro'>!</span>(<span class='ident'>u32</span>, <span class='ident'>g_value_get_uint</span>, <span class='ident'>g_value_set_uint</span>);
+<span class='macro'>numeric</span><span class='macro'>!</span>(<span class='ident'>i64</span>, <span class='ident'>g_value_get_int64</span>, <span class='ident'>g_value_set_int64</span>);
+<span class='macro'>numeric</span><span class='macro'>!</span>(<span class='ident'>u64</span>, <span class='ident'>g_value_get_uint64</span>, <span class='ident'>g_value_set_uint64</span>);
+<span class='macro'>numeric</span><span class='macro'>!</span>(<span class='ident'>f32</span>, <span class='ident'>g_value_get_float</span>, <span class='ident'>g_value_set_float</span>);
+<span class='macro'>numeric</span><span class='macro'>!</span>(<span class='ident'>f64</span>, <span class='ident'>g_value_get_double</span>, <span class='ident'>g_value_set_double</span>);
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -847,7 +1168,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

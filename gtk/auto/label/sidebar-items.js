@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Label","The `Label` widget displays a small amount of text. As the name implies, most labels are used to label another widget such as a `Button`, a `MenuItem`, or a `ComboBox`."]]});

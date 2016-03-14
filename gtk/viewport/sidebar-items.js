@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Viewport","The `Viewport` widget acts as an adaptor class, implementing scrollability for child widgets that lack their own scrolling capabilities. Use `Viewport` to scroll child widgets such as `Grid`, `Box`, and so on."]]});

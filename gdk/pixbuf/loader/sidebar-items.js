@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["PixbufLoader","Application-driven progressive image loading."]]});

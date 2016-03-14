@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Attributes","Attributes to use for a newly-created window."],["Window","Onscreen display areas in the target window system."]]});
+initSidebarItems({"struct":[["Window",""]]});

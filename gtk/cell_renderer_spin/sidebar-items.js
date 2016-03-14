@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["CellRendererSpin","`CellRendererSpin` renders text in a cell like `CellRendererText` from which it is derived. But while `CellRendererText` offers a simple entry to edit the text, `CellRendererSpin` offers a `SpinButton` widget. Of course, that means that the text has to be parseable as a floating point number."]]});

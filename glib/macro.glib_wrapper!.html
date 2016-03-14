@@ -9,6 +9,7 @@
 
     <title>glib::glib_wrapper! - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-1599' class='srclink' href='../src/glib/wrapper.rs.html#84-133' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-1824' class='srclink' href='../src/glib/wrapper.rs.html#96-159' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>glib_wrapper</span> {
     (
@@ -56,11 +57,7 @@
             <span class='ident'>copy</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>copy_arg</span>:<span class='ident'>ident</span><span class='op'>|</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>copy_expr</span>:<span class='ident'>expr</span>,
             <span class='ident'>free</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>free_arg</span>:<span class='ident'>ident</span><span class='op'>|</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>free_expr</span>:<span class='ident'>expr</span>,
         }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>glib_boxed_wrapper</span><span class='macro'>!</span>([$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>)<span class='op'>*</span>] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>, <span class='kw-2'>@</span><span class='ident'>copy</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>copy_arg</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>copy_expr</span>,
-            <span class='kw-2'>@</span><span class='ident'>free</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>free_arg</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>free_expr</span>);
-    };
-
+    ) <span class='op'>=&gt;</span> { ... };
     (
         $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
         <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>(<span class='ident'>Refcounted</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>:<span class='ident'>path</span><span class='op'>&gt;</span>);
@@ -69,11 +66,16 @@
             <span class='kw-2'>ref</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ref_arg</span>:<span class='ident'>ident</span><span class='op'>|</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ref_expr</span>:<span class='ident'>expr</span>,
             <span class='ident'>unref</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>unref_arg</span>:<span class='ident'>ident</span><span class='op'>|</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>unref_expr</span>:<span class='ident'>expr</span>,
         }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>glib_refcounted_wrapper</span><span class='macro'>!</span>([$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>)<span class='op'>*</span>] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>, <span class='kw-2'>@</span><span class='kw-2'>ref</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ref_arg</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ref_expr</span>,
-            <span class='kw-2'>@</span><span class='ident'>unref</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>unref_arg</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>unref_expr</span>);
-    };
+    ) <span class='op'>=&gt;</span> { ... };
+    (
+        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
+        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>(<span class='ident'>Shared</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>:<span class='ident'>path</span><span class='op'>&gt;</span>);
 
+        <span class='kw'>match</span> <span class='kw'>fn</span> {
+            <span class='kw-2'>ref</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ref_arg</span>:<span class='ident'>ident</span><span class='op'>|</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ref_expr</span>:<span class='ident'>expr</span>,
+            <span class='ident'>unref</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>unref_arg</span>:<span class='ident'>ident</span><span class='op'>|</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>unref_expr</span>:<span class='ident'>expr</span>,
+        }
+    ) <span class='op'>=&gt;</span> { ... };
     (
         $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
         <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>(<span class='ident'>Object</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>:<span class='ident'>path</span><span class='op'>&gt;</span>);
@@ -81,10 +83,7 @@
         <span class='kw'>match</span> <span class='kw'>fn</span> {
             <span class='ident'>get_type</span> <span class='op'>=&gt;</span> <span class='op'>||</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get_type_expr</span>:<span class='ident'>expr</span>,
         }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>glib_object_wrapper</span><span class='macro'>!</span>([$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>)<span class='op'>*</span>] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>, <span class='kw-2'>@</span><span class='ident'>get_type</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get_type_expr</span>, []);
-    };
-
+    ) <span class='op'>=&gt;</span> { ... };
     (
         $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
         <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>(<span class='ident'>Object</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>:<span class='ident'>path</span><span class='op'>&gt;</span>): $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>implements</span>:<span class='ident'>path</span>),<span class='op'>+</span>;
@@ -92,14 +91,12 @@
         <span class='kw'>match</span> <span class='kw'>fn</span> {
             <span class='ident'>get_type</span> <span class='op'>=&gt;</span> <span class='op'>||</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get_type_expr</span>:<span class='ident'>expr</span>,
         }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>glib_object_wrapper</span><span class='macro'>!</span>([$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>)<span class='op'>*</span>] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ffi_name</span>, <span class='kw-2'>@</span><span class='ident'>get_type</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>get_type_expr</span>,
-            [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>implements</span>),<span class='op'>+</span>]);
-    };
+    ) <span class='op'>=&gt;</span> { ... };
 }</pre>
 <div class='docblock'><p>Defines a wrapper type and implements the appropriate traits.</p>
 
 <p>The basic syntax is</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
     <span class='doccomment'>/// Documentation</span>
@@ -112,11 +109,14 @@
 }</pre>
 
 <p>This creates a wrapper named <code>$name</code> around the foreign type <code>$foreign</code>
-of $kind (one of <code>Boxed</code>, <code>Object</code>) using expressions from the <code>match fn</code>
-block to implement type-specific low-level operations. The expression
-will be evaluated in <code>unsafe</code> context.</p>
+of <code>$kind</code> (one of <code>Boxed</code>, <code>Shared</code>, <code>Object</code>) using expressions from the <code>match fn</code>
+block to implement type-specific low-level operations (the expression
+will be evaluated in <code>unsafe</code> context).</p>
 
-<h3 id='boxed' class='section-header'><a href='#boxed'>Boxed</a></h3><pre class='rust rust-example-rendered'>
+<h3 id='boxed' class='section-header'><a href='#boxed'>Boxed</a></h3>
+<p>Boxed records with single ownership.</p>
+
+<pre class='rust rust-example-rendered'>
 <span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
     <span class='doccomment'>/// Text buffer iterator</span>
     <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TextIter</span>(<span class='ident'>Boxed</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GtkTextIter</span><span class='op'>&gt;</span>);
@@ -131,10 +131,13 @@ will be evaluated in <code>unsafe</code> context.</p>
 
 <p><code>free</code>: <code>|*mut $foreign|</code> frees the value.</p>
 
-<h3 id='refcounted' class='section-header'><a href='#refcounted'>Refcounted</a></h3><pre class='rust rust-example-rendered'>
+<h3 id='shared' class='section-header'><a href='#shared'>Shared</a></h3>
+<p>Records with reference counted shared ownership.</p>
+
+<pre class='rust rust-example-rendered'>
 <span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
     <span class='doccomment'>/// Object holding timing information for a single frame.</span>
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FrameTimings</span>(<span class='ident'>Refcounted</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkFrameTimings</span><span class='op'>&gt;</span>);
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FrameTimings</span>(<span class='ident'>Shared</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkFrameTimings</span><span class='op'>&gt;</span>);
 
     <span class='kw'>match</span> <span class='kw'>fn</span> {
         <span class='kw-2'>ref</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>ptr</span><span class='op'>|</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_frame_timings_ref</span>(<span class='ident'>ptr</span>),
@@ -146,7 +149,10 @@ will be evaluated in <code>unsafe</code> context.</p>
 
 <p><code>unref</code>: <code>|*mut $foreign|</code> decreases the refcount.</p>
 
-<h3 id='object' class='section-header'><a href='#object'>Object</a></h3><pre class='rust rust-example-rendered'>
+<h3 id='object' class='section-header'><a href='#object'>Object</a></h3>
+<p>Objects -- classes and interfaces.</p>
+
+<pre class='rust rust-example-rendered'>
 <span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
     <span class='doccomment'>/// Object representing an input device.</span>
     <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Device</span>(<span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkDevice</span><span class='op'>&gt;</span>);
@@ -155,6 +161,7 @@ will be evaluated in <code>unsafe</code> context.</p>
         <span class='ident'>get_type</span> <span class='op'>=&gt;</span> <span class='op'>||</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_type</span>(),
     }
 }</pre>
+
 <pre class='rust rust-example-rendered'>
 <span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
     <span class='doccomment'>/// A container with just one child.</span>
@@ -165,7 +172,7 @@ will be evaluated in <code>unsafe</code> context.</p>
     }
 }</pre>
 
-<p><code>get_type: || -&gt; GType</code> returns the type identifier of the class.</p>
+<p><code>get_type: || -&gt; GType</code> returns the type identifier of the class or interface.</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -209,7 +216,7 @@ will be evaluated in <code>unsafe</code> context.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

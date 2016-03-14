@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Visual","Low-level display hardware information."]]});
+initSidebarItems({"struct":[["Visual","A `Visual` contains information about a particular visual."]]});

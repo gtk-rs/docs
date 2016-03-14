@@ -9,6 +9,7 @@
 
     <title>glib::translate - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -45,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-688' class='srclink' href='../../src/glib/translate.rs.html#5-816' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-767' class='srclink' href='../../src/glib/translate.rs.html#5-1154' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Translation between GLib/GLib-based FFI types and their Rust counterparts.</p>
 
 <p>This module allows library bindings authors to decouple type translation
@@ -53,6 +54,7 @@ logic and use unified idioms at FFI boundaries. It also implements
 translation of GLib core data types.</p>
 
 <p><code>FromGlib</code>, <code>from_glib</code> and <code>ToGlib</code> translate simple types like <code>bool</code>.</p>
+
 <pre class='rust rust-example-rendered'>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_accept_focus</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>accept_focus</span>: <span class='ident'>bool</span>) {
         <span class='kw'>unsafe</span> { <span class='ident'>glib_ffi</span>::<span class='ident'>gdk_window_set_accept_focus</span>(<span class='self'>self</span>.<span class='ident'>pointer</span>, <span class='ident'>accept_focus</span>.<span class='ident'>to_glib</span>()) }
@@ -64,6 +66,7 @@ translation of GLib core data types.</p>
 
 <p><code>FromGlibPtr</code> (<code>from_glib_none</code> and <code>from_glib_full</code>) and <code>ToGlibPtr</code> work on <code>gpointer</code>s
 and support different modes of ownership transfer.</p>
+
 <pre class='rust rust-example-rendered'>
     <span class='kw'>fn</span> <span class='ident'>get_title</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
@@ -78,6 +81,7 @@ A <code>Stash</code> contains the temporary storage and a pointer into it that
 is valid for the lifetime of the <code>Stash</code>. As the lifetime of the <code>Stash</code> returned
 from <code>to_glib_none</code> is at least the enclosing statement, you can avoid explicitly
 binding the stash in most cases and just take the pointer out of it:</p>
+
 <pre class='rust rust-example-rendered'>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_icon_name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
         <span class='kw'>unsafe</span> {
@@ -95,11 +99,26 @@ binding the stash in most cases and just take the pointer out of it:</p>
                     </tr>
                 
                     <tr class=' module-item'>
+                        <td><a class='struct' href='struct.List.html'
+                               title='glib::translate::List'>List</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
                         <td><a class='struct' href='struct.PtrArray.html'
                                title='glib::translate::PtrArray'>PtrArray</a></td>
                         <td class='docblock short'>
                              <p>Temporary storage for passing a <code>NULL</code> terminated array of pointers.</p>
-
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SList.html'
+                               title='glib::translate::SList'>SList</a></td>
+                        <td class='docblock short'>
+                             
                         </td>
                     </tr>
                 
@@ -108,7 +127,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::Stash'>Stash</a></td>
                         <td class='docblock short'>
                              <p>Helper type that stores temporary values used for translation.</p>
-
                         </td>
                     </tr>
                 
@@ -126,7 +144,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::FromGlib'>FromGlib</a></td>
                         <td class='docblock short'>
                              <p>Translate a simple type.</p>
-
                         </td>
                     </tr>
                 
@@ -135,7 +152,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::FromGlibPtr'>FromGlibPtr</a></td>
                         <td class='docblock short'>
                              <p>Translate from a pointer type.</p>
-
                         </td>
                     </tr>
                 
@@ -144,7 +160,14 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::FromGlibPtrContainer'>FromGlibPtrContainer</a></td>
                         <td class='docblock short'>
                              <p>Translate from a container of pointers.</p>
-
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='trait' href='trait.GlibPtrDefault.html'
+                               title='glib::translate::GlibPtrDefault'>GlibPtrDefault</a></td>
+                        <td class='docblock short'>
+                             <p>Provides the default pointer type to be used in some container conversions.</p>
                         </td>
                     </tr>
                 
@@ -153,7 +176,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::Ptr'>Ptr</a></td>
                         <td class='docblock short'>
                              <p>A pointer</p>
-
                         </td>
                     </tr>
                 
@@ -170,7 +192,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::ToGlib'>ToGlib</a></td>
                         <td class='docblock short'>
                              <p>Translate a simple type.</p>
-
                         </td>
                     </tr>
                 
@@ -179,7 +200,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::ToGlibPtr'>ToGlibPtr</a></td>
                         <td class='docblock short'>
                              <p>Translate to a pointer.</p>
-
                         </td>
                     </tr>
                 
@@ -187,7 +207,7 @@ binding the stash in most cases and just take the pointer out of it:</p>
                         <td><a class='trait' href='trait.ToGlibPtrMut.html'
                                title='glib::translate::ToGlibPtrMut'>ToGlibPtrMut</a></td>
                         <td class='docblock short'>
-                             
+                             <p>Translate to a pointer with a mutable borrow.</p>
                         </td>
                     </tr>
                 
@@ -196,7 +216,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::Uninitialized'>Uninitialized</a></td>
                         <td class='docblock short'>
                              <p>A trait for creating an uninitialized value. Handy for receiving outparams.</p>
-
                         </td>
                     </tr>
                 </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -206,7 +225,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::from_glib'>from_glib</a></td>
                         <td class='docblock short'>
                              <p>Translate a simple type.</p>
-
                         </td>
                     </tr>
                 
@@ -215,7 +233,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::from_glib_borrow'>from_glib_borrow</a></td>
                         <td class='docblock short'>
                              <p>Translate from a pointer type, borrowing the pointer.</p>
-
                         </td>
                     </tr>
                 
@@ -224,7 +241,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::from_glib_full'>from_glib_full</a></td>
                         <td class='docblock short'>
                              <p>Translate from a pointer type, transfer: full (assume ownership).</p>
-
                         </td>
                     </tr>
                 
@@ -233,7 +249,14 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::from_glib_none'>from_glib_none</a></td>
                         <td class='docblock short'>
                              <p>Translate from a pointer type, transfer: none.</p>
-
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.mut_override.html'
+                               title='glib::translate::mut_override'>mut_override</a></td>
+                        <td class='docblock short'>
+                             <p>Overrides pointer mutability.</p>
                         </td>
                     </tr>
                 
@@ -242,7 +265,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::some_if'>some_if</a></td>
                         <td class='docblock short'>
                              <p>Returns <code>Some(val)</code> if the condition is true and <code>None</code> otherwise.</p>
-
                         </td>
                     </tr>
                 
@@ -251,7 +273,6 @@ binding the stash in most cases and just take the pointer out of it:</p>
                                title='glib::translate::uninitialized'>uninitialized</a></td>
                         <td class='docblock short'>
                              <p>Returns an uninitialized value.</p>
-
                         </td>
                     </tr>
                 </table></section>
@@ -297,7 +318,7 @@ binding the stash in most cases and just take the pointer out of it:</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

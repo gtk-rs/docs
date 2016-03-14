@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Display","Controls a set of `Screen`s and their associated input devices."]]});
+initSidebarItems({"struct":[["Display","`Display` objects purpose are two fold:"]]});

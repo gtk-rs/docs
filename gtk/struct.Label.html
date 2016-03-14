@@ -9,6 +9,7 @@
 
     <title>gtk::Label - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -45,197 +46,504 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-5754' class='srclink' href='../src/gtk/macros.rs.html#27-29' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Label {
-    pub pointer: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../ffi/struct.GtkWidget.html' title='ffi::GtkWidget'>GtkWidget</a></a>,
-}</pre><h2 class='fields'>Fields</h2>
-<table><tr class='stab '>
-                                  <td id='structfield.pointer'><code>pointer</code></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a>&gt;</code></h4>
-<h4 id='method.new_with_mnemonic' class='method'><code>fn <a href='#method.new_with_mnemonic' class='fnname'>new_with_mnemonic</a>(text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a>&gt;</code></h4>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#method.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+        </span></span></h1>
+<pre class='rust struct'>pub struct Label(_, _);</pre><div class='docblock'><p>The <code>Label</code> widget displays a small amount of text. As the name
+implies, most labels are used to label another widget such as a
+<code>Button</code>, a <code>MenuItem</code>, or a <code>ComboBox</code>.</p>
+
+<h1 id='label-as-buildable' class='section-header'><a href='#label-as-buildable'><code>Label</code> as <code>Buildable</code></a></h1>
+<p>The <code>Label</code> implementation of the <code>Buildable</code> interface supports a
+custom <code>&lt;attributes&gt;</code> element, which supports any number of <code>&lt;attribute&gt;</code>
+elements. The <code>&lt;attribute&gt;</code> element has attributes named “name“, “value“,
+“start“ and “end“ and allows you to specify <code>pango::Attribute</code> values for
+this label.</p>
+
+<p>An example of a UI definition fragment specifying Pango attributes:</p>
+
+<pre><code class="language-C">  // Pressing Alt+H will activate this button
+  button = gtk_button_new ();
+  label = gtk_label_new_with_mnemonic (&quot;_Hello&quot;);
+  gtk_container_add (GTK_CONTAINER (button), label);
+</code></pre>
+
+<p>There’s a convenience function to create buttons with a mnemonic label
+already inside:</p>
+
+<pre><code class="language-C">  // Pressing Alt+H will activate this button
+  button = gtk_button_new_with_mnemonic (&quot;_Hello&quot;);
+</code></pre>
+
+<p>To create a mnemonic for a widget alongside the label, such as a
+<code>Entry</code>, you have to point the label at the entry with
+<code>Label::set_mnemonic_widget</code>:</p>
+
+<pre><code class="language-C">  // Pressing Alt+H will focus the entry
+  entry = gtk_entry_new ();
+  label = gtk_label_new_with_mnemonic (&quot;_Hello&quot;);
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
+</code></pre>
+
+<h1 id='markup-styled-text' class='section-header'><a href='#markup-styled-text'>Markup (styled text)</a></h1>
+<p>To make it easy to format text in a label (changing colors,
+fonts, etc.), label text can be provided in a simple
+[markup format][PangoMarkupFormat].</p>
+
+<p>Here’s how to create a label with a small font:</p>
+
+<pre><code class="language-C">  label = gtk_label_new (NULL);
+  gtk_label_set_markup (GTK_LABEL (label), &quot;&lt;small&gt;Small text&lt;/small&gt;&quot;);
+</code></pre>
+
+<p>(See [complete documentation][PangoMarkupFormat] of available
+tags in the Pango manual.)</p>
+
+<p>The markup passed to <code>Label::set_markup</code> must be valid; for example,
+literal &lt;, &gt; and &amp; characters must be escaped as &lt;, &gt;, and &amp;.
+If you pass text obtained from the user, file, or a network to
+<code>Label::set_markup</code>, you’ll want to escape it with
+<code>g_markup_escape_text</code> or <code>g_markup_printf_escaped</code>.</p>
+
+<p>Markup strings are just a convenient way to set the <code>pango::AttrList</code> on
+a label; <code>Label::set_attributes</code> may be a simpler way to set
+attributes in some cases. Be careful though; <code>pango::AttrList</code> tends to
+cause internationalization problems, unless you’re applying attributes
+to the entire string (i.e. unless you set the range of each attribute
+to [0, <code>G_MAXINT</code>)). The reason is that specifying the start_index and
+end_index for a <code>pango::Attribute</code> requires knowledge of the exact string
+being displayed, so translations will cause problems.</p>
+
+<h1 id='selectable-labels' class='section-header'><a href='#selectable-labels'>Selectable labels</a></h1>
+<p>Labels can be made selectable with <code>Label::set_selectable</code>.
+Selectable labels allow the user to copy the label contents to
+the clipboard. Only labels that contain useful-to-copy information
+— such as error messages — should be made selectable.</p>
+
+<h1 id='text-layout--label-text-layout' class='section-header'><a href='#text-layout--label-text-layout'>Text layout # {<code>label</code>-text-layout}</a></h1>
+<p>A label can contain any number of paragraphs, but will have
+performance problems if it contains more than a small number.
+Paragraphs are separated by newlines or other paragraph separators
+understood by Pango.</p>
+
+<p>Labels can automatically wrap text if you call
+<code>Label::set_line_wrap</code>.</p>
+
+<p><code>Label::set_justify</code> sets how the lines in a label align
+with one another. If you want to set how the label as a whole
+aligns in its available space, see the <code>Widget::halign</code> and
+<code>Widget:valign</code> properties.</p>
+
+<p>The <code>Label:width-chars</code> and <code>Label:max-width-chars</code> properties
+can be used to control the size allocation of ellipsized or wrapped
+labels. For ellipsizing labels, if either is specified (and less
+than the actual text size), it is used as the minimum width, and the actual
+text size is used as the natural width of the label. For wrapping labels,
+width-chars is used as the minimum width, if specified, and max-width-chars
+is used as the natural width. Even if max-width-chars specified, wrapping
+labels will be rewrapped to use all of the available width.</p>
+
+<p>Note that the interpretation of <code>Label:width-chars</code> and
+<code>Label:max-width-chars</code> has changed a bit with the introduction of
+[width-for-height geometry management.][geometry-management]</p>
+
+<h1 id='links' class='section-header'><a href='#links'>Links</a></h1>
+<p>Since 2.18, GTK+ supports markup for clickable hyperlinks in addition
+to regular Pango markup. The markup for links is borrowed from HTML,
+using the <code>&lt;a&gt;</code> with “href“ and “title“ attributes. GTK+ renders links
+similar to the way they appear in web browsers, with colored, underlined
+text. The “title“ attribute is displayed as a tooltip on the link.</p>
+
+<p>An example looks like this:</p>
+
+<pre><code class="language-C">const gchar *text =
+&quot;Go to the&quot;
+&quot;&lt;a href=\&quot;http://www.gtk.org title=&quot;&amp;lt;i&amp;gt;Our&amp;lt;/i&amp;gt; website\&quot;&gt;&quot;
+&quot;GTK+ website&lt;/a&gt; for more...&quot;;
+gtk_label_set_markup (label, text);
+</code></pre>
+
+<p>It is possible to implement custom handling for links and their tooltips with
+the <code>Label::activate-link</code> signal and the <code>Label::get_current_uri</code> function.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.MiscExt.html"><code>MiscExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.BuildableExt.html"><code>BuildableExt</code></a></p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(str: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;) -&gt; <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h4>
+<div class='docblock'><p>Creates a new label with the given text inside it. You can
+pass <code>None</code> to get an empty label widget.</p>
+
+<h2 id='str' class='section-header'><a href='#str'><code>str</code></a></h2>
+<p>The text of the label</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>the new <code>Label</code></p>
+</div><h4 id='method.new_with_mnemonic' class='method'><code>fn <a href='#method.new_with_mnemonic' class='fnname'>new_with_mnemonic</a>(str: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;) -&gt; <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h4>
+<div class='docblock'><p>Creates a new <code>Label</code>, containing the text in <code>str</code>.</p>
+
+<p>If characters in <code>str</code> are preceded by an underscore, they are
+underlined. If you need a literal underscore character in a label, use
+&#39;__&#39; (two underscores). The first underlined character represents a
+keyboard accelerator called a mnemonic. The mnemonic key can be used
+to activate another widget, chosen automatically, or explicitly using
+<code>Label::set_mnemonic_widget</code>.</p>
+
+<p>If <code>Label::set_mnemonic_widget</code> is not called, then the first
+activatable ancestor of the <code>Label</code> will be chosen as the mnemonic
+widget. For instance, if the label is inside a button or menu item,
+the button or menu item will automatically become the mnemonic widget
+and be activated by the mnemonic.</p>
+
+<h2 id='str-1' class='section-header'><a href='#str-1'><code>str</code></a></h2>
+<p>The text of the label, with an underscore in front of the
+ mnemonic character</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>the new <code>Label</code></p>
+</div><h4 id='method.get_angle' class='method'><code>fn <a href='#method.get_angle' class='fnname'>get_angle</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></h4>
+<div class='docblock'><p>Gets the angle of rotation for the label. See
+<code>Label::set_angle</code>.</p>
+
+<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<p>the angle of rotation for the label</p>
+</div><h4 id='method.get_current_uri' class='method'><code>fn <a href='#method.get_current_uri' class='fnname'>get_current_uri</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
+<div class='docblock'><p>Returns the URI for the currently active link in the label.
+The active link is the one under the mouse pointer or, in a
+selectable label, the link in which the text cursor is currently
+positioned.</p>
+
+<p>This function is intended for use in a <code>Label::activate-link</code> handler
+or for use in a <code>Widget::query-tooltip</code> handler.</p>
+
+<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
+<p>the currently active URI. The string is owned by GTK+ and must
+ not be freed or modified.</p>
+</div><h4 id='method.get_justify' class='method'><code>fn <a href='#method.get_justify' class='fnname'>get_justify</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.Justification.html' title='gtk::Justification'>Justification</a></code></h4>
+<div class='docblock'><p>Returns the justification of the label. See <code>Label::set_justify</code>.</p>
+
+<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
+<p><code>Justification</code></p>
+</div><h4 id='method.get_label' class='method'><code>fn <a href='#method.get_label' class='fnname'>get_label</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
+<div class='docblock'><p>Fetches the text from a label widget including any embedded
+underlines indicating mnemonics and Pango markup. (See
+<code>Label::get_text</code>).</p>
+
+<h1 id='returns-5' class='section-header'><a href='#returns-5'>Returns</a></h1>
+<p>the text of the label widget. This string is
+ owned by the widget and must not be modified or freed.</p>
+</div><h4 id='method.get_layout_offsets' class='method'><code>fn <a href='#method.get_layout_offsets' class='fnname'>get_layout_offsets</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></h4>
+<div class='docblock'><p>Obtains the coordinates where the label will draw the <code>pango::Layout</code>
+representing the text in the label; useful to convert mouse events
+into coordinates inside the <code>pango::Layout</code>, e.g. to take some action
+if some part of the label is clicked. Of course you will need to
+create a <code>EventBox</code> to receive the events, and pack the label
+inside it, since labels are windowless (they return <code>false</code> from
+<code>Widget::get_has_window</code>). Remember
+when using the <code>pango::Layout</code> functions you need to convert to
+and from pixels using PANGO_PIXELS() or <code>PANGO_SCALE</code>.</p>
+
+<h2 id='x' class='section-header'><a href='#x'><code>x</code></a></h2>
+<p>location to store X offset of layout, or <code>None</code></p>
+
+<h2 id='y' class='section-header'><a href='#y'><code>y</code></a></h2>
+<p>location to store Y offset of layout, or <code>None</code></p>
+</div><h4 id='method.get_line_wrap' class='method'><code>fn <a href='#method.get_line_wrap' class='fnname'>get_line_wrap</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Returns whether lines in the label are automatically wrapped.
+See <code>Label::set_line_wrap</code>.</p>
+
+<h1 id='returns-6' class='section-header'><a href='#returns-6'>Returns</a></h1>
+<p><code>true</code> if the lines of the label are automatically wrapped.</p>
+</div><h4 id='method.get_lines' class='method'><code>fn <a href='#method.get_lines' class='fnname'>get_lines</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
+<div class='docblock'><p>Gets the number of lines to which an ellipsized, wrapping
+label should be limited. See <code>Label::set_lines</code>.</p>
+
+<p>Since: 3.10</p>
+
+<h1 id='returns-7' class='section-header'><a href='#returns-7'>Returns</a></h1>
+<p>The number of lines</p>
+</div><h4 id='method.get_max_width_chars' class='method'><code>fn <a href='#method.get_max_width_chars' class='fnname'>get_max_width_chars</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
+<div class='docblock'><p>Retrieves the desired maximum width of <code>self</code>, in characters. See
+<code>Label::set_width_chars</code>.</p>
+
+<h1 id='returns-8' class='section-header'><a href='#returns-8'>Returns</a></h1>
+<p>the maximum width of the label in characters.</p>
+</div><h4 id='method.get_mnemonic_keyval' class='method'><code>fn <a href='#method.get_mnemonic_keyval' class='fnname'>get_mnemonic_keyval</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
+<div class='docblock'><p>If the label has been set so that it has an mnemonic key this function
+returns the keyval used for the mnemonic accelerator. If there is no
+mnemonic set up it returns <code>GDK_KEY_VoidSymbol</code>.</p>
+
+<h1 id='returns-9' class='section-header'><a href='#returns-9'>Returns</a></h1>
+<p>GDK keyval usable for accelerators, or <code>GDK_KEY_VoidSymbol</code></p>
+</div><h4 id='method.get_mnemonic_widget' class='method'><code>fn <a href='#method.get_mnemonic_widget' class='fnname'>get_mnemonic_widget</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a>&gt;</code></h4>
+<div class='docblock'><p>Retrieves the target of the mnemonic (keyboard shortcut) of this
+label. See <code>Label::set_mnemonic_widget</code>.</p>
+
+<h1 id='returns-10' class='section-header'><a href='#returns-10'>Returns</a></h1>
+<p>the target of the label’s mnemonic,
+ or <code>None</code> if none has been set and the default algorithm will be used.</p>
+</div><h4 id='method.get_selectable' class='method'><code>fn <a href='#method.get_selectable' class='fnname'>get_selectable</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Gets the value set by <code>Label::set_selectable</code>.</p>
+
+<h1 id='returns-11' class='section-header'><a href='#returns-11'>Returns</a></h1>
+<p><code>true</code> if the user can copy text from the label</p>
+</div><h4 id='method.get_selection_bounds' class='method'><code>fn <a href='#method.get_selection_bounds' class='fnname'>get_selection_bounds</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code></h4>
+<div class='docblock'><p>Gets the selected range of characters in the label, returning <code>true</code>
+if there’s a selection.</p>
+
+<h2 id='start' class='section-header'><a href='#start'><code>start</code></a></h2>
+<p>return location for start of selection, as a character offset</p>
+
+<h2 id='end' class='section-header'><a href='#end'><code>end</code></a></h2>
+<p>return location for end of selection, as a character offset</p>
+
+<h1 id='returns-12' class='section-header'><a href='#returns-12'>Returns</a></h1>
+<p><code>true</code> if selection is non-empty</p>
+</div><h4 id='method.get_single_line_mode' class='method'><code>fn <a href='#method.get_single_line_mode' class='fnname'>get_single_line_mode</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Returns whether the label is in single line mode.</p>
+
+<h1 id='returns-13' class='section-header'><a href='#returns-13'>Returns</a></h1>
+<p><code>true</code> when the label is in single line mode.</p>
+</div><h4 id='method.get_text' class='method'><code>fn <a href='#method.get_text' class='fnname'>get_text</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
+<div class='docblock'><p>Fetches the text from a label widget, as displayed on the
+screen. This does not include any embedded underlines
+indicating mnemonics or Pango markup. (See <code>Label::get_label</code>)</p>
+
+<h1 id='returns-14' class='section-header'><a href='#returns-14'>Returns</a></h1>
+<p>the text in the label widget. This is the internal
+ string used by the label, and must not be modified.</p>
+</div><h4 id='method.get_track_visited_links' class='method'><code>fn <a href='#method.get_track_visited_links' class='fnname'>get_track_visited_links</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Returns whether the label is currently keeping track
+of clicked links.</p>
+
+<h1 id='returns-15' class='section-header'><a href='#returns-15'>Returns</a></h1>
+<p><code>true</code> if clicked links are remembered</p>
+</div><h4 id='method.get_use_markup' class='method'><code>fn <a href='#method.get_use_markup' class='fnname'>get_use_markup</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Returns whether the label’s text is interpreted as marked up with
+the [Pango text markup language][PangoMarkupFormat].
+See gtk_label_set_use_markup ().</p>
+
+<h1 id='returns-16' class='section-header'><a href='#returns-16'>Returns</a></h1>
+<p><code>true</code> if the label’s text will be parsed for markup.</p>
+</div><h4 id='method.get_use_underline' class='method'><code>fn <a href='#method.get_use_underline' class='fnname'>get_use_underline</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Returns whether an embedded underline in the label indicates a
+mnemonic. See <code>Label::set_use_underline</code>.</p>
+
+<h1 id='returns-17' class='section-header'><a href='#returns-17'>Returns</a></h1>
+<p><code>true</code> whether an embedded underline in the label indicates
+ the mnemonic accelerator keys.</p>
+</div><h4 id='method.get_width_chars' class='method'><code>fn <a href='#method.get_width_chars' class='fnname'>get_width_chars</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
+<div class='docblock'><p>Retrieves the desired width of <code>self</code>, in characters. See
+<code>Label::set_width_chars</code>.</p>
+
+<h1 id='returns-18' class='section-header'><a href='#returns-18'>Returns</a></h1>
+<p>the width of the label in characters.</p>
+</div><h4 id='method.get_xalign' class='method'><code>fn <a href='#method.get_xalign' class='fnname'>get_xalign</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></h4>
+<div class='docblock'><p>Gets the <code>Label:xalign</code> property for <code>self</code>.</p>
+
+<p>Since: 3.16</p>
+
+<h1 id='returns-19' class='section-header'><a href='#returns-19'>Returns</a></h1>
+<p>the xalign property</p>
+</div><h4 id='method.get_yalign' class='method'><code>fn <a href='#method.get_yalign' class='fnname'>get_yalign</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></h4>
+<div class='docblock'><p>Gets the <code>Label:yalign</code> property for <code>self</code>.</p>
+
+<p>Since: 3.16</p>
+
+<h1 id='returns-20' class='section-header'><a href='#returns-20'>Returns</a></h1>
+<p>the yalign property</p>
+</div><h4 id='method.select_region' class='method'><code>fn <a href='#method.select_region' class='fnname'>select_region</a>(&amp;self, start_offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, end_offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
+<div class='docblock'><p>Selects a range of characters in the label, if the label is selectable.
+See <code>Label::set_selectable</code>. If the label is not selectable,
+this function has no effect. If <code>start_offset</code> or
+<code>end_offset</code> are -1, then the end of the label will be substituted.</p>
+
+<h2 id='start_offset' class='section-header'><a href='#start_offset'><code>start_offset</code></a></h2>
+<p>start offset (in characters not bytes)</p>
+
+<h2 id='end_offset' class='section-header'><a href='#end_offset'><code>end_offset</code></a></h2>
+<p>end offset (in characters not bytes)</p>
+</div><h4 id='method.set_angle' class='method'><code>fn <a href='#method.set_angle' class='fnname'>set_angle</a>(&amp;self, angle: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a>)</code></h4>
+<div class='docblock'><p>Sets the angle of rotation for the label. An angle of 90 reads from
+from bottom to top, an angle of 270, from top to bottom. The angle
+setting for the label is ignored if the label is selectable,
+wrapped, or ellipsized.</p>
+
+<h2 id='angle' class='section-header'><a href='#angle'><code>angle</code></a></h2>
+<p>the angle that the baseline of the label makes with
+ the horizontal, in degrees, measured counterclockwise</p>
+</div><h4 id='method.set_justify' class='method'><code>fn <a href='#method.set_justify' class='fnname'>set_justify</a>(&amp;self, jtype: <a class='enum' href='../gtk/enum.Justification.html' title='gtk::Justification'>Justification</a>)</code></h4>
+<div class='docblock'><p>Sets the alignment of the lines in the text of the label relative to
+each other. <code>Justification::Left</code> is the default value when the widget is
+first created with <code>Label::new</code>. If you instead want to set the
+alignment of the label as a whole, use <code>Widget::set_halign</code> instead.
+<code>Label::set_justify</code> has no effect on labels containing only a
+single line.</p>
+
+<h2 id='jtype' class='section-header'><a href='#jtype'><code>jtype</code></a></h2>
+<p>a <code>Justification</code></p>
+</div><h4 id='method.set_label' class='method'><code>fn <a href='#method.set_label' class='fnname'>set_label</a>(&amp;self, str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
+<div class='docblock'><p>Sets the text of the label. The label is interpreted as
+including embedded underlines and/or Pango markup depending
+on the values of the <code>Label:use-underline</code>&quot; and
+<code>Label:use-markup</code> properties.</p>
+
+<h2 id='str-2' class='section-header'><a href='#str-2'><code>str</code></a></h2>
+<p>the new text to set for the label</p>
+</div><h4 id='method.set_line_wrap' class='method'><code>fn <a href='#method.set_line_wrap' class='fnname'>set_line_wrap</a>(&amp;self, wrap: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
+<div class='docblock'><p>Toggles line wrapping within the <code>Label</code> widget. <code>true</code> makes it break
+lines if text exceeds the widget’s size. <code>false</code> lets the text get cut off
+by the edge of the widget if it exceeds the widget size.</p>
+
+<p>Note that setting line wrapping to <code>true</code> does not make the label
+wrap at its parent container’s width, because GTK+ widgets
+conceptually can’t make their requisition depend on the parent
+container’s size. For a label that wraps at a specific position,
+set the label’s width using <code>Widget::set_size_request</code>.</p>
+
+<h2 id='wrap' class='section-header'><a href='#wrap'><code>wrap</code></a></h2>
+<p>the setting</p>
+</div><h4 id='method.set_lines' class='method'><code>fn <a href='#method.set_lines' class='fnname'>set_lines</a>(&amp;self, lines: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
+<div class='docblock'><p>Sets the number of lines to which an ellipsized, wrapping label
+should be limited. This has no effect if the label is not wrapping
+or ellipsized. Set this to -1 if you don’t want to limit the
+number of lines.</p>
+
+<p>Since: 3.10</p>
+
+<h2 id='lines' class='section-header'><a href='#lines'><code>lines</code></a></h2>
+<p>the desired number of lines, or -1</p>
+</div><h4 id='method.set_markup' class='method'><code>fn <a href='#method.set_markup' class='fnname'>set_markup</a>(&amp;self, str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
+<div class='docblock'><p>Parses <code>str</code> which is marked up with the
+[Pango text markup language][PangoMarkupFormat], setting the
+label’s text and attribute list based on the parse results. If the <code>str</code> is
+external data, you may need to escape it with <code>g_markup_escape_text</code> or
+<code>g_markup_printf_escaped</code>:</p>
+
+<pre><code class="language-C">const char *format = &quot;&lt;span style=\&quot;italic\&quot;&gt;\%s&lt;/span&gt;&quot;;
+char *markup;
+
+markup = g_markup_printf_escaped (format, str);
+gtk_label_set_markup (GTK_LABEL (label), markup);
+g_free (markup);
+</code></pre>
+
+<h2 id='str-3' class='section-header'><a href='#str-3'><code>str</code></a></h2>
+<p>a markup string (see [Pango markup format][PangoMarkupFormat])</p>
+</div><h4 id='method.set_markup_with_mnemonic' class='method'><code>fn <a href='#method.set_markup_with_mnemonic' class='fnname'>set_markup_with_mnemonic</a>(&amp;self, str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
+<div class='docblock'><p>Parses <code>str</code> which is marked up with the
+[Pango text markup language][PangoMarkupFormat],
+setting the label’s text and attribute list based on the parse results.
+If characters in <code>str</code> are preceded by an underscore, they are underlined
+indicating that they represent a keyboard accelerator called a mnemonic.</p>
+
+<p>The mnemonic key can be used to activate another widget, chosen
+automatically, or explicitly using <code>Label::set_mnemonic_widget</code>.</p>
+
+<h2 id='str-4' class='section-header'><a href='#str-4'><code>str</code></a></h2>
+<p>a markup string (see
+ [Pango markup format][PangoMarkupFormat])</p>
+</div><h4 id='method.set_max_width_chars' class='method'><code>fn <a href='#method.set_max_width_chars' class='fnname'>set_max_width_chars</a>(&amp;self, n_chars: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
+<div class='docblock'><p>Sets the desired maximum width in characters of <code>self</code> to <code>n_chars</code>.</p>
+
+<h2 id='n_chars' class='section-header'><a href='#n_chars'><code>n_chars</code></a></h2>
+<p>the new desired maximum width, in characters.</p>
+</div><h4 id='method.set_mnemonic_widget' class='method'><code>fn <a href='#method.set_mnemonic_widget' class='fnname'>set_mnemonic_widget</a>&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a>&gt;&gt;(&amp;self, widget: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;)</code></h4>
+<div class='docblock'><p>If the label has been set so that it has an mnemonic key (using
+i.e. <code>Label::set_markup_with_mnemonic</code>,
+<code>Label::set_text_with_mnemonic</code>, <code>Label::new_with_mnemonic</code>
+or the “use_underline” property) the label can be associated with a
+widget that is the target of the mnemonic. When the label is inside
+a widget (like a <code>Button</code> or a <code>Notebook</code> tab) it is
+automatically associated with the correct widget, but sometimes
+(i.e. when the target is a <code>Entry</code> next to the label) you need to
+set it explicitly using this function.</p>
+
+<p>The target widget will be accelerated by emitting the
+<code>Widget</code>::mnemonic-activate signal on it. The default handler for
+this signal will activate the widget if there are no mnemonic collisions
+and toggle focus between the colliding widgets otherwise.</p>
+
+<h2 id='widget' class='section-header'><a href='#widget'><code>widget</code></a></h2>
+<p>the target <code>Widget</code></p>
+</div><h4 id='method.set_pattern' class='method'><code>fn <a href='#method.set_pattern' class='fnname'>set_pattern</a>(&amp;self, pattern: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
+<div class='docblock'><p>The pattern of underlines you want under the existing text within the
+<code>Label</code> widget. For example if the current text of the label says
+“FooBarBaz” passing a pattern of “___ ___” will underline
+“Foo” and “Baz” but not “Bar”.</p>
+
+<h2 id='pattern' class='section-header'><a href='#pattern'><code>pattern</code></a></h2>
+<p>The pattern as described above.</p>
+</div><h4 id='method.set_selectable' class='method'><code>fn <a href='#method.set_selectable' class='fnname'>set_selectable</a>(&amp;self, setting: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
+<div class='docblock'><p>Selectable labels allow the user to select text from the label, for
+copy-and-paste.</p>
+
+<h2 id='setting' class='section-header'><a href='#setting'><code>setting</code></a></h2>
+<p><code>true</code> to allow selecting text in the label</p>
+</div><h4 id='method.set_single_line_mode' class='method'><code>fn <a href='#method.set_single_line_mode' class='fnname'>set_single_line_mode</a>(&amp;self, single_line_mode: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
+<div class='docblock'><p>Sets whether the label is in single line mode.</p>
+
+<h2 id='single_line_mode' class='section-header'><a href='#single_line_mode'><code>single_line_mode</code></a></h2>
+<p><code>true</code> if the label should be in single line mode</p>
+</div><h4 id='method.set_text' class='method'><code>fn <a href='#method.set_text' class='fnname'>set_text</a>(&amp;self, str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
+<div class='docblock'><p>Sets the text within the <code>Label</code> widget. It overwrites any text that
+was there before.</p>
+
+<p>This will also clear any previously set mnemonic accelerators.</p>
+
+<h2 id='str-5' class='section-header'><a href='#str-5'><code>str</code></a></h2>
+<p>The text you want to set</p>
+</div><h4 id='method.set_text_with_mnemonic' class='method'><code>fn <a href='#method.set_text_with_mnemonic' class='fnname'>set_text_with_mnemonic</a>(&amp;self, str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
+<div class='docblock'><p>Sets the label’s text from the string <code>str</code>.
+If characters in <code>str</code> are preceded by an underscore, they are underlined
+indicating that they represent a keyboard accelerator called a mnemonic.
+The mnemonic key can be used to activate another widget, chosen
+automatically, or explicitly using <code>Label::set_mnemonic_widget</code>.</p>
+
+<h2 id='str-6' class='section-header'><a href='#str-6'><code>str</code></a></h2>
+<p>a string</p>
+</div><h4 id='method.set_track_visited_links' class='method'><code>fn <a href='#method.set_track_visited_links' class='fnname'>set_track_visited_links</a>(&amp;self, track_links: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
+<div class='docblock'><p>Sets whether the label should keep track of clicked
+links (and use a different color for them).</p>
+
+<h2 id='track_links' class='section-header'><a href='#track_links'><code>track_links</code></a></h2>
+<p><code>true</code> to track visited links</p>
+</div><h4 id='method.set_use_markup' class='method'><code>fn <a href='#method.set_use_markup' class='fnname'>set_use_markup</a>(&amp;self, setting: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
+<div class='docblock'><p>Sets whether the text of the label contains markup in
+[Pango’s text markup language][PangoMarkupFormat].
+See <code>Label::set_markup</code>.</p>
+
+<h2 id='setting-1' class='section-header'><a href='#setting-1'><code>setting</code></a></h2>
+<p><code>true</code> if the label’s text should be parsed for markup.</p>
+</div><h4 id='method.set_use_underline' class='method'><code>fn <a href='#method.set_use_underline' class='fnname'>set_use_underline</a>(&amp;self, setting: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
+<div class='docblock'><p>If true, an underline in the text indicates the next character should be
+used for the mnemonic accelerator key.</p>
+
+<h2 id='setting-2' class='section-header'><a href='#setting-2'><code>setting</code></a></h2>
+<p><code>true</code> if underlines in the text indicate mnemonics</p>
+</div><h4 id='method.set_width_chars' class='method'><code>fn <a href='#method.set_width_chars' class='fnname'>set_width_chars</a>(&amp;self, n_chars: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
+<div class='docblock'><p>Sets the desired width in characters of <code>self</code> to <code>n_chars</code>.</p>
+
+<h2 id='n_chars-1' class='section-header'><a href='#n_chars-1'><code>n_chars</code></a></h2>
+<p>the new desired width, in characters.</p>
+</div><h4 id='method.set_xalign' class='method'><code>fn <a href='#method.set_xalign' class='fnname'>set_xalign</a>(&amp;self, xalign: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>)</code></h4>
+<div class='docblock'><p>Sets the <code>Label:xalign</code> property for <code>self</code>.</p>
+
+<p>Since: 3.16</p>
+
+<h2 id='xalign' class='section-header'><a href='#xalign'><code>xalign</code></a></h2>
+<p>the new xalign value, between 0 and 1</p>
+</div><h4 id='method.set_yalign' class='method'><code>fn <a href='#method.set_yalign' class='fnname'>set_yalign</a>(&amp;self, yalign: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>)</code></h4>
+<div class='docblock'><p>Sets the <code>Label:yalign</code> property for <code>self</code>.</p>
+
+<p>Since: 3.16</p>
+
+<h2 id='yalign' class='section-header'><a href='#yalign'><code>yalign</code></a></h2>
+<p>the new yalign value, between 0 and 1</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.StaticType.html' title='gtk::StaticType'>StaticType</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../gtk/trait.StaticType.html#method.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../gtk/enum.Type.html' title='gtk::Type'>Type</a></code></h4>
+</div><h3 class='impl'><code>impl&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt; for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Misc.html' title='gtk::Misc'>Misc</a>&gt; for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a>&gt; for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Buildable.html' title='gtk::Buildable'>Buildable</a>&gt; for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
+<h4 id='method.hash_slice' class='method'><span class="since">1.3.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 </div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h4>
-<h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../gtk/traits/trait.FFIWidget.html' title='gtk::traits::FFIWidget'>FFIWidget</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.unwrap_widget' class='method'><code>fn <a href='../gtk/traits/trait.FFIWidget.html#method.unwrap_widget' class='fnname'>unwrap_widget</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../ffi/struct.GtkWidget.html' title='ffi::GtkWidget'>GtkWidget</a></a></code></h4>
-<h4 id='method.wrap_widget' class='method'><code>fn <a href='../gtk/traits/trait.FFIWidget.html#method.wrap_widget' class='fnname'>wrap_widget</a>(widget: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../ffi/struct.GtkWidget.html' title='ffi::GtkWidget'>GtkWidget</a></a>) -&gt; <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.show_all' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.show_all' class='fnname'>show_all</a>(&amp;self)</code></h4>
-<h4 id='method.show_now' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.show_now' class='fnname'>show_now</a>(&amp;self)</code></h4>
-<h4 id='method.hide' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.hide' class='fnname'>hide</a>(&amp;self)</code></h4>
-<h4 id='method.map' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.map' class='fnname'>map</a>(&amp;self)</code></h4>
-<h4 id='method.unmap' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.unmap' class='fnname'>unmap</a>(&amp;self)</code></h4>
-<h4 id='method.realize' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.realize' class='fnname'>realize</a>(&amp;self)</code></h4>
-<h4 id='method.unrealize' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.unrealize' class='fnname'>unrealize</a>(&amp;self)</code></h4>
-<h4 id='method.queue_draw' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.queue_draw' class='fnname'>queue_draw</a>(&amp;self)</code></h4>
-<h4 id='method.queue_resize' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.queue_resize' class='fnname'>queue_resize</a>(&amp;self)</code></h4>
-<h4 id='method.queue_resize_no_redraw' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.queue_resize_no_redraw' class='fnname'>queue_resize_no_redraw</a>(&amp;self)</code></h4>
-<h4 id='method.get_scale_factor' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_scale_factor' class='fnname'>get_scale_factor</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.activate' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.activate' class='fnname'>activate</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.reparent' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.reparent' class='fnname'>reparent</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, new_parent: &amp;T)</code></h4>
-<h4 id='method.is_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_focus' class='fnname'>is_focus</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.grab_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.grab_focus' class='fnname'>grab_focus</a>(&amp;self)</code></h4>
-<h4 id='method.grab_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.grab_default' class='fnname'>grab_default</a>(&amp;self)</code></h4>
-<h4 id='method.set_name' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_name' class='fnname'>set_name</a>(&amp;self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.get_name' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_name' class='fnname'>get_name</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
-<h4 id='method.set_sensitive' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_sensitive' class='fnname'>set_sensitive</a>(&amp;self, sensitive: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.set_parent' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_parent' class='fnname'>set_parent</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, parent: &amp;T)</code></h4>
-<h4 id='method.get_toplevel' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_toplevel' class='fnname'>get_toplevel</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h4>
-<h4 id='method.get_ancestor' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_ancestor' class='fnname'>get_ancestor</a>(&amp;self, widget_type: <a class='enum' href='../glib/types/enum.Type.html' title='glib::types::Type'>Type</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h4>
-<h4 id='method.is_ancestor' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_ancestor' class='fnname'>is_ancestor</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, ancestor: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.hide_on_delete' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.hide_on_delete' class='fnname'>hide_on_delete</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_direction' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_direction' class='fnname'>set_direction</a>(&amp;self, dir: <a class='enum' href='../gtk/enum.TextDirection.html' title='gtk::TextDirection'>TextDirection</a>)</code></h4>
-<h4 id='method.get_direction' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_direction' class='fnname'>get_direction</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.TextDirection.html' title='gtk::TextDirection'>TextDirection</a></code></h4>
-<h4 id='method.set_default_direction' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_default_direction' class='fnname'>set_default_direction</a>(dir: <a class='enum' href='../gtk/enum.TextDirection.html' title='gtk::TextDirection'>TextDirection</a>)</code></h4>
-<h4 id='method.get_default_direction' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_default_direction' class='fnname'>get_default_direction</a>() -&gt; <a class='enum' href='../gtk/enum.TextDirection.html' title='gtk::TextDirection'>TextDirection</a></code></h4>
-<h4 id='method.in_destruction' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.in_destruction' class='fnname'>in_destruction</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.unparent' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.unparent' class='fnname'>unparent</a>(&amp;self)</code></h4>
-<h4 id='method.translate_coordinates' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.translate_coordinates' class='fnname'>translate_coordinates</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, dest_widget: &amp;T, src_x: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, src_y: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a>&gt;</code></h4>
-<h4 id='method.override_background_color' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.override_background_color' class='fnname'>override_background_color</a>(&amp;self, state: <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a>, color: &amp;<a class='struct' href='../gdk_ffi/struct.GdkRGBA.html' title='gdk_ffi::GdkRGBA'>GdkRGBA</a>)</code></h4>
-<h4 id='method.override_color' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.override_color' class='fnname'>override_color</a>(&amp;self, state: <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a>, color: &amp;<a class='struct' href='../gdk_ffi/struct.GdkRGBA.html' title='gdk_ffi::GdkRGBA'>GdkRGBA</a>)</code></h4>
-<h4 id='method.override_symbolic_color' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.override_symbolic_color' class='fnname'>override_symbolic_color</a>(&amp;self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, color: &amp;<a class='struct' href='../gdk_ffi/struct.GdkRGBA.html' title='gdk_ffi::GdkRGBA'>GdkRGBA</a>)</code></h4>
-<h4 id='method.override_cursor' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.override_cursor' class='fnname'>override_cursor</a>(&amp;self, cursor: &amp;<a class='struct' href='../gdk_ffi/struct.GdkRGBA.html' title='gdk_ffi::GdkRGBA'>GdkRGBA</a>, secondary_cursor: &amp;<a class='struct' href='../gdk_ffi/struct.GdkRGBA.html' title='gdk_ffi::GdkRGBA'>GdkRGBA</a>)</code></h4>
-<h4 id='method.override_font' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.override_font' class='fnname'>override_font</a>(&amp;self, font: &amp;<a class='struct' href='../pango/widgets/font_description/struct.FontDescription.html' title='pango::widgets::font_description::FontDescription'>FontDescription</a>)</code></h4>
-<h4 id='method.queue_draw_area' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.queue_draw_area' class='fnname'>queue_draw_area</a>(&amp;self, x: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, y: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, width: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, height: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.set_app_paintable' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_app_paintable' class='fnname'>set_app_paintable</a>(&amp;self, app_paintable: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.set_double_buffered' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_double_buffered' class='fnname'>set_double_buffered</a>(&amp;self, double_buffered: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.set_redraw_on_allocate' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_redraw_on_allocate' class='fnname'>set_redraw_on_allocate</a>(&amp;self, redraw_on_allocate: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.mnemonic_activate' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.mnemonic_activate' class='fnname'>mnemonic_activate</a>(&amp;self, group_cycling: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.child_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.child_focus' class='fnname'>child_focus</a>(&amp;self, direction: <a class='enum' href='../gtk/enum.DirectionType.html' title='gtk::DirectionType'>DirectionType</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_child_visible' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_child_visible' class='fnname'>get_child_visible</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_parent' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_parent' class='fnname'>get_parent</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h4>
-<h4 id='method.has_screen' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.has_screen' class='fnname'>has_screen</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_screen' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_screen' class='fnname'>get_screen</a>(&amp;self) -&gt; <a class='struct' href='../gdk/screen/struct.Screen.html' title='gdk::screen::Screen'>Screen</a></code></h4>
-<h4 id='method.get_size_request' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_size_request' class='fnname'>get_size_request</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.set_child_visible' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_child_visible' class='fnname'>set_child_visible</a>(&amp;self, is_visible: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.set_size_request' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_size_request' class='fnname'>set_size_request</a>(&amp;self, width: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, height: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.set_no_show_all' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_no_show_all' class='fnname'>set_no_show_all</a>(&amp;self, no_show_all: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_no_show_all' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_no_show_all' class='fnname'>get_no_show_all</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.list_mnemonic_labels' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.list_mnemonic_labels' class='fnname'>list_mnemonic_labels</a>(&amp;self) -&gt; <a class='struct' href='../glib/list/struct.List.html' title='glib::list::List'>List</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;Self&gt;&gt;</code></h4>
-<h4 id='method.add_mnemonic_label' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.add_mnemonic_label' class='fnname'>add_mnemonic_label</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, label: &amp;T)</code></h4>
-<h4 id='method.remove_mnemonic_label' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.remove_mnemonic_label' class='fnname'>remove_mnemonic_label</a>&lt;T: <a class='trait' href='../gtk/traits/widget/trait.WidgetTrait.html' title='gtk::traits::widget::WidgetTrait'>WidgetTrait</a>&gt;(&amp;self, label: &amp;T)</code></h4>
-<h4 id='method.is_composited' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_composited' class='fnname'>is_composited</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.error_bell' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.error_bell' class='fnname'>error_bell</a>(&amp;self)</code></h4>
-<h4 id='method.keynav_failed' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.keynav_failed' class='fnname'>keynav_failed</a>(&amp;self, direction: <a class='enum' href='../gtk/enum.DirectionType.html' title='gtk::DirectionType'>DirectionType</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_tooltip_markup' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_tooltip_markup' class='fnname'>get_tooltip_markup</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
-<h4 id='method.set_tooltip_markup' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_tooltip_markup' class='fnname'>set_tooltip_markup</a>(&amp;self, markup: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.get_tooltip_text' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_tooltip_text' class='fnname'>get_tooltip_text</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
-<h4 id='method.set_tooltip_text' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_tooltip_text' class='fnname'>set_tooltip_text</a>(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.get_has_tooltip' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_has_tooltip' class='fnname'>get_has_tooltip</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_has_tooltip' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_has_tooltip' class='fnname'>set_has_tooltip</a>(&amp;self, has_tooltip: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.trigger_tooltip_query' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.trigger_tooltip_query' class='fnname'>trigger_tooltip_query</a>(&amp;self)</code></h4>
-<h4 id='method.get_allocated_baseline' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_allocated_baseline' class='fnname'>get_allocated_baseline</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_app_paintable' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_app_paintable' class='fnname'>get_app_paintable</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_can_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_can_default' class='fnname'>get_can_default</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_can_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_can_default' class='fnname'>set_can_default</a>(&amp;self, can_default: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_can_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_can_focus' class='fnname'>get_can_focus</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_can_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_can_focus' class='fnname'>set_can_focus</a>(&amp;self, can_focus: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_double_buffered' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_double_buffered' class='fnname'>get_double_buffered</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_window' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_window' class='fnname'>get_window</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gdk/window/struct.Window.html' title='gdk::window::Window'>Window</a>&gt;</code></h4>
-<h4 id='method.get_has_window' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_has_window' class='fnname'>get_has_window</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_has_window' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_has_window' class='fnname'>set_has_window</a>(&amp;self, has_window: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_sensitive' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_sensitive' class='fnname'>get_sensitive</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.is_sensitive' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_sensitive' class='fnname'>is_sensitive</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_visible' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_visible' class='fnname'>get_visible</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.is_visible' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_visible' class='fnname'>is_visible</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_visible' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_visible' class='fnname'>set_visible</a>(&amp;self, visible: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.set_state_flags' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_state_flags' class='fnname'>set_state_flags</a>(&amp;self, flags: <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a>, clear: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.unset_state_flags' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.unset_state_flags' class='fnname'>unset_state_flags</a>(&amp;self, flags: <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a>)</code></h4>
-<h4 id='method.get_state_flags' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_state_flags' class='fnname'>get_state_flags</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a></code></h4>
-<h4 id='method.has_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.has_default' class='fnname'>has_default</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.has_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.has_focus' class='fnname'>has_focus</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.has_visible_focus' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.has_visible_focus' class='fnname'>has_visible_focus</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.has_grab' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.has_grab' class='fnname'>has_grab</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.is_drawable' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_drawable' class='fnname'>is_drawable</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.is_toplevel' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.is_toplevel' class='fnname'>is_toplevel</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_receives_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_receives_default' class='fnname'>set_receives_default</a>(&amp;self, receives_default: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_receives_default' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_receives_default' class='fnname'>get_receives_default</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_support_multidevice' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_support_multidevice' class='fnname'>set_support_multidevice</a>(&amp;self, support_multidevice: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_support_multidevice' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_support_multidevice' class='fnname'>get_support_multidevice</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_realized' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_realized' class='fnname'>set_realized</a>(&amp;self, realized: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_realized' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_realized' class='fnname'>get_realized</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_mapped' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_mapped' class='fnname'>set_mapped</a>(&amp;self, mapped: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_mapped' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_mapped' class='fnname'>get_mapped</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_modifier_mask' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_modifier_mask' class='fnname'>get_modifier_mask</a>(&amp;self, intent: <a class='enum' href='../gdk_ffi/enum.GdkModifierIntent.html' title='gdk_ffi::GdkModifierIntent'>ModifierIntent</a>) -&gt; <a class='struct' href='../gdk_ffi/struct.GdkModifierType.html' title='gdk_ffi::GdkModifierType'>ModifierType</a></code></h4>
-<h4 id='method.set_opacity' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_opacity' class='fnname'>set_opacity</a>(&amp;self, opacity: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a>)</code></h4>
-<h4 id='method.get_opacity' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_opacity' class='fnname'>get_opacity</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></h4>
-<h4 id='method.set_margin_top' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_margin_top' class='fnname'>set_margin_top</a>(&amp;self, margin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.set_margin_bottom' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_margin_bottom' class='fnname'>set_margin_bottom</a>(&amp;self, margin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.get_margin_top' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_margin_top' class='fnname'>get_margin_top</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_margin_bottom' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_margin_bottom' class='fnname'>get_margin_bottom</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_allocated_width' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_allocated_width' class='fnname'>get_allocated_width</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_allocated_height' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_allocated_height' class='fnname'>get_allocated_height</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.reset_style' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.reset_style' class='fnname'>reset_style</a>(&amp;self)</code></h4>
-<h4 id='method.get_preferred_height' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_preferred_height' class='fnname'>get_preferred_height</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_preferred_width' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_preferred_width' class='fnname'>get_preferred_width</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_preferred_height_for_width' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_preferred_height_for_width' class='fnname'>get_preferred_height_for_width</a>(&amp;self, width: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_preferred_width_for_height' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_preferred_width_for_height' class='fnname'>get_preferred_width_for_height</a>(&amp;self, height: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_preferred_height_and_baseline_for_width' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_preferred_height_and_baseline_for_width' class='fnname'>get_preferred_height_and_baseline_for_width</a>(&amp;self, width: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_request_mode' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_request_mode' class='fnname'>get_request_mode</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.SizeRequestMode.html' title='gtk::SizeRequestMode'>SizeRequestMode</a></code></h4>
-<h4 id='method.get_halign' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_halign' class='fnname'>get_halign</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.Align.html' title='gtk::Align'>Align</a></code></h4>
-<h4 id='method.set_halign' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_halign' class='fnname'>set_halign</a>(&amp;self, align: <a class='enum' href='../gtk/enum.Align.html' title='gtk::Align'>Align</a>)</code></h4>
-<h4 id='method.get_valign' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_valign' class='fnname'>get_valign</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.Align.html' title='gtk::Align'>Align</a></code></h4>
-<h4 id='method.get_valign_with_baseline' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_valign_with_baseline' class='fnname'>get_valign_with_baseline</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.Align.html' title='gtk::Align'>Align</a></code></h4>
-<h4 id='method.set_valign' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_valign' class='fnname'>set_valign</a>(&amp;self, align: <a class='enum' href='../gtk/enum.Align.html' title='gtk::Align'>Align</a>)</code></h4>
-<h4 id='method.get_margin_start' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_margin_start' class='fnname'>get_margin_start</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.set_margin_start' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_margin_start' class='fnname'>set_margin_start</a>(&amp;self, margin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.get_margin_end' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_margin_end' class='fnname'>get_margin_end</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.set_margin_end' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_margin_end' class='fnname'>set_margin_end</a>(&amp;self, margin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.get_hexpand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_hexpand' class='fnname'>get_hexpand</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_hexpand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_hexpand' class='fnname'>set_hexpand</a>(&amp;self, expand: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_hexpand_set' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_hexpand_set' class='fnname'>get_hexpand_set</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_hexpand_set' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_hexpand_set' class='fnname'>set_hexpand_set</a>(&amp;self, expand: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_vexpand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_vexpand' class='fnname'>get_vexpand</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_vexpand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_vexpand' class='fnname'>set_vexpand</a>(&amp;self, expand: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_vexpand_set' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_vexpand_set' class='fnname'>get_vexpand_set</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_vexpand_set' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.set_vexpand_set' class='fnname'>set_vexpand_set</a>(&amp;self, expand: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_style_context' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.get_style_context' class='fnname'>get_style_context</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h4>
-<h4 id='method.queue_compute_expand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.queue_compute_expand' class='fnname'>queue_compute_expand</a>(&amp;self)</code></h4>
-<h4 id='method.compute_expand' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.compute_expand' class='fnname'>compute_expand</a>(&amp;self, orientation: <a class='enum' href='../gtk/enum.Orientation.html' title='gtk::Orientation'>Orientation</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.init_template' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.init_template' class='fnname'>init_template</a>(&amp;self)</code></h4>
-<h4 id='method.thaw_child_notify' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.thaw_child_notify' class='fnname'>thaw_child_notify</a>(&amp;self)</code></h4>
-<h4 id='method.freeze_child_notify' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.freeze_child_notify' class='fnname'>freeze_child_notify</a>(&amp;self)</code></h4>
-<h4 id='method.child_notify' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.child_notify' class='fnname'>child_notify</a>(&amp;self, child_property: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.destroy' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.destroy' class='fnname'>destroy</a>(&amp;self)</code></h4>
-<h4 id='method.destroyed' class='method'><code>fn <a href='../gtk/traits/widget/trait.WidgetTrait.html#method.destroyed' class='fnname'>destroyed</a>(&amp;self, other: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../glib/traits/trait.FFIGObject.html' title='glib::traits::FFIGObject'>FFIGObject</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.unwrap_gobject' class='method'><code>fn <a href='../glib/traits/trait.FFIGObject.html#method.unwrap_gobject' class='fnname'>unwrap_gobject</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../gobject_ffi/struct.GObject.html' title='gobject_ffi::GObject'>GObject</a></a></code></h4>
-<h4 id='method.wrap_object' class='method'><code>unsafe fn <a href='../glib/traits/trait.FFIGObject.html#method.wrap_object' class='fnname'>wrap_object</a>(object: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut <a class='struct' href='../gobject_ffi/struct.GObject.html' title='gobject_ffi::GObject'>GObject</a></a>) -&gt; <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../gtk/traits/gobject/trait.GObjectTrait.html' title='gtk::traits::gobject::GObjectTrait'>GObjectTrait</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/traits/misc/trait.MiscTrait.html' title='gtk::traits::misc::MiscTrait'>MiscTrait</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.set_alignment' class='method'><code>fn <a href='../gtk/traits/misc/trait.MiscTrait.html#method.set_alignment' class='fnname'>set_alignment</a>(&amp;self, x_align: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>, y_align: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>)</code></h4>
-<h4 id='method.set_padding' class='method'><code>fn <a href='../gtk/traits/misc/trait.MiscTrait.html#method.set_padding' class='fnname'>set_padding</a>(&amp;self, x_pad: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, y_pad: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.get_alignment' class='method'><code>fn <a href='../gtk/traits/misc/trait.MiscTrait.html#method.get_alignment' class='fnname'>get_alignment</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>)</a></code></h4>
-<h4 id='method.get_padding' class='method'><code>fn <a href='../gtk/traits/misc/trait.MiscTrait.html#method.get_padding' class='fnname'>get_padding</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../gtk/traits/label/trait.LabelTrait.html' title='gtk::traits::label::LabelTrait'>LabelTrait</a> for <a class='struct' href='../gtk/struct.Label.html' title='gtk::Label'>Label</a></code></h3><div class='impl-items'><h4 id='method.set_label' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_label' class='fnname'>set_label</a>(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.set_text' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_text' class='fnname'>set_text</a>(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.set_justify' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_justify' class='fnname'>set_justify</a>(&amp;self, jtype: <a class='enum' href='../gtk/enum.Justification.html' title='gtk::Justification'>Justification</a>)</code></h4>
-<h4 id='method.set_markup' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_markup' class='fnname'>set_markup</a>(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.set_markup_with_mnemonic' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_markup_with_mnemonic' class='fnname'>set_markup_with_mnemonic</a>(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.set_pattern' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_pattern' class='fnname'>set_pattern</a>(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.set_text_with_mnemonic' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_text_with_mnemonic' class='fnname'>set_text_with_mnemonic</a>(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
-<h4 id='method.set_width_chars' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_width_chars' class='fnname'>set_width_chars</a>(&amp;self, n_chars: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.set_max_width_chars' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_max_width_chars' class='fnname'>set_max_width_chars</a>(&amp;self, n_chars: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.set_line_wrap' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_line_wrap' class='fnname'>set_line_wrap</a>(&amp;self, wrap: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_line_wrap' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_line_wrap' class='fnname'>get_line_wrap</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_lines' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_lines' class='fnname'>set_lines</a>(&amp;self, lines: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.get_lines' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_lines' class='fnname'>get_lines</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_layout_offsets' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_layout_offsets' class='fnname'>get_layout_offsets</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.get_mnemonic_keyval' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_mnemonic_keyval' class='fnname'>get_mnemonic_keyval</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
-<h4 id='method.set_selectable' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_selectable' class='fnname'>set_selectable</a>(&amp;self, selectable: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_selectable' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_selectable' class='fnname'>get_selectable</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_use_markup' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_use_markup' class='fnname'>set_use_markup</a>(&amp;self, use_markup: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_use_markup' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_use_markup' class='fnname'>get_use_markup</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_use_underline' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_use_underline' class='fnname'>set_use_underline</a>(&amp;self, use_underline: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_use_underline' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_use_underline' class='fnname'>get_use_underline</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_single_line_mode' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_single_line_mode' class='fnname'>set_single_line_mode</a>(&amp;self, single_line_mode: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_single_line_mode' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_single_line_mode' class='fnname'>get_single_line_mode</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.set_track_visited_links' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_track_visited_links' class='fnname'>set_track_visited_links</a>(&amp;self, track_visited_links: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
-<h4 id='method.get_track_visited_links' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_track_visited_links' class='fnname'>get_track_visited_links</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.get_text' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_text' class='fnname'>get_text</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
-<h4 id='method.get_label' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_label' class='fnname'>get_label</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
-<h4 id='method.get_current_uri' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_current_uri' class='fnname'>get_current_uri</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
-<h4 id='method.select_region' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.select_region' class='fnname'>select_region</a>(&amp;self, start_offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, end_offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
-<h4 id='method.get_justify' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_justify' class='fnname'>get_justify</a>(&amp;self) -&gt; <a class='enum' href='../gtk/enum.Justification.html' title='gtk::Justification'>Justification</a></code></h4>
-<h4 id='method.get_width_chars' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_width_chars' class='fnname'>get_width_chars</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_max_width_chars' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_max_width_chars' class='fnname'>get_max_width_chars</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
-<h4 id='method.get_selection_bounds' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_selection_bounds' class='fnname'>get_selection_bounds</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</a></code></h4>
-<h4 id='method.set_angle' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.set_angle' class='fnname'>set_angle</a>(&amp;self, angle: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a>)</code></h4>
-<h4 id='method.get_angle' class='method'><code>fn <a href='../gtk/traits/label/trait.LabelTrait.html#method.get_angle' class='fnname'>get_angle</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></h4>
+<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -279,7 +587,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

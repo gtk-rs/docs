@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Statusbar","A `Statusbar` is usually placed along the bottom of an application's main `Window`. It may provide a regular commentary of the application's status (as is usually the case in a web browser, for example), or may be used to simply output a message when the status changes, (when an upload is complete in an FTP client, for example)."]]});

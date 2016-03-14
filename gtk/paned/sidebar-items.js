@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Paned","`Paned` has two panes, arranged either horizontally or vertically. The division between the two panes is adjustable by the user by dragging a handle."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Revealer","The `Revealer` widget is a container which animates the transition of its child from invisible to visible."]]});

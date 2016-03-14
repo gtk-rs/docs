@@ -1,1 +1,0 @@
-initSidebarItems({"trait":[["UnsafeFrom",""],["Wrapper","A wrapper struct."]]});

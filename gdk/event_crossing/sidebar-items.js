@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["EventCrossing","Generated when the pointer enters or leaves a window."]]});

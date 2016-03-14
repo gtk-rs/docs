@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/glib/src/types.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gtk-rs-release/glib/src/types.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>types.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -180,10 +181,44 @@
 <span id="138">138</span>
 <span id="139">139</span>
 <span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
 </pre><pre class='rust '>
-<span class='comment'>// Copyright 2015, The Gtk-rs Project Developers.</span>
+<span class='comment'>// Copyright 2015-2016, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+
+<span class='doccomment'>//! Runtime type infromation.</span>
 
 <span class='kw'>use</span> <span class='ident'>translate</span>::{<span class='ident'>FromGlib</span>, <span class='ident'>ToGlib</span>, <span class='ident'>from_glib</span>};
 <span class='kw'>use</span> <span class='ident'>glib_ffi</span>;
@@ -206,10 +241,10 @@
     <span class='ident'>I32</span>,
     <span class='doccomment'>/// The fundamental type corresponding to `u32`</span>
     <span class='ident'>U32</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `isize`</span>
-    <span class='ident'>ISize</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `usize`</span>
-    <span class='ident'>USize</span>,
+    <span class='doccomment'>/// The fundamental type corresponding to C `long`</span>
+    <span class='ident'>ILong</span>,
+    <span class='doccomment'>/// The fundamental type corresponding to C `unsigned long`</span>
+    <span class='ident'>ULong</span>,
     <span class='doccomment'>/// The fundamental type corresponding to `i64`</span>
     <span class='ident'>I64</span>,
     <span class='doccomment'>/// The fundamental type corresponding to `u64`</span>
@@ -240,9 +275,39 @@
     <span class='ident'>Other</span>(<span class='ident'>usize</span>),
 }
 
+<span class='doccomment'>/// Types that are supported by GLib dynamic typing.</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>StaticType</span> {
+    <span class='doccomment'>/// Returns the type identifier of `Self`.</span>
     <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span>;
 }
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>StaticType</span><span class='op'>&gt;</span> <span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span> {
+    <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
+        <span class='ident'>T</span>::<span class='ident'>static_type</span>()
+    }
+}
+
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>builtin</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> {
+        <span class='kw'>impl</span> <span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
+            <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
+                <span class='ident'>Type</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val</span>
+            }
+        }
+    }
+}
+
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>bool</span>, <span class='ident'>Bool</span>);
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>i8</span>, <span class='ident'>I8</span>);
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>u8</span>, <span class='ident'>U8</span>);
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>i32</span>, <span class='ident'>I32</span>);
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>u32</span>, <span class='ident'>U32</span>);
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>i64</span>, <span class='ident'>I64</span>);
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>u64</span>, <span class='ident'>U64</span>);
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>f32</span>, <span class='ident'>F32</span>);
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>f64</span>, <span class='ident'>F64</span>);
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>str</span>, <span class='ident'>String</span>);
+<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>String</span>, <span class='ident'>String</span>);
 
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>InstanceType</span> {
     <span class='kw'>fn</span> <span class='ident'>instance_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span>;
@@ -270,8 +335,8 @@
             <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_BOOLEAN</span> <span class='op'>=&gt;</span> <span class='ident'>Bool</span>,
             <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INT</span> <span class='op'>=&gt;</span> <span class='ident'>I32</span>,
             <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_UINT</span> <span class='op'>=&gt;</span> <span class='ident'>U32</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_LONG</span> <span class='op'>=&gt;</span> <span class='ident'>ISize</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_ULONG</span> <span class='op'>=&gt;</span> <span class='ident'>USize</span>,
+            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_LONG</span> <span class='op'>=&gt;</span> <span class='ident'>ILong</span>,
+            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_ULONG</span> <span class='op'>=&gt;</span> <span class='ident'>ULong</span>,
             <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INT64</span> <span class='op'>=&gt;</span> <span class='ident'>I64</span>,
             <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_UINT64</span> <span class='op'>=&gt;</span> <span class='ident'>U64</span>,
             <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_ENUM</span> <span class='op'>=&gt;</span> <span class='ident'>BaseEnum</span>,
@@ -303,8 +368,8 @@
             <span class='ident'>Bool</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_BOOLEAN</span>,
             <span class='ident'>I32</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INT</span>,
             <span class='ident'>U32</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_UINT</span>,
-            <span class='ident'>ISize</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_LONG</span>,
-            <span class='ident'>USize</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_ULONG</span>,
+            <span class='ident'>ILong</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_LONG</span>,
+            <span class='ident'>ULong</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_ULONG</span>,
             <span class='ident'>I64</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INT64</span>,
             <span class='ident'>U64</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_UINT64</span>,
             <span class='ident'>BaseEnum</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_ENUM</span>,
@@ -365,7 +430,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

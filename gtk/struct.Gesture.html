@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Gesture` struct in crate `gtk`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Gesture">
+
+    <title>gtk::Gesture - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Gesture', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>gtk</a>::<wbr><a class='struct' href=''>Gesture</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span></span></h1>
+<pre class='rust struct'>pub struct Gesture(_, _);</pre><div class='docblock'><p><code>Gesture</code> is the base object for gesture recognition, although this
+object is quite generalized to serve as a base for multi-touch gestures,
+it is suitable to implement single-touch and pointer-based gestures (using
+the special <code>None</code> <code>gdk::EventSequence</code> value for these).</p>
+
+<p>The number of touches that a <code>Gesture</code> need to be recognized is controlled
+by the <code>Gesture:n-points</code> property, if a gesture is keeping track of less
+or more than that number of sequences, it won&#39;t check wether the gesture
+is recognized.</p>
+
+<p>As soon as the gesture has the expected number of touches, the gesture will
+run the <code>Gesture::check</code> signal regularly on input events until the gesture
+is recognized, the criteria to consider a gesture as &quot;recognized&quot; is left to
+<code>Gesture</code> subclasses.</p>
+
+<p>A recognized gesture will then emit the following signals:
+- <code>Gesture::begin</code> when the gesture is recognized.
+- A number of <code>Gesture::update</code>, whenever an input event is processed.
+- <code>Gesture::end</code> when the gesture is no longer recognized.</p>
+
+<h2 id='event-propagation' class='section-header'><a href='#event-propagation'>Event propagation</a></h2>
+<p>In order to receive events, a gesture needs to either set a propagation phase
+through <code>EventControllerExt::set_propagation_phase</code>, or feed those manually
+through <code>EventControllerExt::handle_event</code>.</p>
+
+<p>In the capture phase, events are propagated from the toplevel down to the
+target widget, and gestures that are attached to containers above the widget
+get a chance to interact with the event before it reaches the target.</p>
+
+<p>After the capture phase, GTK+ emits the traditional <code>Widget::button-press</code>,
+<code>Widget::button-release</code>, <code>Widget::touch-event</code>, etc signals. Gestures
+with the <code>PropagationPhase::Target</code> phase are fed events from the default <code>Widget::event</code>
+handlers.</p>
+
+<p>In the bubble phase, events are propagated up from the target widget to the
+toplevel, and gestures that are attached to containers above the widget get
+a chance to interact with events that have not been handled yet.</p>
+
+<h2 id='states-of-a-sequence--touch-sequence-states' class='section-header'><a href='#states-of-a-sequence--touch-sequence-states'>States of a sequence # {<code>touch</code>-sequence-states}</a></h2>
+<p>Whenever input interaction happens, a single event may trigger a cascade of
+<code>GtkGestures</code>, both across the parents of the widget receiving the event and
+in parallel within an individual widget. It is a responsibility of the
+widgets using those gestures to set the state of touch sequences accordingly
+in order to enable cooperation of gestures around the <code>GdkEventSequences</code>
+triggering those.</p>
+
+<p>Within a widget, gestures can be grouped through <code>GestureExt::group</code>,
+grouped gestures synchronize the state of sequences, so calling
+<code>GestureExt::set_sequence_state</code> on one will effectively propagate
+the state throughout the group.</p>
+
+<p>By default, all sequences start out in the <code>EventSequenceState::None</code> state,
+sequences in this state trigger the gesture event handler, but event
+propagation will continue unstopped by gestures.</p>
+
+<p>If a sequence enters into the <code>EventSequenceState::Denied</code> state, the gesture
+group will effectively ignore the sequence, letting events go unstopped
+through the gesture, but the &quot;slot&quot; will still remain occupied while
+the touch is active.</p>
+
+<p>If a sequence enters in the <code>EventSequenceState::Claimed</code> state, the gesture
+group will grab all interaction on the sequence, by:
+- Setting the same sequence to <code>EventSequenceState::Denied</code> on every other gesture
+ group within the widget, and every gesture on parent widgets in the propagation
+ chain.
+- calling <code>Gesture::cancel</code> on every gesture in widgets underneath in the
+ propagation chain.
+- Stopping event propagation after the gesture group handles the event.</p>
+
+<p>Note: if a sequence is set early to <code>EventSequenceState::Claimed</code> on
+<code>gdk::EventType::TouchBegin</code>/<code>gdk::EventType::ButtonPress</code> (so those events are captured before
+reaching the event widget, this implies <code>PropagationPhase::Capture</code>), one similar
+event will emulated if the sequence changes to <code>EventSequenceState::Denied</code>.
+This way event coherence is preserved before event propagation is unstopped
+again.</p>
+
+<p>Sequence states can&#39;t be changed freely, see <code>GestureExt::set_sequence_state</code>
+to know about the possible lifetimes of a <code>gdk::EventSequence</code>.</p>
+
+<p>Since: 3.14</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.GestureExt.html"><code>GestureExt</code></a>, <a href="trait.EventControllerExt.html"><code>EventControllerExt</code></a></p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.StaticType.html' title='gtk::StaticType'>StaticType</a> for <a class='struct' href='../gtk/struct.Gesture.html' title='gtk::Gesture'>Gesture</a></code></h3><div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../gtk/trait.StaticType.html#method.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../gtk/enum.Type.html' title='gtk::Type'>Type</a></code></h4>
+</div><h3 class='impl'><code>impl&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gtk/struct.Gesture.html' title='gtk::Gesture'>Gesture</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gtk/struct.Gesture.html' title='gtk::Gesture'>Gesture</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt; for <a class='struct' href='../gtk/struct.Gesture.html' title='gtk::Gesture'>Gesture</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.EventController.html' title='gtk::EventController'>EventController</a>&gt; for <a class='struct' href='../gtk/struct.Gesture.html' title='gtk::Gesture'>Gesture</a></code></h3><div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gtk/struct.Gesture.html' title='gtk::Gesture'>Gesture</a></code></h3><div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
+<h4 id='method.hash_slice' class='method'><span class="since">1.3.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gtk/struct.Gesture.html' title='gtk::Gesture'>Gesture</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gtk/struct.Gesture.html' title='gtk::Gesture'>Gesture</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.Gesture.html' title='gtk::Gesture'>Gesture</a></code></h4>
+<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gtk";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

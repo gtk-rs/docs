@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["key","Corresponding values to keys"],["modifier_type",""]]});
+initSidebarItems({"mod":[["key",""],["modifier_type",""]]});

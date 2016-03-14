@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["GObject",""],["Object","The base class in the object hierarchy."]],"trait":[["Downcast","Downcasts support."],["ObjectExt",""],["Upcast","Declares the \"is a\" relationship."]]});
+initSidebarItems({"struct":[["GObject",""],["Object","The base class in the object hierarchy."]],"trait":[["Cast","Upcasting and downcasting support."],["Downcast","Downcasts support."],["IsA","Declares the \"is a\" relationship."],["ObjectExt",""]]});

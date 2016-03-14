@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["FileChooserWidget","`FileChooserWidget` is a widget for choosing files. It exposes the `FileChooser` interface, and you should use the methods of this interface to interact with the widget."]]});

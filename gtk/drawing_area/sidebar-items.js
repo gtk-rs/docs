@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["DrawingArea","The `DrawingArea` widget is used for creating custom user interface elements. It’s essentially a blank widget; you can draw on it. After creating a drawing area, the application may want to connect to:"]]});

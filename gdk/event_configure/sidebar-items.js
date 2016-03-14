@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["EventConfigure","Generated when a window size or position has changed."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["CellRendererProgress","`CellRendererProgress` renders a numeric value as a progress par in a cell. Additionally, it can display a text on top of the progress bar."]]});

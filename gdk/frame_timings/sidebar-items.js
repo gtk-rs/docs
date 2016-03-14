@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["FrameTimings","Object holding timing information for a single frame."]]});
+initSidebarItems({"struct":[["FrameTimings","A `FrameTimings` object holds timing information for a single frame of the application’s displays. To retrieve `FrameTimings` objects, use `FrameClock::get_timings` or `FrameClock::get_current_timings`. The information in `FrameTimings` is useful for precise synchronization of video with the event or audio streams, and for measuring quality metrics for the application’s display, such as latency and jitter."]]});

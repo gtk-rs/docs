@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Image","The `Image` widget displays an image. Various kinds of object can be displayed as an image; most typically, you would load a `gdk_pixbuf::Pixbuf` (\"pixel buffer\") from a file, and then display that. There’s a convenience function to do this, `Image::new_from_file`, used as follows:"]]});

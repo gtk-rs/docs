@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ColorChooser","`ColorChooser` is an interface that is implemented by widgets for choosing colors. Depending on the situation, colors may be allowed to have alpha (translucency)."]],"trait":[["ColorChooserExt","Trait containing all `ColorChooser` methods."]]});

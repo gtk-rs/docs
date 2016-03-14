@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Cursor","Standard and pixmap cursors."]],"type":[["Type",""]]});
+initSidebarItems({"struct":[["Cursor","A `Cursor` represents a cursor. Its contents are private."]]});

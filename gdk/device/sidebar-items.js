@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Device","Object representing an input device."]],"type":[["Type",""]]});
+initSidebarItems({"struct":[["Device","The `Device` object represents a single input device, such as a keyboard, a mouse, a touchpad, etc."]]});

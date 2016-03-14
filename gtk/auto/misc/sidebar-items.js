@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Misc","`[Deprecated since 3.14]` The `Misc` widget is an abstract widget which is not useful itself, but is used to derive subclasses which have alignment and padding attributes."]],"trait":[["MiscExt","`[Deprecated since 3.14]` Trait containing all `Misc` methods."]]});

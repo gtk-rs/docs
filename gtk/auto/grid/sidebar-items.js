@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Grid","`Grid` is a container which arranges its child widgets in rows and columns. It is a very similar to `Table` and `Box`, but it consistently uses `Widget`’s `Widget:margin` and `Widget:expand` properties instead of custom child properties, and it fully supports [height-for-width geometry management][geometry-management]."]]});

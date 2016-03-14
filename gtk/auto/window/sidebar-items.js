@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Window","A `Window` is a toplevel window which can contain other widgets. Windows normally have decorations that are under the control of the windowing system and allow the user to manipulate the window (resize it, move it, close it,...)."]],"trait":[["WindowExt","Trait containing all `Window` methods."]]});

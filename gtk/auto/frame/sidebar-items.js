@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Frame","The frame widget is a Bin that surrounds its child with a decorative frame and an optional label. If present, the label is drawn in a gap in the top side of the frame. The position of the label can be controlled with `FrameExt::set_label_align`."]],"trait":[["FrameExt","Trait containing all `Frame` methods."]]});

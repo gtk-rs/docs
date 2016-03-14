@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["animation","Animations — Animated images."],["format","A GdkPixbufFormat contains information about the image format accepted by a module. Only modules should access the fields directly, applications should use the gdk_pixbuf_format_* functions."],["loader",""]],"struct":[["Pixbuf","Represents an image."]]});

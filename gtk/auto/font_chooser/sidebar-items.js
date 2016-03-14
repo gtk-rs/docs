@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["FontChooser","`FontChooser` is an interface that can be implemented by widgets displaying the list of fonts. In GTK+, the main objects that implement this interface are `FontChooserWidget`, `FontChooserDialog` and `FontButton`."]],"trait":[["FontChooserExt","Trait containing all `FontChooser` methods."]]});

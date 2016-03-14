@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["RectangleExt",""]]});
+initSidebarItems({"trait":[["ContextExt",""],["RGBA",""],["RectangleExt",""]]});

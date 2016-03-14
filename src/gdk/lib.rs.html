@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/gdk/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gtk-rs-release/gdk/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -197,59 +198,68 @@
 <span id="155">155</span>
 <span id="156">156</span>
 <span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='doccomment'>/*!
-Bindings and wrappers for __GDK__
-*/</span>
-
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>gdk_pixbuf_sys</span> <span class='kw'>as</span> <span class='ident'>gdk_pixbuf_ffi</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>gdk_sys</span> <span class='kw'>as</span> <span class='ident'>gdk_ffi</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>gdk_sys</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>gdk_pixbuf</span>;
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>glib</span> <span class='kw'>as</span> <span class='ident'>glib_main</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>glib</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>cairo</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>glib_main</span> <span class='kw'>as</span> <span class='ident'>glib</span>;
-
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>mod</span> <span class='ident'>rt</span>;
-
-<span class='kw'>mod</span> <span class='ident'>events</span>;
-<span class='kw'>mod</span> <span class='ident'>keys</span>;
-<span class='kw'>mod</span> <span class='ident'>rectangle</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>mod</span> <span class='ident'>event</span>;
 
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>prelude</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>enums</span>;
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>app_launch_context</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>atom</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>cursor</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>device</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>device_manager</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>display</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>display_manager</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>drag_context</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gdk_3_8</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>frame_clock</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gdk_3_8</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>frame_timings</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>pixbuf</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>rgba</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>screen</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>visual</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>window</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>cairo_interaction</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gdk_3_16</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>gl_context</span>;
+<span class='kw'>mod</span> <span class='ident'>app_launch_context</span>;
+<span class='kw'>mod</span> <span class='ident'>atom</span>;
+<span class='kw'>mod</span> <span class='ident'>cairo_interaction</span>;
+<span class='kw'>mod</span> <span class='ident'>cursor</span>;
+<span class='kw'>mod</span> <span class='ident'>device</span>;
+<span class='kw'>mod</span> <span class='ident'>device_manager</span>;
+<span class='kw'>mod</span> <span class='ident'>display</span>;
+<span class='kw'>mod</span> <span class='ident'>display_manager</span>;
+<span class='kw'>mod</span> <span class='ident'>drag_context</span>;
+<span class='kw'>mod</span> <span class='ident'>event_button</span>;
+<span class='kw'>mod</span> <span class='ident'>event_configure</span>;
+<span class='kw'>mod</span> <span class='ident'>event_crossing</span>;
+<span class='kw'>mod</span> <span class='ident'>event_dnd</span>;
+<span class='kw'>mod</span> <span class='ident'>event_expose</span>;
+<span class='kw'>mod</span> <span class='ident'>event_focus</span>;
+<span class='kw'>mod</span> <span class='ident'>event_grab_broken</span>;
+<span class='kw'>mod</span> <span class='ident'>event_key</span>;
+<span class='kw'>mod</span> <span class='ident'>event_motion</span>;
+<span class='kw'>mod</span> <span class='ident'>event_owner_change</span>;
+<span class='kw'>mod</span> <span class='ident'>event_property</span>;
+<span class='kw'>mod</span> <span class='ident'>event_proximity</span>;
+<span class='kw'>mod</span> <span class='ident'>event_scroll</span>;
+<span class='kw'>mod</span> <span class='ident'>event_selection</span>;
+<span class='kw'>mod</span> <span class='ident'>event_setting</span>;
+<span class='kw'>mod</span> <span class='ident'>event_touch</span>;
+<span class='kw'>mod</span> <span class='ident'>event_visibility</span>;
+<span class='kw'>mod</span> <span class='ident'>event_window_state</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;3.8&quot;</span>)]</span>
+<span class='kw'>mod</span> <span class='ident'>frame_clock</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;3.8&quot;</span>)]</span>
+<span class='kw'>mod</span> <span class='ident'>frame_timings</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;3.16&quot;</span>)]</span>
+<span class='kw'>mod</span> <span class='ident'>gl_context</span>;
+<span class='kw'>mod</span> <span class='ident'>keys</span>;
+<span class='kw'>mod</span> <span class='ident'>rectangle</span>;
+<span class='kw'>mod</span> <span class='ident'>rgba</span>;
+<span class='kw'>mod</span> <span class='ident'>screen</span>;
+<span class='kw'>mod</span> <span class='ident'>visual</span>;
+<span class='kw'>mod</span> <span class='ident'>window</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkColor</span> <span class='kw'>as</span> <span class='ident'>Color</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkColor</span> <span class='kw'>as</span> <span class='ident'>Color</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkRGBA</span> <span class='kw'>as</span> <span class='ident'>RGBA</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>rt</span>::{
     <span class='ident'>init</span>,
@@ -269,88 +279,75 @@ Bindings and wrappers for __GDK__
     <span class='ident'>error_trap_pop</span>,
     <span class='ident'>error_trap_pop_ignored</span>
 };
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gdk_3_10</span>)]</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;3.10&quot;</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>rt</span>::<span class='ident'>set_allowed_backends</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>app_launch_context</span>::<span class='ident'>AppLaunchContext</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>atom</span>::<span class='ident'>Atom</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>atom</span>::<span class='ident'>NONE</span> <span class='kw'>as</span> <span class='ident'>ATOM_NONE</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>cursor</span>::<span class='ident'>Cursor</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>device</span>::<span class='ident'>Device</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>device_manager</span>::<span class='ident'>DeviceManager</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>display</span>::<span class='ident'>Display</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>display_manager</span>::<span class='ident'>DisplayManager</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>drag_context</span>::<span class='ident'>DragContext</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gdk_3_8</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event</span>::<span class='ident'>Event</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_button</span>::<span class='ident'>EventButton</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_configure</span>::<span class='ident'>EventConfigure</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_crossing</span>::<span class='ident'>EventCrossing</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_dnd</span>::<span class='ident'>EventDND</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_expose</span>::<span class='ident'>EventExpose</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_focus</span>::<span class='ident'>EventFocus</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_grab_broken</span>::<span class='ident'>EventGrabBroken</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_key</span>::<span class='ident'>EventKey</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_motion</span>::<span class='ident'>EventMotion</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_owner_change</span>::<span class='ident'>EventOwnerChange</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_property</span>::<span class='ident'>EventProperty</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_proximity</span>::<span class='ident'>EventProximity</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_scroll</span>::<span class='ident'>EventScroll</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_selection</span>::<span class='ident'>EventSelection</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_setting</span>::<span class='ident'>EventSetting</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_touch</span>::<span class='ident'>EventTouch</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_visibility</span>::<span class='ident'>EventVisibility</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_window_state</span>::<span class='ident'>EventWindowState</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;3.8&quot;</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>frame_clock</span>::<span class='ident'>FrameClock</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gdk_3_8</span>)]</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;3.8&quot;</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>frame_timings</span>::<span class='ident'>FrameTimings</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>pixbuf</span>::<span class='ident'>Pixbuf</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>pixbuf</span>::<span class='ident'>animation</span>::<span class='ident'>PixbufAnimation</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>pixbuf</span>::<span class='ident'>animation</span>::<span class='ident'>PixbufSimpleAnim</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>pixbuf</span>::<span class='ident'>format</span>::<span class='ident'>PixbufFormat</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>pixbuf</span>::<span class='ident'>loader</span>::<span class='ident'>PixbufLoader</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>screen</span>::<span class='ident'>Screen</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>visual</span>::<span class='ident'>Visual</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>window</span>::<span class='ident'>Window</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>gdk_3_16</span>)]</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;3.16&quot;</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gl_context</span>::<span class='ident'>GLContext</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>events</span>::{
-    <span class='ident'>EventType</span>,
-    <span class='ident'>Event</span>,
-    <span class='ident'>EventAny</span>,
-    <span class='ident'>EventExpose</span>,
-    <span class='ident'>EventVisibility</span>,
-    <span class='ident'>EventMotion</span>,
-    <span class='ident'>EventButton</span>,
-    <span class='ident'>EventTouch</span>,
-    <span class='ident'>EventScroll</span>,
-    <span class='ident'>EventKey</span>,
-    <span class='ident'>EventCrossing</span>,
-    <span class='ident'>EventFocus</span>,
-    <span class='ident'>EventConfigure</span>,
-    <span class='ident'>EventProperty</span>,
-    <span class='ident'>EventSelection</span>,
-    <span class='ident'>EventOwnerChange</span>,
-    <span class='ident'>EventProximity</span>,
-    <span class='ident'>EventSetting</span>,
-    <span class='ident'>EventWindowState</span>,
-    <span class='ident'>EventGrabBroken</span>,
-    <span class='ident'>EventDND</span>,
-    <span class='ident'>VisibilityState</span>,
-    <span class='ident'>ScrollDirection</span>,
-    <span class='ident'>NotifyType</span>,
-    <span class='ident'>CrossingMode</span>,
-    <span class='ident'>PropertyState</span>,
-    <span class='ident'>SettingAction</span>,
-    <span class='ident'>OwnerChange</span>
-};
-
-
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkAxisUse</span> <span class='kw'>as</span> <span class='ident'>AxisUse</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkDragAction</span> <span class='kw'>as</span> <span class='ident'>DragAction</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkDragProtocol</span> <span class='kw'>as</span> <span class='ident'>DragProtocol</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkEventMask</span> <span class='kw'>as</span> <span class='ident'>EventMask</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkFullscreenMode</span> <span class='kw'>as</span> <span class='ident'>FullscreenMode</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkGrabOwnership</span> <span class='kw'>as</span> <span class='ident'>GrabOwnership</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkGrabStatus</span> <span class='kw'>as</span> <span class='ident'>GrabStatus</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkGravity</span> <span class='kw'>as</span> <span class='ident'>Gravity</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkInputMode</span> <span class='kw'>as</span> <span class='ident'>InputMode</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkInputSource</span> <span class='kw'>as</span> <span class='ident'>InputSource</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkModifierIntent</span> <span class='kw'>as</span> <span class='ident'>ModifierIntent</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkModifierType</span> <span class='kw'>as</span> <span class='ident'>ModifierType</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkWMDecoration</span> <span class='kw'>as</span> <span class='ident'>WMDecoration</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkWMFunction</span> <span class='kw'>as</span> <span class='ident'>WMFunction</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkWindowEdge</span> <span class='kw'>as</span> <span class='ident'>WindowEdge</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkWindowHints</span> <span class='kw'>as</span> <span class='ident'>WindowHints</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkWindowState</span> <span class='kw'>as</span> <span class='ident'>WindowState</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkWindowType</span> <span class='kw'>as</span> <span class='ident'>WindowType</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkWindowTypeHint</span> <span class='kw'>as</span> <span class='ident'>WindowTypeHint</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_ffi</span>::<span class='ident'>GdkWindowWindowClass</span> <span class='kw'>as</span> <span class='ident'>WindowWindowClass</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span>::<span class='ident'>GdkColorspace</span> <span class='kw'>as</span> <span class='ident'>Colorspace</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span>::<span class='ident'>GdkInterpType</span> <span class='kw'>as</span> <span class='ident'>InterpType</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span>::<span class='ident'>GdkPixbufAlphaMode</span> <span class='kw'>as</span> <span class='ident'>PixbufAlphaMode</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span>::<span class='ident'>GdkPixbufError</span> <span class='kw'>as</span> <span class='ident'>PixbufError</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkAxisUse</span> <span class='kw'>as</span> <span class='ident'>AxisUse</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkCrossingMode</span> <span class='kw'>as</span> <span class='ident'>CrossingMode</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkDragAction</span> <span class='kw'>as</span> <span class='ident'>DragAction</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkDragProtocol</span> <span class='kw'>as</span> <span class='ident'>DragProtocol</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkEventMask</span> <span class='kw'>as</span> <span class='ident'>EventMask</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkEventType</span> <span class='kw'>as</span> <span class='ident'>EventType</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkFullscreenMode</span> <span class='kw'>as</span> <span class='ident'>FullscreenMode</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkGrabOwnership</span> <span class='kw'>as</span> <span class='ident'>GrabOwnership</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkGrabStatus</span> <span class='kw'>as</span> <span class='ident'>GrabStatus</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkGravity</span> <span class='kw'>as</span> <span class='ident'>Gravity</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkInputMode</span> <span class='kw'>as</span> <span class='ident'>InputMode</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkInputSource</span> <span class='kw'>as</span> <span class='ident'>InputSource</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkModifierIntent</span> <span class='kw'>as</span> <span class='ident'>ModifierIntent</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkModifierType</span> <span class='kw'>as</span> <span class='ident'>ModifierType</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkNotifyType</span> <span class='kw'>as</span> <span class='ident'>NotifyType</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkOwnerChange</span> <span class='kw'>as</span> <span class='ident'>OwnerChange</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkPropertyState</span> <span class='kw'>as</span> <span class='ident'>PropertyState</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkScrollDirection</span> <span class='kw'>as</span> <span class='ident'>ScrollDirection</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkSettingAction</span> <span class='kw'>as</span> <span class='ident'>SettingAction</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkVisibilityState</span> <span class='kw'>as</span> <span class='ident'>VisibilityState</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkWMDecoration</span> <span class='kw'>as</span> <span class='ident'>WMDecoration</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkWMFunction</span> <span class='kw'>as</span> <span class='ident'>WMFunction</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkWindowEdge</span> <span class='kw'>as</span> <span class='ident'>WindowEdge</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkWindowHints</span> <span class='kw'>as</span> <span class='ident'>WindowHints</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkWindowState</span> <span class='kw'>as</span> <span class='ident'>WindowState</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkWindowType</span> <span class='kw'>as</span> <span class='ident'>WindowType</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkWindowTypeHint</span> <span class='kw'>as</span> <span class='ident'>WindowTypeHint</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>GdkWindowWindowClass</span> <span class='kw'>as</span> <span class='ident'>WindowWindowClass</span>;
 
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>i32</span>;
@@ -403,7 +400,7 @@ Bindings and wrappers for __GDK__
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `ApplicationWindow` struct in crate `gtk`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ApplicationWindow">
+
+    <title>gtk::ApplicationWindow - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'ApplicationWindow', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>gtk</a>::<wbr><a class='struct' href=''>ApplicationWindow</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span></span></h1>
+<pre class='rust struct'>pub struct ApplicationWindow(_, _);</pre><div class='docblock'><p><code>ApplicationWindow</code> is a <code>Window</code> subclass that offers some
+extra functionality for better integration with <code>Application</code>
+features. Notably, it can handle both the application menu as well
+as the menubar. See <code>Application::set_app_menu</code> and
+<code>Application::set_menubar</code>.</p>
+
+<p>This class implements the <code>gio::ActionGroup</code> and <code>gio::ActionMap</code> interfaces,
+to let you add window-specific actions that will be exported by the
+associated <code>Application</code>, together with its application-wide
+actions. Window-specific actions are prefixed with the “win.”
+prefix and application-wide actions are prefixed with the “app.”
+prefix. Actions must be addressed with the prefixed name when
+referring to them from a <code>gio::MenuModel</code>.</p>
+
+<p>Note that widgets that are placed inside a <code>ApplicationWindow</code>
+can also activate these actions, if they implement the
+<code>Actionable</code> interface.</p>
+
+<p>As with <code>Application</code>, the GDK lock will be acquired when
+processing actions arriving from other processes and should therefore
+be held when activating actions locally (if GDK threads are enabled).</p>
+
+<p>The settings <code>Settings:gtk-shell-shows-app-menu</code> and
+<code>Settings:gtk-shell-shows-menubar</code> tell GTK+ whether the
+desktop environment is showing the application menu and menubar
+models outside the application as part of the desktop shell.
+For instance, on OS X, both menus will be displayed remotely;
+on Windows neither will be. gnome-shell (starting with version 3.4)
+will display the application menu, but not the menubar.</p>
+
+<p>If the desktop environment does not display the menubar, then
+<code>ApplicationWindow</code> will automatically show a <code>MenuBar</code> for it.
+(see the <code>Application</code> docs for some screenshots of how this
+looks on different platforms).
+This behaviour can be overridden with the <code>ApplicationWindow:show-menubar</code>
+property. If the desktop environment does not display the application
+menu, then it will automatically be included in the menubar. It can
+also be shown as part of client-side window decorations, e.g. by
+using <code>HeaderBar::set_show_close_button</code>.</p>
+
+<h2 id='a-applicationwindow-with-a-menubar' class='section-header'><a href='#a-applicationwindow-with-a-menubar'>A <code>ApplicationWindow</code> with a menubar</a></h2>
+<pre><code class="language-C">app = gtk_application_new ();
+
+builder = gtk_builder_new_from_string (
+    &quot;&lt;interface&gt;&quot;
+    &quot;  &lt;menu id=&#39;menubar&#39;&gt;&quot;
+    &quot;    &lt;submenu label=&#39;_Edit&#39;&gt;&quot;
+    &quot;      &lt;item label=&#39;_Copy&#39; action=&#39;win.copy&#39;/&gt;&quot;
+    &quot;      &lt;item label=&#39;_Paste&#39; action=&#39;win.paste&#39;/&gt;&quot;
+    &quot;    &lt;/submenu&gt;&quot;
+    &quot;  &lt;/menu&gt;&quot;
+    &quot;&lt;/interface&gt;&quot;,
+    -1);
+
+menubar = G_MENU_MODEL (gtk_builder_get_object (builder,
+                                                &quot;menubar&quot;));
+gtk_application_set_menubar (G_APPLICATION (app), menubar);
+g_object_unref (builder);
+
+...
+
+window = gtk_application_window_new (app);
+</code></pre>
+
+<h2 id='handling-fallback-yourself' class='section-header'><a href='#handling-fallback-yourself'>Handling fallback yourself</a></h2>
+<p><a href="https://git.gnome.org/browse/gtk+/tree/examples/sunny.c">A simple example</a></p>
+
+<p>The XML format understood by <code>Builder</code> for <code>gio::MenuModel</code> consists
+of a toplevel <code>&lt;menu&gt;</code> element, which contains one or more <code>&lt;item&gt;</code>
+elements. Each <code>&lt;item&gt;</code> element contains <code>&lt;attribute&gt;</code> and <code>&lt;link&gt;</code>
+elements with a mandatory name attribute. <code>&lt;link&gt;</code> elements have the
+same content model as <code>&lt;menu&gt;</code>.</p>
+
+<p>Attribute values can be translated using gettext, like other <code>Builder</code>
+content. <code>&lt;attribute&gt;</code> elements can be marked for translation with a
+<code>translatable=&quot;yes&quot;</code> attribute. It is also possible to specify message
+context and translator comments, using the context and comments attributes.
+To make use of this, the <code>Builder</code> must have been given the gettext
+domain to use.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.WindowExt.html"><code>WindowExt</code></a>, <a href="trait.BinExt.html"><code>BinExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.BuildableExt.html"><code>BuildableExt</code></a></p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(application: &amp;<a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a>) -&gt; <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h4>
+<div class='docblock'><p>Creates a new <code>ApplicationWindow</code>.</p>
+
+<h2 id='application' class='section-header'><a href='#application'><code>application</code></a></h2>
+<p>a <code>Application</code></p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a newly created <code>ApplicationWindow</code></p>
+</div><h4 id='method.get_id' class='method'><code>fn <a href='#method.get_id' class='fnname'>get_id</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
+<div class='docblock'><p>Returns the unique ID of the window. If the window has not yet been added to
+a <code>Application</code>, returns <code>0</code>.</p>
+
+<p>Since: 3.6</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>the unique ID for <code>self</code>, or <code>0</code> if the window
+ has not yet been added to a <code>Application</code></p>
+</div><h4 id='method.get_show_menubar' class='method'><code>fn <a href='#method.get_show_menubar' class='fnname'>get_show_menubar</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Returns whether the window will display a menubar for the app menu
+and menubar as needed.</p>
+
+<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<p><code>true</code> if <code>self</code> will display a menubar when needed</p>
+</div><h4 id='method.set_show_menubar' class='method'><code>fn <a href='#method.set_show_menubar' class='fnname'>set_show_menubar</a>(&amp;self, show_menubar: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h4>
+<div class='docblock'><p>Sets whether the window will display a menubar for the app menu
+and menubar as needed.</p>
+
+<h2 id='show_menubar' class='section-header'><a href='#show_menubar'><code>show_menubar</code></a></h2>
+<p>whether to show a menubar when needed</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.StaticType.html' title='gtk::StaticType'>StaticType</a> for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../gtk/trait.StaticType.html#method.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../gtk/enum.Type.html' title='gtk::Type'>Type</a></code></h4>
+</div><h3 class='impl'><code>impl&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt; for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Window.html' title='gtk::Window'>Window</a>&gt; for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Bin.html' title='gtk::Bin'>Bin</a>&gt; for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a>&gt; for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a>&gt; for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Buildable.html' title='gtk::Buildable'>Buildable</a>&gt; for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
+<h4 id='method.hash_slice' class='method'><span class="since">1.3.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.ApplicationWindow.html' title='gtk::ApplicationWindow'>ApplicationWindow</a></code></h4>
+<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gtk";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

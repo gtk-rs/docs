@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/cairo/src/context.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gtk-rs-release/cairo/src/context.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>context.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -1482,6 +1483,15 @@
 <span id="1440">1440</span>
 <span id="1441">1441</span>
 <span id="1442">1442</span>
+<span id="1443">1443</span>
+<span id="1444">1444</span>
+<span id="1445">1445</span>
+<span id="1446">1446</span>
+<span id="1447">1447</span>
+<span id="1448">1448</span>
+<span id="1449">1449</span>
+<span id="1450">1450</span>
+<span id="1451">1451</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -1499,7 +1509,8 @@
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>enums</span>::{
     <span class='ident'>FontSlant</span>,
     <span class='ident'>FontWeight</span>,
-    <span class='ident'>TextClusterFlags</span>
+    <span class='ident'>TextClusterFlags</span>,
+    <span class='ident'>Operator</span>,
 };
 <span class='kw'>use</span> <span class='ident'>Rectangle</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
@@ -1578,7 +1589,7 @@
     <span class='doccomment'>/// and with target as a target surface. The target surface should be constructed</span>
     <span class='doccomment'>/// with a backend-specific function such as cairo_image_surface_create() (or any other</span>
     <span class='doccomment'>/// Context::backend_surface_create() variant).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This function references target , so you can immediately call Surface::drop() on</span>
     <span class='doccomment'>/// it if you don&#39;t need to maintain a separate reference to it.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Surface</span><span class='op'>&gt;&gt;</span>(<span class='ident'>target</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Context</span> {
@@ -1599,7 +1610,7 @@
     <span class='doccomment'>/// the saved state. Multiple calls to Context::save() and Context::restore() can be nested;</span>
     <span class='doccomment'>/// each call to Context::restore() restores the state from the matching paired</span>
     <span class='doccomment'>/// Context::save().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// It isn&#39;t necessary to clear all saved states before a Context is freed. If the</span>
     <span class='doccomment'>/// reference count of a Context drops to zero in response to a call to Context::drop(), any</span>
     <span class='doccomment'>/// saved states will be freed along with the Context.</span>
@@ -1626,26 +1637,26 @@
     <span class='doccomment'>/// or Context::pop_group_to_source(). These calls provide the result of any drawing</span>
     <span class='doccomment'>/// to the group as a pattern, (either as an explicit object, or set as the source</span>
     <span class='doccomment'>/// pattern).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This group functionality can be convenient for performing intermediate compositing.</span>
     <span class='doccomment'>/// One common use of a group is to render objects as opaque within the group, (so that</span>
     <span class='doccomment'>/// they occlude each other), and then blend the result with translucence onto the</span>
     <span class='doccomment'>/// destination.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Groups can be nested arbitrarily deep by making balanced calls to Context::push_group()</span>
     <span class='doccomment'>/// / Context::pop_group(). Each call pushes  /pops the new target group onto/from a stack.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The Context::push_group() function calls Context::save() so that any changes to the</span>
     <span class='doccomment'>/// graphics state will not be visible outside the group, (the pop_group functions call</span>
     <span class='doccomment'>/// Context::restore()).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// By default the intermediate group will have a content type of Content::ColorAlpha.</span>
     <span class='doccomment'>/// Other content types can be chosen for the group by using</span>
     <span class='doccomment'>/// Context::push_group_with_content() instead.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// As an example, here is how one might fill and stroke a path with translucence, but</span>
     <span class='doccomment'>/// without any portion of the fill being visible under the stroke:</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```ignore</span>
     <span class='doccomment'>/// cr.push_group();</span>
     <span class='doccomment'>/// cr.set_source (fill_pattern);</span>
@@ -1671,7 +1682,7 @@
     <span class='doccomment'>/// Terminates the redirection begun by a call to Context::push_group() or</span>
     <span class='doccomment'>/// Context::push_group_with_content() and returns a new pattern containing the results</span>
     <span class='doccomment'>/// of all drawing operations performed to the group.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The Context::pop_group() function calls Context::restore(), (balancing a call to</span>
     <span class='doccomment'>/// Context::save() by the push_group function), so that any changes to the graphics</span>
     <span class='doccomment'>/// state will not be visible outside the group.</span>
@@ -1684,17 +1695,17 @@
     <span class='doccomment'>/// Terminates the redirection begun by a call to Context::push_group() or</span>
     <span class='doccomment'>/// Context::push_group_with_content() and installs the resulting pattern as the</span>
     <span class='doccomment'>/// source pattern in the given cairo context.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The behavior of this function is equivalent to the sequence of operations:</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```ignore</span>
     <span class='doccomment'>/// let mut group = context.pop_group();</span>
     <span class='doccomment'>/// context.set_source(group);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// but is more convenient as their is no need for a variable to store the short-lived</span>
     <span class='doccomment'>/// pointer to the pattern.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The Context::pop_group() function calls Context::restore(), (balancing a call to</span>
     <span class='doccomment'>/// Context::save() by the push_group function), so that any changes to the graphics state</span>
     <span class='doccomment'>/// will not be visible outside the group.</span>
@@ -1708,11 +1719,11 @@
 
     <span class='doccomment'>/// Sets the source pattern within self to an opaque color. This opaque color will then be</span>
     <span class='doccomment'>/// used for any subsequent drawing operation until a new source pattern is set.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The color components are floating point numbers in the range 0 to 1.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If the values passed in are outside that range, they will be clamped.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The default source pattern is opaque black, (that is, it is equivalent to</span>
     <span class='doccomment'>/// Context::set_source_rgb(0.0, 0.0, 0.0)).</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_source_rgb</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>red</span>: <span class='ident'>f64</span>, <span class='ident'>green</span>: <span class='ident'>f64</span>, <span class='ident'>blue</span>: <span class='ident'>f64</span>) {
@@ -1723,10 +1734,10 @@
 
     <span class='doccomment'>/// Sets the source pattern within self to a translucent color. This color will then be used</span>
     <span class='doccomment'>/// for any subsequent drawing operation until a new source pattern is set.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The color and alpha components are floating point numbers in the range 0 to 1. If the</span>
     <span class='doccomment'>/// values passed in are outside that range, they will be clamped.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The default source pattern is opaque black, (that is, it is equivalent to</span>
     <span class='doccomment'>/// Context::set_source_rgba(0.0, 0.0, 0.0, 1.0)).</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_source_rgba</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>red</span>: <span class='ident'>f64</span>, <span class='ident'>green</span>: <span class='ident'>f64</span>, <span class='ident'>blue</span>: <span class='ident'>f64</span>, <span class='ident'>alpha</span>: <span class='ident'>f64</span>) {
@@ -1737,12 +1748,12 @@
 
     <span class='doccomment'>/// Sets the source pattern within self to source. This pattern will then be used for any</span>
     <span class='doccomment'>/// subsequent drawing operation until a new source pattern is set.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note: The pattern&#39;s transformation matrix will be locked to the user space in effect</span>
     <span class='doccomment'>/// at the time of Context::set_source(). This means that further modifications of the</span>
     <span class='doccomment'>/// current transformation matrix will not affect the source pattern. See</span>
     <span class='doccomment'>/// Pattern::set_matrix().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The default source pattern is a solid pattern that is opaque black, (that is, it is</span>
     <span class='doccomment'>/// equivalent to Context::set_source_rgb(0.0, 0.0, 0.0)).</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_source</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>source</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pattern</span>) {
@@ -1767,7 +1778,7 @@
     <span class='doccomment'>/// is a hint, and a particular backend may or may not support a particular value.</span>
     <span class='doccomment'>/// At the current time, no backend supports CAIRO_ANTIALIAS_SUBPIXEL when drawing</span>
     <span class='doccomment'>/// shapes.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note that this option does not affect text rendering, instead see</span>
     <span class='doccomment'>/// FontOptions::set_antialias().</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_antialias</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>antialias</span> : <span class='ident'>Antialias</span>) {
@@ -1788,19 +1799,19 @@
     <span class='doccomment'>/// an array of positive values. Each value provides the length of alternate &quot;on&quot; and &quot;off&quot;</span>
     <span class='doccomment'>/// portions of the stroke. The offset specifies an offset into the pattern at which the</span>
     <span class='doccomment'>/// stroke begins.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Each &quot;on&quot; segment will have caps applied as if the segment were a separate sub-path. In</span>
     <span class='doccomment'>/// particular, it is valid to use an &quot;on&quot; length of 0.0 with Line::CapRound or Line::CapSquare</span>
     <span class='doccomment'>/// in order to distributed dots or squares along a path.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note: The length values are in user-space units as evaluated at the time of stroking.</span>
     <span class='doccomment'>/// This is not necessarily the same as the user space at the time of Context::set_dash().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If num_dashes is 0 dashing is disabled.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If num_dashes is 1 a symmetric pattern is assumed with alternating on and off portions</span>
     <span class='doccomment'>/// of the size specified by the single value in dashes .</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If any value in dashes is negative, or if all values are 0, then self will be put into</span>
     <span class='doccomment'>/// an error state with a status of Status::InvalidDash.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_dash</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dashes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>f64</span>], <span class='ident'>offset</span>: <span class='ident'>f64</span>) {
@@ -1846,7 +1857,7 @@
     <span class='doccomment'>/// which regions are inside or outside a complex (potentially self-intersecting) path.</span>
     <span class='doccomment'>/// The current fill rule affects both Context::fill() and Context::clip(). See FillRule</span>
     <span class='doccomment'>/// enum for details on the semantics of each available fill rule.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The default fill rule is FillRule::Winding.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_fill_rule</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fill_rule</span> : <span class='ident'>FillRule</span>) {
         <span class='kw'>unsafe</span> {
@@ -1864,11 +1875,11 @@
 
     <span class='doccomment'>/// Sets the current line cap style within the cairo context. See LineCap enum</span>
     <span class='doccomment'>/// for details about how the available line cap styles are drawn.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// As with the other stroke parameters, the current line cap style is examined</span>
     <span class='doccomment'>/// by Context::stroke(), Context::stroke_extents(), and Context::::stroke_to_path(),</span>
     <span class='doccomment'>/// but does not have any effect during path construction.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The default line cap style is LineCap::Butt.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_line_cap</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>arg</span>: <span class='ident'>LineCap</span>){
         <span class='kw'>unsafe</span> {
@@ -1886,11 +1897,11 @@
 
     <span class='doccomment'>/// Sets the current line join style within the cairo context. See LineJoin enum</span>
     <span class='doccomment'>/// for details about how the available line join styles are drawn.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// As with the other stroke parameters, the current line join style is examined by</span>
     <span class='doccomment'>/// Context::stroke(), cairo_stroke_extents(), and Context::stroke_to_path(), but</span>
     <span class='doccomment'>/// does not have any effect during path construction.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The default line join style is LineJoin::Miter.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_line_join</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>arg</span>: <span class='ident'>LineJoin</span>) {
         <span class='kw'>unsafe</span> {
@@ -1909,18 +1920,18 @@
     <span class='doccomment'>/// Sets the current line width within the cairo context. The line width value specifies</span>
     <span class='doccomment'>/// the diameter of a pen that is circular in user space, (though device-space pen may be</span>
     <span class='doccomment'>/// an ellipse in general due to scaling/shear/rotation of the CTM).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note: When the description above refers to user space and CTM it refers to the user</span>
     <span class='doccomment'>/// space and CTM in effect at the time of the stroking operation, not the user space and</span>
     <span class='doccomment'>/// CTM in effect at the time of the call to Context::set_line_width(). The simplest usage</span>
     <span class='doccomment'>/// makes both of these spaces identical. That is, if there is no change to the CTM between</span>
     <span class='doccomment'>/// a call to Context::set_line_width() and the stroking operation, then one can just pass</span>
     <span class='doccomment'>/// user-space values to Context::set_line_width() and ignore this note.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// As with the other stroke parameters, the current line width is examined by</span>
     <span class='doccomment'>/// Context::stroke(), Context::stroke_extents(), and Context::stroke_to_path(), but does</span>
     <span class='doccomment'>/// not have any effect during path construction.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The default line width value is 2.0.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_line_width</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>arg</span>: <span class='ident'>f64</span>) {
         <span class='kw'>unsafe</span> {
@@ -1939,20 +1950,20 @@
     }
 
     <span class='doccomment'>/// Sets the current miter limit within the cairo context.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If the current line join style is set to LineJoin::Miter (see Context::set_line_join()),</span>
     <span class='doccomment'>/// the miter limit is used to determine whether the lines should be joined with a bevel</span>
     <span class='doccomment'>/// instead of a miter. Cairo divides the length of the miter by the line width. If the result</span>
     <span class='doccomment'>/// is greater than the miter limit, the style is converted to a bevel.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// As with the other stroke parameters, the current line miter limit is examined by</span>
     <span class='doccomment'>/// Context::stroke(), Context::stroke_extents(), and Context::stroke_to_path(), but does</span>
     <span class='doccomment'>/// not have any effect during path construction.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The default miter limit value is 10.0, which will convert joins with interior angles less</span>
     <span class='doccomment'>/// than 11 degrees to bevels instead of miters. For reference, a miter limit of 2.0 makes the</span>
     <span class='doccomment'>/// miter cutoff at 60 degrees, and a miter limit of 1.414 makes the cutoff at 90 degrees.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// A miter limit for a desired angle can be computed as: miter limit = 1/sin(angle/2)</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_miter_limit</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>arg</span>: <span class='ident'>f64</span>) {
         <span class='kw'>unsafe</span> {
@@ -1965,6 +1976,18 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_miter_limit</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
         <span class='kw'>unsafe</span> {
             <span class='ident'>ffi</span>::<span class='ident'>cairo_get_miter_limit</span>(<span class='self'>self</span>.<span class='number'>0</span>)
+        }
+    }
+
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_operator</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>op</span>: <span class='ident'>Operator</span>) {
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>ffi</span>::<span class='ident'>cairo_set_operator</span>(<span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>op</span>);
+        }
+    }
+
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_operator</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Operator</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>ffi</span>::<span class='ident'>cairo_get_operator</span>(<span class='self'>self</span>.<span class='number'>0</span>)
         }
     }
 
@@ -1993,12 +2016,12 @@
     <span class='doccomment'>/// Establishes a new clip region by intersecting the current clip region with the current</span>
     <span class='doccomment'>/// path as it would be filled by Context::fill() and according to the current fill rule</span>
     <span class='doccomment'>/// (see Context::set_fill_rule()).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// After Context::clip(), the current path will be cleared from the cairo context.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The current clip region affects all drawing operations by effectively masking out any</span>
     <span class='doccomment'>/// changes to the surface that are outside the current clip region.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Calling Context::clip() can only make the clip region smaller, never larger. But the</span>
     <span class='doccomment'>/// current clip is part of the graphics state, so a temporary restriction of the clip</span>
     <span class='doccomment'>/// region can be achieved by calling Context::clip() within a Context::save() /</span>
@@ -2013,13 +2036,13 @@
     <span class='doccomment'>/// Establishes a new clip region by intersecting the current clip region with the current</span>
     <span class='doccomment'>/// path as it would be filled by Context::fill() and according to the current fill rule</span>
     <span class='doccomment'>/// (see Context::set_fill_rule()).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Unlike Context::clip(), Context::clip_preserve() preserves the path within the cairo</span>
     <span class='doccomment'>/// context.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The current clip region affects all drawing operations by effectively masking out any</span>
     <span class='doccomment'>/// changes to the surface that are outside the current clip region.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Calling Context::clip_preserve() can only make the clip region smaller, never larger.</span>
     <span class='doccomment'>/// But the current clip is part of the graphics state, so a temporary restriction of the</span>
     <span class='doccomment'>/// clip region can be achieved by calling Context::clip_preserve() within a</span>
@@ -2046,7 +2069,7 @@
 
     <span class='doccomment'>/// Tests whether the given point is inside the area that would be visible through the current</span>
     <span class='doccomment'>/// clip, i.e. the area that would be filled by a Context::paint() operation.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// See Context::clip(), and Context::clip_preserve().</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>in_clip</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>x</span>:<span class='ident'>f64</span>, <span class='ident'>y</span>:<span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>unsafe</span> {
@@ -2058,7 +2081,7 @@
     <span class='doccomment'>/// region to an infinitely large shape containing the target surface. Equivalently, if</span>
     <span class='doccomment'>/// infinity is too hard to grasp, one can imagine the clip region being reset to the exact</span>
     <span class='doccomment'>/// bounds of the target surface.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note that code meant to be reusable should not call Context::reset_clip() as it will</span>
     <span class='doccomment'>/// cause results unexpected by higher-level code which calls Context::clip(). Consider</span>
     <span class='doccomment'>/// using Context::save() and Context::restore() around Context::clip() as a more robust</span>
@@ -2071,7 +2094,7 @@
     }
 
     <span class='doccomment'>/// Gets the current clip region as a list of rectangles in user coordinates.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The status in the list may be Status::ClipNotRepresentable to indicate that</span>
     <span class='doccomment'>/// the clip region cannot be represented as a list of user-space rectangles.</span>
     <span class='doccomment'>/// The status may have other values to indicate other errors.</span>
@@ -2102,7 +2125,7 @@
     <span class='doccomment'>/// A drawing operator that fills the current path according to the current fill rule,</span>
     <span class='doccomment'>/// (each sub-path is implicitly closed before being filled). Unlike Context::fill(),</span>
     <span class='doccomment'>/// Context::fill_preserve() preserves the path within the cairo context.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// See Context::set_fill_rule() and Context::fill().</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>fill_preserve</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
         <span class='kw'>unsafe</span> {
@@ -2114,14 +2137,14 @@
     <span class='doccomment'>/// (the &quot;inked&quot; area), by a Context::fill() operation given the current path and fill</span>
     <span class='doccomment'>/// parameters. If the current path is empty, returns an empty rectangle ((0,0), (0,0)).</span>
     <span class='doccomment'>/// Surface dimensions and clipping are not taken into account.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Contrast with Context::path_extents(), which is similar, but returns non-zero extents</span>
     <span class='doccomment'>/// for some paths with no inked area, (such as a simple line segment).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note that Context::fill_extents() must necessarily do more work to compute the precise</span>
     <span class='doccomment'>/// inked areas in light of the fill rule, so Context::path_extents() may be more desirable</span>
     <span class='doccomment'>/// for sake of performance if the non-inked path extents are desired.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// See Context::fill(), Context::set_fill_rule() and Context::fill_preserve().</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>fill_extents</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>f64</span>, <span class='ident'>f64</span>, <span class='ident'>f64</span>, <span class='ident'>f64</span>) {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x1</span>: <span class='ident'>f64</span> <span class='op'>=</span> <span class='number'>0.0</span>;
@@ -2138,7 +2161,7 @@
     <span class='doccomment'>/// Tests whether the given point is inside the area that would be affected by a</span>
     <span class='doccomment'>/// Context::fill() operation given the current path and filling parameters. Surface</span>
     <span class='doccomment'>/// dimensions and clipping are not taken into account.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// See Context::fill(), Context::set_fill_rule() and Context::fill_preserve().</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>in_fill</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>x</span>:<span class='ident'>f64</span>, <span class='ident'>y</span>:<span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>unsafe</span> {
@@ -2177,21 +2200,21 @@
     <span class='doccomment'>/// join, line cap, and dash settings. After Context::stroke(), the current path will be cleared</span>
     <span class='doccomment'>/// from the cairo context. See Context::set_line_width(), Context::set_line_join(),</span>
     <span class='doccomment'>/// Context::set_line_cap(), Context::set_dash(), and Context::stroke_preserve().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note: Degenerate segments and sub-paths are treated specially and provide a useful result.</span>
     <span class='doccomment'>/// These can result in two different situations:</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// 1. Zero-length &quot;on&quot; segments set in Context::set_dash(). If the cap style is LineCap::Round</span>
     <span class='doccomment'>/// or LineCap::Square then these segments will be drawn as circular dots or squares respectively.</span>
     <span class='doccomment'>/// In the case of LineCap::Square, the orientation of the squares is determined by the direction</span>
     <span class='doccomment'>/// of the underlying path.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// 2. A sub-path created by Context::move_to() followed by either a Context::close_path() or one</span>
     <span class='doccomment'>/// or more calls to Context::line_to() to the same coordinate as the Context::move_to(). If the</span>
     <span class='doccomment'>/// cap style is LineCap::Round then these sub-paths will be drawn as circular dots. Note that in</span>
     <span class='doccomment'>/// the case of LineCap::Square a degenerate sub-path will not be drawn at all, (since the correct</span>
     <span class='doccomment'>/// orientation is indeterminate).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// In no case will a cap style of LineCap::Butt cause anything to be drawn in the case of either</span>
     <span class='doccomment'>/// degenerate segments or sub-paths.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>stroke</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
@@ -2203,7 +2226,7 @@
     <span class='doccomment'>/// A drawing operator that strokes the current path according to the current line width, line</span>
     <span class='doccomment'>/// join, line cap, and dash settings. Unlike Context::stroke(), Context::stroke_preserve()</span>
     <span class='doccomment'>/// preserves the path within the cairo context.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// See Context::set_line_width(), Context::set_line_join(), Context::set_line_cap(),</span>
     <span class='doccomment'>/// Context::set_dash(), and Context::stroke_preserve().</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>stroke_preserve</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
@@ -2216,15 +2239,15 @@
     <span class='doccomment'>/// (the &quot;inked&quot; area), by a Context::stroke() operation given the current path and stroke</span>
     <span class='doccomment'>/// parameters. If the current path is empty, returns an empty rectangle ((0,0), (0,0)).</span>
     <span class='doccomment'>/// Surface dimensions and clipping are not taken into account.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note that if the line width is set to exactly zero, then Context::stroke_extents() will</span>
     <span class='doccomment'>/// return an empty rectangle. Contrast with cairo_path_extents() which can be used to compute</span>
     <span class='doccomment'>/// the non-empty bounds as the line width approaches zero.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note that cairo_stroke_extents() must necessarily do more work to compute the precise inked</span>
     <span class='doccomment'>/// areas in light of the stroke parameters, so cairo_path_extents() may be more desirable for</span>
     <span class='doccomment'>/// sake of performance if non-inked path extents are desired.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// See Context::stroke(), Context::set_line_width(), Context::set_line_join(),</span>
     <span class='doccomment'>/// Context::set_line_cap(), Context::set_dash(), and Context::stroke_preserve().</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>stroke_extents</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>f64</span>, <span class='ident'>f64</span>, <span class='ident'>f64</span>, <span class='ident'>f64</span>) {
@@ -2242,7 +2265,7 @@
     <span class='doccomment'>/// Tests whether the given point is inside the area that would be affected by a </span>
     <span class='doccomment'>/// Context::stroke() operation given the current path and stroking parameters. Surface</span>
     <span class='doccomment'>/// dimensions and clipping are not taken into account.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// See Context::stroke(), Context::set_line_width(), Context::set_line_join(),</span>
     <span class='doccomment'>/// Context::set_line_cap(), Context::set_dash(), and Context::stroke_preserve().</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>in_stroke</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>x</span>:<span class='ident'>f64</span>, <span class='ident'>y</span>:<span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
@@ -2254,7 +2277,7 @@
     <span class='doccomment'>/// Emits the current page for backends that support multiple pages, but doesn&#39;t clear</span>
     <span class='doccomment'>/// it, so, the contents of the current page will be retained for the next page too. Use</span>
     <span class='doccomment'>/// Context::show_page() if you want to get an empty page after the emission.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This is a convenience function that simply calls Surface::copy_page() on self&#39;s</span>
     <span class='doccomment'>/// target.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>copy_page</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
@@ -2265,7 +2288,7 @@
 
     <span class='doccomment'>/// Emits and clears the current page for backends that support multiple pages. Use</span>
     <span class='doccomment'>/// Context::copy_page() if you don&#39;t want to clear the page.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This is a convenience function that simply calls Surface::show_page() on self&#39;s</span>
     <span class='doccomment'>/// target.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>show_page</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
@@ -2399,33 +2422,33 @@
     <span class='doccomment'>/// Note: The Context::select_font_face() function call is part of what the cairo designers</span>
     <span class='doccomment'>/// call the &quot;toy&quot; text API. It is convenient for short demos and simple programs, but it</span>
     <span class='doccomment'>/// is not expected to be adequate for serious text-using applications.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Selects a family and style of font from a simplified description as a family name, slant</span>
     <span class='doccomment'>/// and weight. Cairo provides no operation to list available family names on the system (this</span>
     <span class='doccomment'>/// is a &quot;toy&quot;, remember), but the standard CSS2 generic family names, (&quot;serif&quot;, &quot;sans-serif&quot;,</span>
     <span class='doccomment'>/// &quot;cursive&quot;, &quot;fantasy&quot;, &quot;monospace&quot;), are likely to work as expected.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If family starts with the string &quot;cairo :&quot;, or if no native font backends are compiled in,</span>
     <span class='doccomment'>/// cairo will use an internal font family. The internal font family recognizes many modifiers</span>
     <span class='doccomment'>/// in the family string, most notably, it recognizes the string &quot;monospace&quot;. That is, the</span>
     <span class='doccomment'>/// family name &quot;cairo :monospace&quot; will use the monospace version of the internal font family.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// For &quot;real&quot; font selection, see the font-backend-specific font_face_create functions for the</span>
     <span class='doccomment'>/// font backend you are using. (For example, if you are using the freetype-based cairo-ft font</span>
     <span class='doccomment'>/// backend, see Font::create_for_ft_face() or Font::create_for_pattern().) The resulting font</span>
     <span class='doccomment'>/// face could then be used with Context::scaled_font_create() and Context::set_scaled_font().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Similarly, when using the &quot;real&quot; font support, you can call directly into the underlying</span>
     <span class='doccomment'>/// font system, (such as fontconfig or freetype), for operations such as listing available</span>
     <span class='doccomment'>/// fonts, etc.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// It is expected that most applications will need to use a more comprehensive font handling</span>
     <span class='doccomment'>/// and text layout library, (for example, pango), in conjunction with cairo.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If text is drawn without a call to Context::select_font_face(), (nor Context::set_font_face()</span>
     <span class='doccomment'>/// nor Context::set_scaled_font()), the default family is platform-specific, but is essentially</span>
     <span class='doccomment'>/// &quot;sans-serif&quot;. Default slant is FontSlant::Normal, and default weight is FontWeight::Normal.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This function is equivalent to a call to cairo_toy_font_face_create() followed by</span>
     <span class='doccomment'>/// Context::set_font_face().</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>select_font_face</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>family</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>slant</span>: <span class='ident'>FontSlant</span>, <span class='ident'>weight</span>: <span class='ident'>FontWeight</span>) {
@@ -2438,7 +2461,7 @@
     <span class='doccomment'>/// previously set with Context::set_font_size() or Context::set_font_matrix(). This results</span>
     <span class='doccomment'>/// in a font size of size user space units. (More precisely, this matrix will result in the</span>
     <span class='doccomment'>/// font&#39;s em-square being a size by size square in user space.)</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If text is drawn without a call to Context::set_font_size(), (nor</span>
     <span class='doccomment'>/// Context::set_font_matrix() nor Context::set_scaled_font()), the default font size is 10.0.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_font_size</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>size</span>: <span class='ident'>f64</span>) {
@@ -2447,10 +2470,6 @@
         }
     }
 
-    <span class='doccomment'>/// Sets the current font matrix to matrix . The font matrix gives a transformation from the</span>
-    <span class='doccomment'>/// design space of the font (in this space, the em-square is 1 unit by 1 unit) to user space.</span>
-    <span class='doccomment'>/// Normally, a simple scale is used (see Context::set_font_size()), but a more complex font</span>
-    <span class='doccomment'>/// matrix can be used to shear the font or stretch it unequally along the two axes.</span>
     <span class='comment'>// FIXME probably needs a heap allocation</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_font_matrix</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>matrix</span>: <span class='ident'>Matrix</span>) {
         <span class='kw'>unsafe</span> {
@@ -2523,17 +2542,17 @@
     <span class='doccomment'>/// A drawing operator that generates the shape from a string of UTF-8 characters,</span>
     <span class='doccomment'>/// rendered according to the current FontFace, FontSize (FontMatrix), and</span>
     <span class='doccomment'>/// font_options.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This function first computes a set of glyphs for the string of text. The first</span>
     <span class='doccomment'>/// glyph is placed so that its origin is at the current point. The origin of each</span>
     <span class='doccomment'>/// subsequent glyph is offset from that of the previous glyph by the advance values</span>
     <span class='doccomment'>/// of the previous glyph.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// After this call the current point is moved to the origin of where the next glyph</span>
     <span class='doccomment'>/// would be placed in this same progression. That is, the current point will be at</span>
     <span class='doccomment'>/// the origin of the final glyph offset by its advance values. This allows for easy</span>
     <span class='doccomment'>/// display of a single logical string with multiple calls to Context::show_text().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note: The Context::show_text() function call is part of what the cairo designers</span>
     <span class='doccomment'>/// call the &quot;toy&quot; text API. It is convenient for short demos and simple programs,</span>
     <span class='doccomment'>/// but it is not expected to be adequate for serious text-using applications. See</span>
@@ -2590,7 +2609,7 @@
     <span class='doccomment'>/// that encloses the &quot;inked&quot; portion of the text, (as it would be drawn by</span>
     <span class='doccomment'>/// Context::show_text()). Additionally, the x_advance and y_advance values indicate</span>
     <span class='doccomment'>/// the amount by which the current point would be advanced by Context::show_text().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note that whitespace characters do not directly contribute to the size of the rectangle</span>
     <span class='doccomment'>/// (extents.width and extents.height). They do contribute indirectly by changing the</span>
     <span class='doccomment'>/// position of non-whitespace characters. In particular, trailing whitespace characters</span>
@@ -2616,7 +2635,7 @@
     <span class='doccomment'>/// that encloses the &quot;inked&quot; portion of the glyphs, (as they would be drawn by</span>
     <span class='doccomment'>/// Context::show_glyphs()). Additionally, the x_advance and y_advance values indicate</span>
     <span class='doccomment'>/// the amount by which the current point would be advanced by Context::show_glyphs().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note that whitespace glyphs do not contribute to the size of the rectangle</span>
     <span class='doccomment'>/// (extents.width and extents.height).</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>glyph_extents</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>glyphs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>Glyph</span>]) <span class='op'>-&gt;</span> <span class='ident'>TextExtents</span> {
@@ -2640,10 +2659,10 @@
 
     <span class='doccomment'>/// Creates a copy of the current path and returns it to the user as a Path. See</span>
     <span class='doccomment'>/// PathData for hints on how to iterate over the returned data structure.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This function will always return a valid pointer, but the result will have no</span>
     <span class='doccomment'>/// data (data==NULL and num_data==0), if either of the following conditions hold:</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// 1. If there is insufficient memory to copy the path. In this case path.status</span>
     <span class='doccomment'>/// will be set to Status::NoMemory.</span>
     <span class='doccomment'>/// 2. If self is already in an error state. In this case path.status will contain</span>
@@ -2656,16 +2675,16 @@
 
     <span class='doccomment'>/// Gets a flattened copy of the current path and returns it to the user as a Path.</span>
     <span class='doccomment'>/// See PathData for hints on how to iterate over the returned data structure.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This function is like cairo_copy_path() except that any curves in the path will</span>
     <span class='doccomment'>/// be approximated with piecewise-linear approximations, (accurate to within the</span>
     <span class='doccomment'>/// current tolerance value). That is, the result is guaranteed to not have any</span>
     <span class='doccomment'>/// elements of type Path::CurveTo which will instead be replaced by a series of</span>
     <span class='doccomment'>/// Path::Line elements.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This function will always return a valid pointer, but the result will have no</span>
     <span class='doccomment'>/// data (data==NULL and num_data==0), if either of the following conditions hold:</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// 1. If there is insufficient memory to copy the path. In this case path-&gt;status</span>
     <span class='doccomment'>/// will be set to Status::NoMemory.</span>
     <span class='doccomment'>/// 2. If self is already in an error state. In this case path-&gt;status will contain</span>
@@ -2696,11 +2715,11 @@
 
     <span class='doccomment'>/// Gets the current point of the current path, which is conceptually the final</span>
     <span class='doccomment'>/// point reached by the path so far.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The current point is returned in the user-space coordinate system. If there is</span>
     <span class='doccomment'>/// no defined current point or if cr is in an error status, x and y will both be set</span>
     <span class='doccomment'>/// to 0.0. It is possible to check this in advance with cairo_has_current_point().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Most path construction functions alter the current point. See the following for</span>
     <span class='doccomment'>/// details on how they affect the current point: Context::new_path(),</span>
     <span class='doccomment'>/// Context::new_sub_path(), Context::append_path(), Context::close_path(),</span>
@@ -2708,9 +2727,9 @@
     <span class='doccomment'>/// Context::rel_line_to(), Context::rel_curve_to(), Context::arc(),</span>
     <span class='doccomment'>/// Context::arc_negative(), Context::rectangle(), Context::text_path(),</span>
     <span class='doccomment'>/// Context::glyph_path(), Context::stroke_to_path().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Some functions use and alter the current point but do not otherwise change current path: Context::show_text().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Some functions unset the current path and as a result, current point: Context::fill(), Context::stroke().</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_current_point</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>f64</span>, <span class='ident'>f64</span>) {
         <span class='kw'>unsafe</span> {
@@ -2730,10 +2749,10 @@
 
     <span class='doccomment'>/// Begin a new sub-path. Note that the existing path is not affected. After this call</span>
     <span class='doccomment'>/// there will be no current point.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// In many cases, this call is not needed since new sub-paths are frequently started</span>
     <span class='doccomment'>/// with Context::move_to().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// A call to Context::new_sub_path() is particularly useful when beginning a new</span>
     <span class='doccomment'>/// sub-path with one of the Context::arc() calls. This makes things easier as it is</span>
     <span class='doccomment'>/// no longer necessary to manually compute the arc&#39;s initial coordinates for a call to</span>
@@ -2748,16 +2767,16 @@
     <span class='doccomment'>/// the current sub-path, (the most recent point passed to cairo_move_to()), and</span>
     <span class='doccomment'>/// closes this sub-path. After this call the current point will be at the joined</span>
     <span class='doccomment'>/// endpoint of the sub-path.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The behavior of Context::close_path() is distinct from simply calling</span>
     <span class='doccomment'>/// Context::line_to() with the equivalent coordinate in the case of stroking. When</span>
     <span class='doccomment'>/// a closed sub-path is stroked, there are no caps on the ends of the sub-path.</span>
     <span class='doccomment'>/// Instead, there is a line join connecting the final and initial segments of the</span>
     <span class='doccomment'>/// sub-path.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If there is no current point before the call to Context::close_path(), this</span>
     <span class='doccomment'>/// function will have no effect.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note: As of cairo version 1.2.4 any call to Context::close_path() will place</span>
     <span class='doccomment'>/// an explicit MOVE_TO element into the path immediately after the CLOSE_PATH</span>
     <span class='doccomment'>/// element, (which can be seen in Context::copy_path() for example). This can</span>
@@ -2774,27 +2793,27 @@
     <span class='doccomment'>/// at (xc , yc ), begins at angle1 and proceeds in the direction of increasing</span>
     <span class='doccomment'>/// angles to end at angle2 . If angle2 is less than angle1 it will be progressively</span>
     <span class='doccomment'>/// increased by 2*M_PI until it is greater than angle1 .</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If there is a current point, an initial line segment will be added to the path</span>
     <span class='doccomment'>/// to connect the current point to the beginning of the arc. If this initial line is</span>
     <span class='doccomment'>/// undesired, it can be avoided by calling Context::new_sub_path() before calling</span>
     <span class='doccomment'>/// Context::arc().</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Angles are measured in radians. An angle of 0.0 is in the direction of the</span>
     <span class='doccomment'>/// positive X axis (in user space). An angle of M_PI/2.0 radians (90 degrees) is</span>
     <span class='doccomment'>/// in the direction of the positive Y axis (in user space). Angles increase in the</span>
     <span class='doccomment'>/// direction from the positive X axis toward the positive Y axis. So with the default</span>
     <span class='doccomment'>/// transformation matrix, angles increase in a clockwise direction.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// (To convert from degrees to radians, use degrees * (M_PI / 180.).)</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This function gives the arc in the direction of increasing angles; see</span>
     <span class='doccomment'>/// Context::arc_negative() to get the arc in the direction of decreasing angles.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// The arc is circular in user space. To achieve an elliptical arc, you can scale</span>
     <span class='doccomment'>/// the current transformation matrix by different amounts in the X and Y directions.</span>
     <span class='doccomment'>/// For example, to draw an ellipse in the box given by x , y , width , height :</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```ignore</span>
     <span class='doccomment'>/// cr.save();</span>
     <span class='doccomment'>/// cr.translate(x + width / 2., y + height / 2.);</span>
@@ -2812,7 +2831,7 @@
     <span class='doccomment'>/// at (xc , yc ), begins at angle1 and proceeds in the direction of decreasing</span>
     <span class='doccomment'>/// angles to end at angle2 . If angle2 is greater than angle1 it will be</span>
     <span class='doccomment'>/// progressively decreased by 2*M_PI until it is less than angle1.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// See Context::arc() for more details. This function differs only in the direction</span>
     <span class='doccomment'>/// of the arc between the two angles.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>arc_negative</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>xc</span>: <span class='ident'>f64</span>, <span class='ident'>yc</span>: <span class='ident'>f64</span>, <span class='ident'>radius</span>: <span class='ident'>f64</span>, <span class='ident'>angle1</span>: <span class='ident'>f64</span>, <span class='ident'>angle2</span>: <span class='ident'>f64</span>) {
@@ -2824,7 +2843,7 @@
     <span class='doccomment'>/// Adds a cubic Bézier spline to the path from the current point to position</span>
     <span class='doccomment'>/// (x3 , y3 ) in user-space coordinates, using (x1 , y1 ) and (x2 , y2 ) as the</span>
     <span class='doccomment'>/// control points. After this call the current point will be (x3 , y3 ).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If there is no current point before the call to Context::curve_to() this function</span>
     <span class='doccomment'>/// will behave as if preceded by a call to Context::move_to(cr , x1 , y1 ).</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>curve_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>x1</span>: <span class='ident'>f64</span>, <span class='ident'>y1</span>: <span class='ident'>f64</span>, <span class='ident'>x2</span>: <span class='ident'>f64</span>, <span class='ident'>y2</span>: <span class='ident'>f64</span>, <span class='ident'>x3</span>: <span class='ident'>f64</span>, <span class='ident'>y3</span>: <span class='ident'>f64</span>) {
@@ -2835,7 +2854,7 @@
 
     <span class='doccomment'>/// Adds a line to the path from the current point to position (x , y ) in user-space</span>
     <span class='doccomment'>/// coordinates. After this call the current point will be (x , y ).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// If there is no current point before the call to cairo_line_to() this function</span>
     <span class='doccomment'>/// will behave as cairo_move_to(cr , x , y ).</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>line_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>x</span>: <span class='ident'>f64</span>, <span class='ident'>y</span>: <span class='ident'>f64</span>) {
@@ -2853,9 +2872,9 @@
 
     <span class='doccomment'>/// Adds a closed sub-path rectangle of the given size to the current path at</span>
     <span class='doccomment'>/// position (x , y ) in user-space coordinates.</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// This function is logically equivalent to:</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```ignore</span>
     <span class='doccomment'>/// cr.move_to(, x, y);</span>
     <span class='doccomment'>/// cr.rel_line_to(width, 0);</span>
@@ -2884,11 +2903,11 @@
     <span class='doccomment'>/// to a point offset from the current point by (dx3 , dy3 ), using points offset by</span>
     <span class='doccomment'>/// (dx1 , dy1 ) and (dx2 , dy2 ) as the control points. After this call the current</span>
     <span class='doccomment'>/// point will be offset by (dx3 , dy3 ).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Given a current point of (x, y),</span>
     <span class='doccomment'>/// Context::rel_curve_to(dx1 , dy1 , dx2 , dy2 , dx3 , dy3 ) is logically</span>
     <span class='doccomment'>/// equivalent to Context::curve_to(x+dx1 , y+dy1 , x+dx2 , y+dy2 , x+dx3 , y+dy3 ).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// It is an error to call this function with no current point. Doing so will cause</span>
     <span class='doccomment'>/// self to shutdown with a status of Status::NoCurrentPoint.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>rel_curve_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dx1</span>: <span class='ident'>f64</span>, <span class='ident'>dy1</span>: <span class='ident'>f64</span>, <span class='ident'>dx2</span>: <span class='ident'>f64</span>, <span class='ident'>dy2</span>: <span class='ident'>f64</span>, <span class='ident'>dx3</span>: <span class='ident'>f64</span>, <span class='ident'>dy3</span>: <span class='ident'>f64</span>) {
@@ -2900,10 +2919,10 @@
     <span class='doccomment'>/// Relative-coordinate version of Context::line_to(). Adds a line to the path from</span>
     <span class='doccomment'>/// the current point to a point that is offset from the current point by (dx , dy )</span>
     <span class='doccomment'>/// in user space. After this call the current point will be offset by (dx , dy ).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Given a current point of (x, y), Context::rel_line_to(dx , dy ) is logically</span>
     <span class='doccomment'>/// equivalent to Context::line_to( x + dx , y + dy ).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// It is an error to call this function with no current point. Doing so will cause</span>
     <span class='doccomment'>/// self to shutdown with a status of Status::NoCurrentPoint.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>rel_line_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dx</span>: <span class='ident'>f64</span>, <span class='ident'>dy</span>: <span class='ident'>f64</span>) {
@@ -2913,10 +2932,10 @@
     }
 
     <span class='doccomment'>/// Begin a new sub-path. After this call the current point will offset by (x , y ).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Given a current point of (x, y), Context::rel_move_to(dx , dy ) is logically</span>
     <span class='doccomment'>/// equivalent to Context::move_to(x + dx , y + dy ).</span>
-    <span class='doccomment'>/// </span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// It is an error to call this function with no current point. Doing so will</span>
     <span class='doccomment'>/// cause self to shutdown with a status of Status::NoCurrenPoint.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>rel_move_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dx</span>: <span class='ident'>f64</span>, <span class='ident'>dy</span>: <span class='ident'>f64</span>) {
@@ -2969,7 +2988,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

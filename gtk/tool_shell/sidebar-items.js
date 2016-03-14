@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ToolShell","The `ToolShell` interface allows container widgets to provide additional information when embedding `ToolItem` widgets."]],"trait":[["ToolShellExt","Trait containing all `ToolShell` methods."]]});

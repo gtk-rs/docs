@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["FontButton","The `FontButton` is a button which displays the currently selected font an allows to open a font chooser dialog to change the font. It is suitable widget for selecting a font in a preference dialog."]]});

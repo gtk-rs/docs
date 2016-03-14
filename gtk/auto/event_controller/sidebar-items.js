@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["EventController","`EventController` is a base, low-level implementation for event controllers. Those react to a series of ``GdkEvents``, and possibly trigger actions as a consequence of those."]],"trait":[["EventControllerExt","Trait containing all `EventController` methods."]]});

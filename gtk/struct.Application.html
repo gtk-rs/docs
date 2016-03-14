@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Application` struct in crate `gtk`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Application">
+
+    <title>gtk::Application - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Application', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>gtk</a>::<wbr><a class='struct' href=''>Application</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span></span></h1>
+<pre class='rust struct'>pub struct Application(_, _);</pre><div class='docblock'><p><code>Application</code> is a class that handles many important aspects
+of a GTK+ application in a convenient fashion, without enforcing
+a one-size-fits-all application model.</p>
+
+<p>Currently, <code>Application</code> handles GTK+ initialization, application
+uniqueness, session management, provides some basic scriptability and
+desktop shell integration by exporting actions and menus and manages a
+list of toplevel windows whose life-cycle is automatically tied to the
+life-cycle of your application.</p>
+
+<p>While <code>Application</code> works fine with plain <code>GtkWindows</code>, it is recommended
+to use it together with <code>ApplicationWindow</code>.</p>
+
+<p>When GDK threads are enabled, <code>Application</code> will acquire the GDK
+lock when invoking actions that arrive from other processes. The GDK
+lock is not touched for local action invocations. In order to have
+actions invoked in a predictable context it is therefore recommended
+that the GDK lock be held while invoking actions locally with
+<code>gio::ActionGroup::activate_action</code>. The same applies to actions
+associated with <code>ApplicationWindow</code> and to the “activate” and
+“open” <code>gio::Application</code> methods.</p>
+
+<h2 id='automatic-resources--automatic-resources' class='section-header'><a href='#automatic-resources--automatic-resources'>Automatic resources ## {<code>automatic</code>-resources}</a></h2>
+<p><code>Application</code> will automatically load menus from the <code>Builder</code>
+file located at &quot;gtk/menus.ui&quot;, relative to the application&#39;s
+resource base path (see <code>gio::Application::set_resource_base_path</code>). The
+menu with the ID &quot;app-menu&quot; is taken as the application&#39;s app menu
+and the menu with the ID &quot;menubar&quot; is taken as the application&#39;s
+menubar. Additional menus (most interesting submenus) can be named
+and accessed via <code>Application::get_menu_by_id</code> which allows for
+dynamic population of a part of the menu structure.</p>
+
+<p>If the files &quot;gtk/menus-appmenu.ui&quot; or &quot;gtk/menus-traditional.ui&quot; are
+present then these files will be used in preference, depending on the
+value of <code>Application::prefers_app_menu</code>.</p>
+
+<p>It is also possible to provide the menus manually using
+<code>Application::set_app_menu</code> and <code>Application::set_menubar</code>.</p>
+
+<p><code>Application</code> will also automatically setup an icon search path for
+the default icon theme by appending &quot;icons&quot; to the resource base
+path. This allows your application to easily store its icons as
+resources. See <code>IconTheme::add_resource_path</code> for more
+information.</p>
+
+<h2 id='a-simple-application--gtkapplication' class='section-header'><a href='#a-simple-application--gtkapplication'>A simple application ## {<code>gtkapplication</code>}</a></h2>
+<p><a href="https://git.gnome.org/browse/gtk+/tree/examples/bp/bloatpad.c">A simple example</a></p>
+
+<p><code>Application</code> optionally registers with a session manager
+of the users session (if you set the <code>Application:register-session</code>
+property) and offers various functionality related to the session
+life-cycle.</p>
+
+<p>An application can block various ways to end the session with
+the <code>Application::inhibit</code> function. Typical use cases for
+this kind of inhibiting are long-running, uninterruptible operations,
+such as burning a CD or performing a disk backup. The session
+manager may not honor the inhibitor, but it can be expected to
+inform the user about the negative consequences of ending the
+session while inhibitors are present.</p>
+
+<h2 id='see-also--seealso' class='section-header'><a href='#see-also--seealso'>See Also ## {<code>seealso</code>}</a></h2>
+<p><a href="https://wiki.gnome.org/HowDoI/%60Application%60">HowDoI: Using <code>Application</code></a>,
+<a href="https://developer.gnome.org/gtk3/stable/gtk-getting-started.html%60id%60-1.2.3.3">Getting Started with GTK+: Basics</a></p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a></code></h3><div class='impl-items'><h4 id='method.add_window' class='method'><code>fn <a href='#method.add_window' class='fnname'>add_window</a>&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Window.html' title='gtk::Window'>Window</a>&gt;&gt;(&amp;self, window: &amp;T)</code></h4>
+<div class='docblock'><p>Adds a window to <code>self</code>.</p>
+
+<p>This call is equivalent to setting the <code>Window:application</code>
+property of <code>window</code> to <code>self</code>.</p>
+
+<p>Normally, the connection between the application and the window
+will remain until the window is destroyed, but you can explicitly
+remove it with <code>Application::remove_window</code>.</p>
+
+<p>GTK+ will keep the application running as long as it has
+any windows.</p>
+
+<h2 id='window' class='section-header'><a href='#window'><code>window</code></a></h2>
+<p>a <code>Window</code></p>
+</div><h4 id='method.get_accels_for_action' class='method'><code>fn <a href='#method.get_accels_for_action' class='fnname'>get_accels_for_action</a>(&amp;self, detailed_action_name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
+<div class='docblock'><p>Gets the accelerators that are currently associated with
+the given action.</p>
+
+<p>Since: 3.12</p>
+
+<h2 id='detailed_action_name' class='section-header'><a href='#detailed_action_name'><code>detailed_action_name</code></a></h2>
+<p>a detailed action name, specifying an action
+ and target to obtain accelerators for</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>accelerators for <code>detailed_action_name</code>, as
+ a <code>None</code>-terminated array. Free with <code>g_strfreev</code> when no longer needed</p>
+</div><h4 id='method.get_actions_for_accel' class='method'><code>fn <a href='#method.get_actions_for_accel' class='fnname'>get_actions_for_accel</a>(&amp;self, accel: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
+<div class='docblock'><p>Returns the list of actions (possibly empty) that <code>accel</code> maps to.
+Each item in the list is a detailed action name in the usual form.</p>
+
+<p>This might be useful to discover if an accel already exists in
+order to prevent installation of a conflicting accelerator (from
+an accelerator editor or a plugin system, for example). Note that
+having more than one action per accelerator may not be a bad thing
+and might make sense in cases where the actions never appear in the
+same context.</p>
+
+<p>In case there are no actions for a given accelerator, an empty array
+is returned. <code>None</code> is never returned.</p>
+
+<p>It is a programmer error to pass an invalid accelerator string.
+If you are unsure, check it with <code>gtk_accelerator_parse</code> first.</p>
+
+<p>Since: 3.14</p>
+
+<h2 id='accel' class='section-header'><a href='#accel'><code>accel</code></a></h2>
+<p>an accelerator that can be parsed by <code>gtk_accelerator_parse</code></p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>a <code>None</code>-terminated array of actions for <code>accel</code></p>
+</div><h4 id='method.get_active_window' class='method'><code>fn <a href='#method.get_active_window' class='fnname'>get_active_window</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gtk/struct.Window.html' title='gtk::Window'>Window</a>&gt;</code></h4>
+<div class='docblock'><p>Gets the “active” window for the application.</p>
+
+<p>The active window is the one that was most recently focused (within
+the application). This window may not have the focus at the moment
+if another application has it — this is just the most
+recently-focused window within this application.</p>
+
+<p>Since: 3.6</p>
+
+<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<p>the active window</p>
+</div><h4 id='method.get_window_by_id' class='method'><code>fn <a href='#method.get_window_by_id' class='fnname'>get_window_by_id</a>(&amp;self, id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gtk/struct.Window.html' title='gtk::Window'>Window</a>&gt;</code></h4>
+<div class='docblock'><p>Returns the <code>ApplicationWindow</code> with the given ID.</p>
+
+<p>Since: 3.6</p>
+
+<h2 id='id' class='section-header'><a href='#id'><code>id</code></a></h2>
+<p>an identifier number</p>
+
+<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
+<p>the window with ID <code>id</code>, or
+ <code>None</code> if there is no window with this ID</p>
+</div><h4 id='method.get_windows' class='method'><code>fn <a href='#method.get_windows' class='fnname'>get_windows</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../gtk/struct.Window.html' title='gtk::Window'>Window</a>&gt;</code></h4>
+<div class='docblock'><p>Gets a list of the <code>GtkWindows</code> associated with <code>self</code>.</p>
+
+<p>The list is sorted by most recently focused window, such that the first
+element is the currently focused window. (Useful for choosing a parent
+for a transient window.)</p>
+
+<p>The list that is returned should not be modified in any way. It will
+only remain valid until the next focus change or window creation or
+deletion.</p>
+
+<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
+<p>a <code>glib::List</code> of <code>Window</code></p>
+</div><h4 id='method.inhibit' class='method'><code>fn <a href='#method.inhibit' class='fnname'>inhibit</a>&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Window.html' title='gtk::Window'>Window</a>&gt;&gt;(&amp;self, window: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;, flags: <a class='struct' href='../gtk/struct.ApplicationInhibitFlags.html' title='gtk::ApplicationInhibitFlags'>ApplicationInhibitFlags</a>, reason: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
+<div class='docblock'><p>Inform the session manager that certain types of actions should be
+inhibited. This is not guaranteed to work on all platforms and for
+all types of actions.</p>
+
+<p>Applications should invoke this method when they begin an operation
+that should not be interrupted, such as creating a CD or DVD. The
+types of actions that may be blocked are specified by the <code>flags</code>
+parameter. When the application completes the operation it should
+call <code>Application::uninhibit</code> to remove the inhibitor. Note that
+an application can have multiple inhibitors, and all of the must
+be individually removed. Inhibitors are also cleared when the
+application exits.</p>
+
+<p>Applications should not expect that they will always be able to block
+the action. In most cases, users will be given the option to force
+the action to take place.</p>
+
+<p>Reasons should be short and to the point.</p>
+
+<p>If <code>window</code> is given, the session manager may point the user to
+this window to find out more about why the action is inhibited.</p>
+
+<h2 id='window-1' class='section-header'><a href='#window-1'><code>window</code></a></h2>
+<p>a <code>Window</code>, or <code>None</code></p>
+
+<h2 id='flags' class='section-header'><a href='#flags'><code>flags</code></a></h2>
+<p>what types of actions should be inhibited</p>
+
+<h2 id='reason' class='section-header'><a href='#reason'><code>reason</code></a></h2>
+<p>a short, human-readable string that explains
+ why these operations are inhibited</p>
+
+<h1 id='returns-5' class='section-header'><a href='#returns-5'>Returns</a></h1>
+<p>A non-zero cookie that is used to uniquely identify this
+ request. It should be used as an argument to <code>Application::uninhibit</code>
+ in order to remove the request. If the platform does not support
+ inhibiting or the request failed for some reason, 0 is returned.</p>
+</div><h4 id='method.is_inhibited' class='method'><code>fn <a href='#method.is_inhibited' class='fnname'>is_inhibited</a>(&amp;self, flags: <a class='struct' href='../gtk/struct.ApplicationInhibitFlags.html' title='gtk::ApplicationInhibitFlags'>ApplicationInhibitFlags</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Determines if any of the actions specified in <code>flags</code> are
+currently inhibited (possibly by another application).</p>
+
+<h2 id='flags-1' class='section-header'><a href='#flags-1'><code>flags</code></a></h2>
+<p>what types of actions should be queried</p>
+
+<h1 id='returns-6' class='section-header'><a href='#returns-6'>Returns</a></h1>
+<p><code>true</code> if any of the actions specified in <code>flags</code> are inhibited</p>
+</div><h4 id='method.list_action_descriptions' class='method'><code>fn <a href='#method.list_action_descriptions' class='fnname'>list_action_descriptions</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
+<div class='docblock'><p>Lists the detailed action names which have associated accelerators.
+See <code>Application::set_accels_for_action</code>.</p>
+
+<p>Since: 3.12</p>
+
+<h1 id='returns-7' class='section-header'><a href='#returns-7'>Returns</a></h1>
+<p>a <code>None</code>-terminated array of strings,
+ free with <code>g_strfreev</code> when done</p>
+</div><h4 id='method.prefers_app_menu' class='method'><code>fn <a href='#method.prefers_app_menu' class='fnname'>prefers_app_menu</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Determines if the desktop environment in which the application is
+running would prefer an application menu be shown.</p>
+
+<p>If this function returns <code>true</code> then the application should call
+<code>Application::set_app_menu</code> with the contents of an application
+menu, which will be shown by the desktop environment. If it returns
+<code>false</code> then you should consider using an alternate approach, such as
+a menubar.</p>
+
+<p>The value returned by this function is purely advisory and you are
+free to ignore it. If you call <code>Application::set_app_menu</code> even
+if the desktop environment doesn&#39;t support app menus, then a fallback
+will be provided.</p>
+
+<p>Applications are similarly free not to set an app menu even if the
+desktop environment wants to show one. In that case, a fallback will
+also be created by the desktop environment (GNOME, for example, uses
+a menu with only a &quot;Quit&quot; item in it).</p>
+
+<p>The value returned by this function never changes. Once it returns a
+particular value, it is guaranteed to always return the same value.</p>
+
+<p>You may only call this function after the application has been
+registered and after the base startup handler has run. You&#39;re most
+likely to want to use this from your own startup handler. It may
+also make sense to consult this function while constructing UI (in
+activate, open or an action activation handler) in order to determine
+if you should show a gear menu or not.</p>
+
+<p>This function will return <code>false</code> on Mac OS and a default app menu
+will be created automatically with the &quot;usual&quot; contents of that menu
+typical to most Mac OS applications. If you call
+<code>Application::set_app_menu</code> anyway, then this menu will be
+replaced with your own.</p>
+
+<p>Since: 3.14</p>
+
+<h1 id='returns-8' class='section-header'><a href='#returns-8'>Returns</a></h1>
+<p><code>true</code> if you should set an app menu</p>
+</div><h4 id='method.remove_window' class='method'><code>fn <a href='#method.remove_window' class='fnname'>remove_window</a>&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Window.html' title='gtk::Window'>Window</a>&gt;&gt;(&amp;self, window: &amp;T)</code></h4>
+<div class='docblock'><p>Remove a window from <code>self</code>.</p>
+
+<p>If <code>window</code> belongs to <code>self</code> then this call is equivalent to
+setting the <code>Window:application</code> property of <code>window</code> to
+<code>None</code>.</p>
+
+<p>The application may stop running as a result of a call to this
+function.</p>
+
+<h2 id='window-2' class='section-header'><a href='#window-2'><code>window</code></a></h2>
+<p>a <code>Window</code></p>
+</div><h4 id='method.set_accels_for_action' class='method'><code>fn <a href='#method.set_accels_for_action' class='fnname'>set_accels_for_action</a>(&amp;self, detailed_action_name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, accels: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
+<div class='docblock'><p>Sets zero or more keyboard accelerators that will trigger the
+given action. The first item in <code>accels</code> will be the primary
+accelerator, which may be displayed in the UI.</p>
+
+<p>To remove all accelerators for an action, use an empty, zero-terminated
+array for <code>accels</code>.</p>
+
+<p>Since: 3.12</p>
+
+<h2 id='detailed_action_name-1' class='section-header'><a href='#detailed_action_name-1'><code>detailed_action_name</code></a></h2>
+<p>a detailed action name, specifying an action
+ and target to associate accelerators with</p>
+
+<h2 id='accels' class='section-header'><a href='#accels'><code>accels</code></a></h2>
+<p>a list of accelerators in the format
+ understood by <code>gtk_accelerator_parse</code></p>
+</div><h4 id='method.uninhibit' class='method'><code>fn <a href='#method.uninhibit' class='fnname'>uninhibit</a>(&amp;self, cookie: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>)</code></h4>
+<div class='docblock'><p>Removes an inhibitor that has been established with <code>Application::inhibit</code>.
+Inhibitors are also cleared when the application exits.</p>
+
+<h2 id='cookie' class='section-header'><a href='#cookie'><code>cookie</code></a></h2>
+<p>a cookie that was returned by <code>Application::inhibit</code></p>
+</div></div><h3 class='impl'><code>impl <a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(application_id: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;, flags: <a class='struct' href='../gio_sys/struct.GApplicationFlags.html' title='gio_sys::GApplicationFlags'>ApplicationFlags</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Creates a new <code>Application</code> instance.</p>
+
+<p>When using <code>Application</code>, it is not necessary to call <code>gtk_init</code>
+manually. It is called as soon as the application gets registered as
+the primary instance.</p>
+
+<p>Concretely, <code>gtk_init</code> is called in the default handler for the
+<code>gio::Application::startup</code> signal. Therefore, <code>Application</code> subclasses should
+chain up in their <code>gio::Application::startup</code> handler before using any GTK+ API.</p>
+
+<p>Note that commandline arguments are not passed to <code>gtk_init</code>.
+All GTK+ functionality that is available via commandline arguments
+can also be achieved by setting suitable environment variables
+such as <code>G_DEBUG</code>, so this should not be a big
+problem. If you absolutely must support GTK+ commandline arguments,
+you can explicitly call <code>gtk_init</code> before creating the application
+instance.</p>
+
+<p>If non-<code>None</code>, the application ID must be valid. See
+<code>gio::Application::id_is_valid</code>.</p>
+
+<p>If no application ID is given then some features (most notably application
+uniqueness) will be disabled. A null application ID is only allowed with
+GTK+ 3.6 or later.</p>
+
+<h2 id='application_id' class='section-header'><a href='#application_id'><code>application_id</code></a></h2>
+<p>The application ID.</p>
+
+<h2 id='flags-2' class='section-header'><a href='#flags-2'><code>flags</code></a></h2>
+<p>the application flags</p>
+
+<h1 id='returns-9' class='section-header'><a href='#returns-9'>Returns</a></h1>
+<p>a new <code>Application</code> instance</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.StaticType.html' title='gtk::StaticType'>StaticType</a> for <a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a></code></h3><div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../gtk/trait.StaticType.html#method.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../gtk/enum.Type.html' title='gtk::Type'>Type</a></code></h4>
+</div><h3 class='impl'><code>impl&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt; for <a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a></code></h3><div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a></code></h3><div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
+<h4 id='method.hash_slice' class='method'><span class="since">1.3.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.Application.html' title='gtk::Application'>Application</a></code></h4>
+<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gtk";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
