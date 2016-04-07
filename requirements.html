@@ -68,75 +68,126 @@
 
 <h2 id="debian-and-ubuntu">Debian and Ubuntu</h2>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">&gt; </span>sudo apt-get install libgtk-3-dev</code></pre></figure>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">&gt; </span>sudo apt-get install libgtk-3-dev
+</code></pre>
+</div>
 
 <h2 id="fedora">Fedora</h2>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">&gt; </span>sudo dnf install gtk3-devel glib2-devel
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">&gt; </span>sudo dnf install gtk3-devel glib2-devel
 
 <span class="c">### Fedora 21 and earlier</span>
-<span class="gp">&gt; </span>sudo yum install gtk3-devel glib2-devel</code></pre></figure>
+<span class="gp">&gt; </span>sudo yum install gtk3-devel glib2-devel
+</code></pre>
+</div>
 
 <h2 id="os-x">OS X</h2>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">&gt; </span>brew install gtk+3</code></pre></figure>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">&gt; </span>brew install gtk+3
+</code></pre>
+</div>
 
 <h2 id="windows">Windows</h2>
 
-<p>Make sure you have the <a href="https://www.rust-lang.org/downloads.html#win-foot">GNU
-ABI</a> version of the rust
-compiler installed. Since we need our own toolchain make sure to uncheck
-“Linker and platform libraries” in the Rust setup.
-<img src="rust_setup.png" alt="Screenshot" /></p>
+<p>Make sure you have the <a href="https://www.rust-lang.org/downloads.html#win-foot">GNU ABI</a> version of the rust compiler installed.
+Contrary to earlier instructions, <strong>you don’t need to uncheck “Linker and
+platform libraries” in the Rust setup or delete <code class="highlighter-rouge">gcc.exe</code> and <code class="highlighter-rouge">ld.exe</code> in Rust’s
+<code class="highlighter-rouge">bin</code> directory.</strong></p>
 
-<p>If you already have installed Rust, check if your Rust installation has
-<code class="highlighter-rouge">gcc.exe</code> and <code class="highlighter-rouge">ld.exe</code> in its <code class="highlighter-rouge">bin</code> directory. In that case remove those
-executables, they will be provided by mingw instead. If you won’t you’ll
-probably get a linking error <code class="highlighter-rouge">ld: cannot find -limm32</code>.</p>
+<h3 id="getting-the-gtk-sdk">Getting the GTK+ SDK</h3>
 
-<p>For the toolchain one has two possibilities:</p>
+<p>The GTK+ Project <a href="http://www.gtk.org/download/windows.php">recommends</a> using the GTK+ SDK provided by <a href="https://msys2.github.io/">MSYS2</a>:</p>
 
 <ul>
   <li>
-    <p>Install msys2 with a mingw toolchain and the gtk3 package</p>
+    <p><a href="https://sourceforge.net/p/msys2/wiki/MSYS2%20installation/">Install MSYS2</a>.
+We’re going to assume it’s installed in <code class="highlighter-rouge">C:\msys2</code>. Adjust the path in the
+following steps if necessary.</p>
   </li>
   <li>
-    <p>Install the mingw-w64 toolchain separately and then install a GTK+ SDK</p>
+    <p>In the “MSYS2 Shell” install <code class="highlighter-rouge">libgtk3</code>.</p>
+
+    <ul>
+      <li>
+        <p>32-bit targets:</p>
+
+        <div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">&gt; </span>pacman -S mingw-w64-i686-gtk3
+</code></pre>
+        </div>
+      </li>
+      <li>
+        <p>64-bit targets:</p>
+
+        <div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">&gt; </span>pacman -S mingw-w64-x86_64-gtk3
+</code></pre>
+        </div>
+      </li>
+    </ul>
   </li>
 </ul>
 
-<h3 id="msys2-toolchain">msys2 toolchain</h3>
+<p>If you prefer getting the SDK from <a href="https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer">gtk-win64</a> or building it from source, set
+the variables in the next section accordingly.</p>
 
-<p>This method is recommended according to the [GTK+ project]
-(http://www.gtk.org/download/windows.php). You can follow [this guide]
-(https://blogs.gnome.org/nacho/2014/08/01/how-to-build-your-gtk-application-on-windows/)
-or follow these steps:</p>
+<h3 id="using-the-native-windows-shell">Using the native Windows shell</h3>
 
-<ul>
-  <li>Install and update <a href="https://msys2.github.io/">msys2</a></li>
-  <li>Install the mingw toolchain:</li>
-</ul>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>pacman -S mingw-w64-x86_64-toolchain</code></pre></figure>
+<p>Back in the <code class="highlighter-rouge">cmd.exe</code> shell set the <code class="highlighter-rouge">GTK_LIB_DIR</code> and <code class="highlighter-rouge">PATH</code> environment
+variables.</p>
 
 <ul>
-  <li>Install the gtk3 package:</li>
+  <li>
+    <p>32-bit targets:</p>
+
+    <pre><code class="language-cmd">C:\&gt; SET GTK_LIB_DIR=C:\msys2\mingw32\lib
+C:\&gt; SET PATH=%PATH%;C:\msys2\mingw32\bin
+</code></pre>
+  </li>
+  <li>
+    <p>64-bit targets:</p>
+
+    <pre><code class="language-bat">C:\&gt; SET GTK_LIB_DIR=C:\msys2\mingw64\lib
+C:\&gt; SET PATH=%PATH%;C:\msys2\mingw64\bin
+</code></pre>
+  </li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>pacman -S mingw-w64-x86_64-gtk3</code></pre></figure>
+<p>If you’re happy with these changes, make them permanent with
+<a href="https://technet.microsoft.com/en-us/library/cc755104.aspx"><code class="highlighter-rouge">SETX</code></a>:</p>
 
-<p>Make sure that either <code class="highlighter-rouge">&lt;your msys installation folder&gt;\mingw32\bin</code> or <code class="highlighter-rouge">&lt;your msys installation folder&gt;\mingw64\bin</code> is in your <code class="highlighter-rouge">PATH</code> e.g. (if you have msys32 installed at <code class="highlighter-rouge">c:\msys32</code>, add <code class="highlighter-rouge">c:\msys32\mingw32\bin</code> or <code class="highlighter-rouge">c:\msys32\mingw64\bin</code> to your <code class="highlighter-rouge">PATH</code>).</p>
+<pre><code class="language-cmd">C:\&gt; SETX GTK_LIB_DIR %GTK_LIB_DIR%
+C:\&gt; SETX PATH %PATH%
+</code></pre>
 
-<h3 id="separate-mingw-toolchain">Separate mingw toolchain</h3>
+<h3 id="using-the-msys2-mingw-shell">Using the MSYS2 MinGW shell</h3>
 
-<p>Install <a href="http://mingw-w64.yaxm.org/">mingw-w64</a> (select the win32 threading model) and download a <strong>GTK+</strong> SDK:
- * The GNOME project hosts <a href="http://win32builder.gnome.org/">distributions</a> of GTK+ 3.4 upto 3.10
- * <a href="https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer">GTK+ for Windows Runtime Environment Installer: 64-bit</a> supports GTK+ 3.14, its SDK download links can currently be found <a href="http://lvserver.ugent.be/gtk-win64/sdk/">here</a>.</p>
+<p>Instead of setting the environment variables manually, you can let <code class="highlighter-rouge">pkg-config</code>
+sort the paths out for you.</p>
 
-<p>Make sure both mingw’s and the sdk’s <code class="highlighter-rouge">bin</code> directories are in your <code class="highlighter-rouge">PATH</code> e.g. (assuming mingw is installed in <code class="highlighter-rouge">C:\mingw-w64</code> and the SDK unpacked into <code class="highlighter-rouge">C:\gtk</code>)</p>
+<ul>
+  <li>
+    <p>In the “MSYS2 Shell” install the <code class="highlighter-rouge">mingw-w64</code> toolchain.</p>
 
-<figure class="highlight"><pre><code class="language-bat" data-lang="bat">C:\&gt; set PATH="C:\mingw-w64\bin;C:\gtk\bin;%PATH%"</code></pre></figure>
+    <ul>
+      <li>
+        <p>32-bit targets:</p>
 
+        <div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">&gt; </span>pacman -S mingw-w64-i686-toolchain
+</code></pre>
+        </div>
+      </li>
+      <li>
+        <p>64-bit targets:</p>
+
+        <div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">&gt; </span>pacman -S mingw-w64-x86_64-toolchain
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Start the “MSYS2 MinGW Shell” (not to be confused with “MSYS2 Shell”).</p>
+  </li>
+</ul>
 
       </div>
     </div>
