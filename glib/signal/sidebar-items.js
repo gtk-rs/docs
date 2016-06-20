@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["connect",""]]});
+initSidebarItems({"fn":[["connect",""],["signal_stop_emission",""],["signal_stop_emission_by_name",""]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["WidgetExt",""]]});
+initSidebarItems({"trait":[["WidgetExtManual",""]]});

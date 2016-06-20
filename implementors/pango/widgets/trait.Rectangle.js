@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['pango'] = [];
+implementors["pango"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

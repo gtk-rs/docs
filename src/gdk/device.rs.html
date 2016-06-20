@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gtk-rs-release/gdk/src/device.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/gdk/src/device.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>device.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -386,6 +387,13 @@
 <span id="343">343</span>
 <span id="344">344</span>
 <span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -397,6 +405,7 @@
 <span class='kw'>use</span> <span class='ident'>screen</span>::<span class='ident'>Screen</span>;
 <span class='kw'>use</span> <span class='ident'>window</span>::<span class='ident'>Window</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 
 <span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
     <span class='doccomment'>/// The `Device` object represents a single input device, such</span>
@@ -454,7 +463,7 @@
     <span class='doccomment'>///  }</span>
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Since: 3.16</span>
+    <span class='doccomment'>/// Feature: `v3_16`</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Returns</span>
@@ -471,7 +480,7 @@
     <span class='doccomment'>/// be obtained. This ID is retrieved from the device, and is thus constant for</span>
     <span class='doccomment'>/// it. See `Device::get_vendor_id` for more information.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Since: 3.16</span>
+    <span class='doccomment'>/// Feature: `v3_16`</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Returns</span>
@@ -528,7 +537,7 @@
     <span class='doccomment'>/// ## `modifiers`</span>
     <span class='doccomment'>/// the modifiers to set</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index_</span>: <span class='ident'>u32</span>, <span class='ident'>keyval</span>: <span class='ident'>u32</span>, <span class='ident'>modifiers</span>: ::<span class='ident'>ModifierType</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_set_key</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>index_</span>, <span class='ident'>keyval</span>, <span class='ident'>modifiers</span>) }
+        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_set_key</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>index_</span>, <span class='ident'>keyval</span>, <span class='ident'>modifiers</span>.<span class='ident'>to_glib</span>()) }
     }
 
     <span class='doccomment'>/// If `index_` has a valid keyval, this function will return `true`</span>
@@ -543,8 +552,14 @@
     <span class='doccomment'>/// # Returns</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// `true` if keyval is set for `index`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index_</span>: <span class='ident'>u32</span>, <span class='ident'>keyval</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>u32</span>, <span class='ident'>modifiers</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> ::<span class='ident'>ModifierType</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_key</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>index_</span>, <span class='ident'>keyval</span>, <span class='ident'>modifiers</span>)) }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index_</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>u32</span>, ::<span class='ident'>ModifierType</span>)<span class='op'>&gt;</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>keyval</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>();
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>modifiers</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>();
+            <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_key</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>index_</span>,
+                                                        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>keyval</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>modifiers</span>));
+            <span class='kw'>if</span> <span class='ident'>ret</span> { <span class='prelude-val'>Some</span>((<span class='ident'>keyval</span>, <span class='ident'>from_glib</span>(<span class='ident'>modifiers</span>))) } <span class='kw'>else</span> { <span class='prelude-val'>None</span> }
+        }
     }
 
     <span class='doccomment'>/// Specifies how an axis of a device is used.</span>
@@ -756,6 +771,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

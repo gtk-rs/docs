@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['glib'] = [];implementors['gtk'] = [];
+implementors["glib"] = [];implementors["gio"] = [];implementors["gtk"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

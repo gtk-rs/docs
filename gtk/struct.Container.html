@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,10 +44,10 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>gtk</a>::<wbr><a class='struct' href=''>Container</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span></span></h1>
 <pre class='rust struct'>pub struct Container(_, _);</pre><div class='docblock'><p>A GTK+ user interface is constructed by nesting widgets inside widgets.
 Container widgets are the inner nodes in the resulting tree of widgets:
 they contain other widgets. So, for example, you might have a <code>Window</code>
@@ -69,137 +70,12 @@ sizes and positions to their children. For example, a <code>HBox</code> arranges
 children in a horizontal row, and a <code>Grid</code> arranges the widgets it contains
 in a two-dimensional grid.</p>
 
-<h1 id='height-for-width-geometry-management' class='section-header'><a href='#height-for-width-geometry-management'>Height for width geometry management</a></h1>
-<p>GTK+ uses a height-for-width (and width-for-height) geometry management system.
-Height-for-width means that a widget can change how much vertical space it needs,
-depending on the amount of horizontal space that it is given (and similar for
-width-for-height).</p>
-
-<p>There are some things to keep in mind when implementing container widgets
-that make use of GTK+’s height for width geometry management system. First,
-it’s important to note that a container must prioritize one of its
-dimensions, that is to say that a widget or container can only have a
-<code>SizeRequestMode</code> that is <code>SizeRequestMode::HeightForWidth</code> or
-<code>SizeRequestMode::WidthForHeight</code>. However, every widget and container
-must be able to respond to the APIs for both dimensions, i.e. even if a
-widget has a request mode that is height-for-width, it is possible that
-its parent will request its sizes using the width-for-height APIs.</p>
-
-<p>To ensure that everything works properly, here are some guidelines to follow
-when implementing height-for-width (or width-for-height) containers.</p>
-
-<p>Each request mode involves 2 virtual methods. Height-for-width apis run
-through <code>Widget::get_preferred_width</code> and then through <code>Widget::get_preferred_height_for_width</code>.
-When handling requests in the opposite <code>SizeRequestMode</code> it is important that
-every widget request at least enough space to display all of its content at all times.</p>
-
-<p>When <code>Widget::get_preferred_height</code> is called on a container that is height-for-width,
-the container must return the height for its minimum width. This is easily achieved by
-simply calling the reverse apis implemented for itself as follows:</p>
-
-<pre><code class="language-C">static void
-foo_container_get_preferred_height (GtkWidget *widget,
-                                    gint *min_height,
-                                    gint *nat_height)
-{
-   if (i_am_in_height_for_width_mode)
-     {
-       gint min_width;
-
-       GTK_WIDGET_GET_CLASS (widget)-&gt;get_preferred_width (widget,
-                                                           &amp;min_width,
-                                                           NULL);
-       GTK_WIDGET_GET_CLASS (widget)-&gt;get_preferred_height_for_width
-                                                          (widget,
-                                                           min_width,
-                                                           min_height,
-                                                           nat_height);
-     }
-   else
-     {
-       ... many containers support both request modes, execute the
-       real width-for-height request here by returning the
-       collective heights of all widgets that are stacked
-       vertically (or whatever is appropriate for this container)
-       ...
-     }
-}
-</code></pre>
-
-<p>Similarly, when <code>Widget::get_preferred_width_for_height</code> is called for a container or widget
-that is height-for-width, it then only needs to return the base minimum width like so:</p>
-
-<pre><code class="language-C">static void
-foo_container_get_preferred_width_for_height (GtkWidget *widget,
-                                              gint for_height,
-                                              gint *min_width,
-                                              gint *nat_width)
-{
-   if (i_am_in_height_for_width_mode)
-     {
-       GTK_WIDGET_GET_CLASS (widget)-&gt;get_preferred_width (widget,
-                                                           min_width,
-                                                           nat_width);
-     }
-   else
-     {
-       ... execute the real width-for-height request here based on
-       the required width of the children collectively if the
-       container were to be allocated the said height ...
-     }
-}
-</code></pre>
-
-<p>Height for width requests are generally implemented in terms of a virtual allocation
-of widgets in the input orientation. Assuming an height-for-width request mode, a container
-would implement the <code>get_preferred_height_for_width</code> virtual function by first calling
-<code>Widget::get_preferred_width</code> for each of its children.</p>
-
-<p>For each potential group of children that are lined up horizontally, the values returned by
-<code>Widget::get_preferred_width</code> should be collected in an array of <code>RequestedSize</code> structures.
-Any child spacing should be removed from the input <code>for_width</code> and then the collective size should be
-allocated using the <code>gtk_distribute_natural_allocation</code> convenience function.</p>
-
-<p>The container will then move on to request the preferred height for each child by using
-<code>Widget::get_preferred_height_for_width</code> and using the sizes stored in the <code>RequestedSize</code> array.</p>
-
-<p>To allocate a height-for-width container, it’s again important
-to consider that a container must prioritize one dimension over the other. So if
-a container is a height-for-width container it must first allocate all widgets horizontally
-using a <code>RequestedSize</code> array and <code>gtk_distribute_natural_allocation</code> and then add any
-extra space (if and where appropriate) for the widget to expand.</p>
-
-<p>After adding all the expand space, the container assumes it was allocated sufficient
-height to fit all of its content. At this time, the container must use the total horizontal sizes
-of each widget to request the height-for-width of each of its children and store the requests in a
-<code>RequestedSize</code> array for any widgets that stack vertically (for tabular containers this can
-be generalized into the heights and widths of rows and columns).
-The vertical space must then again be distributed using <code>gtk_distribute_natural_allocation</code>
-while this time considering the allocated height of the widget minus any vertical spacing
-that the container adds. Then vertical expand space should be added where appropriate and available
-and the container should go on to actually allocating the child widgets.</p>
-
-<p>See [<code>Widget</code>’s geometry management section][geometry-management]
-to learn more about implementing height-for-width geometry management for widgets.</p>
-
 <h1 id='child-properties' class='section-header'><a href='#child-properties'>Child properties</a></h1>
 <p><code>Container</code> introduces child properties.
 These are object properties that are not specific
 to either the container or the contained widget, but rather to their relation.
 Typical examples of child properties are the position or pack-type of a widget
 which is contained in a <code>Box</code>.</p>
-
-<p>Use <code>ContainerClass::install_child_property</code> to install child properties
-for a container class and <code>ContainerClass::find_child_property</code> or
-<code>ContainerClass::list_child_properties</code> to get information about existing
-child properties.</p>
-
-<p>To set the value of a child property, use <code>ContainerExt::child_set_property</code>,
-<code>ContainerExt::child_set</code> or <code>ContainerExt::child_set_valist</code>.
-To obtain the value of a child property, use
-<code>ContainerExt::child_get_property</code>, <code>ContainerExt::child_get</code> or
-<code>ContainerExt::child_get_valist</code>. To emit notification about child property
-changes, use <code>Widget::child_notify</code>.</p>
 
 <h1 id='container-as-buildable' class='section-header'><a href='#container-as-buildable'><code>Container</code> as <code>Buildable</code></a></h1>
 <p>The <code>Container</code> implementation of the <code>Buildable</code> interface supports
@@ -216,7 +92,7 @@ chain. The ”name” attribute gives the id of the widget.</p>
 
 <p>An example of these properties in UI definitions:</p>
 
-<pre><code class="language-text">&lt;object class=&quot;GtkBox&quot;&gt;
+<pre><code class="language-xml">&lt;object class=&quot;GtkBox&quot;&gt;
   &lt;child&gt;
     &lt;object class=&quot;GtkEntry&quot; id=&quot;entry1&quot;/&gt;
     &lt;packing&gt;
@@ -234,16 +110,32 @@ chain. The ”name” attribute gives the id of the widget.</p>
 </code></pre>
 
 <h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
-<p><a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.BuildableExt.html"><code>BuildableExt</code></a></p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.StaticType.html' title='gtk::StaticType'>StaticType</a> for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h3><div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../gtk/trait.StaticType.html#method.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../gtk/enum.Type.html' title='gtk::Type'>Type</a></code></h4>
-</div><h3 class='impl'><code>impl&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.ne' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt; for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a>&gt; for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Buildable.html' title='gtk::Buildable'>Buildable</a>&gt; for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h3><div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h3><div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
-<h4 id='method.hash_slice' class='method'><span class="since">1.3.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h4>
-<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div></section>
+<p><a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a></p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../gtk/trait.StaticType.html' title='gtk::StaticType'>StaticType</a> for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../gtk/enum.Type.html' title='gtk::Type'>Type</a></code></h4>
+<div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a>&gt; for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt; for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
+<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
+</div><h4 id='method.hash_slice' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></h4>
+<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.Container.html' title='gtk::Container'>Container</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -266,6 +158,8 @@ chain. The ”name” attribute gives the id of the widget.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

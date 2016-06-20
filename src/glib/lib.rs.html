@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gtk-rs-release/glib/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/glib/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -179,6 +180,10 @@
 <span id="136">136</span>
 <span id="137">137</span>
 <span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2016, The Gtk-rs Project Developers.</span>
 <span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -210,6 +215,8 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Dynamically typed [`Value`](value/index.html) can carry values of any `T:</span>
 <span class='doccomment'>//! StaticType`.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! [`Variant`](variant/index.html) can carry values of `T: StaticVariantType`.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! # Errors</span>
 <span class='doccomment'>//!</span>
@@ -256,10 +263,7 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>gobject_sys</span> <span class='kw'>as</span> <span class='ident'>gobject_ffi</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>gio_sys</span> <span class='kw'>as</span> <span class='ident'>gio_ffi</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>app_info</span>::{
-    <span class='ident'>AppInfo</span>,
-    <span class='ident'>AppInfoExt</span>,
-};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>bytes</span>::<span class='ident'>Bytes</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>error</span>::<span class='ident'>Error</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>file_error</span>::<span class='ident'>FileError</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>object</span>::{
@@ -267,6 +271,10 @@
     <span class='ident'>IsA</span>,
     <span class='ident'>Object</span>,
     <span class='ident'>ObjectExt</span>,
+};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>signal</span>::{
+    <span class='ident'>signal_stop_emission</span>,
+    <span class='ident'>signal_stop_emission_by_name</span>
 };
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>source</span>::{
     <span class='ident'>CallbackGuard</span>,
@@ -284,19 +292,19 @@
     <span class='ident'>TypedValue</span>,
     <span class='ident'>Value</span>,
 };
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>variant</span>::{
+    <span class='ident'>StaticVariantType</span>,
+    <span class='ident'>ToVariant</span>,
+    <span class='ident'>Variant</span>,
+};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>variant_type</span>::{
+    <span class='ident'>VariantTy</span>,
+    <span class='ident'>VariantType</span>,
+};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>time_val</span>::{
     <span class='ident'>TimeVal</span>,
     <span class='ident'>get_current_time</span>,
 };
-
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gio_ffi</span>::<span class='ident'>GApplicationFlags</span> <span class='kw'>as</span> <span class='ident'>ApplicationFlags</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gio_ffi</span>::<span class='ident'>G_APPLICATION_FLAGS_NONE</span> <span class='kw'>as</span> <span class='ident'>APPLICATION_FLAGS_NONE</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gio_ffi</span>::<span class='ident'>G_APPLICATION_IS_SERVICE</span> <span class='kw'>as</span> <span class='ident'>APPLICATION_IS_SERVICE</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gio_ffi</span>::<span class='ident'>G_APPLICATION_IS_LAUNCHER</span> <span class='kw'>as</span> <span class='ident'>APPLICATION_IS_LAUNCHER</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gio_ffi</span>::<span class='ident'>G_APPLICATION_HANDLES_OPEN</span> <span class='kw'>as</span> <span class='ident'>APPLICATION_HANDLES_OPEN</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gio_ffi</span>::<span class='ident'>G_APPLICATION_HANDLES_COMMAND_LINE</span> <span class='kw'>as</span> <span class='ident'>APPLICATION_HANDLES_COMMAND_LINE</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gio_ffi</span>::<span class='ident'>G_APPLICATION_SEND_ENVIRONMENT</span> <span class='kw'>as</span> <span class='ident'>APPLICATION_SEND_ENVIRONMENT</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gio_ffi</span>::<span class='ident'>G_APPLICATION_NON_UNIQUE</span> <span class='kw'>as</span> <span class='ident'>APPLICATION_NON_UNIQUE</span>;
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>wrapper</span>;
@@ -307,7 +315,7 @@
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>object</span>;
 
-<span class='kw'>mod</span> <span class='ident'>app_info</span>;
+<span class='kw'>mod</span> <span class='ident'>bytes</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>error</span>;
 <span class='kw'>mod</span> <span class='ident'>file_error</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>prelude</span>;
@@ -317,7 +325,8 @@
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>translate</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>types</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>value</span>;
-
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>variant</span>;
+<span class='kw'>mod</span> <span class='ident'>variant_type</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -342,6 +351,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

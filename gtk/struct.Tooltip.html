@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,11 +44,146 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>gtk</a>::<wbr><a class='struct' href=''>Tooltip</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-30716' class='srclink' href='../src/gtk/src/signal.rs.html#47' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Tooltip;</pre></section>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span></span></h1>
+<pre class='rust struct'>pub struct Tooltip(_, _);</pre><div class='docblock'><p>Basic tooltips can be realized simply by using <code>Widget::set_tooltip_text</code>
+or <code>Widget::set_tooltip_markup</code> without any explicit tooltip object.</p>
+
+<p>When you need a tooltip with a little more fancy contents, like adding an
+image, or you want the tooltip to have different contents per <code>TreeView</code>
+row or cell, you will have to do a little more work:</p>
+
+<ul>
+<li><p>Set the <code>Widget:has-tooltip</code> property to <code>true</code>, this will make GTK+
+monitor the widget for motion and related events which are needed to
+determine when and where to show a tooltip.</p></li>
+<li><p>Connect to the <code>Widget::query-tooltip</code> signal. This signal will be
+emitted when a tooltip is supposed to be shown. One of the arguments passed
+to the signal handler is a <code>Tooltip</code> object. This is the object that we
+are about to display as a tooltip, and can be manipulated in your callback
+using functions like <code>Tooltip::set_icon</code>. There are functions for setting
+the tooltip’s markup, setting an image from a named icon, or even putting in
+a custom widget.</p>
+
+<p>Return <code>true</code> from your query-tooltip handler. This causes the tooltip to be
+show. If you return <code>false</code>, it will not be shown.</p></li>
+</ul>
+
+<p>In the probably rare case where you want to have even more control over the
+tooltip that is about to be shown, you can set your own <code>Window</code> which
+will be used as tooltip window. This works as follows:</p>
+
+<ul>
+<li><p>Set <code>Widget:has-tooltip</code> and connect to <code>Widget::query-tooltip</code> as before.
+Use <code>Widget::set_tooltip_window</code> to set a <code>Window</code> created by you as
+tooltip window.</p></li>
+<li><p>In the <code>Widget::query-tooltip</code> callback you can access your window using
+<code>Widget::get_tooltip_window</code> and manipulate as you wish. The semantics of
+the return value are exactly as before, return <code>true</code> to show the window,
+<code>false</code> to not show it.</p></li>
+</ul>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../gtk/struct.Tooltip.html' title='gtk::Tooltip'>Tooltip</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-28687' class='srclink' href='../src/gtk/src/auto/tooltip.rs.html#57-165' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.set_custom' class='method'><code>fn <a href='#method.set_custom' class='fnname'>set_custom</a>&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Widget.html' title='gtk::Widget'>Widget</a>&gt;&gt;(&amp;self, custom_widget: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;)</code></h4>
+<div class='docblock'><p>Replaces the widget packed into the tooltip with
+<code>custom_widget</code>. <code>custom_widget</code> does not get destroyed when the tooltip goes
+away.
+By default a box with a <code>Image</code> and <code>Label</code> is embedded in
+the tooltip, which can be configured using <code>Tooltip::set_markup</code>
+and <code>Tooltip::set_icon</code>.</p>
+
+<h2 id='custom_widget' class='section-header'><a href='#custom_widget'><code>custom_widget</code></a></h2>
+<p>a <code>Widget</code>, or <code>None</code> to unset the old custom widget.</p>
+</div><h4 id='method.set_icon' class='method'><code>fn <a href='#method.set_icon' class='fnname'>set_icon</a>(&amp;self, pixbuf: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../gdk_pixbuf/pixbuf/struct.Pixbuf.html' title='gdk_pixbuf::pixbuf::Pixbuf'>Pixbuf</a>&gt;)</code></h4>
+<div class='docblock'><p>Sets the icon of the tooltip (which is in front of the text) to be
+<code>pixbuf</code>. If <code>pixbuf</code> is <code>None</code>, the image will be hidden.</p>
+
+<h2 id='pixbuf' class='section-header'><a href='#pixbuf'><code>pixbuf</code></a></h2>
+<p>a <code>gdk_pixbuf::Pixbuf</code>, or <code>None</code></p>
+</div><h4 id='method.set_icon_from_icon_name' class='method'><code>fn <a href='#method.set_icon_from_icon_name' class='fnname'>set_icon_from_icon_name</a>(&amp;self, icon_name: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;, size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
+<div class='docblock'><p>Sets the icon of the tooltip (which is in front of the text) to be
+the icon indicated by <code>icon_name</code> with the size indicated
+by <code>size</code>. If <code>icon_name</code> is <code>None</code>, the image will be hidden.</p>
+
+<h2 id='icon_name' class='section-header'><a href='#icon_name'><code>icon_name</code></a></h2>
+<p>an icon name, or <code>None</code></p>
+
+<h2 id='size' class='section-header'><a href='#size'><code>size</code></a></h2>
+<p>a stock icon size</p>
+</div><h4 id='method.set_icon_from_stock' class='method'><code>fn <a href='#method.set_icon_from_stock' class='fnname'>set_icon_from_stock</a>(&amp;self, stock_id: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;, size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
+<div class='docblock'><p>Sets the icon of the tooltip (which is in front of the text) to be
+the stock item indicated by <code>stock_id</code> with the size indicated
+by <code>size</code>. If <code>stock_id</code> is <code>None</code>, the image will be hidden.</p>
+
+<h1 id='deprecated-since-310' class='section-header'><a href='#deprecated-since-310'>Deprecated since 3.10</a></h1>
+<p>Use <code>Tooltip::set_icon_from_icon_name</code> instead.</p>
+
+<h2 id='stock_id' class='section-header'><a href='#stock_id'><code>stock_id</code></a></h2>
+<p>a stock id, or <code>None</code></p>
+
+<h2 id='size-1' class='section-header'><a href='#size-1'><code>size</code></a></h2>
+<p>a stock icon size</p>
+</div><h4 id='method.set_markup' class='method'><code>fn <a href='#method.set_markup' class='fnname'>set_markup</a>(&amp;self, markup: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;)</code></h4>
+<div class='docblock'><p>Sets the text of the tooltip to be <code>markup</code>, which is marked up
+with the [Pango text markup language][PangoMarkupFormat].
+If <code>markup</code> is <code>None</code>, the label will be hidden.</p>
+
+<h2 id='markup' class='section-header'><a href='#markup'><code>markup</code></a></h2>
+<p>a markup string (see [Pango markup format][PangoMarkupFormat]) or <code>None</code></p>
+</div><h4 id='method.set_text' class='method'><code>fn <a href='#method.set_text' class='fnname'>set_text</a>(&amp;self, text: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;)</code></h4>
+<div class='docblock'><p>Sets the text of the tooltip to be <code>text</code>. If <code>text</code> is <code>None</code>, the label
+will be hidden. See also <code>Tooltip::set_markup</code>.</p>
+
+<h2 id='text' class='section-header'><a href='#text'><code>text</code></a></h2>
+<p>a text string or <code>None</code></p>
+</div><h4 id='method.set_tip_area' class='method'><code>fn <a href='#method.set_tip_area' class='fnname'>set_tip_area</a>(&amp;self, rect: &amp;<a class='struct' href='../gtk/struct.Rectangle.html' title='gtk::Rectangle'>Rectangle</a>)</code></h4>
+<div class='docblock'><p>Sets the area of the widget, where the contents of this tooltip apply,
+to be <code>rect</code> (in widget coordinates). This is especially useful for
+properly setting tooltips on <code>TreeView</code> rows and cells, <code>GtkIconViews</code>,
+etc.</p>
+
+<p>For setting tooltips on <code>TreeView</code>, please refer to the convenience
+functions for this: <code>TreeView::set_tooltip_row</code> and
+<code>TreeView::set_tooltip_cell</code>.</p>
+
+<h2 id='rect' class='section-header'><a href='#rect'><code>rect</code></a></h2>
+<p>a <code>gdk::Rectangle</code></p>
+</div><h4 id='method.trigger_tooltip_query' class='method'><code>fn <a href='#method.trigger_tooltip_query' class='fnname'>trigger_tooltip_query</a>(display: &amp;<a class='struct' href='../gdk/display/struct.Display.html' title='gdk::display::Display'>Display</a>)</code></h4>
+<div class='docblock'><p>Triggers a new tooltip query on <code>display</code>, in order to update the current
+visible tooltip, or to show/hide the current tooltip. This function is
+useful to call when, for example, the state of the widget changed by a
+key press.</p>
+
+<h2 id='display' class='section-header'><a href='#display'><code>display</code></a></h2>
+<p>a <code>gdk::Display</code></p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../gtk/trait.StaticType.html' title='gtk::StaticType'>StaticType</a> for <a class='struct' href='../gtk/struct.Tooltip.html' title='gtk::Tooltip'>Tooltip</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../gtk/enum.Type.html' title='gtk::Type'>Type</a></code></h4>
+<div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gtk/struct.Tooltip.html' title='gtk::Tooltip'>Tooltip</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gtk/struct.Tooltip.html' title='gtk::Tooltip'>Tooltip</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt; for <a class='struct' href='../gtk/struct.Tooltip.html' title='gtk::Tooltip'>Tooltip</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gtk/struct.Tooltip.html' title='gtk::Tooltip'>Tooltip</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
+<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
+</div><h4 id='method.hash_slice' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></h4>
+<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gtk/struct.Tooltip.html' title='gtk::Tooltip'>Tooltip</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gtk/struct.Tooltip.html' title='gtk::Tooltip'>Tooltip</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.Tooltip.html' title='gtk::Tooltip'>Tooltip</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -70,6 +206,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

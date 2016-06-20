@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["ImageSurface",""]]});
+initSidebarItems({"struct":[["ImageSurface",""],["ImageSurfaceData",""]]});

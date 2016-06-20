@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['cairo'] = [];
+implementors["cairo"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

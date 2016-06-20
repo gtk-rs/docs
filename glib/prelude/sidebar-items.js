@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Continue","Continue calling the closure in the future iterations or drop it."]],"trait":[["AppInfoExt",""]]});
+initSidebarItems({"struct":[["Continue","Continue calling the closure in the future iterations or drop it."]]});

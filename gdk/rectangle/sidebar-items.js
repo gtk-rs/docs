@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["RectangleExt",""]]});
+initSidebarItems({"struct":[["Rectangle",""]]});

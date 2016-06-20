@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ImageMenuItem","`[Deprecated since 3.10]` A `ImageMenuItem` is a menu item which has an icon next to the text label."]]});

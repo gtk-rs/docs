@@ -69,6 +69,7 @@
 <ul>
   <li><a href="cairo/"><strong>cairo</strong></a></li>
   <li><a href="gdk/"><strong>gdk</strong></a></li>
+  <li><a href="gio/"><strong>gio</strong></a></li>
   <li><a href="glib/"><strong>glib</strong></a></li>
   <li><a href="gtk/"><strong>gtk</strong></a></li>
   <li><a href="pango/"><strong>pango</strong></a></li>
@@ -76,13 +77,21 @@
 
 <h3 id="versions">Versions</h3>
 
-<p>The build script will query the installed library versions from <code class="highlighter-rouge">pkg-config</code>
-and instruct <code class="highlighter-rouge">rustc</code> via <code class="highlighter-rouge">cfg</code> arguments to compile the appropriate set of APIs.</p>
+<p>By default the <code class="highlighter-rouge">gtk</code> crate provides only GTK+ 3.4 APIs. You can access more
+modern APIs by selecting one of the following features: <code class="highlighter-rouge">v3_6</code>, <code class="highlighter-rouge">v3_8</code>,
+<code class="highlighter-rouge">v3_10</code>, <code class="highlighter-rouge">v3_12</code>, <code class="highlighter-rouge">v3_14</code>, <code class="highlighter-rouge">v3_16</code>.</p>
 
-<p>All the APIs available in the installed library will just work but if you
-attempt to use newer ones, the build will fail. Presently, Rust doesn’t allow
-to generate custom error messages so there doesn’t appear to be a way to make
-such errors more friendly.</p>
+<p><code class="highlighter-rouge">Cargo.toml</code> example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nn">[dependencies.gtk]</span>
+<span class="py">version</span> <span class="p">=</span> <span class="s">"0.1.0"</span>
+<span class="py">features</span> <span class="p">=</span> <span class="nn">["v3_16"]</span>
+</code></pre>
+</div>
+
+<p><strong>Take care when choosing the version to target: some of your users might
+not have easy access to the latest ones.</strong> The higher the version, the fewer
+users will have it installed.</p>
 
 <h3 id="examples">Examples</h3>
 

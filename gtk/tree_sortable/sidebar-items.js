@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["SortColumn",""]],"trait":[["TreeSortableExt",""]]});
+initSidebarItems({"enum":[["SortColumn",""]],"trait":[["TreeSortableExtManual",""]]});

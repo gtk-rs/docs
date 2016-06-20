@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["DialogExt",""]]});
+initSidebarItems({"trait":[["DialogExtManual",""]]});

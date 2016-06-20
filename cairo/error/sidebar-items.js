@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["IoError",""]]});
+initSidebarItems({"enum":[["BorrowError",""],["IoError",""]]});

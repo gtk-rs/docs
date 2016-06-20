@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,10 +44,10 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>gtk</a>::<wbr><a class='struct' href=''>StyleContext</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span></span></h1>
 <pre class='rust struct'>pub struct StyleContext(_, _);</pre><div class='docblock'><p><code>StyleContext</code> is an object that stores styling information affecting
 a widget defined by <code>WidgetPath</code>.</p>
 
@@ -109,7 +110,11 @@ priority, keep in mind that the user settings in
 <code>XDG_CONFIG_HOME/gtk-3.0/gtk.css</code> will
 still take precedence over your changes, as it uses the
 <code>GTK_STYLE_PROVIDER_PRIORITY_USER</code> priority.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h4>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-25066' class='srclink' href='../src/gtk/src/auto/style_context.rs.html#98-761' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h4>
 <div class='docblock'><p>Creates a standalone <code>StyleContext</code>, this style context
 won’t be attached to any widget, so you may want
 to call <code>StyleContext::set_path</code> yourself.</p>
@@ -140,6 +145,26 @@ matched by:</p>
 
 <h2 id='class_name' class='section-header'><a href='#class_name'><code>class_name</code></a></h2>
 <p>class name to use in styling</p>
+</div><h4 id='method.add_provider' class='method'><code>fn <a href='#method.add_provider' class='fnname'>add_provider</a>&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.StyleProvider.html' title='gtk::StyleProvider'>StyleProvider</a>&gt;&gt;(&amp;self, provider: &amp;T, priority: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>)</code></h4>
+<div class='docblock'><p>Adds a style provider to <code>self</code>, to be used in style construction.
+Note that a style provider added by this function only affects
+the style of the widget to which <code>self</code> belongs. If you want
+to affect the style of all widgets, use
+<code>StyleContext::add_provider_for_screen</code>.</p>
+
+<p>Note: If both priorities are the same, a <code>StyleProvider</code>
+added through this function takes precedence over another added
+through <code>StyleContext::add_provider_for_screen</code>.</p>
+
+<h2 id='provider' class='section-header'><a href='#provider'><code>provider</code></a></h2>
+<p>a <code>StyleProvider</code></p>
+
+<h2 id='priority' class='section-header'><a href='#priority'><code>priority</code></a></h2>
+<p>the priority of the style provider. The lower
+ it is, the earlier it will be used in the style
+ construction. Typically this will be in the range
+ between <code>GTK_STYLE_PROVIDER_PRIORITY_FALLBACK</code> and
+ <code>GTK_STYLE_PROVIDER_PRIORITY_USER</code></p>
 </div><h4 id='method.add_region' class='method'><code>fn <a href='#method.add_region' class='fnname'>add_region</a>(&amp;self, region_name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, flags: <a class='struct' href='../gtk/struct.RegionFlags.html' title='gtk::RegionFlags'>RegionFlags</a>)</code></h4>
 <div class='docblock'><p>Adds a region to <code>self</code>, so posterior calls to
 <code>StyleContext::get</code> or any of the gtk_render_*()
@@ -179,33 +204,60 @@ and “-”, starting always with a lowercase letter.</p>
 
 <h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
 <p>the widget direction</p>
+</div><h4 id='method.get_frame_clock' class='method'><code>fn <a href='#method.get_frame_clock' class='fnname'>get_frame_clock</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gdk/frame_clock/struct.FrameClock.html' title='gdk::frame_clock::FrameClock'>FrameClock</a>&gt;</code></h4>
+<div class='docblock'><p>Returns the <code>gdk::FrameClock</code> to which <code>self</code> is attached.</p>
+
+<p>Feature: <code>v3_8</code></p>
+
+<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<p>a <code>gdk::FrameClock</code>, or <code>None</code>
+ if <code>self</code> does not have an attached frame clock.</p>
 </div><h4 id='method.get_junction_sides' class='method'><code>fn <a href='#method.get_junction_sides' class='fnname'>get_junction_sides</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.JunctionSides.html' title='gtk::JunctionSides'>JunctionSides</a></code></h4>
 <div class='docblock'><p>Returns the sides where rendered elements connect visually with others.</p>
 
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
 <p>the junction sides</p>
 </div><h4 id='method.get_parent' class='method'><code>fn <a href='#method.get_parent' class='fnname'>get_parent</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a>&gt;</code></h4>
 <div class='docblock'><p>Gets the parent context set via <code>StyleContext::set_parent</code>.
 See that function for details.</p>
 
-<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
+<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
 <p>the parent context or <code>None</code></p>
 </div><h4 id='method.get_scale' class='method'><code>fn <a href='#method.get_scale' class='fnname'>get_scale</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
 <div class='docblock'><p>Returns the scale used for assets.</p>
 
-<p>Since: 3.10</p>
+<p>Feature: <code>v3_10</code></p>
 
-<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
+<h1 id='returns-5' class='section-header'><a href='#returns-5'>Returns</a></h1>
 <p>the scale</p>
 </div><h4 id='method.get_screen' class='method'><code>fn <a href='#method.get_screen' class='fnname'>get_screen</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gdk/screen/struct.Screen.html' title='gdk::screen::Screen'>Screen</a>&gt;</code></h4>
 <div class='docblock'><p>Returns the <code>gdk::Screen</code> to which <code>self</code> is attached.</p>
 
-<h1 id='returns-5' class='section-header'><a href='#returns-5'>Returns</a></h1>
+<h1 id='returns-6' class='section-header'><a href='#returns-6'>Returns</a></h1>
 <p>a <code>gdk::Screen</code>.</p>
+</div><h4 id='method.get_section' class='method'><code>fn <a href='#method.get_section' class='fnname'>get_section</a>(&amp;self, property: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gtk/struct.CssSection.html' title='gtk::CssSection'>CssSection</a>&gt;</code></h4>
+<div class='docblock'><p>Queries the location in the CSS where <code>property</code> was defined for the
+current <code>self</code>. Note that the state to be queried is taken from
+<code>StyleContext::get_state</code>.</p>
+
+<p>If the location is not available, <code>None</code> will be returned. The
+location might not be available for various reasons, such as the
+property being overridden, <code>property</code> not naming a supported CSS
+property or tracking of definitions being disabled for performance
+reasons.</p>
+
+<p>Shorthand CSS properties cannot be queried for a location and will
+always return <code>None</code>.</p>
+
+<h2 id='property' class='section-header'><a href='#property'><code>property</code></a></h2>
+<p>style property name</p>
+
+<h1 id='returns-7' class='section-header'><a href='#returns-7'>Returns</a></h1>
+<p><code>None</code> or the section where value was defined</p>
 </div><h4 id='method.get_state' class='method'><code>fn <a href='#method.get_state' class='fnname'>get_state</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.StateFlags.html' title='gtk::StateFlags'>StateFlags</a></code></h4>
 <div class='docblock'><p>Returns the state used when rendering.</p>
 
-<h1 id='returns-6' class='section-header'><a href='#returns-6'>Returns</a></h1>
+<h1 id='returns-8' class='section-header'><a href='#returns-8'>Returns</a></h1>
 <p>the state flags</p>
 </div><h4 id='method.has_class' class='method'><code>fn <a href='#method.has_class' class='fnname'>has_class</a>(&amp;self, class_name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>Returns <code>true</code> if <code>self</code> currently has defined the
@@ -214,7 +266,7 @@ given class name</p>
 <h2 id='class_name-1' class='section-header'><a href='#class_name-1'><code>class_name</code></a></h2>
 <p>a class name</p>
 
-<h1 id='returns-7' class='section-header'><a href='#returns-7'>Returns</a></h1>
+<h1 id='returns-9' class='section-header'><a href='#returns-9'>Returns</a></h1>
 <p><code>true</code> if <code>self</code> has <code>class_name</code> defined</p>
 </div><h4 id='method.has_region' class='method'><code>fn <a href='#method.has_region' class='fnname'>has_region</a>(&amp;self, region_name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gtk/struct.RegionFlags.html' title='gtk::RegionFlags'>RegionFlags</a>&gt;</code></h4>
 <div class='docblock'><p>Returns <code>true</code> if <code>self</code> has the region defined.
@@ -228,7 +280,7 @@ affecting the region.</p>
 <h2 id='flags_return' class='section-header'><a href='#flags_return'><code>flags_return</code></a></h2>
 <p>return location for region flags</p>
 
-<h1 id='returns-8' class='section-header'><a href='#returns-8'>Returns</a></h1>
+<h1 id='returns-10' class='section-header'><a href='#returns-10'>Returns</a></h1>
 <p><code>true</code> if region is defined</p>
 </div><h4 id='method.invalidate' class='method'><code>fn <a href='#method.invalidate' class='fnname'>invalidate</a>(&amp;self)</code></h4>
 <div class='docblock'><p>Invalidates <code>self</code> style information, so it will be reconstructed
@@ -240,7 +292,7 @@ information immediately.</p>
 </div><h4 id='method.list_classes' class='method'><code>fn <a href='#method.list_classes' class='fnname'>list_classes</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></h4>
 <div class='docblock'><p>Returns the list of classes currently defined in <code>self</code>.</p>
 
-<h1 id='returns-9' class='section-header'><a href='#returns-9'>Returns</a></h1>
+<h1 id='returns-11' class='section-header'><a href='#returns-11'>Returns</a></h1>
 <p>a <code>glib::List</code> of
  strings with the currently defined classes. The contents
  of the list are owned by GTK+, but you must free the list
@@ -249,7 +301,7 @@ information immediately.</p>
 <div class='docblock'><p>Returns the list of regions currently defined in <code>self</code>.</p>
 
 <h1 id='deprecated-since-314-2' class='section-header'><a href='#deprecated-since-314-2'>Deprecated since 3.14</a></h1>
-<h1 id='returns-10' class='section-header'><a href='#returns-10'>Returns</a></h1>
+<h1 id='returns-12' class='section-header'><a href='#returns-12'>Returns</a></h1>
 <p>a <code>glib::List</code> of
  strings with the currently defined regions. The contents
  of the list are owned by GTK+, but you must free the list
@@ -265,6 +317,11 @@ See <code>StyleContext::push_animatable_region</code>.</p>
 
 <h2 id='class_name-2' class='section-header'><a href='#class_name-2'><code>class_name</code></a></h2>
 <p>class name to remove</p>
+</div><h4 id='method.remove_provider' class='method'><code>fn <a href='#method.remove_provider' class='fnname'>remove_provider</a>&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.StyleProvider.html' title='gtk::StyleProvider'>StyleProvider</a>&gt;&gt;(&amp;self, provider: &amp;T)</code></h4>
+<div class='docblock'><p>Removes <code>provider</code> from the style providers list in <code>self</code>.</p>
+
+<h2 id='provider-1' class='section-header'><a href='#provider-1'><code>provider</code></a></h2>
+<p>a <code>StyleProvider</code></p>
 </div><h4 id='method.remove_region' class='method'><code>fn <a href='#method.remove_region' class='fnname'>remove_region</a>(&amp;self, region_name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h4>
 <div class='docblock'><p>Removes a region from <code>self</code>.</p>
 
@@ -320,6 +377,19 @@ call this yourself.</p>
 
 <h2 id='direction' class='section-header'><a href='#direction'><code>direction</code></a></h2>
 <p>the new direction.</p>
+</div><h4 id='method.set_frame_clock' class='method'><code>fn <a href='#method.set_frame_clock' class='fnname'>set_frame_clock</a>(&amp;self, frame_clock: &amp;<a class='struct' href='../gdk/frame_clock/struct.FrameClock.html' title='gdk::frame_clock::FrameClock'>FrameClock</a>)</code></h4>
+<div class='docblock'><p>Attaches <code>self</code> to the given frame clock.</p>
+
+<p>The frame clock is used for the timing of animations.</p>
+
+<p>If you are using a <code>StyleContext</code> returned from
+<code>Widget::get_style_context</code>, you do not need to
+call this yourself.</p>
+
+<p>Feature: <code>v3_8</code></p>
+
+<h2 id='frame_clock' class='section-header'><a href='#frame_clock'><code>frame_clock</code></a></h2>
+<p>a <code>gdk::FrameClock</code></p>
 </div><h4 id='method.set_junction_sides' class='method'><code>fn <a href='#method.set_junction_sides' class='fnname'>set_junction_sides</a>(&amp;self, sides: <a class='struct' href='../gtk/struct.JunctionSides.html' title='gtk::JunctionSides'>JunctionSides</a>)</code></h4>
 <div class='docblock'><p>Sets the sides where rendered elements (mostly through
 <code>gtk_render_frame</code>) will visually connect with other visual elements.</p>
@@ -348,7 +418,7 @@ of properties.</p>
 </div><h4 id='method.set_scale' class='method'><code>fn <a href='#method.set_scale' class='fnname'>set_scale</a>(&amp;self, scale: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></h4>
 <div class='docblock'><p>Sets the scale to use when getting image assets for the style .</p>
 
-<p>Since: 3.10</p>
+<p>Feature: <code>v3_10</code></p>
 
 <h2 id='scale' class='section-header'><a href='#scale'><code>scale</code></a></h2>
 <p>scale</p>
@@ -389,8 +459,39 @@ it’s being unset.</p>
 <h2 id='progress' class='section-header'><a href='#progress'><code>progress</code></a></h2>
 <p>return location for the transition progress</p>
 
-<h1 id='returns-11' class='section-header'><a href='#returns-11'>Returns</a></h1>
+<h1 id='returns-13' class='section-header'><a href='#returns-13'>Returns</a></h1>
 <p><code>true</code> if there is a running transition animation for <code>state</code>.</p>
+</div><h4 id='method.add_provider_for_screen' class='method'><code>fn <a href='#method.add_provider_for_screen' class='fnname'>add_provider_for_screen</a>&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.StyleProvider.html' title='gtk::StyleProvider'>StyleProvider</a>&gt;&gt;(screen: &amp;<a class='struct' href='../gdk/screen/struct.Screen.html' title='gdk::screen::Screen'>Screen</a>, provider: &amp;T, priority: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>)</code></h4>
+<div class='docblock'><p>Adds a global style provider to <code>screen</code>, which will be used
+in style construction for all <code>GtkStyleContexts</code> under <code>screen</code>.</p>
+
+<p>GTK+ uses this to make styling information from <code>Settings</code>
+available.</p>
+
+<p>Note: If both priorities are the same, A <code>StyleProvider</code>
+added through <code>StyleContext::add_provider</code> takes precedence
+over another added through this function.</p>
+
+<h2 id='screen-1' class='section-header'><a href='#screen-1'><code>screen</code></a></h2>
+<p>a <code>gdk::Screen</code></p>
+
+<h2 id='provider-2' class='section-header'><a href='#provider-2'><code>provider</code></a></h2>
+<p>a <code>StyleProvider</code></p>
+
+<h2 id='priority-1' class='section-header'><a href='#priority-1'><code>priority</code></a></h2>
+<p>the priority of the style provider. The lower
+ it is, the earlier it will be used in the style
+ construction. Typically this will be in the range
+ between <code>GTK_STYLE_PROVIDER_PRIORITY_FALLBACK</code> and
+ <code>GTK_STYLE_PROVIDER_PRIORITY_USER</code></p>
+</div><h4 id='method.remove_provider_for_screen' class='method'><code>fn <a href='#method.remove_provider_for_screen' class='fnname'>remove_provider_for_screen</a>&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.StyleProvider.html' title='gtk::StyleProvider'>StyleProvider</a>&gt;&gt;(screen: &amp;<a class='struct' href='../gdk/screen/struct.Screen.html' title='gdk::screen::Screen'>Screen</a>, provider: &amp;T)</code></h4>
+<div class='docblock'><p>Removes <code>provider</code> from the global style providers list in <code>screen</code>.</p>
+
+<h2 id='screen-2' class='section-header'><a href='#screen-2'><code>screen</code></a></h2>
+<p>a <code>gdk::Screen</code></p>
+
+<h2 id='provider-3' class='section-header'><a href='#provider-3'><code>provider</code></a></h2>
+<p>a <code>StyleProvider</code></p>
 </div><h4 id='method.reset_widgets' class='method'><code>fn <a href='#method.reset_widgets' class='fnname'>reset_widgets</a>(screen: &amp;<a class='struct' href='../gdk/screen/struct.Screen.html' title='gdk::screen::Screen'>Screen</a>)</code></h4>
 <div class='docblock'><p>This function recomputes the styles for all widgets under a particular
 <code>gdk::Screen</code>. This is useful when some global parameter has changed that
@@ -399,17 +500,33 @@ style, it will both redraw and recompute any cached information about
 its appearance. As an example, it is used when the color scheme changes
 in the related <code>Settings</code> object.</p>
 
-<h2 id='screen-1' class='section-header'><a href='#screen-1'><code>screen</code></a></h2>
+<h2 id='screen-3' class='section-header'><a href='#screen-3'><code>screen</code></a></h2>
 <p>a <code>gdk::Screen</code></p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.StaticType.html' title='gtk::StaticType'>StaticType</a> for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h3><div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../gtk/trait.StaticType.html#method.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../gtk/enum.Type.html' title='gtk::Type'>Type</a></code></h4>
-</div><h3 class='impl'><code>impl&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.ne' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt; for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h3><div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h3><div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
-<h4 id='method.hash_slice' class='method'><span class="since">1.3.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h4>
-<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div></section>
+</div><h4 id='method.connect_changed' class='method'><code>fn <a href='#method.connect_changed' class='fnname'>connect_changed</a>&lt;F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(&amp;<a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a>) + 'static&gt;(&amp;self, f: F) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../gtk/trait.StaticType.html' title='gtk::StaticType'>StaticType</a> for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.static_type' class='method'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class='enum' href='../gtk/enum.Type.html' title='gtk::Type'>Type</a></code></h4>
+<div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T: <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt;&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt; for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../gtk/trait.IsA.html' title='gtk::IsA'>IsA</a>&lt;<a class='struct' href='../gtk/struct.Object.html' title='gtk::Object'>Object</a>&gt; for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></h4>
+<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
+</div><h4 id='method.hash_slice' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></h4>
+<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gtk/struct.StyleContext.html' title='gtk::StyleContext'>StyleContext</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -432,6 +549,8 @@ in the related <code>Settings</code> object.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

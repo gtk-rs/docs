@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["CssSection","Defines a part of a CSS document. Because sections are nested into one another, you can use `CssSection::get_parent` to get the containing region."]]});
