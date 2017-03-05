@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/pango/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/pango-8b09f0fff5076af8/2ca6c43/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -67,38 +68,32 @@
 <span id="23">23</span>
 <span id="24">24</span>
 <span id="25">25</span>
-<span id="26">26</span>
-<span id="27">27</span>
-<span id="28">28</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2015, The Gtk-rs Project Developers.</span>
-<span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2015, The Gtk-rs Project Developers.</span>
+<span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>pango_sys</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>glib</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pango_sys</span> <span class="kw">as</span> <span class="ident">ffi</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">glib</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">bitflags</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>widgets</span>::{
-    <span class='ident'>Item</span>,
-    <span class='ident'>Rectangle</span>,
-    <span class='ident'>Matrix</span>,
-    <span class='ident'>GlyphString</span>,
-    <span class='ident'>FontDescription</span>,
+<span class="kw">mod</span> <span class="ident">auto</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">auto</span>::<span class="kw-2">*</span>;
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">widgets</span>::{
+    <span class="ident">Item</span>,
+    <span class="ident">Rectangle</span>,
+    <span class="ident">Matrix</span>,
+    <span class="ident">GlyphString</span>,
+    <span class="ident">FontDescription</span>,
 };
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>PangoGravity</span> <span class='kw'>as</span> <span class='ident'>Gravity</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>PangoGravityHint</span> <span class='kw'>as</span> <span class='ident'>GravityHint</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>PangoScript</span> <span class='kw'>as</span> <span class='ident'>Script</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>PangoDirection</span> <span class='kw'>as</span> <span class='ident'>Direction</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>PangoBidiType</span> <span class='kw'>as</span> <span class='ident'>BidiType</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>PangoStyle</span> <span class='kw'>as</span> <span class='ident'>Style</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>PangoWeight</span> <span class='kw'>as</span> <span class='ident'>Weight</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>PangoVariant</span> <span class='kw'>as</span> <span class='ident'>Variant</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>PangoStretch</span> <span class='kw'>as</span> <span class='ident'>Stretch</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>PangoFontMask</span> <span class='kw'>as</span> <span class='ident'>FontMask</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">PANGO_SCALE</span> <span class="kw">as</span> <span class="ident">SCALE</span>;
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>widgets</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">widgets</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -156,11 +151,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "pango";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

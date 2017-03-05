@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/gdk/src/event_button.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/gdk-0e2106e2e12a0cc1/b1be032/src/event_button.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>event_button.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -102,65 +103,73 @@
 <span id="58">58</span>
 <span id="59">59</span>
 <span id="60">60</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2016, The Gtk-rs Project Developers.</span>
-<span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2016, The Gtk-rs Project Developers.</span>
+<span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
 
-<span class='doccomment'>/// Used for button press and button release events. The</span>
-<span class='doccomment'>/// `type` field will be one of `EventType::ButtonPress`,</span>
-<span class='doccomment'>/// `EventType::2buttonPress`, `EventType::3buttonPress` or `EventType::ButtonRelease`,</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Double and triple-clicks result in a sequence of events being received.</span>
-<span class='doccomment'>/// For double-clicks the order of events will be:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// - `EventType::ButtonPress`</span>
-<span class='doccomment'>/// - `EventType::ButtonRelease`</span>
-<span class='doccomment'>/// - `EventType::ButtonPress`</span>
-<span class='doccomment'>/// - `EventType::2buttonPress`</span>
-<span class='doccomment'>/// - `EventType::ButtonRelease`</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Note that the first click is received just like a normal</span>
-<span class='doccomment'>/// button press, while the second click results in a `EventType::2buttonPress`</span>
-<span class='doccomment'>/// being received just after the `EventType::ButtonPress`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Triple-clicks are very similar to double-clicks, except that</span>
-<span class='doccomment'>/// `EventType::3buttonPress` is inserted after the third click. The order of the</span>
-<span class='doccomment'>/// events is:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// - `EventType::ButtonPress`</span>
-<span class='doccomment'>/// - `EventType::ButtonRelease`</span>
-<span class='doccomment'>/// - `EventType::ButtonPress`</span>
-<span class='doccomment'>/// - `EventType::2buttonPress`</span>
-<span class='doccomment'>/// - `EventType::ButtonRelease`</span>
-<span class='doccomment'>/// - `EventType::ButtonPress`</span>
-<span class='doccomment'>/// - `EventType::3buttonPress`</span>
-<span class='doccomment'>/// - `EventType::ButtonRelease`</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// For a double click to occur, the second button press must occur within</span>
-<span class='doccomment'>/// 1/4 of a second of the first. For a triple click to occur, the third</span>
-<span class='doccomment'>/// button press must also occur within 1/2 second of the first button press.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EventButton</span>(::<span class='ident'>Event</span>);
+<span class="doccomment">/// Used for button press and button release events. The</span>
+<span class="doccomment">/// `type` field will be one of `EventType::ButtonPress`,</span>
+<span class="doccomment">/// `EventType::2buttonPress`, `EventType::3buttonPress` or `EventType::ButtonRelease`,</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Double and triple-clicks result in a sequence of events being received.</span>
+<span class="doccomment">/// For double-clicks the order of events will be:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - `EventType::ButtonPress`</span>
+<span class="doccomment">/// - `EventType::ButtonRelease`</span>
+<span class="doccomment">/// - `EventType::ButtonPress`</span>
+<span class="doccomment">/// - `EventType::2buttonPress`</span>
+<span class="doccomment">/// - `EventType::ButtonRelease`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Note that the first click is received just like a normal</span>
+<span class="doccomment">/// button press, while the second click results in a `EventType::2buttonPress`</span>
+<span class="doccomment">/// being received just after the `EventType::ButtonPress`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Triple-clicks are very similar to double-clicks, except that</span>
+<span class="doccomment">/// `EventType::3buttonPress` is inserted after the third click. The order of the</span>
+<span class="doccomment">/// events is:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// - `EventType::ButtonPress`</span>
+<span class="doccomment">/// - `EventType::ButtonRelease`</span>
+<span class="doccomment">/// - `EventType::ButtonPress`</span>
+<span class="doccomment">/// - `EventType::2buttonPress`</span>
+<span class="doccomment">/// - `EventType::ButtonRelease`</span>
+<span class="doccomment">/// - `EventType::ButtonPress`</span>
+<span class="doccomment">/// - `EventType::3buttonPress`</span>
+<span class="doccomment">/// - `EventType::ButtonRelease`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// For a double click to occur, the second button press must occur within</span>
+<span class="doccomment">/// 1/4 of a second of the first. For a triple click to occur, the third</span>
+<span class="doccomment">/// button press must also occur within 1/2 second of the first button press.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EventButton</span>(::<span class="ident">Event</span>);
 
-<span class='macro'>event_wrapper</span><span class='macro'>!</span>(<span class='ident'>EventButton</span>, <span class='ident'>GdkEventButton</span>);
-<span class='macro'>event_subtype</span><span class='macro'>!</span>(<span class='ident'>EventButton</span>, <span class='ident'>ButtonPress</span> <span class='op'>|</span> <span class='ident'>DoubleButtonPress</span> <span class='op'>|</span> <span class='ident'>TripleButtonPress</span> <span class='op'>|</span> <span class='ident'>ButtonRelease</span>);
+<span class="macro">event_wrapper</span><span class="macro">!</span>(<span class="ident">EventButton</span>, <span class="ident">GdkEventButton</span>);
+<span class="macro">event_subtype</span><span class="macro">!</span>(<span class="ident">EventButton</span>, <span class="ident">ButtonPress</span> <span class="op">|</span> <span class="ident">DoubleButtonPress</span> <span class="op">|</span> <span class="ident">TripleButtonPress</span> <span class="op">|</span> <span class="ident">ButtonRelease</span>);
 
-<span class='kw'>impl</span> <span class='ident'>EventButton</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>f64</span>, <span class='ident'>f64</span>) {
-        <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>as_ref</span>().<span class='ident'>x</span>;
-        <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>as_ref</span>().<span class='ident'>y</span>;
-        (<span class='ident'>x</span>, <span class='ident'>y</span>)
+<span class="kw">impl</span> <span class="ident">EventButton</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>) {
+        <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">x</span>;
+        <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">y</span>;
+        (<span class="ident">x</span>, <span class="ident">y</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_state</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> ::<span class='ident'>ModifierType</span> {
-        <span class='ident'>from_glib</span>(<span class='self'>self</span>.<span class='ident'>as_ref</span>().<span class='ident'>state</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> ::<span class="ident">ModifierType</span> {
+        <span class="ident">from_glib</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">state</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_time</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='self'>self</span>.<span class='ident'>as_ref</span>().<span class='ident'>time</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">time</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_button</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">button</span>
     }
 }
 </pre>
@@ -220,11 +229,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "gdk";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

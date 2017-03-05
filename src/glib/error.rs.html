@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/glib/src/error.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/glib-928cf7b282977403/93cadce/src/error.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>error.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -157,121 +158,121 @@
 <span id="113">113</span>
 <span id="114">114</span>
 <span id="115">115</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2016, The Gtk-rs Project Developers.</span>
-<span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2016, The Gtk-rs Project Developers.</span>
+<span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='doccomment'>//! `Error` binding and helper trait.</span>
+<span class="doccomment">//! `Error` binding and helper trait.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>CStr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>;
-<span class='kw'>use</span> <span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>glib_ffi</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">CStr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>;
+<span class="kw">use</span> <span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">ffi</span> <span class="kw">as</span> <span class="ident">glib_ffi</span>;
 
-<span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
-    <span class='doccomment'>/// A generic error capable of representing various error domains (types).</span>
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Error</span>(<span class='ident'>Boxed</span><span class='op'>&lt;</span><span class='ident'>glib_ffi</span>::<span class='ident'>GError</span><span class='op'>&gt;</span>);
+<span class="macro">glib_wrapper</span><span class="macro">!</span> {
+    <span class="doccomment">/// A generic error capable of representing various error domains (types).</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span>(<span class="ident">Boxed</span><span class="op">&lt;</span><span class="ident">glib_ffi</span>::<span class="ident">GError</span><span class="op">&gt;</span>);
 
-    <span class='kw'>match</span> <span class='kw'>fn</span> {
-        <span class='ident'>copy</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>ptr</span><span class='op'>|</span> <span class='ident'>glib_ffi</span>::<span class='ident'>g_error_copy</span>(<span class='ident'>ptr</span>),
-        <span class='ident'>free</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>ptr</span><span class='op'>|</span> <span class='ident'>glib_ffi</span>::<span class='ident'>g_error_free</span>(<span class='ident'>ptr</span>),
+    <span class="kw">match</span> <span class="kw">fn</span> {
+        <span class="ident">copy</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">glib_ffi</span>::<span class="ident">g_error_copy</span>(<span class="ident">ptr</span>),
+        <span class="ident">free</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">glib_ffi</span>::<span class="ident">g_error_free</span>(<span class="ident">ptr</span>),
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Error</span> {
-    <span class='doccomment'>/// Creates an error with supplied error enum variant and message.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ErrorDomain</span><span class='op'>&gt;</span>(<span class='ident'>error</span>: <span class='ident'>T</span>, <span class='ident'>message</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_full</span>(
-                <span class='ident'>glib_ffi</span>::<span class='ident'>g_error_new_literal</span>(<span class='ident'>T</span>::<span class='ident'>domain</span>(), <span class='ident'>error</span>.<span class='ident'>code</span>(), <span class='ident'>message</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+<span class="kw">impl</span> <span class="ident">Error</span> {
+    <span class="doccomment">/// Creates an error with supplied error enum variant and message.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ErrorDomain</span><span class="op">&gt;</span>(<span class="ident">error</span>: <span class="ident">T</span>, <span class="ident">message</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_full</span>(
+                <span class="ident">glib_ffi</span>::<span class="ident">g_error_new_literal</span>(<span class="ident">T</span>::<span class="ident">domain</span>(), <span class="ident">error</span>.<span class="ident">code</span>(), <span class="ident">message</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
         }
     }
 
-    <span class='doccomment'>/// Checks if the error domain matches `T`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ErrorDomain</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>domain</span> <span class='op'>==</span> <span class='ident'>T</span>::<span class='ident'>domain</span>()
+    <span class="doccomment">/// Checks if the error domain matches `T`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ErrorDomain</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">domain</span> <span class="op">==</span> <span class="ident">T</span>::<span class="ident">domain</span>()
     }
 
-    <span class='doccomment'>/// Tries to convert to a specific error enum.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `Some` if the error belongs to the enum&#39;s error domain and</span>
-    <span class='doccomment'>/// `None` otherwise.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```ignore</span>
-    <span class='doccomment'>/// if let Some(file_error) = error.kind::&lt;FileError&gt;() {</span>
-    <span class='doccomment'>///     match file_error {</span>
-    <span class='doccomment'>///         FileError::Exist =&gt; ...</span>
-    <span class='doccomment'>///         FileError::Isdir =&gt; ...</span>
-    <span class='doccomment'>///         ...</span>
-    <span class='doccomment'>///     }</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```ignore</span>
-    <span class='doccomment'>/// match error {</span>
-    <span class='doccomment'>///     Some(FileError::Exist) =&gt; ...</span>
-    <span class='doccomment'>///     Some(FileError::Isdir) =&gt; ...</span>
-    <span class='doccomment'>///     ...</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>kind</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ErrorDomain</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>domain</span> <span class='op'>==</span> <span class='ident'>T</span>::<span class='ident'>domain</span>() {
-            <span class='ident'>T</span>::<span class='ident'>from</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>code</span>)
+    <span class="doccomment">/// Tries to convert to a specific error enum.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns `Some` if the error belongs to the enum&#39;s error domain and</span>
+    <span class="doccomment">/// `None` otherwise.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```ignore</span>
+    <span class="doccomment">/// if let Some(file_error) = error.kind::&lt;FileError&gt;() {</span>
+    <span class="doccomment">///     match file_error {</span>
+    <span class="doccomment">///         FileError::Exist =&gt; ...</span>
+    <span class="doccomment">///         FileError::Isdir =&gt; ...</span>
+    <span class="doccomment">///         ...</span>
+    <span class="doccomment">///     }</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```ignore</span>
+    <span class="doccomment">/// match error {</span>
+    <span class="doccomment">///     Some(FileError::Exist) =&gt; ...</span>
+    <span class="doccomment">///     Some(FileError::Isdir) =&gt; ...</span>
+    <span class="doccomment">///     ...</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ErrorDomain</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">domain</span> <span class="op">==</span> <span class="ident">T</span>::<span class="ident">domain</span>() {
+            <span class="ident">T</span>::<span class="ident">from</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">code</span>)
         }
-        <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
+        <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>message</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>message</span>).<span class='ident'>to_bytes</span>();
-            <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>bytes</span>).<span class='ident'>unwrap_or_else</span>(<span class='op'>|</span><span class='ident'>err</span><span class='op'>|</span> {
-                <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='kw-2'>&amp;</span><span class='ident'>bytes</span>[..<span class='ident'>err</span>.<span class='ident'>valid_up_to</span>()]).<span class='ident'>unwrap</span>()
+    <span class="kw">fn</span> <span class="ident">message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">CStr</span>::<span class="ident">from_ptr</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">message</span>).<span class="ident">to_bytes</span>();
+            <span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">bytes</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+                <span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>[..<span class="ident">err</span>.<span class="ident">valid_up_to</span>()]).<span class="ident">unwrap</span>()
             })
         }
     }
 
-    <span class='comment'>// backcompat shim</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>wrap</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>glib_ffi</span>::<span class='ident'>GError</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span>) }
+    <span class="comment">// backcompat shim</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_ffi</span>::<span class="ident">GError</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_full</span>(<span class="ident">ptr</span>) }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>message</span>())
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">message</span>())
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>error</span>::<span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='self'>self</span>.<span class='ident'>message</span>()
+<span class="kw">impl</span> <span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="self">self</span>.<span class="ident">message</span>()
     }
 }
 
-<span class='doccomment'>/// `GLib` error domain.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This trait is implemented by error enums that represent error domains (types).</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ErrorDomain</span>: <span class='ident'>Copy</span> {
-    <span class='doccomment'>/// Returns the quark identifying the error domain.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// As returned from `g_some_error_quark`.</span>
-    <span class='kw'>fn</span> <span class='ident'>domain</span>() <span class='op'>-&gt;</span> <span class='ident'>glib_ffi</span>::<span class='ident'>GQuark</span>;
+<span class="doccomment">/// `GLib` error domain.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This trait is implemented by error enums that represent error domains (types).</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ErrorDomain</span>: <span class="ident">Copy</span> {
+    <span class="doccomment">/// Returns the quark identifying the error domain.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// As returned from `g_some_error_quark`.</span>
+    <span class="kw">fn</span> <span class="ident">domain</span>() <span class="op">-&gt;</span> <span class="ident">glib_ffi</span>::<span class="ident">GQuark</span>;
 
-    <span class='doccomment'>/// Gets the integer representation of the variant.</span>
-    <span class='kw'>fn</span> <span class='ident'>code</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span>;
+    <span class="doccomment">/// Gets the integer representation of the variant.</span>
+    <span class="kw">fn</span> <span class="ident">code</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span>;
 
-    <span class='doccomment'>/// Tries to convert an integer code to an enum variant.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// By convention, the `Failed` variant, if present, is a catch-all,</span>
-    <span class='doccomment'>/// i.e. any unrecognized codes map to it.</span>
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>code</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='self'>Self</span>: <span class='ident'>Sized</span>;
+    <span class="doccomment">/// Tries to convert an integer code to an enum variant.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// By convention, the `Failed` variant, if present, is a catch-all,</span>
+    <span class="doccomment">/// i.e. any unrecognized codes map to it.</span>
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">code</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span>;
 }
 </pre>
 </section>
@@ -330,11 +331,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "glib";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

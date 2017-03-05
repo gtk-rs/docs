@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["FontDescription",""],["GlyphString",""],["Item",""]],"trait":[["Matrix",""],["Rectangle",""]]});
+initSidebarItems({"struct":[["FontDescription",""],["GlyphString",""],["Item",""],["Rectangle",""]],"trait":[["Matrix",""]]});

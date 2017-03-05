@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["connect",""],["signal_stop_emission",""],["signal_stop_emission_by_name",""]]});
+initSidebarItems({"fn":[["connect",""],["signal_handler_block",""],["signal_handler_unblock",""],["signal_stop_emission",""],["signal_stop_emission_by_name",""]],"struct":[["Inhibit","Whether to propagate the signal to the default handler."]]});

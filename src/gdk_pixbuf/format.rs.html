@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/.cargo/git/checkouts/gdk-pixbuf-6408a438f82ec9df/master/src/format.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/gdk-pixbuf-6408a438f82ec9df/b1e6a38/src/format.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>format.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -177,150 +178,140 @@
 <span id="133">133</span>
 <span id="134">134</span>
 <span id="135">135</span>
-<span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
-<span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
+<span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>;
+<span class="kw">use</span> <span class="ident">gdk_pixbuf_ffi</span> <span class="kw">as</span> <span class="ident">ffi</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_char</span>;
 
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PixbufFormat</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>GdkPixbufFormat</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PixbufFormat</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GdkPixbufFormat</span>);
 
-<span class='kw'>impl</span> <span class='ident'>PixbufFormat</span> {
-    <span class='doccomment'>/// Returns the name of the format.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// the name of the format.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_full</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_format_get_name</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+<span class="kw">impl</span> <span class="ident">PixbufFormat</span> {
+    <span class="doccomment">/// Returns the name of the format.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// the name of the format.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_format_get_name</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
         }
     }
 
-    <span class='doccomment'>/// Returns a description of the format.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// a description of the format.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_full</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_format_get_description</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+    <span class="doccomment">/// Returns a description of the format.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a description of the format.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_format_get_description</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
         }
     }
 
-    <span class='doccomment'>/// Returns the mime types supported by the format.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// a `None`-terminated array of mime types which must be freed with</span>
-    <span class='doccomment'>/// `g_strfreev` when it is no longer needed.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mime_types</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>Vec</span>::<span class='ident'>from_glib_full</span>(
-                <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_format_get_mime_types</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)
-                    <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>)
+    <span class="doccomment">/// Returns the mime types supported by the format.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a `None`-terminated array of mime types which must be freed with</span>
+    <span class="doccomment">/// `g_strfreev` when it is no longer needed.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mime_types</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">Vec</span>::<span class="ident">from_glib_full</span>(
+                <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_format_get_mime_types</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)
+                    <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>)
         }
     }
 
-    <span class='doccomment'>/// Returns the filename extensions typically used for files in the</span>
-    <span class='doccomment'>/// given format.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// a `None`-terminated array of filename extensions which must be</span>
-    <span class='doccomment'>/// freed with `g_strfreev` when it is no longer needed.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_extensions</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>Vec</span>::<span class='ident'>from_glib_full</span>(
-                <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_format_get_extensions</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)
-                    <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>)
+    <span class="doccomment">/// Returns the filename extensions typically used for files in the</span>
+    <span class="doccomment">/// given format.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a `None`-terminated array of filename extensions which must be</span>
+    <span class="doccomment">/// freed with `g_strfreev` when it is no longer needed.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_extensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">Vec</span>::<span class="ident">from_glib_full</span>(
+                <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_format_get_extensions</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)
+                    <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>)
         }
     }
 
-    <span class='doccomment'>/// Returns whether pixbufs can be saved in the given format.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// whether pixbufs can be saved in the given format.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_writable</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_format_is_writable</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)) }
+    <span class="doccomment">/// Returns whether pixbufs can be saved in the given format.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// whether pixbufs can be saved in the given format.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_writable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">unsafe</span> { <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_format_is_writable</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class='doccomment'>/// Returns whether this image format is scalable. If a file is in a</span>
-    <span class='doccomment'>/// scalable format, it is preferable to load it at the desired size,</span>
-    <span class='doccomment'>/// rather than loading it at the default size and scaling the</span>
-    <span class='doccomment'>/// resulting pixbuf to the desired size.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// whether this image format is scalable.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_scalable</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_format_is_scalable</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)) }
+    <span class="doccomment">/// Returns whether this image format is scalable. If a file is in a</span>
+    <span class="doccomment">/// scalable format, it is preferable to load it at the desired size,</span>
+    <span class="doccomment">/// rather than loading it at the default size and scaling the</span>
+    <span class="doccomment">/// resulting pixbuf to the desired size.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// whether this image format is scalable.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_scalable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">unsafe</span> { <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_format_is_scalable</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class='doccomment'>/// Returns whether this image format is disabled. See</span>
-    <span class='doccomment'>/// `PixbufFormat::set_disabled`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// whether this image format is disabled.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_disabled</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_format_is_disabled</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)) }
+    <span class="doccomment">/// Returns whether this image format is disabled. See</span>
+    <span class="doccomment">/// `PixbufFormat::set_disabled`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// whether this image format is disabled.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_disabled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">unsafe</span> { <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_format_is_disabled</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class='doccomment'>/// Disables or enables an image format. If a format is disabled,</span>
-    <span class='doccomment'>/// gdk-pixbuf won&#39;t use the image loader for this format to load</span>
-    <span class='doccomment'>/// images. Applications can use this to avoid using image loaders</span>
-    <span class='doccomment'>/// with an inappropriate license, see `PixbufFormat::get_license`.</span>
-    <span class='doccomment'>/// ## `disabled`</span>
-    <span class='doccomment'>/// `true` to disable the format `self`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_disabled</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>disabled</span>: <span class='ident'>bool</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_format_set_disabled</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>disabled</span>.<span class='ident'>to_glib</span>()) }
+    <span class="doccomment">/// Disables or enables an image format. If a format is disabled,</span>
+    <span class="doccomment">/// gdk-pixbuf won&#39;t use the image loader for this format to load</span>
+    <span class="doccomment">/// images. Applications can use this to avoid using image loaders</span>
+    <span class="doccomment">/// with an inappropriate license, see `PixbufFormat::get_license`.</span>
+    <span class="doccomment">/// ## `disabled`</span>
+    <span class="doccomment">/// `true` to disable the format `self`</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_disabled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">disabled</span>: <span class="ident">bool</span>) {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_format_set_disabled</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">disabled</span>.<span class="ident">to_glib</span>()) }
     }
 
-    <span class='doccomment'>/// Returns information about the license of the image loader for the format. The</span>
-    <span class='doccomment'>/// returned string should be a shorthand for a wellknown license, e.g. &quot;LGPL&quot;,</span>
-    <span class='doccomment'>/// &quot;GPL&quot;, &quot;QPL&quot;, &quot;GPL/QPL&quot;, or &quot;other&quot; to indicate some other license. This</span>
-    <span class='doccomment'>/// string should be freed with `g_free` when it&#39;s no longer needed.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// a string describing the license of `self`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_license</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_full</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_format_get_license</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+    <span class="doccomment">/// Returns information about the license of the image loader for the format. The</span>
+    <span class="doccomment">/// returned string should be a shorthand for a wellknown license, e.g. &quot;LGPL&quot;,</span>
+    <span class="doccomment">/// &quot;GPL&quot;, &quot;QPL&quot;, &quot;GPL/QPL&quot;, or &quot;other&quot; to indicate some other license. This</span>
+    <span class="doccomment">/// string should be freed with `g_free` when it&#39;s no longer needed.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a string describing the license of `self`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_license</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_format_get_license</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
         }
     }
 }
 
-<span class='comment'>// It&#39;s owned by the library and we never free it</span>
+<span class="comment">// It&#39;s owned by the library and we never free it</span>
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToGlibPtr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>GdkPixbufFormat</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>PixbufFormat</span> {
-    <span class='kw'>type</span> <span class='ident'>Storage</span> <span class='op'>=</span> ();
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ToGlibPtr</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GdkPixbufFormat</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PixbufFormat</span> {
+    <span class="kw">type</span> <span class="ident">Storage</span> <span class="op">=</span> ();
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_glib_none</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Stash</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>GdkPixbufFormat</span>, <span class='ident'>PixbufFormat</span><span class='op'>&gt;</span> {
-        <span class='ident'>Stash</span>(<span class='self'>self</span>.<span class='number'>0</span>, ())
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">to_glib_none</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Stash</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GdkPixbufFormat</span>, <span class="ident">PixbufFormat</span><span class="op">&gt;</span> {
+        <span class="ident">Stash</span>(<span class="self">self</span>.<span class="number">0</span>, ())
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>FromGlibPtr</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>GdkPixbufFormat</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>PixbufFormat</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_glib_none</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>GdkPixbufFormat</span>) <span class='op'>-&gt;</span> <span class='ident'>PixbufFormat</span> {
-        <span class='ident'>PixbufFormat</span>(<span class='ident'>ptr</span>)
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_glib_full</span>(_: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>GdkPixbufFormat</span>) <span class='op'>-&gt;</span> <span class='ident'>PixbufFormat</span> {
-        <span class='macro'>unimplemented</span><span class='macro'>!</span>();
+<span class="kw">impl</span> <span class="ident">FromGlibPtrNone</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GdkPixbufFormat</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PixbufFormat</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_none</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GdkPixbufFormat</span>) <span class="op">-&gt;</span> <span class="ident">PixbufFormat</span> {
+        <span class="ident">PixbufFormat</span>(<span class="ident">ptr</span>)
     }
 }
 </pre>
@@ -380,11 +371,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "gdk_pixbuf";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

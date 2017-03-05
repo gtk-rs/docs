@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/glib/src/types.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/glib-928cf7b282977403/93cadce/src/types.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>types.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -214,176 +215,176 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2015-2016, The Gtk-rs Project Developers.</span>
-<span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2015-2016, The Gtk-rs Project Developers.</span>
+<span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='doccomment'>//! Runtime type infromation.</span>
+<span class="doccomment">//! Runtime type information.</span>
 
-<span class='kw'>use</span> <span class='ident'>translate</span>::{<span class='ident'>FromGlib</span>, <span class='ident'>ToGlib</span>, <span class='ident'>from_glib</span>};
-<span class='kw'>use</span> <span class='ident'>glib_ffi</span>;
-<span class='kw'>use</span> <span class='ident'>gobject_ffi</span>;
+<span class="kw">use</span> <span class="ident">translate</span>::{<span class="ident">FromGlib</span>, <span class="ident">ToGlib</span>, <span class="ident">from_glib</span>};
+<span class="kw">use</span> <span class="ident">ffi</span> <span class="kw">as</span> <span class="ident">glib_ffi</span>;
+<span class="kw">use</span> <span class="ident">gobject_ffi</span>;
 
-<span class='doccomment'>/// A GLib or GLib-based library type</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Type</span> {
-    <span class='doccomment'>/// An invalid `Type` used as error return value in some functions</span>
-    <span class='ident'>Invalid</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to the unit type `()`</span>
-    <span class='ident'>Unit</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `i8`</span>
-    <span class='ident'>I8</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `u8`</span>
-    <span class='ident'>U8</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `bool`</span>
-    <span class='ident'>Bool</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `i32`</span>
-    <span class='ident'>I32</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `u32`</span>
-    <span class='ident'>U32</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to C `long`</span>
-    <span class='ident'>ILong</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to C `unsigned long`</span>
-    <span class='ident'>ULong</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `i64`</span>
-    <span class='ident'>I64</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `u64`</span>
-    <span class='ident'>U64</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `f32`</span>
-    <span class='ident'>F32</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `f64`</span>
-    <span class='ident'>F64</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to `String`</span>
-    <span class='ident'>String</span>,
-    <span class='doccomment'>/// The fundamental type corresponding to a pointer</span>
-    <span class='ident'>Pointer</span>,
-    <span class='doccomment'>/// The fundamental type of GVariant</span>
-    <span class='ident'>Variant</span>,
-    <span class='doccomment'>/// The fundamental type from which all interfaces are derived</span>
-    <span class='ident'>BaseInterface</span>,
-    <span class='doccomment'>/// The fundamental type from which all enumeration types are derived</span>
-    <span class='ident'>BaseEnum</span>,
-    <span class='doccomment'>/// The fundamental type from which all flags types are derived</span>
-    <span class='ident'>BaseFlags</span>,
-    <span class='doccomment'>/// The fundamental type from which all boxed types are derived</span>
-    <span class='ident'>BaseBoxed</span>,
-    <span class='doccomment'>/// The fundamental type from which all `GParamSpec` types are derived</span>
-    <span class='ident'>BaseParamSpec</span>,
-    <span class='doccomment'>/// The fundamental type from which all objects are derived</span>
-    <span class='ident'>BaseObject</span>,
-    <span class='doccomment'>/// A non-fundamental type identified by value of type `usize`</span>
-    <span class='ident'>Other</span>(<span class='ident'>usize</span>),
+<span class="doccomment">/// A GLib or GLib-based library type</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Type</span> {
+    <span class="doccomment">/// An invalid `Type` used as error return value in some functions</span>
+    <span class="ident">Invalid</span>,
+    <span class="doccomment">/// The fundamental type corresponding to the unit type `()`</span>
+    <span class="ident">Unit</span>,
+    <span class="doccomment">/// The fundamental type corresponding to `i8`</span>
+    <span class="ident">I8</span>,
+    <span class="doccomment">/// The fundamental type corresponding to `u8`</span>
+    <span class="ident">U8</span>,
+    <span class="doccomment">/// The fundamental type corresponding to `bool`</span>
+    <span class="ident">Bool</span>,
+    <span class="doccomment">/// The fundamental type corresponding to `i32`</span>
+    <span class="ident">I32</span>,
+    <span class="doccomment">/// The fundamental type corresponding to `u32`</span>
+    <span class="ident">U32</span>,
+    <span class="doccomment">/// The fundamental type corresponding to C `long`</span>
+    <span class="ident">ILong</span>,
+    <span class="doccomment">/// The fundamental type corresponding to C `unsigned long`</span>
+    <span class="ident">ULong</span>,
+    <span class="doccomment">/// The fundamental type corresponding to `i64`</span>
+    <span class="ident">I64</span>,
+    <span class="doccomment">/// The fundamental type corresponding to `u64`</span>
+    <span class="ident">U64</span>,
+    <span class="doccomment">/// The fundamental type corresponding to `f32`</span>
+    <span class="ident">F32</span>,
+    <span class="doccomment">/// The fundamental type corresponding to `f64`</span>
+    <span class="ident">F64</span>,
+    <span class="doccomment">/// The fundamental type corresponding to `String`</span>
+    <span class="ident">String</span>,
+    <span class="doccomment">/// The fundamental type corresponding to a pointer</span>
+    <span class="ident">Pointer</span>,
+    <span class="doccomment">/// The fundamental type of GVariant</span>
+    <span class="ident">Variant</span>,
+    <span class="doccomment">/// The fundamental type from which all interfaces are derived</span>
+    <span class="ident">BaseInterface</span>,
+    <span class="doccomment">/// The fundamental type from which all enumeration types are derived</span>
+    <span class="ident">BaseEnum</span>,
+    <span class="doccomment">/// The fundamental type from which all flags types are derived</span>
+    <span class="ident">BaseFlags</span>,
+    <span class="doccomment">/// The fundamental type from which all boxed types are derived</span>
+    <span class="ident">BaseBoxed</span>,
+    <span class="doccomment">/// The fundamental type from which all `GParamSpec` types are derived</span>
+    <span class="ident">BaseParamSpec</span>,
+    <span class="doccomment">/// The fundamental type from which all objects are derived</span>
+    <span class="ident">BaseObject</span>,
+    <span class="doccomment">/// A non-fundamental type identified by value of type `usize`</span>
+    <span class="ident">Other</span>(<span class="ident">usize</span>),
 }
 
-<span class='doccomment'>/// Types that are supported by GLib dynamic typing.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>StaticType</span> {
-    <span class='doccomment'>/// Returns the type identifier of `Self`.</span>
-    <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span>;
+<span class="doccomment">/// Types that are supported by GLib dynamic typing.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">StaticType</span> {
+    <span class="doccomment">/// Returns the type identifier of `Self`.</span>
+    <span class="kw">fn</span> <span class="ident">static_type</span>() <span class="op">-&gt;</span> <span class="ident">Type</span>;
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: ?<span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>StaticType</span><span class='op'>&gt;</span> <span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span> {
-    <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
-        <span class='ident'>T</span>::<span class='ident'>static_type</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">StaticType</span><span class="op">&gt;</span> <span class="ident">StaticType</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span> {
+    <span class="kw">fn</span> <span class="ident">static_type</span>() <span class="op">-&gt;</span> <span class="ident">Type</span> {
+        <span class="ident">T</span>::<span class="ident">static_type</span>()
     }
 }
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>builtin</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> {
-        <span class='kw'>impl</span> <span class='ident'>StaticType</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-            <span class='kw'>fn</span> <span class='ident'>static_type</span>() <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
-                <span class='ident'>Type</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">builtin</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">val</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> {
+        <span class="kw">impl</span> <span class="ident">StaticType</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
+            <span class="kw">fn</span> <span class="ident">static_type</span>() <span class="op">-&gt;</span> <span class="ident">Type</span> {
+                <span class="ident">Type</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">val</span>
             }
         }
     }
 }
 
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>bool</span>, <span class='ident'>Bool</span>);
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>i8</span>, <span class='ident'>I8</span>);
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>u8</span>, <span class='ident'>U8</span>);
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>i32</span>, <span class='ident'>I32</span>);
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>u32</span>, <span class='ident'>U32</span>);
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>i64</span>, <span class='ident'>I64</span>);
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>u64</span>, <span class='ident'>U64</span>);
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>f32</span>, <span class='ident'>F32</span>);
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>f64</span>, <span class='ident'>F64</span>);
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>str</span>, <span class='ident'>String</span>);
-<span class='macro'>builtin</span><span class='macro'>!</span>(<span class='ident'>String</span>, <span class='ident'>String</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">bool</span>, <span class="ident">Bool</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">i8</span>, <span class="ident">I8</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">u8</span>, <span class="ident">U8</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">i32</span>, <span class="ident">I32</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">u32</span>, <span class="ident">U32</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">i64</span>, <span class="ident">I64</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">u64</span>, <span class="ident">U64</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">f32</span>, <span class="ident">F32</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">f64</span>, <span class="ident">F64</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">str</span>, <span class="ident">String</span>);
+<span class="macro">builtin</span><span class="macro">!</span>(<span class="ident">String</span>, <span class="ident">String</span>);
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>InstanceType</span> {
-    <span class='kw'>fn</span> <span class='ident'>instance_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span>;
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">InstanceType</span> {
+    <span class="kw">fn</span> <span class="ident">instance_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Type</span>;
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>instance_of</span><span class='op'>&lt;</span><span class='ident'>C</span>: <span class='ident'>StaticType</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span>: <span class='ident'>glib_ffi</span>::<span class='ident'>gconstpointer</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>from_glib</span>(
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>g_type_check_instance_is_a</span>(
-                <span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='op'>&lt;</span><span class='ident'>C</span> <span class='kw'>as</span> <span class='ident'>StaticType</span><span class='op'>&gt;</span>::<span class='ident'>static_type</span>().<span class='ident'>to_glib</span>()))
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">instance_of</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">StaticType</span><span class="op">&gt;</span>(<span class="ident">ptr</span>: <span class="ident">glib_ffi</span>::<span class="ident">gconstpointer</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">unsafe</span> {
+        <span class="ident">from_glib</span>(
+            <span class="ident">gobject_ffi</span>::<span class="ident">g_type_check_instance_is_a</span>(
+                <span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _, <span class="op">&lt;</span><span class="ident">C</span> <span class="kw">as</span> <span class="ident">StaticType</span><span class="op">&gt;</span>::<span class="ident">static_type</span>().<span class="ident">to_glib</span>()))
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>FromGlib</span><span class='op'>&lt;</span><span class='ident'>glib_ffi</span>::<span class='ident'>GType</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Type</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_glib</span>(<span class='ident'>val</span>: <span class='ident'>glib_ffi</span>::<span class='ident'>GType</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Type</span>::<span class='op'>*</span>;
-        <span class='kw'>match</span> <span class='ident'>val</span> {
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INVALID</span> <span class='op'>=&gt;</span> <span class='ident'>Invalid</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_NONE</span> <span class='op'>=&gt;</span> <span class='ident'>Unit</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INTERFACE</span> <span class='op'>=&gt;</span> <span class='ident'>BaseInterface</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_CHAR</span> <span class='op'>=&gt;</span> <span class='ident'>I8</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_UCHAR</span> <span class='op'>=&gt;</span> <span class='ident'>U8</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_BOOLEAN</span> <span class='op'>=&gt;</span> <span class='ident'>Bool</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INT</span> <span class='op'>=&gt;</span> <span class='ident'>I32</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_UINT</span> <span class='op'>=&gt;</span> <span class='ident'>U32</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_LONG</span> <span class='op'>=&gt;</span> <span class='ident'>ILong</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_ULONG</span> <span class='op'>=&gt;</span> <span class='ident'>ULong</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INT64</span> <span class='op'>=&gt;</span> <span class='ident'>I64</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_UINT64</span> <span class='op'>=&gt;</span> <span class='ident'>U64</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_ENUM</span> <span class='op'>=&gt;</span> <span class='ident'>BaseEnum</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_FLAGS</span> <span class='op'>=&gt;</span> <span class='ident'>BaseFlags</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_FLOAT</span> <span class='op'>=&gt;</span> <span class='ident'>F32</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_DOUBLE</span> <span class='op'>=&gt;</span> <span class='ident'>F64</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_STRING</span> <span class='op'>=&gt;</span> <span class='ident'>String</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_POINTER</span> <span class='op'>=&gt;</span> <span class='ident'>Pointer</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_BOXED</span> <span class='op'>=&gt;</span> <span class='ident'>BaseBoxed</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_PARAM</span> <span class='op'>=&gt;</span> <span class='ident'>BaseParamSpec</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_OBJECT</span> <span class='op'>=&gt;</span> <span class='ident'>BaseObject</span>,
-            <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_VARIANT</span> <span class='op'>=&gt;</span> <span class='ident'>Variant</span>,
-            <span class='ident'>x</span> <span class='op'>=&gt;</span> <span class='ident'>Other</span>(<span class='ident'>x</span> <span class='kw'>as</span> <span class='ident'>usize</span>),
+<span class="kw">impl</span> <span class="ident">FromGlib</span><span class="op">&lt;</span><span class="ident">glib_ffi</span>::<span class="ident">GType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Type</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">from_glib</span>(<span class="ident">val</span>: <span class="ident">glib_ffi</span>::<span class="ident">GType</span>) <span class="op">-&gt;</span> <span class="ident">Type</span> {
+        <span class="kw">use</span> <span class="self">self</span>::<span class="ident">Type</span>::<span class="kw-2">*</span>;
+        <span class="kw">match</span> <span class="ident">val</span> {
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_INVALID</span> <span class="op">=&gt;</span> <span class="ident">Invalid</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_NONE</span> <span class="op">=&gt;</span> <span class="ident">Unit</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_INTERFACE</span> <span class="op">=&gt;</span> <span class="ident">BaseInterface</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_CHAR</span> <span class="op">=&gt;</span> <span class="ident">I8</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_UCHAR</span> <span class="op">=&gt;</span> <span class="ident">U8</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_BOOLEAN</span> <span class="op">=&gt;</span> <span class="ident">Bool</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_INT</span> <span class="op">=&gt;</span> <span class="ident">I32</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_UINT</span> <span class="op">=&gt;</span> <span class="ident">U32</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_LONG</span> <span class="op">=&gt;</span> <span class="ident">ILong</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_ULONG</span> <span class="op">=&gt;</span> <span class="ident">ULong</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_INT64</span> <span class="op">=&gt;</span> <span class="ident">I64</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_UINT64</span> <span class="op">=&gt;</span> <span class="ident">U64</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_ENUM</span> <span class="op">=&gt;</span> <span class="ident">BaseEnum</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_FLAGS</span> <span class="op">=&gt;</span> <span class="ident">BaseFlags</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_FLOAT</span> <span class="op">=&gt;</span> <span class="ident">F32</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_DOUBLE</span> <span class="op">=&gt;</span> <span class="ident">F64</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_STRING</span> <span class="op">=&gt;</span> <span class="ident">String</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_POINTER</span> <span class="op">=&gt;</span> <span class="ident">Pointer</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_BOXED</span> <span class="op">=&gt;</span> <span class="ident">BaseBoxed</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_PARAM</span> <span class="op">=&gt;</span> <span class="ident">BaseParamSpec</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_OBJECT</span> <span class="op">=&gt;</span> <span class="ident">BaseObject</span>,
+            <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_VARIANT</span> <span class="op">=&gt;</span> <span class="ident">Variant</span>,
+            <span class="ident">x</span> <span class="op">=&gt;</span> <span class="ident">Other</span>(<span class="ident">x</span> <span class="kw">as</span> <span class="ident">usize</span>),
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ToGlib</span> <span class='kw'>for</span> <span class='ident'>Type</span> {
-    <span class='kw'>type</span> <span class='ident'>GlibType</span> <span class='op'>=</span> <span class='ident'>glib_ffi</span>::<span class='ident'>GType</span>;
+<span class="kw">impl</span> <span class="ident">ToGlib</span> <span class="kw">for</span> <span class="ident">Type</span> {
+    <span class="kw">type</span> <span class="ident">GlibType</span> <span class="op">=</span> <span class="ident">glib_ffi</span>::<span class="ident">GType</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>to_glib</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>glib_ffi</span>::<span class='ident'>GType</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Type</span>::<span class='op'>*</span>;
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Invalid</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INVALID</span>,
-            <span class='ident'>Unit</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_NONE</span>,
-            <span class='ident'>BaseInterface</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INTERFACE</span>,
-            <span class='ident'>I8</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_CHAR</span>,
-            <span class='ident'>U8</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_UCHAR</span>,
-            <span class='ident'>Bool</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_BOOLEAN</span>,
-            <span class='ident'>I32</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INT</span>,
-            <span class='ident'>U32</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_UINT</span>,
-            <span class='ident'>ILong</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_LONG</span>,
-            <span class='ident'>ULong</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_ULONG</span>,
-            <span class='ident'>I64</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_INT64</span>,
-            <span class='ident'>U64</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_UINT64</span>,
-            <span class='ident'>BaseEnum</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_ENUM</span>,
-            <span class='ident'>BaseFlags</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_FLAGS</span>,
-            <span class='ident'>F32</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_FLOAT</span>,
-            <span class='ident'>F64</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_DOUBLE</span>,
-            <span class='ident'>String</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_STRING</span>,
-            <span class='ident'>Pointer</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_POINTER</span>,
-            <span class='ident'>BaseBoxed</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_BOXED</span>,
-            <span class='ident'>BaseParamSpec</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_PARAM</span>,
-            <span class='ident'>BaseObject</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_OBJECT</span>,
-            <span class='ident'>Variant</span> <span class='op'>=&gt;</span> <span class='ident'>gobject_ffi</span>::<span class='ident'>G_TYPE_VARIANT</span>,
-            <span class='ident'>Other</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='ident'>x</span> <span class='kw'>as</span> <span class='ident'>glib_ffi</span>::<span class='ident'>GType</span>,
+    <span class="kw">fn</span> <span class="ident">to_glib</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">glib_ffi</span>::<span class="ident">GType</span> {
+        <span class="kw">use</span> <span class="self">self</span>::<span class="ident">Type</span>::<span class="kw-2">*</span>;
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Invalid</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_INVALID</span>,
+            <span class="ident">Unit</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_NONE</span>,
+            <span class="ident">BaseInterface</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_INTERFACE</span>,
+            <span class="ident">I8</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_CHAR</span>,
+            <span class="ident">U8</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_UCHAR</span>,
+            <span class="ident">Bool</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_BOOLEAN</span>,
+            <span class="ident">I32</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_INT</span>,
+            <span class="ident">U32</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_UINT</span>,
+            <span class="ident">ILong</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_LONG</span>,
+            <span class="ident">ULong</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_ULONG</span>,
+            <span class="ident">I64</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_INT64</span>,
+            <span class="ident">U64</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_UINT64</span>,
+            <span class="ident">BaseEnum</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_ENUM</span>,
+            <span class="ident">BaseFlags</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_FLAGS</span>,
+            <span class="ident">F32</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_FLOAT</span>,
+            <span class="ident">F64</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_DOUBLE</span>,
+            <span class="ident">String</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_STRING</span>,
+            <span class="ident">Pointer</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_POINTER</span>,
+            <span class="ident">BaseBoxed</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_BOXED</span>,
+            <span class="ident">BaseParamSpec</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_PARAM</span>,
+            <span class="ident">BaseObject</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_OBJECT</span>,
+            <span class="ident">Variant</span> <span class="op">=&gt;</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_VARIANT</span>,
+            <span class="ident">Other</span>(<span class="ident">x</span>) <span class="op">=&gt;</span> <span class="ident">x</span> <span class="kw">as</span> <span class="ident">glib_ffi</span>::<span class="ident">GType</span>,
         }
     }
 }
@@ -444,11 +445,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "glib";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

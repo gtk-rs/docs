@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/cairo/src/fonts.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/cairo-e6055a6d391c3fc9/6d49b3c/src/fonts.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>fonts.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -429,48 +430,48 @@
 <span id="385">385</span>
 <span id="386">386</span>
 <span id="387">387</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
-<span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
+<span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='doccomment'>//! FontOptions: How a font should be rendered.</span>
-<span class='doccomment'>//! </span>
-<span class='doccomment'>//! FontFace: Base class for font faces.</span>
-<span class='doccomment'>//! </span>
-<span class='doccomment'>//! ScaledFont: Font face at particular size and options.</span>
+<span class="doccomment">//! FontOptions: How a font should be rendered.</span>
+<span class="doccomment">//! </span>
+<span class="doccomment">//! FontFace: Base class for font faces.</span>
+<span class="doccomment">//! </span>
+<span class="doccomment">//! ScaledFont: Font face at particular size and options.</span>
 
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>clone</span>::<span class='ident'>Clone</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>PartialEq</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Drop</span>;
-<span class='kw'>use</span> <span class='ident'>ffi</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">clone</span>::<span class="ident">Clone</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Drop</span>;
+<span class="kw">use</span> <span class="ident">ffi</span>;
 
-<span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>enums</span>::{
-    <span class='ident'>Antialias</span>,
-    <span class='ident'>SubpixelOrder</span>,
-    <span class='ident'>HintStyle</span>,
-    <span class='ident'>HintMetrics</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">enums</span>::{
+    <span class="ident">Antialias</span>,
+    <span class="ident">SubpixelOrder</span>,
+    <span class="ident">HintStyle</span>,
+    <span class="ident">HintMetrics</span>,
 
-    <span class='ident'>FontType</span>,
-    <span class='ident'>FontWeight</span>,
-    <span class='ident'>FontSlant</span>,
+    <span class="ident">FontType</span>,
+    <span class="ident">FontWeight</span>,
+    <span class="ident">FontSlant</span>,
 };
-<span class='kw'>use</span> ::<span class='ident'>matrices</span>::<span class='ident'>Matrix</span>;
-<span class='kw'>use</span> <span class='ident'>ffi</span>::{
-    <span class='ident'>cairo_font_options_t</span>,
-    <span class='ident'>cairo_font_face_t</span>,
-    <span class='ident'>cairo_scaled_font_t</span>
-};
-
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ffi</span>::{
-    <span class='ident'>FontExtents</span>,
-    <span class='ident'>Glyph</span>,
-    <span class='ident'>TextCluster</span>,
-    <span class='ident'>TextExtents</span>
+<span class="kw">use</span> ::<span class="ident">matrices</span>::<span class="ident">Matrix</span>;
+<span class="kw">use</span> <span class="ident">ffi</span>::{
+    <span class="ident">cairo_font_options_t</span>,
+    <span class="ident">cairo_font_face_t</span>,
+    <span class="ident">cairo_scaled_font_t</span>
 };
 
-<span class='comment'>/* TODO
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ffi</span>::{
+    <span class="ident">FontExtents</span>,
+    <span class="ident">Glyph</span>,
+    <span class="ident">TextCluster</span>,
+    <span class="ident">TextExtents</span>
+};
+
+<span class="comment">/* TODO
  Allocates an array of cairo_glyph_t&#39;s. This function is only useful in
  implementations of cairo_user_scaled_font_text_to_glyphs_func_t where the user
  needs to allocate an array of glyphs that cairo will free. For all other uses,
@@ -497,323 +498,323 @@ impl TextCluster {
 */</span>
 
 
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FontOptions</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cairo_font_options_t</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FontOptions</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_font_options_t</span>);
 
-<span class='doccomment'>/// The font options specify how fonts should be rendered. Most of the time the font options</span>
-<span class='doccomment'>/// implied by a surface are just right and do not need any changes, but for pixel-based targets</span>
-<span class='doccomment'>/// tweaking font options may result in superior output on a particular display.</span>
-<span class='kw'>impl</span> <span class='ident'>FontOptions</span> {
-    <span class='doccomment'>/// Allocates a new font options object with all options initialized to default values.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>FontOptions</span> {
-        <span class='kw'>let</span> <span class='ident'>font_options</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>FontOptions</span>(<span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_create</span>())
+<span class="doccomment">/// The font options specify how fonts should be rendered. Most of the time the font options</span>
+<span class="doccomment">/// implied by a surface are just right and do not need any changes, but for pixel-based targets</span>
+<span class="doccomment">/// tweaking font options may result in superior output on a particular display.</span>
+<span class="kw">impl</span> <span class="ident">FontOptions</span> {
+    <span class="doccomment">/// Allocates a new font options object with all options initialized to default values.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">FontOptions</span> {
+        <span class="kw">let</span> <span class="ident">font_options</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="ident">FontOptions</span>(<span class="ident">ffi</span>::<span class="ident">cairo_font_options_create</span>())
         };
-        <span class='ident'>font_options</span>.<span class='ident'>ensure_status</span>();
-        <span class='ident'>font_options</span>
+        <span class="ident">font_options</span>.<span class="ident">ensure_status</span>();
+        <span class="ident">font_options</span>
     }
 
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cairo_font_options_t</span> {
-        <span class='kw'>let</span> <span class='ident'>FontOptions</span>(<span class='ident'>ptr</span>) <span class='op'>=</span> <span class='op'>*</span><span class='self'>self</span>;
-        <span class='ident'>ptr</span>
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_font_options_t</span> {
+        <span class="kw">let</span> <span class="ident">FontOptions</span>(<span class="ident">ptr</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
+        <span class="ident">ptr</span>
     }
 
-    <span class='doccomment'>/// Checks whether an error has previously occurred for this font options object.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ensure_status</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
-        <span class='kw'>let</span> <span class='ident'>status</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_status</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// Checks whether an error has previously occurred for this font options object.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ensure_status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_status</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         };
-        <span class='ident'>status</span>.<span class='ident'>ensure_valid</span>()
+        <span class="ident">status</span>.<span class="ident">ensure_valid</span>()
     }
 
-    <span class='doccomment'>/// Merges non-default options from other into self, replacing existing values.</span>
-    <span class='doccomment'>/// This operation can be thought of as somewhat similar to compositing other onto</span>
-    <span class='doccomment'>/// self with the operation of Operator::Over.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>merge</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>FontOptions</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_merge</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>(), <span class='ident'>other</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// Merges non-default options from other into self, replacing existing values.</span>
+    <span class="doccomment">/// This operation can be thought of as somewhat similar to compositing other onto</span>
+    <span class="doccomment">/// self with the operation of Operator::Over.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">merge</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">FontOptions</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_merge</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>(), <span class="ident">other</span>.<span class="ident">get_ptr</span>())
         }
     }
 
-    <span class='doccomment'>/// Compute a hash for the font options object; this value will be useful when</span>
-    <span class='doccomment'>/// storing an object containing a FontOptions in a hash table.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>hash</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span>{
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_hash</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>()) <span class='kw'>as</span> <span class='ident'>u64</span>
+    <span class="doccomment">/// Compute a hash for the font options object; this value will be useful when</span>
+    <span class="doccomment">/// storing an object containing a FontOptions in a hash table.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u64</span>{
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_hash</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>()) <span class="kw">as</span> <span class="ident">u64</span>
         }
     }
 
-    <span class='doccomment'>/// Sets the antialiasing mode for the font options object. This specifies the type</span>
-    <span class='doccomment'>/// of antialiasing to do when rendering text.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_antialias</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>antialias</span>: <span class='ident'>Antialias</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_set_antialias</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>(), <span class='ident'>antialias</span>)
+    <span class="doccomment">/// Sets the antialiasing mode for the font options object. This specifies the type</span>
+    <span class="doccomment">/// of antialiasing to do when rendering text.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_antialias</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">antialias</span>: <span class="ident">Antialias</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_set_antialias</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>(), <span class="ident">antialias</span>)
         }
     }
 
-    <span class='doccomment'>/// Gets the antialiasing mode for the font options object.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_antialias</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Antialias</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_get_antialias</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// Gets the antialiasing mode for the font options object.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_antialias</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Antialias</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_get_antialias</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         }
     }
 
-    <span class='doccomment'>/// Sets the subpixel order for the font options object. The subpixel order specifies</span>
-    <span class='doccomment'>/// the order of color elements within each pixel on the display device when rendering</span>
-    <span class='doccomment'>/// with an antialiasing mode of Antialias::Subpixel. See the documentation for</span>
-    <span class='doccomment'>/// SubpixelOrder for full details.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_subpixel_order</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>order</span>: <span class='ident'>SubpixelOrder</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_set_subpixel_order</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>(), <span class='ident'>order</span>)
+    <span class="doccomment">/// Sets the subpixel order for the font options object. The subpixel order specifies</span>
+    <span class="doccomment">/// the order of color elements within each pixel on the display device when rendering</span>
+    <span class="doccomment">/// with an antialiasing mode of Antialias::Subpixel. See the documentation for</span>
+    <span class="doccomment">/// SubpixelOrder for full details.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_subpixel_order</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">order</span>: <span class="ident">SubpixelOrder</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_set_subpixel_order</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>(), <span class="ident">order</span>)
         }
     }
 
-    <span class='doccomment'>/// Gets the subpixel order for the font options object. See the documentation for</span>
-    <span class='doccomment'>/// SubpixelOrder for full details.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_subpixel_order</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>SubpixelOrder</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_get_subpixel_order</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// Gets the subpixel order for the font options object. See the documentation for</span>
+    <span class="doccomment">/// SubpixelOrder for full details.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_subpixel_order</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">SubpixelOrder</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_get_subpixel_order</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         }
     }
 
-    <span class='doccomment'>/// Sets the hint style for font outlines for the font options object. This controls</span>
-    <span class='doccomment'>/// whether to fit font outlines to the pixel grid, and if so, whether to optimize</span>
-    <span class='doccomment'>/// for fidelity or contrast. See the documentation for HintStyle for full</span>
-    <span class='doccomment'>/// details.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_hint_style</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>hint_style</span>: <span class='ident'>HintStyle</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_set_hint_style</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>(), <span class='ident'>hint_style</span>)
+    <span class="doccomment">/// Sets the hint style for font outlines for the font options object. This controls</span>
+    <span class="doccomment">/// whether to fit font outlines to the pixel grid, and if so, whether to optimize</span>
+    <span class="doccomment">/// for fidelity or contrast. See the documentation for HintStyle for full</span>
+    <span class="doccomment">/// details.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_hint_style</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hint_style</span>: <span class="ident">HintStyle</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_set_hint_style</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>(), <span class="ident">hint_style</span>)
         }
     }
 
-    <span class='doccomment'>/// Gets the hint style for font outlines for the font options object. See the</span>
-    <span class='doccomment'>/// documentation for HintStyle for full details.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_hint_style</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>HintStyle</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_get_hint_style</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// Gets the hint style for font outlines for the font options object. See the</span>
+    <span class="doccomment">/// documentation for HintStyle for full details.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_hint_style</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">HintStyle</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_get_hint_style</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         }
     }
 
-    <span class='doccomment'>/// Sets the metrics hinting mode for the font options object. This controls</span>
-    <span class='doccomment'>/// whether metrics are quantized to integer values in device units. See the</span>
-    <span class='doccomment'>/// documentation for HintMetrics for full details.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_hint_metrics</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>hint_metrics</span>: <span class='ident'>HintMetrics</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_set_hint_metrics</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>(), <span class='ident'>hint_metrics</span>)
+    <span class="doccomment">/// Sets the metrics hinting mode for the font options object. This controls</span>
+    <span class="doccomment">/// whether metrics are quantized to integer values in device units. See the</span>
+    <span class="doccomment">/// documentation for HintMetrics for full details.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_hint_metrics</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hint_metrics</span>: <span class="ident">HintMetrics</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_set_hint_metrics</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>(), <span class="ident">hint_metrics</span>)
         }
     }
 
-    <span class='doccomment'>/// Gets the metrics hinting mode for the font options object. See the documentation</span>
-    <span class='doccomment'>/// for HintMetrics for full details.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_hint_metrics</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>HintMetrics</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_get_hint_metrics</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
-        }
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>PartialEq</span> <span class='kw'>for</span> <span class='ident'>FontOptions</span> {
-    <span class='kw'>fn</span> <span class='ident'>eq</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='ident'>FontOptions</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_equal</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>(), <span class='ident'>other</span>.<span class='ident'>get_ptr</span>()).<span class='ident'>as_bool</span>()
+    <span class="doccomment">/// Gets the metrics hinting mode for the font options object. See the documentation</span>
+    <span class="doccomment">/// for HintMetrics for full details.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_hint_metrics</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">HintMetrics</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_get_hint_metrics</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>FontOptions</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>FontOptions</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>FontOptions</span>(<span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_copy</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>()))
+<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">FontOptions</span> {
+    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">FontOptions</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_equal</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>(), <span class="ident">other</span>.<span class="ident">get_ptr</span>()).<span class="ident">as_bool</span>()
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>FontOptions</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_options_destroy</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+<span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">FontOptions</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontOptions</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">FontOptions</span>(<span class="ident">ffi</span>::<span class="ident">cairo_font_options_copy</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>()))
         }
     }
 }
 
-<span class='doccomment'>/// FontFace represents a particular font at a particular weight, slant, and other</span>
-<span class='doccomment'>/// characteristic but no size, transformation, or size.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Font faces are created using font-backend-specific constructors, typically of the</span>
-<span class='doccomment'>/// form Context::backend_font_face_create(), or implicitly using the toy text API by</span>
-<span class='doccomment'>/// way of Context::select_font_face(). The resulting face can be accessed using</span>
-<span class='doccomment'>/// Context::get_font_face().</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FontFace</span>(<span class='kw'>pub</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cairo_font_face_t</span>);
+<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">FontOptions</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_options_destroy</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
+        }
+    }
+}
 
-<span class='kw'>impl</span> <span class='ident'>FontFace</span> {
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cairo_font_face_t</span> {
-        <span class='kw'>let</span> <span class='ident'>FontFace</span>(<span class='ident'>ptr</span>) <span class='op'>=</span> <span class='op'>*</span><span class='self'>self</span>;
-        <span class='ident'>ptr</span>
+<span class="doccomment">/// FontFace represents a particular font at a particular weight, slant, and other</span>
+<span class="doccomment">/// characteristic but no size, transformation, or size.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Font faces are created using font-backend-specific constructors, typically of the</span>
+<span class="doccomment">/// form Context::backend_font_face_create(), or implicitly using the toy text API by</span>
+<span class="doccomment">/// way of Context::select_font_face(). The resulting face can be accessed using</span>
+<span class="doccomment">/// Context::get_font_face().</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FontFace</span>(<span class="kw">pub</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_font_face_t</span>);
+
+<span class="kw">impl</span> <span class="ident">FontFace</span> {
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_font_face_t</span> {
+        <span class="kw">let</span> <span class="ident">FontFace</span>(<span class="ident">ptr</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
+        <span class="ident">ptr</span>
     }
 
-    <span class='doccomment'>/// Creates a font face from a triplet of family, slant, and weight. These font faces</span>
-    <span class='doccomment'>/// are used in implementation of the the cairo &quot;toy&quot; font API.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If family is the zero-length string &quot;&quot;, the platform-specific default family is assumed.</span>
-    <span class='doccomment'>/// The default family then can be queried using FontFace::toy_get_family().</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The Context::select_font_face() function uses this to create font faces. See that</span>
-    <span class='doccomment'>/// function for limitations and other details of toy font faces.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>toy_create</span>(<span class='ident'>family</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>slant</span>: <span class='ident'>FontSlant</span>, <span class='ident'>weight</span>: <span class='ident'>FontWeight</span>) <span class='op'>-&gt;</span> <span class='ident'>FontFace</span> {
-        <span class='kw'>let</span> <span class='ident'>font_face</span> <span class='op'>=</span> <span class='ident'>FontFace</span>(
-            <span class='kw'>unsafe</span> {
-                <span class='ident'>ffi</span>::<span class='ident'>cairo_toy_font_face_create</span>(<span class='ident'>family</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>slant</span>, <span class='ident'>weight</span>)
+    <span class="doccomment">/// Creates a font face from a triplet of family, slant, and weight. These font faces</span>
+    <span class="doccomment">/// are used in implementation of the the cairo &quot;toy&quot; font API.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If family is the zero-length string &quot;&quot;, the platform-specific default family is assumed.</span>
+    <span class="doccomment">/// The default family then can be queried using FontFace::toy_get_family().</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The Context::select_font_face() function uses this to create font faces. See that</span>
+    <span class="doccomment">/// function for limitations and other details of toy font faces.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">toy_create</span>(<span class="ident">family</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">slant</span>: <span class="ident">FontSlant</span>, <span class="ident">weight</span>: <span class="ident">FontWeight</span>) <span class="op">-&gt;</span> <span class="ident">FontFace</span> {
+        <span class="kw">let</span> <span class="ident">font_face</span> <span class="op">=</span> <span class="ident">FontFace</span>(
+            <span class="kw">unsafe</span> {
+                <span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_create</span>(<span class="ident">family</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">slant</span>, <span class="ident">weight</span>)
             }
         );
-        <span class='ident'>font_face</span>.<span class='ident'>ensure_status</span>();
-        <span class='ident'>font_face</span>
+        <span class="ident">font_face</span>.<span class="ident">ensure_status</span>();
+        <span class="ident">font_face</span>
     }
 
-    <span class='doccomment'>/// Gets the familly name of a toy font.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>toy_get_family</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>cairo_toy_font_face_get_family</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>()))
+    <span class="doccomment">/// Gets the familly name of a toy font.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">toy_get_family</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_get_family</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>()))
         }
     }
 
-    <span class='doccomment'>/// Gets the slant a toy font.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>toy_get_slant</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>FontSlant</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_toy_font_face_get_slant</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// Gets the slant a toy font.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">toy_get_slant</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontSlant</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_get_slant</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         }
     }
 
-    <span class='doccomment'>/// Gets the weight a toy font.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>toy_get_weight</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>FontWeight</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_toy_font_face_get_weight</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// Gets the weight a toy font.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">toy_get_weight</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontWeight</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_get_weight</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         }
     }
 
-    <span class='doccomment'>/// Checks whether an error has previously occurred for this font face.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ensure_status</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
-        <span class='kw'>let</span> <span class='ident'>status</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_face_status</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// Checks whether an error has previously occurred for this font face.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ensure_status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_face_status</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         };
-        <span class='ident'>status</span>.<span class='ident'>ensure_valid</span>()
+        <span class="ident">status</span>.<span class="ident">ensure_valid</span>()
     }
 
-    <span class='doccomment'>/// This function returns the type of the backend used to create a font face. See</span>
-    <span class='doccomment'>/// FontType for available types.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>FontType</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_face_get_type</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// This function returns the type of the backend used to create a font face. See</span>
+    <span class="doccomment">/// FontType for available types.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontType</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_face_get_type</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         }
     }
 
-    <span class='doccomment'>/// Returns the current reference count of self.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_reference_count</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_face_get_reference_count</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>()) <span class='kw'>as</span> <span class='ident'>usize</span>
+    <span class="doccomment">/// Returns the current reference count of self.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_reference_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_face_get_reference_count</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>()) <span class="kw">as</span> <span class="ident">usize</span>
         }
     }
 
-    <span class='doccomment'>/// Increases the reference count on self by one. This prevents self from being</span>
-    <span class='doccomment'>/// destroyed until a matching call to FontFace drop trait is made.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The number of references to a FontFace can be get using</span>
-    <span class='doccomment'>/// FontFace::get_reference_count().</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>reference</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>FontFace</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>FontFace</span>(<span class='ident'>ffi</span>::<span class='ident'>cairo_font_face_reference</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>()))
+    <span class="doccomment">/// Increases the reference count on self by one. This prevents self from being</span>
+    <span class="doccomment">/// destroyed until a matching call to FontFace drop trait is made.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The number of references to a FontFace can be get using</span>
+    <span class="doccomment">/// FontFace::get_reference_count().</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reference</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontFace</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">FontFace</span>(<span class="ident">ffi</span>::<span class="ident">cairo_font_face_reference</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>()))
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>FontFace</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_font_face_destroy</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">FontFace</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_font_face_destroy</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         }
     }
 }
 
-<span class='doccomment'>/// ScaledFont represents a realization of a font face at a particular size and</span>
-<span class='doccomment'>/// transformation and a certain set of font options.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ScaledFont</span>(<span class='kw'>pub</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cairo_scaled_font_t</span>);
+<span class="doccomment">/// ScaledFont represents a realization of a font face at a particular size and</span>
+<span class="doccomment">/// transformation and a certain set of font options.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ScaledFont</span>(<span class="kw">pub</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_scaled_font_t</span>);
 
-<span class='kw'>impl</span> <span class='ident'>ScaledFont</span> {
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>cairo_scaled_font_t</span> {
-        <span class='kw'>let</span> <span class='ident'>ScaledFont</span>(<span class='ident'>ptr</span>) <span class='op'>=</span> <span class='op'>*</span><span class='self'>self</span>;
-        <span class='ident'>ptr</span>
+<span class="kw">impl</span> <span class="ident">ScaledFont</span> {
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_scaled_font_t</span> {
+        <span class="kw">let</span> <span class="ident">ScaledFont</span>(<span class="ident">ptr</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
+        <span class="ident">ptr</span>
     }
 
-    <span class='doccomment'>/// Creates a ScaledFont object from a font face and matrices that describe the</span>
-    <span class='doccomment'>/// size of the font and the environment in which it will be used.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>font_face</span>: <span class='ident'>FontFace</span>, <span class='ident'>font_matrix</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Matrix</span>, <span class='ident'>ctm</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Matrix</span>, <span class='ident'>options</span>: <span class='ident'>FontOptions</span>) <span class='op'>-&gt;</span> <span class='ident'>ScaledFont</span> {
-        <span class='kw'>let</span> <span class='ident'>scaled_font</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>ScaledFont</span>(<span class='ident'>ffi</span>::<span class='ident'>cairo_scaled_font_create</span>(<span class='ident'>font_face</span>.<span class='ident'>get_ptr</span>(), <span class='ident'>font_matrix</span>, <span class='ident'>ctm</span>, <span class='ident'>options</span>.<span class='ident'>get_ptr</span>()))
+    <span class="doccomment">/// Creates a ScaledFont object from a font face and matrices that describe the</span>
+    <span class="doccomment">/// size of the font and the environment in which it will be used.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">font_face</span>: <span class="ident">FontFace</span>, <span class="ident">font_matrix</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Matrix</span>, <span class="ident">ctm</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Matrix</span>, <span class="ident">options</span>: <span class="ident">FontOptions</span>) <span class="op">-&gt;</span> <span class="ident">ScaledFont</span> {
+        <span class="kw">let</span> <span class="ident">scaled_font</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="ident">ScaledFont</span>(<span class="ident">ffi</span>::<span class="ident">cairo_scaled_font_create</span>(<span class="ident">font_face</span>.<span class="ident">get_ptr</span>(), <span class="ident">font_matrix</span>, <span class="ident">ctm</span>, <span class="ident">options</span>.<span class="ident">get_ptr</span>()))
         };
-        <span class='ident'>scaled_font</span>.<span class='ident'>ensure_status</span>();
-        <span class='ident'>scaled_font</span>
+        <span class="ident">scaled_font</span>.<span class="ident">ensure_status</span>();
+        <span class="ident">scaled_font</span>
     }
 
-    <span class='doccomment'>/// Checks whether an error has previously occurred for this ScaledFont.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ensure_status</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
-        <span class='kw'>let</span> <span class='ident'>status</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_scaled_font_status</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// Checks whether an error has previously occurred for this ScaledFont.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ensure_status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_scaled_font_status</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         };
-        <span class='ident'>status</span>.<span class='ident'>ensure_valid</span>()
+        <span class="ident">status</span>.<span class="ident">ensure_valid</span>()
     }
 
-    <span class='doccomment'>/// This function returns the type of the backend used to create a scaled font.</span>
-    <span class='doccomment'>/// See FontType for available types. However, this function never returns</span>
-    <span class='doccomment'>/// FontType::Toy.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>FontType</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_scaled_font_get_type</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+    <span class="doccomment">/// This function returns the type of the backend used to create a scaled font.</span>
+    <span class="doccomment">/// See FontType for available types. However, this function never returns</span>
+    <span class="doccomment">/// FontType::Toy.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontType</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_scaled_font_get_type</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         }
     }
 
-    <span class='doccomment'>/// Returns the current reference count of self.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_reference_count</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_scaled_font_get_reference_count</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>()) <span class='kw'>as</span> <span class='ident'>usize</span>
+    <span class="doccomment">/// Returns the current reference count of self.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_reference_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_scaled_font_get_reference_count</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>()) <span class="kw">as</span> <span class="ident">usize</span>
         }
     }
 
-    <span class='comment'>//pub fn cairo_scaled_font_extents(scaled_font: *mut cairo_scaled_font_t, extents: *mut cairo_font_extents_t);</span>
+    <span class="comment">//pub fn cairo_scaled_font_extents(scaled_font: *mut cairo_scaled_font_t, extents: *mut cairo_font_extents_t);</span>
 
-    <span class='comment'>//                    cairo_text_extents_t;</span>
-    <span class='comment'>//pub fn cairo_scaled_font_text_extents(scaled_font: *mut cairo_scaled_font_t, utf8: *mut char, extents: *mut cairo_text_extents_t);</span>
+    <span class="comment">//                    cairo_text_extents_t;</span>
+    <span class="comment">//pub fn cairo_scaled_font_text_extents(scaled_font: *mut cairo_scaled_font_t, utf8: *mut char, extents: *mut cairo_text_extents_t);</span>
 
-    <span class='comment'>//pub fn cairo_scaled_font_glyph_extents(scaled_font: *mut cairo_scaled_font_t, glyphs: *mut Glyph, num_glyphs: c_int, extents: *mut cairo_text_extents_t);</span>
+    <span class="comment">//pub fn cairo_scaled_font_glyph_extents(scaled_font: *mut cairo_scaled_font_t, glyphs: *mut Glyph, num_glyphs: c_int, extents: *mut cairo_text_extents_t);</span>
 
-    <span class='comment'>//pub fn cairo_scaled_font_text_to_glyphs(scaled_font: *mut cairo_scaled_font_t, x: c_double, y: c_double, utf8: *mut char, utf8_len: c_int, glyphs: **mut Glyph, num_glyphs: *mut c_int, clusters: **mut TextCluster, num_clusters: *mut c_int, cluster_flags: *mut TextClusterFlags) -&gt; Status;</span>
+    <span class="comment">//pub fn cairo_scaled_font_text_to_glyphs(scaled_font: *mut cairo_scaled_font_t, x: c_double, y: c_double, utf8: *mut char, utf8_len: c_int, glyphs: **mut Glyph, num_glyphs: *mut c_int, clusters: **mut TextCluster, num_clusters: *mut c_int, cluster_flags: *mut TextClusterFlags) -&gt; Status;</span>
 
-    <span class='comment'>//pub fn cairo_scaled_font_get_font_face(scaled_font: *mut cairo_scaled_font_t) -&gt; *mut cairo_font_face_t;</span>
+    <span class="comment">//pub fn cairo_scaled_font_get_font_face(scaled_font: *mut cairo_scaled_font_t) -&gt; *mut cairo_font_face_t;</span>
 
-    <span class='comment'>//pub fn cairo_scaled_font_get_font_options(scaled_font: *mut cairo_scaled_font_t, options: *mut cairo_font_options_t);</span>
+    <span class="comment">//pub fn cairo_scaled_font_get_font_options(scaled_font: *mut cairo_scaled_font_t, options: *mut cairo_font_options_t);</span>
 
-    <span class='comment'>//pub fn cairo_scaled_font_get_font_matrix(scaled_font: *mut cairo_scaled_font_t, font_matrix: *mut cairo_matrix_t);</span>
+    <span class="comment">//pub fn cairo_scaled_font_get_font_matrix(scaled_font: *mut cairo_scaled_font_t, font_matrix: *mut cairo_matrix_t);</span>
 
-    <span class='comment'>//pub fn cairo_scaled_font_get_ctm(scaled_font: *mut cairo_scaled_font_t, ctm: *mut cairo_matrix_t);</span>
+    <span class="comment">//pub fn cairo_scaled_font_get_ctm(scaled_font: *mut cairo_scaled_font_t, ctm: *mut cairo_matrix_t);</span>
 
-    <span class='comment'>//pub fn cairo_scaled_font_get_scale_matrix(scaled_font: *mut cairo_scaled_font_t, scale_matrix: *cairo_matrix_t);</span>
+    <span class="comment">//pub fn cairo_scaled_font_get_scale_matrix(scaled_font: *mut cairo_scaled_font_t, scale_matrix: *cairo_matrix_t);</span>
 
-    <span class='doccomment'>/// Increases the reference count on self by one. This prevents self from being</span>
-    <span class='doccomment'>/// destroyed until a matching call to ScaledFont drop trait is made.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The number of references to a cairo_scaled_font_t can be get using</span>
-    <span class='doccomment'>/// ScaledFont::get_reference_count().</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>reference</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>ScaledFont</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ScaledFont</span>(<span class='ident'>ffi</span>::<span class='ident'>cairo_scaled_font_reference</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>()))
+    <span class="doccomment">/// Increases the reference count on self by one. This prevents self from being</span>
+    <span class="doccomment">/// destroyed until a matching call to ScaledFont drop trait is made.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The number of references to a cairo_scaled_font_t can be get using</span>
+    <span class="doccomment">/// ScaledFont::get_reference_count().</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reference</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ScaledFont</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ScaledFont</span>(<span class="ident">ffi</span>::<span class="ident">cairo_scaled_font_reference</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>()))
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>ScaledFont</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>cairo_scaled_font_destroy</span>(<span class='self'>self</span>.<span class='ident'>get_ptr</span>())
+<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">ScaledFont</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_scaled_font_destroy</span>(<span class="self">self</span>.<span class="ident">get_ptr</span>())
         }
     }
 }
@@ -874,11 +875,9 @@ impl TextCluster {
     <script>
         window.rootPath = "../../";
         window.currentCrate = "cairo";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>
