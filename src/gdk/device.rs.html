@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/gdk/src/device.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/gdk-0e2106e2e12a0cc1/b1be032/src/device.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>device.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -394,357 +395,357 @@
 <span id="350">350</span>
 <span id="351">351</span>
 <span id="352">352</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
-<span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
+<span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>cursor</span>::<span class='ident'>Cursor</span>;
-<span class='kw'>use</span> <span class='ident'>display</span>::<span class='ident'>Display</span>;
-<span class='kw'>use</span> <span class='ident'>screen</span>::<span class='ident'>Screen</span>;
-<span class='kw'>use</span> <span class='ident'>window</span>::<span class='ident'>Window</span>;
-<span class='kw'>use</span> <span class='ident'>ffi</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">cursor</span>::<span class="ident">Cursor</span>;
+<span class="kw">use</span> <span class="ident">display</span>::<span class="ident">Display</span>;
+<span class="kw">use</span> <span class="ident">screen</span>::<span class="ident">Screen</span>;
+<span class="kw">use</span> <span class="ident">window</span>::<span class="ident">Window</span>;
+<span class="kw">use</span> <span class="ident">ffi</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 
-<span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
-    <span class='doccomment'>/// The `Device` object represents a single input device, such</span>
-    <span class='doccomment'>/// as a keyboard, a mouse, a touchpad, etc.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See the `DeviceManager` documentation for more information</span>
-    <span class='doccomment'>/// about the various kinds of master and slave devices, and their</span>
-    <span class='doccomment'>/// relationships.</span>
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Device</span>(<span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkDevice</span><span class='op'>&gt;</span>);
+<span class="macro">glib_wrapper</span><span class="macro">!</span> {
+    <span class="doccomment">/// The `Device` object represents a single input device, such</span>
+    <span class="doccomment">/// as a keyboard, a mouse, a touchpad, etc.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See the `DeviceManager` documentation for more information</span>
+    <span class="doccomment">/// about the various kinds of master and slave devices, and their</span>
+    <span class="doccomment">/// relationships.</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Device</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GdkDevice</span><span class="op">&gt;</span>);
 
-    <span class='kw'>match</span> <span class='kw'>fn</span> {
-        <span class='ident'>get_type</span> <span class='op'>=&gt;</span> <span class='op'>||</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_type</span>(),
+    <span class="kw">match</span> <span class="kw">fn</span> {
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">gdk_device_get_type</span>(),
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Type</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>GdkDeviceType</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Type</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">GdkDeviceType</span>;
 
-<span class='kw'>impl</span> <span class='ident'>Device</span> {
-    <span class='doccomment'>/// Determines the name of the device.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// a name</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_name</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+<span class="kw">impl</span> <span class="ident">Device</span> {
+    <span class="doccomment">/// Determines the name of the device.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a name</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_device_get_name</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
         }
     }
 
-    <span class='doccomment'>/// Returns the vendor ID of this device, or `None` if this information couldn&#39;t</span>
-    <span class='doccomment'>/// be obtained. This ID is retrieved from the device, and is thus constant for</span>
-    <span class='doccomment'>/// it.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This function, together with `Device::get_product_id`, can be used to eg.</span>
-    <span class='doccomment'>/// compose `gio::Settings` paths to store settings for this device.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```C</span>
-    <span class='doccomment'>///  static GSettings *</span>
-    <span class='doccomment'>///  get_device_settings (GdkDevice *device)</span>
-    <span class='doccomment'>///  {</span>
-    <span class='doccomment'>///    const gchar *vendor, *product;</span>
-    <span class='doccomment'>///    GSettings *settings;</span>
-    <span class='doccomment'>///    GdkDevice *device;</span>
-    <span class='doccomment'>///    gchar *path;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///    vendor = gdk_device_get_vendor_id (device);</span>
-    <span class='doccomment'>///    product = gdk_device_get_product_id (device);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///    path = g_strdup_printf (&quot;/org/example/app/devices/%s:%s/&quot;, vendor, product);</span>
-    <span class='doccomment'>///    settings = g_settings_new_with_path (DEVICE_SCHEMA, path);</span>
-    <span class='doccomment'>///    g_free (path);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///    return settings;</span>
-    <span class='doccomment'>///  }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Feature: `v3_16`</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// the vendor ID, or `None`</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;v3_16&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_vendor_id</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_vendor_id</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+    <span class="doccomment">/// Returns the vendor ID of this device, or `None` if this information couldn&#39;t</span>
+    <span class="doccomment">/// be obtained. This ID is retrieved from the device, and is thus constant for</span>
+    <span class="doccomment">/// it.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function, together with `Device::get_product_id`, can be used to eg.</span>
+    <span class="doccomment">/// compose `gio::Settings` paths to store settings for this device.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```C</span>
+    <span class="doccomment">///  static GSettings *</span>
+    <span class="doccomment">///  get_device_settings (GdkDevice *device)</span>
+    <span class="doccomment">///  {</span>
+    <span class="doccomment">///    const gchar *vendor, *product;</span>
+    <span class="doccomment">///    GSettings *settings;</span>
+    <span class="doccomment">///    GdkDevice *device;</span>
+    <span class="doccomment">///    gchar *path;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///    vendor = gdk_device_get_vendor_id (device);</span>
+    <span class="doccomment">///    product = gdk_device_get_product_id (device);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///    path = g_strdup_printf (&quot;/org/example/app/devices/%s:%s/&quot;, vendor, product);</span>
+    <span class="doccomment">///    settings = g_settings_new_with_path (DEVICE_SCHEMA, path);</span>
+    <span class="doccomment">///    g_free (path);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///    return settings;</span>
+    <span class="doccomment">///  }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Feature: `v3_16`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// the vendor ID, or `None`</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_16&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_vendor_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_device_get_vendor_id</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
         }
     }
 
-    <span class='doccomment'>/// Returns the product ID of this device, or `None` if this information couldn&#39;t</span>
-    <span class='doccomment'>/// be obtained. This ID is retrieved from the device, and is thus constant for</span>
-    <span class='doccomment'>/// it. See `Device::get_vendor_id` for more information.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Feature: `v3_16`</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// the product ID, or `None`</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;v3_16&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_product_id</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_product_id</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+    <span class="doccomment">/// Returns the product ID of this device, or `None` if this information couldn&#39;t</span>
+    <span class="doccomment">/// be obtained. This ID is retrieved from the device, and is thus constant for</span>
+    <span class="doccomment">/// it. See `Device::get_vendor_id` for more information.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Feature: `v3_16`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// the product ID, or `None`</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_16&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_product_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_device_get_product_id</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
         }
     }
 
-    <span class='doccomment'>/// Determines the type of the device.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// a `InputSource`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_source</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> ::<span class='ident'>InputSource</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_source</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Determines the type of the device.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a `InputSource`</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> ::<span class="ident">InputSource</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_get_source</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Sets a the mode of an input device. The mode controls if the</span>
-    <span class='doccomment'>/// device is active and whether the device’s range is mapped to the</span>
-    <span class='doccomment'>/// entire screen or to a single window.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note: This is only meaningful for floating devices, master devices (and</span>
-    <span class='doccomment'>/// slaves connected to these) drive the pointer cursor, which is not limited</span>
-    <span class='doccomment'>/// by the input mode.</span>
-    <span class='doccomment'>/// ## `mode`</span>
-    <span class='doccomment'>/// the input mode.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `true` if the mode was successfully changed.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_mode</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>mode</span>: ::<span class='ident'>InputMode</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_set_mode</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>mode</span>); }
+    <span class="doccomment">/// Sets a the mode of an input device. The mode controls if the</span>
+    <span class="doccomment">/// device is active and whether the device’s range is mapped to the</span>
+    <span class="doccomment">/// entire screen or to a single window.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note: This is only meaningful for floating devices, master devices (and</span>
+    <span class="doccomment">/// slaves connected to these) drive the pointer cursor, which is not limited</span>
+    <span class="doccomment">/// by the input mode.</span>
+    <span class="doccomment">/// ## `mode`</span>
+    <span class="doccomment">/// the input mode.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `true` if the mode was successfully changed.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mode</span>: ::<span class="ident">InputMode</span>) {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_set_mode</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">mode</span>); }
     }
 
-    <span class='doccomment'>/// Determines the mode of the device.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// a `InputSource`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mode</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> ::<span class='ident'>InputMode</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_mode</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Determines the mode of the device.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a `InputSource`</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> ::<span class="ident">InputMode</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_get_mode</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Specifies the X key event to generate when a macro button of a device</span>
-    <span class='doccomment'>/// is pressed.</span>
-    <span class='doccomment'>/// ## `index_`</span>
-    <span class='doccomment'>/// the index of the macro button to set</span>
-    <span class='doccomment'>/// ## `keyval`</span>
-    <span class='doccomment'>/// the keyval to generate</span>
-    <span class='doccomment'>/// ## `modifiers`</span>
-    <span class='doccomment'>/// the modifiers to set</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index_</span>: <span class='ident'>u32</span>, <span class='ident'>keyval</span>: <span class='ident'>u32</span>, <span class='ident'>modifiers</span>: ::<span class='ident'>ModifierType</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_set_key</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>index_</span>, <span class='ident'>keyval</span>, <span class='ident'>modifiers</span>.<span class='ident'>to_glib</span>()) }
+    <span class="doccomment">/// Specifies the X key event to generate when a macro button of a device</span>
+    <span class="doccomment">/// is pressed.</span>
+    <span class="doccomment">/// ## `index_`</span>
+    <span class="doccomment">/// the index of the macro button to set</span>
+    <span class="doccomment">/// ## `keyval`</span>
+    <span class="doccomment">/// the keyval to generate</span>
+    <span class="doccomment">/// ## `modifiers`</span>
+    <span class="doccomment">/// the modifiers to set</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index_</span>: <span class="ident">u32</span>, <span class="ident">keyval</span>: <span class="ident">u32</span>, <span class="ident">modifiers</span>: ::<span class="ident">ModifierType</span>) {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_set_key</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">index_</span>, <span class="ident">keyval</span>, <span class="ident">modifiers</span>.<span class="ident">to_glib</span>()) }
     }
 
-    <span class='doccomment'>/// If `index_` has a valid keyval, this function will return `true`</span>
-    <span class='doccomment'>/// and fill in `keyval` and `modifiers` with the keyval settings.</span>
-    <span class='doccomment'>/// ## `index_`</span>
-    <span class='doccomment'>/// the index of the macro button to get.</span>
-    <span class='doccomment'>/// ## `keyval`</span>
-    <span class='doccomment'>/// return value for the keyval.</span>
-    <span class='doccomment'>/// ## `modifiers`</span>
-    <span class='doccomment'>/// return value for modifiers.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `true` if keyval is set for `index`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index_</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>u32</span>, ::<span class='ident'>ModifierType</span>)<span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>keyval</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>();
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>modifiers</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>();
-            <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_key</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>index_</span>,
-                                                        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>keyval</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>modifiers</span>));
-            <span class='kw'>if</span> <span class='ident'>ret</span> { <span class='prelude-val'>Some</span>((<span class='ident'>keyval</span>, <span class='ident'>from_glib</span>(<span class='ident'>modifiers</span>))) } <span class='kw'>else</span> { <span class='prelude-val'>None</span> }
+    <span class="doccomment">/// If `index_` has a valid keyval, this function will return `true`</span>
+    <span class="doccomment">/// and fill in `keyval` and `modifiers` with the keyval settings.</span>
+    <span class="doccomment">/// ## `index_`</span>
+    <span class="doccomment">/// the index of the macro button to get.</span>
+    <span class="doccomment">/// ## `keyval`</span>
+    <span class="doccomment">/// return value for the keyval.</span>
+    <span class="doccomment">/// ## `modifiers`</span>
+    <span class="doccomment">/// return value for modifiers.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `true` if keyval is set for `index`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index_</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u32</span>, ::<span class="ident">ModifierType</span>)<span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">keyval</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">modifiers</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
+            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gdk_device_get_key</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">index_</span>,
+                                                        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">keyval</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">modifiers</span>));
+            <span class="kw">if</span> <span class="ident">ret</span> { <span class="prelude-val">Some</span>((<span class="ident">keyval</span>, <span class="ident">from_glib</span>(<span class="ident">modifiers</span>))) } <span class="kw">else</span> { <span class="prelude-val">None</span> }
         }
     }
 
-    <span class='doccomment'>/// Specifies how an axis of a device is used.</span>
-    <span class='doccomment'>/// ## `index_`</span>
-    <span class='doccomment'>/// the index of the axis</span>
-    <span class='doccomment'>/// ## `use_`</span>
-    <span class='doccomment'>/// specifies how the axis is used</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_axis_use</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index_</span>: <span class='ident'>u32</span>, <span class='ident'>use_</span>: ::<span class='ident'>AxisUse</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_set_axis_use</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>index_</span>, <span class='ident'>use_</span>) }
+    <span class="doccomment">/// Specifies how an axis of a device is used.</span>
+    <span class="doccomment">/// ## `index_`</span>
+    <span class="doccomment">/// the index of the axis</span>
+    <span class="doccomment">/// ## `use_`</span>
+    <span class="doccomment">/// specifies how the axis is used</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_axis_use</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index_</span>: <span class="ident">u32</span>, <span class="ident">use_</span>: ::<span class="ident">AxisUse</span>) {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_set_axis_use</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">index_</span>, <span class="ident">use_</span>) }
     }
 
-    <span class='doccomment'>/// Returns the axis use for `index_`.</span>
-    <span class='doccomment'>/// ## `index_`</span>
-    <span class='doccomment'>/// the index of the axis.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// a `AxisUse` specifying how the axis is used.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_axis_use</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index_</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> ::<span class='ident'>AxisUse</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_axis_use</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>index_</span>) }
+    <span class="doccomment">/// Returns the axis use for `index_`.</span>
+    <span class="doccomment">/// ## `index_`</span>
+    <span class="doccomment">/// the index of the axis.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a `AxisUse` specifying how the axis is used.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_axis_use</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index_</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> ::<span class="ident">AxisUse</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_get_axis_use</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">index_</span>) }
     }
 
-    <span class='doccomment'>/// Returns the associated device to `self`, if `self` is of type</span>
-    <span class='doccomment'>/// `DeviceType::Master`, it will return the paired pointer or</span>
-    <span class='doccomment'>/// keyboard.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If `self` is of type `DeviceType::Slave`, it will return</span>
-    <span class='doccomment'>/// the master device to which `self` is attached to.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If `self` is of type `DeviceType::Floating`, `None` will be</span>
-    <span class='doccomment'>/// returned, as there is no associated device.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The associated device, or</span>
-    <span class='doccomment'>///  `None`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_associated_device</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Device</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_associated_device</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)) }
+    <span class="doccomment">/// Returns the associated device to `self`, if `self` is of type</span>
+    <span class="doccomment">/// `DeviceType::Master`, it will return the paired pointer or</span>
+    <span class="doccomment">/// keyboard.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If `self` is of type `DeviceType::Slave`, it will return</span>
+    <span class="doccomment">/// the master device to which `self` is attached to.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If `self` is of type `DeviceType::Floating`, `None` will be</span>
+    <span class="doccomment">/// returned, as there is no associated device.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The associated device, or</span>
+    <span class="doccomment">///  `None`</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_associated_device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_device_get_associated_device</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class='doccomment'>/// Returns the device type for `self`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// the `DeviceType` for `self`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_device_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Type</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_device_type</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Returns the device type for `self`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// the `DeviceType` for `self`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_device_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Type</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_get_device_type</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Returns the `Display` to which `self` pertains.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// a `Display`. This memory is owned</span>
-    <span class='doccomment'>///  by GTK+, and must not be freed or unreffed.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_display</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Display</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_display</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)) }
+    <span class="doccomment">/// Returns the `Display` to which `self` pertains.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a `Display`. This memory is owned</span>
+    <span class="doccomment">///  by GTK+, and must not be freed or unreffed.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Display</span> {
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_device_get_display</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class='doccomment'>/// Determines whether the pointer follows device motion.</span>
-    <span class='doccomment'>/// This is not meaningful for keyboard devices, which don&#39;t have a pointer.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `true` if the pointer follows device motion</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_has_cursor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_has_cursor</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)) }
+    <span class="doccomment">/// Determines whether the pointer follows device motion.</span>
+    <span class="doccomment">/// This is not meaningful for keyboard devices, which don&#39;t have a pointer.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `true` if the pointer follows device motion</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_has_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">unsafe</span> { <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gdk_device_get_has_cursor</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class='doccomment'>/// Returns the number of axes the device currently has.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// the number of axes.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_n_axes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_n_axes</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Returns the number of axes the device currently has.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// the number of axes.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_n_axes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_get_n_axes</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Returns the number of keys the device currently has.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// the number of keys.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_n_keys</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_n_keys</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Returns the number of keys the device currently has.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// the number of keys.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_n_keys</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_get_n_keys</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Warps `self` in `display` to the point `x`,`y` on</span>
-    <span class='doccomment'>/// the screen `screen`, unless the device is confined</span>
-    <span class='doccomment'>/// to a window by a grab, in which case it will be moved</span>
-    <span class='doccomment'>/// as far as allowed by the grab. Warping the pointer</span>
-    <span class='doccomment'>/// creates events as if the user had moved the mouse</span>
-    <span class='doccomment'>/// instantaneously to the destination.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that the pointer should normally be under the</span>
-    <span class='doccomment'>/// control of the user. This function was added to cover</span>
-    <span class='doccomment'>/// some rare use cases like keyboard navigation support</span>
-    <span class='doccomment'>/// for the color picker in the ``GtkColorSelectionDialog``.</span>
-    <span class='doccomment'>/// ## `screen`</span>
-    <span class='doccomment'>/// the screen to warp `self` to.</span>
-    <span class='doccomment'>/// ## `x`</span>
-    <span class='doccomment'>/// the X coordinate of the destination.</span>
-    <span class='doccomment'>/// ## `y`</span>
-    <span class='doccomment'>/// the Y coordinate of the destination.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>warp</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>screen</span>: <span class='kw-2'>&amp;</span><span class='ident'>Screen</span>, <span class='ident'>x</span>: <span class='ident'>i32</span>, <span class='ident'>y</span>: <span class='ident'>i32</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_warp</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>screen</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>x</span>, <span class='ident'>y</span>) }
+    <span class="doccomment">/// Warps `self` in `display` to the point `x`,`y` on</span>
+    <span class="doccomment">/// the screen `screen`, unless the device is confined</span>
+    <span class="doccomment">/// to a window by a grab, in which case it will be moved</span>
+    <span class="doccomment">/// as far as allowed by the grab. Warping the pointer</span>
+    <span class="doccomment">/// creates events as if the user had moved the mouse</span>
+    <span class="doccomment">/// instantaneously to the destination.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that the pointer should normally be under the</span>
+    <span class="doccomment">/// control of the user. This function was added to cover</span>
+    <span class="doccomment">/// some rare use cases like keyboard navigation support</span>
+    <span class="doccomment">/// for the color picker in the ``GtkColorSelectionDialog``.</span>
+    <span class="doccomment">/// ## `screen`</span>
+    <span class="doccomment">/// the screen to warp `self` to.</span>
+    <span class="doccomment">/// ## `x`</span>
+    <span class="doccomment">/// the X coordinate of the destination.</span>
+    <span class="doccomment">/// ## `y`</span>
+    <span class="doccomment">/// the Y coordinate of the destination.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">warp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">screen</span>: <span class="kw-2">&amp;</span><span class="ident">Screen</span>, <span class="ident">x</span>: <span class="ident">i32</span>, <span class="ident">y</span>: <span class="ident">i32</span>) {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_warp</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">screen</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">x</span>, <span class="ident">y</span>) }
     }
 
-    <span class='doccomment'>/// Grabs the device so that all events coming from this device are passed to</span>
-    <span class='doccomment'>/// this application until the device is ungrabbed with `Device::ungrab`,</span>
-    <span class='doccomment'>/// or the window becomes unviewable. This overrides any previous grab on the device</span>
-    <span class='doccomment'>/// by this client.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that `self` and `window` need to be on the same display.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Device grabs are used for operations which need complete control over the</span>
-    <span class='doccomment'>/// given device events (either pointer or keyboard). For example in GTK+ this</span>
-    <span class='doccomment'>/// is used for Drag and Drop operations, popup menus and such.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that if the event mask of an X window has selected both button press</span>
-    <span class='doccomment'>/// and button release events, then a button press event will cause an automatic</span>
-    <span class='doccomment'>/// pointer grab until the button is released. X does this automatically since</span>
-    <span class='doccomment'>/// most applications expect to receive button press and release events in pairs.</span>
-    <span class='doccomment'>/// It is equivalent to a pointer grab on the window with `owner_events` set to</span>
-    <span class='doccomment'>/// `true`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If you set up anything at the time you take the grab that needs to be</span>
-    <span class='doccomment'>/// cleaned up when the grab ends, you should handle the `EventGrabBroken`</span>
-    <span class='doccomment'>/// events that are emitted when the grab ends unvoluntarily.</span>
-    <span class='doccomment'>/// ## `window`</span>
-    <span class='doccomment'>/// the `Window` which will own the grab (the grab window)</span>
-    <span class='doccomment'>/// ## `grab_ownership`</span>
-    <span class='doccomment'>/// specifies the grab ownership.</span>
-    <span class='doccomment'>/// ## `owner_events`</span>
-    <span class='doccomment'>/// if `false` then all device events are reported with respect to</span>
-    <span class='doccomment'>///  `window` and are only reported if selected by `event_mask`. If</span>
-    <span class='doccomment'>///  `true` then pointer events for this application are reported</span>
-    <span class='doccomment'>///  as normal, but pointer events outside this application are</span>
-    <span class='doccomment'>///  reported with respect to `window` and only if selected by</span>
-    <span class='doccomment'>///  `event_mask`. In either mode, unreported events are discarded.</span>
-    <span class='doccomment'>/// ## `event_mask`</span>
-    <span class='doccomment'>/// specifies the event mask, which is used in accordance with</span>
-    <span class='doccomment'>///  `owner_events`.</span>
-    <span class='doccomment'>/// ## `cursor`</span>
-    <span class='doccomment'>/// the cursor to display while the grab is active if the device is</span>
-    <span class='doccomment'>///  a pointer. If this is `None` then the normal cursors are used for</span>
-    <span class='doccomment'>///  `window` and its descendants, and the cursor for `window` is used</span>
-    <span class='doccomment'>///  elsewhere.</span>
-    <span class='doccomment'>/// ## `time_`</span>
-    <span class='doccomment'>/// the timestamp of the event which led to this pointer grab. This</span>
-    <span class='doccomment'>///  usually comes from the ``GdkEvent`` struct, though `GDK_CURRENT_TIME`</span>
-    <span class='doccomment'>///  can be used if the time isn’t known.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `GrabStatus::Success` if the grab was successful.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>grab</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>window</span>: <span class='kw-2'>&amp;</span><span class='ident'>Window</span>, <span class='ident'>grab_ownership</span>: ::<span class='ident'>GrabOwnership</span>, <span class='ident'>owner_events</span>: <span class='ident'>bool</span>,
-                <span class='ident'>event_mask</span>: ::<span class='ident'>EventMask</span>, <span class='ident'>cursor</span>: <span class='kw-2'>&amp;</span><span class='ident'>Cursor</span>, <span class='ident'>time_</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> ::<span class='ident'>GrabStatus</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>gdk_device_grab</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>window</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>grab_ownership</span>,
-                <span class='ident'>owner_events</span>.<span class='ident'>to_glib</span>(), <span class='ident'>event_mask</span>, <span class='ident'>cursor</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>time_</span>)
+    <span class="doccomment">/// Grabs the device so that all events coming from this device are passed to</span>
+    <span class="doccomment">/// this application until the device is ungrabbed with `Device::ungrab`,</span>
+    <span class="doccomment">/// or the window becomes unviewable. This overrides any previous grab on the device</span>
+    <span class="doccomment">/// by this client.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that `self` and `window` need to be on the same display.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Device grabs are used for operations which need complete control over the</span>
+    <span class="doccomment">/// given device events (either pointer or keyboard). For example in GTK+ this</span>
+    <span class="doccomment">/// is used for Drag and Drop operations, popup menus and such.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that if the event mask of an X window has selected both button press</span>
+    <span class="doccomment">/// and button release events, then a button press event will cause an automatic</span>
+    <span class="doccomment">/// pointer grab until the button is released. X does this automatically since</span>
+    <span class="doccomment">/// most applications expect to receive button press and release events in pairs.</span>
+    <span class="doccomment">/// It is equivalent to a pointer grab on the window with `owner_events` set to</span>
+    <span class="doccomment">/// `true`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If you set up anything at the time you take the grab that needs to be</span>
+    <span class="doccomment">/// cleaned up when the grab ends, you should handle the `EventGrabBroken`</span>
+    <span class="doccomment">/// events that are emitted when the grab ends unvoluntarily.</span>
+    <span class="doccomment">/// ## `window`</span>
+    <span class="doccomment">/// the `Window` which will own the grab (the grab window)</span>
+    <span class="doccomment">/// ## `grab_ownership`</span>
+    <span class="doccomment">/// specifies the grab ownership.</span>
+    <span class="doccomment">/// ## `owner_events`</span>
+    <span class="doccomment">/// if `false` then all device events are reported with respect to</span>
+    <span class="doccomment">///  `window` and are only reported if selected by `event_mask`. If</span>
+    <span class="doccomment">///  `true` then pointer events for this application are reported</span>
+    <span class="doccomment">///  as normal, but pointer events outside this application are</span>
+    <span class="doccomment">///  reported with respect to `window` and only if selected by</span>
+    <span class="doccomment">///  `event_mask`. In either mode, unreported events are discarded.</span>
+    <span class="doccomment">/// ## `event_mask`</span>
+    <span class="doccomment">/// specifies the event mask, which is used in accordance with</span>
+    <span class="doccomment">///  `owner_events`.</span>
+    <span class="doccomment">/// ## `cursor`</span>
+    <span class="doccomment">/// the cursor to display while the grab is active if the device is</span>
+    <span class="doccomment">///  a pointer. If this is `None` then the normal cursors are used for</span>
+    <span class="doccomment">///  `window` and its descendants, and the cursor for `window` is used</span>
+    <span class="doccomment">///  elsewhere.</span>
+    <span class="doccomment">/// ## `time_`</span>
+    <span class="doccomment">/// the timestamp of the event which led to this pointer grab. This</span>
+    <span class="doccomment">///  usually comes from the ``GdkEvent`` struct, though `GDK_CURRENT_TIME`</span>
+    <span class="doccomment">///  can be used if the time isn’t known.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `GrabStatus::Success` if the grab was successful.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">grab</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="kw-2">&amp;</span><span class="ident">Window</span>, <span class="ident">grab_ownership</span>: ::<span class="ident">GrabOwnership</span>, <span class="ident">owner_events</span>: <span class="ident">bool</span>,
+                <span class="ident">event_mask</span>: ::<span class="ident">EventMask</span>, <span class="ident">cursor</span>: <span class="kw-2">&amp;</span><span class="ident">Cursor</span>, <span class="ident">time_</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> ::<span class="ident">GrabStatus</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">gdk_device_grab</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">window</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">grab_ownership</span>,
+                <span class="ident">owner_events</span>.<span class="ident">to_glib</span>(), <span class="ident">event_mask</span>, <span class="ident">cursor</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">time_</span>)
         }
     }
 
-    <span class='doccomment'>/// Release any grab on `self`.</span>
-    <span class='doccomment'>/// ## `time_`</span>
-    <span class='doccomment'>/// a timestap (e.g. `GDK_CURRENT_TIME`).</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ungrab</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>time_</span>: <span class='ident'>u32</span>) {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_device_ungrab</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>time_</span>) }
+    <span class="doccomment">/// Release any grab on `self`.</span>
+    <span class="doccomment">/// ## `time_`</span>
+    <span class="doccomment">/// a timestap (e.g. `GDK_CURRENT_TIME`).</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ungrab</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">time_</span>: <span class="ident">u32</span>) {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_device_ungrab</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">time_</span>) }
     }
 
-    <span class='doccomment'>/// Interprets an array of double as axis values for a given device,</span>
-    <span class='doccomment'>/// and locates the value in the array for a given axis use.</span>
-    <span class='doccomment'>/// ## `axes`</span>
-    <span class='doccomment'>/// pointer to an array of axes</span>
-    <span class='doccomment'>/// ## `use_`</span>
-    <span class='doccomment'>/// the use to look for</span>
-    <span class='doccomment'>/// ## `value`</span>
-    <span class='doccomment'>/// location to store the found value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `true` if the given axis use was found, otherwise `false`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_axis</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>axes</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>f64</span>], <span class='ident'>use_</span>: ::<span class='ident'>AxisUse</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_device_get_axis</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>axes</span>.<span class='ident'>as_mut_ptr</span>(), <span class='ident'>use_</span>, <span class='ident'>value</span>)) }
+    <span class="doccomment">/// Interprets an array of double as axis values for a given device,</span>
+    <span class="doccomment">/// and locates the value in the array for a given axis use.</span>
+    <span class="doccomment">/// ## `axes`</span>
+    <span class="doccomment">/// pointer to an array of axes</span>
+    <span class="doccomment">/// ## `use_`</span>
+    <span class="doccomment">/// the use to look for</span>
+    <span class="doccomment">/// ## `value`</span>
+    <span class="doccomment">/// location to store the found value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `true` if the given axis use was found, otherwise `false`</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_axis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">axes</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">f64</span>], <span class="ident">use_</span>: ::<span class="ident">AxisUse</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">f64</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">unsafe</span> { <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gdk_device_get_axis</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">axes</span>.<span class="ident">as_mut_ptr</span>(), <span class="ident">use_</span>, <span class="ident">value</span>)) }
     }
 }
 </pre>
@@ -804,11 +805,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "gdk";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

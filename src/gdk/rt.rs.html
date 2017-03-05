@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/rust/gn/gdk/src/rt.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/gdk-0e2106e2e12a0cc1/b1be032/src/rt.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>rt.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -209,173 +210,173 @@
 <span id="165">165</span>
 <span id="166">166</span>
 <span id="167">167</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
-<span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
+<span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='doccomment'>//! General — Library initialization and miscellaneous functions</span>
+<span class="doccomment">//! General — Library initialization and miscellaneous functions</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>Cell</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>atomic</span>::{<span class='ident'>AtomicBool</span>, <span class='ident'>ATOMIC_BOOL_INIT</span>, <span class='ident'>Ordering</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">Cell</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">ATOMIC_BOOL_INIT</span>, <span class="ident">Ordering</span>};
 
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>ffi</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">ffi</span>;
 
-<span class='macro'>thread_local</span><span class='macro'>!</span> {
-    <span class='kw'>static</span> <span class='ident'>IS_MAIN_THREAD</span>: <span class='ident'>Cell</span><span class='op'>&lt;</span><span class='ident'>bool</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Cell</span>::<span class='ident'>new</span>(<span class='boolvalue'>false</span>)
+<span class="macro">thread_local</span><span class="macro">!</span> {
+    <span class="kw">static</span> <span class="ident">IS_MAIN_THREAD</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Cell</span>::<span class="ident">new</span>(<span class="bool-val">false</span>)
 }
 
-<span class='kw'>static</span> <span class='ident'>INITIALIZED</span>: <span class='ident'>AtomicBool</span> <span class='op'>=</span> <span class='ident'>ATOMIC_BOOL_INIT</span>;
+<span class="kw">static</span> <span class="ident">INITIALIZED</span>: <span class="ident">AtomicBool</span> <span class="op">=</span> <span class="ident">ATOMIC_BOOL_INIT</span>;
 
-<span class='doccomment'>/// Asserts that this is the main thread and either `gdk::init` or `gtk::init` has been called.</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>assert_initialized_main_thread</span> {
-    () <span class='op'>=&gt;</span> (
-        <span class='kw'>if</span> <span class='op'>!</span>::<span class='ident'>rt</span>::<span class='ident'>is_initialized_main_thread</span>() {
-            <span class='kw'>if</span> ::<span class='ident'>rt</span>::<span class='ident'>is_initialized</span>() {
-                <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;GDK may only be used from the main thread.&quot;</span>);
+<span class="doccomment">/// Asserts that this is the main thread and either `gdk::init` or `gtk::init` has been called.</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">assert_initialized_main_thread</span> {
+    () <span class="op">=&gt;</span> (
+        <span class="kw">if</span> <span class="op">!</span>::<span class="ident">rt</span>::<span class="ident">is_initialized_main_thread</span>() {
+            <span class="kw">if</span> ::<span class="ident">rt</span>::<span class="ident">is_initialized</span>() {
+                <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;GDK may only be used from the main thread.&quot;</span>);
             }
-            <span class='kw'>else</span> {
-                <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;GDK has not been initialized. Call `gdk::init` or `gtk::init` first.&quot;</span>);
+            <span class="kw">else</span> {
+                <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;GDK has not been initialized. Call `gdk::init` or `gtk::init` first.&quot;</span>);
             }
         }
     )
 }
 
-<span class='doccomment'>/// No-op.</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>skip_assert_initialized</span> {
-    () <span class='op'>=&gt;</span> ()
+<span class="doccomment">/// No-op.</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">skip_assert_initialized</span> {
+    () <span class="op">=&gt;</span> ()
 }
 
-<span class='doccomment'>/// Asserts that neither `gdk::init` nor `gtk::init` has been called.</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>assert_not_initialized</span> {
-    () <span class='op'>=&gt;</span> (
-        <span class='kw'>if</span> ::<span class='ident'>rt</span>::<span class='ident'>is_initialized</span>() {
-            <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;This function has to be called before `gdk::init` or `gtk::init`.&quot;</span>);
+<span class="doccomment">/// Asserts that neither `gdk::init` nor `gtk::init` has been called.</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">assert_not_initialized</span> {
+    () <span class="op">=&gt;</span> (
+        <span class="kw">if</span> ::<span class="ident">rt</span>::<span class="ident">is_initialized</span>() {
+            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;This function has to be called before `gdk::init` or `gtk::init`.&quot;</span>);
         }
     )
 }
 
-<span class='doccomment'>/// Returns `true` if GDK has been initialized.</span>
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_initialized</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='macro'>skip_assert_initialized</span><span class='macro'>!</span>();
-    <span class='ident'>INITIALIZED</span>.<span class='ident'>load</span>(<span class='ident'>Ordering</span>::<span class='ident'>Acquire</span>)
+<span class="doccomment">/// Returns `true` if GDK has been initialized.</span>
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_initialized</span>() <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="macro">skip_assert_initialized</span><span class="macro">!</span>();
+    <span class="ident">INITIALIZED</span>.<span class="ident">load</span>(<span class="ident">Ordering</span>::<span class="ident">Acquire</span>)
 }
 
-<span class='doccomment'>/// Returns `true` if GDK has been initialized and this is the main thread.</span>
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_initialized_main_thread</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='macro'>skip_assert_initialized</span><span class='macro'>!</span>();
-    <span class='ident'>IS_MAIN_THREAD</span>.<span class='ident'>with</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='ident'>c</span>.<span class='ident'>get</span>())
+<span class="doccomment">/// Returns `true` if GDK has been initialized and this is the main thread.</span>
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_initialized_main_thread</span>() <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="macro">skip_assert_initialized</span><span class="macro">!</span>();
+    <span class="ident">IS_MAIN_THREAD</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">get</span>())
 }
 
-<span class='doccomment'>/// Informs this crate that GDK has been initialized and the current thread is the main one.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>set_initialized</span>() {
-    <span class='macro'>skip_assert_initialized</span><span class='macro'>!</span>();
-    <span class='kw'>if</span> <span class='ident'>is_initialized_main_thread</span>() {
-        <span class='kw'>return</span>;
+<span class="doccomment">/// Informs this crate that GDK has been initialized and the current thread is the main one.</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">set_initialized</span>() {
+    <span class="macro">skip_assert_initialized</span><span class="macro">!</span>();
+    <span class="kw">if</span> <span class="ident">is_initialized_main_thread</span>() {
+        <span class="kw">return</span>;
     }
-    <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>is_initialized</span>() {
-        <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Attempted to initialize GDK from two different threads.&quot;</span>);
+    <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_initialized</span>() {
+        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Attempted to initialize GDK from two different threads.&quot;</span>);
     }
-    <span class='ident'>INITIALIZED</span>.<span class='ident'>store</span>(<span class='boolvalue'>true</span>, <span class='ident'>Ordering</span>::<span class='ident'>Release</span>);
-    <span class='ident'>IS_MAIN_THREAD</span>.<span class='ident'>with</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='ident'>c</span>.<span class='ident'>set</span>(<span class='boolvalue'>true</span>));
+    <span class="ident">INITIALIZED</span>.<span class="ident">store</span>(<span class="bool-val">true</span>, <span class="ident">Ordering</span>::<span class="ident">Release</span>);
+    <span class="ident">IS_MAIN_THREAD</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">set</span>(<span class="bool-val">true</span>));
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init</span>() {
-    <span class='macro'>assert_not_initialized</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>gdk_init</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>());
-        <span class='ident'>set_initialized</span>();
-    }
-}
-
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_display_arg_name</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_get_display_arg_name</span>())
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init</span>() {
+    <span class="macro">assert_not_initialized</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">gdk_init</span>(<span class="ident">ptr</span>::<span class="ident">null_mut</span>(), <span class="ident">ptr</span>::<span class="ident">null_mut</span>());
+        <span class="ident">set_initialized</span>();
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>notify_startup_complete</span>() {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_notify_startup_complete</span>() }
-}
-
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>notify_startup_complete_with_id</span>(<span class='ident'>startup_id</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>gdk_notify_startup_complete_with_id</span>(<span class='ident'>startup_id</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>);
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display_arg_name</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> {
+        <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_get_display_arg_name</span>())
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;v3_10&quot;</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_allowed_backends</span>(<span class='ident'>backends</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-    <span class='macro'>assert_not_initialized</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>gdk_set_allowed_backends</span>(<span class='ident'>backends</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">notify_startup_complete</span>() {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_notify_startup_complete</span>() }
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">notify_startup_complete_with_id</span>(<span class="ident">startup_id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">gdk_notify_startup_complete_with_id</span>(<span class="ident">startup_id</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>);
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_program_class</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_get_program_class</span>())
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_10&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_allowed_backends</span>(<span class="ident">backends</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
+    <span class="macro">assert_not_initialized</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">gdk_set_allowed_backends</span>(<span class="ident">backends</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_program_class</span>(<span class='ident'>program_class</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>gdk_set_program_class</span>(<span class='ident'>program_class</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_program_class</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> {
+        <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_get_program_class</span>())
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>flush</span>() {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_flush</span>() }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_program_class</span>(<span class="ident">program_class</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">gdk_set_program_class</span>(<span class="ident">program_class</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)
+    }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>screen_width</span>() <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_screen_width</span>() }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush</span>() {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_flush</span>() }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>screen_height</span>() <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_screen_height</span>() }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">screen_width</span>() <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_screen_width</span>() }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>screen_width_mm</span>() <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_screen_width_mm</span>() }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">screen_height</span>() <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_screen_height</span>() }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>screen_height_mm</span>() <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_screen_height_mm</span>() }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">screen_width_mm</span>() <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_screen_width_mm</span>() }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>beep</span>() {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_flush</span>() }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">screen_height_mm</span>() <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_screen_height_mm</span>() }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>error_trap_push</span>() {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_error_trap_push</span>() }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">beep</span>() {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_flush</span>() }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>error_trap_pop</span>() <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_error_trap_pop</span>() }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error_trap_push</span>() {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_error_trap_push</span>() }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>error_trap_pop_ignored</span>() {
-    <span class='macro'>assert_initialized_main_thread</span><span class='macro'>!</span>();
-    <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_error_trap_pop_ignored</span>() }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error_trap_pop</span>() <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_error_trap_pop</span>() }
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error_trap_pop_ignored</span>() {
+    <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
+    <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_error_trap_pop_ignored</span>() }
 }
 </pre>
 </section>
@@ -434,11 +435,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "gdk";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

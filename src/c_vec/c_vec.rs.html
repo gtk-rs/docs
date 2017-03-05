@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/.cargo/registry/src/github.com-1ecc6299db9ec823/c_vec-1.0.12/src/c_vec.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/registry/src/github.com-1ecc6299db9ec823/c_vec-1.2.0/src/c_vec.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>c_vec.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -411,374 +412,374 @@
 <span id="367">367</span>
 <span id="368">368</span>
 <span id="369">369</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2012 The Rust Project Developers.</span>
-<span class='comment'>// Copyright 2015 Guillaume Gomez</span>
-<span class='comment'>//</span>
-<span class='comment'>// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
-<span class='comment'>// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
-<span class='comment'>// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your</span>
-<span class='comment'>// option. This file may not be copied, modified, or distributed</span>
-<span class='comment'>// except according to those terms.</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2012 The Rust Project Developers.</span>
+<span class="comment">// Copyright 2015 Guillaume Gomez</span>
+<span class="comment">//</span>
+<span class="comment">// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
+<span class="comment">// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
+<span class="comment">// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your</span>
+<span class="comment">// option. This file may not be copied, modified, or distributed</span>
+<span class="comment">// except according to those terms.</span>
 
-<span class='doccomment'>//! Library to interface with chunks of memory allocated in C.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! It is often desirable to safely interface with memory allocated from C,</span>
-<span class='doccomment'>//! encapsulating the unsafety into allocation and destruction time.  Indeed,</span>
-<span class='doccomment'>//! allocating memory externally is currently the only way to give Rust shared</span>
-<span class='doccomment'>//! mut state with C programs that keep their own references; vectors are</span>
-<span class='doccomment'>//! unsuitable because they could be reallocated or moved at any time, and</span>
-<span class='doccomment'>//! importing C memory into a vector takes a one-time snapshot of the memory.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This module simplifies the usage of such external blocks of memory.  Memory</span>
-<span class='doccomment'>//! is encapsulated into an opaque object after creation; the lifecycle of the</span>
-<span class='doccomment'>//! memory can be optionally managed by Rust, if an appropriate destructor</span>
-<span class='doccomment'>//! closure is provided.  Safety is ensured by bounds-checking accesses, which</span>
-<span class='doccomment'>//! are marshalled through get and set functions.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! There are three unsafe functions: the two constructors, and the</span>
-<span class='doccomment'>//! unwrapping method. The constructors are unsafe for the</span>
-<span class='doccomment'>//! obvious reason (they act on a pointer that cannot be checked inside the</span>
-<span class='doccomment'>//! method), but `into_inner()` is somewhat more subtle in its unsafety.</span>
-<span class='doccomment'>//! It returns the contained pointer, but at the same time destroys the CVec</span>
-<span class='doccomment'>//! without running its destructor. This can be used to pass memory back to</span>
-<span class='doccomment'>//! C, but care must be taken that the ownership of underlying resources are</span>
-<span class='doccomment'>//! handled correctly, i.e. that allocated memory is eventually freed</span>
-<span class='doccomment'>//! if necessary.</span>
+<span class="doccomment">//! Library to interface with chunks of memory allocated in C.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! It is often desirable to safely interface with memory allocated from C,</span>
+<span class="doccomment">//! encapsulating the unsafety into allocation and destruction time.  Indeed,</span>
+<span class="doccomment">//! allocating memory externally is currently the only way to give Rust shared</span>
+<span class="doccomment">//! mut state with C programs that keep their own references; vectors are</span>
+<span class="doccomment">//! unsuitable because they could be reallocated or moved at any time, and</span>
+<span class="doccomment">//! importing C memory into a vector takes a one-time snapshot of the memory.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This module simplifies the usage of such external blocks of memory.  Memory</span>
+<span class="doccomment">//! is encapsulated into an opaque object after creation; the lifecycle of the</span>
+<span class="doccomment">//! memory can be optionally managed by Rust, if an appropriate destructor</span>
+<span class="doccomment">//! closure is provided.  Safety is ensured by bounds-checking accesses, which</span>
+<span class="doccomment">//! are marshalled through get and set functions.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! There are three unsafe functions: the two constructors, and the</span>
+<span class="doccomment">//! unwrapping method. The constructors are unsafe for the</span>
+<span class="doccomment">//! obvious reason (they act on a pointer that cannot be checked inside the</span>
+<span class="doccomment">//! method), but `into_inner()` is somewhat more subtle in its unsafety.</span>
+<span class="doccomment">//! It returns the contained pointer, but at the same time destroys the CVec</span>
+<span class="doccomment">//! without running its destructor. This can be used to pass memory back to</span>
+<span class="doccomment">//! C, but care must be taken that the ownership of underlying resources are</span>
+<span class="doccomment">//! handled correctly, i.e. that allocated memory is eventually freed</span>
+<span class="doccomment">//! if necessary.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Index</span>, <span class='ident'>IndexMut</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">slice</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{<span class="ident">Index</span>, <span class="ident">IndexMut</span>};
 
-<span class='doccomment'>/// The type representing a foreign chunk of memory</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>CVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='ident'>base</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>,
-    <span class='ident'>len</span>: <span class='ident'>usize</span>,
-    <span class='ident'>dtor</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>FnMut</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>)<span class='op'>&gt;&gt;</span>
+<span class="doccomment">/// The type representing a foreign chunk of memory</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CVec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="ident">base</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>,
+    <span class="ident">len</span>: <span class="ident">usize</span>,
+    <span class="ident">dtor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">FnMut</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>)<span class="op">&gt;&gt;</span>
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>CVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>mut</span> <span class='ident'>f</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>dtor</span>.<span class='ident'>take</span>() {
-            <span class='ident'>f</span>(<span class='self'>self</span>.<span class='ident'>base</span>);
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">CVec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">dtor</span>.<span class="ident">take</span>() {
+            <span class="ident">f</span>(<span class="self">self</span>.<span class="ident">base</span>);
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>CVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Create a `CVec` from a raw pointer to a buffer with a given length.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Panics if the given pointer is null. The returned vector will not attempt</span>
-    <span class='doccomment'>/// to deallocate the vector when dropped.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Arguments</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// * base - A unique pointer to a buffer</span>
-    <span class='doccomment'>/// * len - The number of elements in the buffer</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>base</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>CVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>base</span> <span class='op'>!=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>());
-        <span class='ident'>CVec</span> {
-            <span class='ident'>base</span>: <span class='ident'>base</span>,
-            <span class='ident'>len</span>: <span class='ident'>len</span>,
-            <span class='ident'>dtor</span>: <span class='prelude-val'>None</span>,
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">CVec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a `CVec` from a raw pointer to a buffer with a given length.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Panics if the given pointer is null. The returned vector will not attempt</span>
+    <span class="doccomment">/// to deallocate the vector when dropped.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * base - A unique pointer to a buffer</span>
+    <span class="doccomment">/// * len - The number of elements in the buffer</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">base</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">len</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">CVec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">base</span> <span class="op">!=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>());
+        <span class="ident">CVec</span> {
+            <span class="ident">base</span>: <span class="ident">base</span>,
+            <span class="ident">len</span>: <span class="ident">len</span>,
+            <span class="ident">dtor</span>: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class='doccomment'>/// Create a `CVec` from a foreign buffer, with a given length,</span>
-    <span class='doccomment'>/// and a function to run upon destruction.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Panics if the given pointer is null.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Arguments</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// * base - A unique pointer to a buffer</span>
-    <span class='doccomment'>/// * len - The number of elements in the buffer</span>
-    <span class='doccomment'>/// * dtor - A fn to run when the value is destructed, useful</span>
-    <span class='doccomment'>///          for freeing the buffer, etc. `base` will be passed</span>
-    <span class='doccomment'>///          to it as an argument.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>new_with_dtor</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>base</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>,
-                                   <span class='ident'>len</span>: <span class='ident'>usize</span>,
-                                   <span class='ident'>dtor</span>: <span class='ident'>F</span>)
-                                   <span class='op'>-&gt;</span> <span class='ident'>CVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>) <span class='op'>+</span> <span class='lifetime'>&#39;static</span>
+    <span class="doccomment">/// Create a `CVec` from a foreign buffer, with a given length,</span>
+    <span class="doccomment">/// and a function to run upon destruction.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Panics if the given pointer is null.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * base - A unique pointer to a buffer</span>
+    <span class="doccomment">/// * len - The number of elements in the buffer</span>
+    <span class="doccomment">/// * dtor - A fn to run when the value is destructed, useful</span>
+    <span class="doccomment">///          for freeing the buffer, etc. `base` will be passed</span>
+    <span class="doccomment">///          to it as an argument.</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new_with_dtor</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">base</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>,
+                                   <span class="ident">len</span>: <span class="ident">usize</span>,
+                                   <span class="ident">dtor</span>: <span class="ident">F</span>)
+                                   <span class="op">-&gt;</span> <span class="ident">CVec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>
     {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>base</span> <span class='op'>!=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>());
-        <span class='kw'>let</span> <span class='ident'>dtor</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>dtor</span>);
-        <span class='ident'>CVec</span> {
-            <span class='ident'>base</span>: <span class='ident'>base</span>,
-            <span class='ident'>len</span>: <span class='ident'>len</span>,
-            <span class='ident'>dtor</span>: <span class='prelude-val'>Some</span>(<span class='ident'>dtor</span>)
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">base</span> <span class="op">!=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>());
+        <span class="kw">let</span> <span class="ident">dtor</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">dtor</span>);
+        <span class="ident">CVec</span> {
+            <span class="ident">base</span>: <span class="ident">base</span>,
+            <span class="ident">len</span>: <span class="ident">len</span>,
+            <span class="ident">dtor</span>: <span class="prelude-val">Some</span>(<span class="ident">dtor</span>)
         }
     }
 
-    <span class='doccomment'>/// Retrieves an element at a given index, returning `None` if the requested</span>
-    <span class='doccomment'>/// index is greater than the length of the vector.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>ofs</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>ofs</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>len</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>.<span class='ident'>base</span>.<span class='ident'>offset</span>(<span class='ident'>ofs</span> <span class='kw'>as</span> <span class='ident'>isize</span>) })
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
+    <span class="doccomment">/// Retrieves an element at a given index, returning `None` if the requested</span>
+    <span class="doccomment">/// index is greater than the length of the vector.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">ofs</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">ofs</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">len</span> {
+            <span class="prelude-val">Some</span>(<span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">base</span>.<span class="ident">offset</span>(<span class="ident">ofs</span> <span class="kw">as</span> <span class="ident">isize</span>) })
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
         }
     }
 
-    <span class='doccomment'>/// Retrieves a mutable element at a given index, returning `None` if the</span>
-    <span class='doccomment'>/// requested index is greater than the length of the vector.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>ofs</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>ofs</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>len</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>base</span>.<span class='ident'>offset</span>(<span class='ident'>ofs</span> <span class='kw'>as</span> <span class='ident'>isize</span>) })
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
+    <span class="doccomment">/// Retrieves a mutable element at a given index, returning `None` if the</span>
+    <span class="doccomment">/// requested index is greater than the length of the vector.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ofs</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">ofs</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">len</span> {
+            <span class="prelude-val">Some</span>(<span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">base</span>.<span class="ident">offset</span>(<span class="ident">ofs</span> <span class="kw">as</span> <span class="ident">isize</span>) })
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
         }
     }
 
-    <span class='doccomment'>/// Unwrap the pointer without running the destructor</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This method retrieves the underlying pointer, and in the process</span>
-    <span class='doccomment'>/// destroys the CVec but without running the destructor. A use case</span>
-    <span class='doccomment'>/// would be transferring ownership of the buffer to a C function, as</span>
-    <span class='doccomment'>/// in this case you would not want to run the destructor.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that if you want to access the underlying pointer without</span>
-    <span class='doccomment'>/// cancelling the destructor, you can simply call `transmute` on the return</span>
-    <span class='doccomment'>/// value of `get(0)`.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>into_inner</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        <span class='self'>self</span>.<span class='ident'>dtor</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
-        <span class='self'>self</span>.<span class='ident'>base</span>
+    <span class="doccomment">/// Unwrap the pointer without running the destructor</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method retrieves the underlying pointer, and in the process</span>
+    <span class="doccomment">/// destroys the CVec but without running the destructor. A use case</span>
+    <span class="doccomment">/// would be transferring ownership of the buffer to a C function, as</span>
+    <span class="doccomment">/// in this case you would not want to run the destructor.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that if you want to access the underlying pointer without</span>
+    <span class="doccomment">/// cancelling the destructor, you can simply call `transmute` on the return</span>
+    <span class="doccomment">/// value of `get(0)`.</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">into_inner</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span> {
+        <span class="self">self</span>.<span class="ident">dtor</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="self">self</span>.<span class="ident">base</span>
     }
 
-    <span class='doccomment'>/// Returns the number of items in this vector.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> { <span class='self'>self</span>.<span class='ident'>len</span> }
+    <span class="doccomment">/// Returns the number of items in this vector.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> { <span class="self">self</span>.<span class="ident">len</span> }
 
-    <span class='doccomment'>/// Returns whether this vector is empty.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_empty</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='self'>self</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> }
+    <span class="doccomment">/// Returns whether this vector is empty.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> }
 
-    <span class='doccomment'>/// Convert to CSlice</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_cslice</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>CSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='ident'>CSlice</span> {
-            <span class='ident'>base</span>: <span class='self'>self</span>.<span class='ident'>base</span>,
-            <span class='ident'>len</span>: <span class='self'>self</span>.<span class='ident'>len</span>
-        }
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>AsRef</span><span class='op'>&lt;</span>[<span class='ident'>T</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>CVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// View the stored data as a slice.</span>
-    <span class='kw'>fn</span> <span class='ident'>as_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>] {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='self'>self</span>.<span class='ident'>base</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span>, <span class='self'>self</span>.<span class='ident'>len</span>)
+    <span class="doccomment">/// Convert to CSlice</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_cslice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">CSlice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="ident">CSlice</span> {
+            <span class="ident">base</span>: <span class="self">self</span>.<span class="ident">base</span>,
+            <span class="ident">len</span>: <span class="self">self</span>.<span class="ident">len</span>
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>AsMut</span><span class='op'>&lt;</span>[<span class='ident'>T</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>CVec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// View the stored data as a slice.</span>
-    <span class='kw'>fn</span> <span class='ident'>as_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>] {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='self'>self</span>.<span class='ident'>base</span>, <span class='self'>self</span>.<span class='ident'>len</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">T</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CVec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// View the stored data as a slice.</span>
+    <span class="kw">fn</span> <span class="ident">as_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">T</span>] {
+        <span class="kw">unsafe</span> {
+            <span class="ident">slice</span>::<span class="ident">from_raw_parts</span>(<span class="self">self</span>.<span class="ident">base</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span>, <span class="self">self</span>.<span class="ident">len</span>)
         }
     }
 }
 
-<span class='doccomment'>/// The type representing an &#39;unsafe&#39; foreign chunk of memory</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>CSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='ident'>base</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>,
-    <span class='ident'>len</span>: <span class='ident'>usize</span>
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>CSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Create a `CSlice` from a raw pointer to a buffer with a given length.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Panics if the given pointer is null. The returned vector will not attempt</span>
-    <span class='doccomment'>/// to deallocate the vector when dropped.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Arguments</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// * base - A raw pointer to a buffer</span>
-    <span class='doccomment'>/// * len - The number of elements in the buffer</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>base</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>CSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>base</span> <span class='op'>!=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>());
-        <span class='ident'>CSlice</span> {
-            <span class='ident'>base</span>: <span class='ident'>base</span>,
-            <span class='ident'>len</span>: <span class='ident'>len</span>
-        }
-    }
-
-    <span class='doccomment'>/// Retrieves an element at a given index, returning `None` if the requested</span>
-    <span class='doccomment'>/// index is greater than the length of the vector.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>ofs</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>ofs</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>len</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>.<span class='ident'>base</span>.<span class='ident'>offset</span>(<span class='ident'>ofs</span> <span class='kw'>as</span> <span class='ident'>isize</span>) })
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
-        }
-    }
-
-    <span class='doccomment'>/// Retrieves a mutable element at a given index, returning `None` if the</span>
-    <span class='doccomment'>/// requested index is greater than the length of the vector.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>ofs</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>ofs</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>len</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>base</span>.<span class='ident'>offset</span>(<span class='ident'>ofs</span> <span class='kw'>as</span> <span class='ident'>isize</span>) })
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
-        }
-    }
-
-    <span class='doccomment'>/// Returns the number of items in this vector.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> { <span class='self'>self</span>.<span class='ident'>len</span> }
-
-    <span class='doccomment'>/// Returns whether this vector is empty.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_empty</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='self'>self</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>AsRef</span><span class='op'>&lt;</span>[<span class='ident'>T</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>CSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// View the stored data as a slice.</span>
-    <span class='kw'>fn</span> <span class='ident'>as_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>] {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='self'>self</span>.<span class='ident'>base</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span>, <span class='self'>self</span>.<span class='ident'>len</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">AsMut</span><span class="op">&lt;</span>[<span class="ident">T</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CVec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// View the stored data as a slice.</span>
+    <span class="kw">fn</span> <span class="ident">as_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>] {
+        <span class="kw">unsafe</span> {
+            <span class="ident">slice</span>::<span class="ident">from_raw_parts_mut</span>(<span class="self">self</span>.<span class="ident">base</span>, <span class="self">self</span>.<span class="ident">len</span>)
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>AsMut</span><span class='op'>&lt;</span>[<span class='ident'>T</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>CSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// View the stored data as a slice.</span>
-    <span class='kw'>fn</span> <span class='ident'>as_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>] {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='self'>self</span>.<span class='ident'>base</span>, <span class='self'>self</span>.<span class='ident'>len</span>)
+<span class="doccomment">/// The type representing an &#39;unsafe&#39; foreign chunk of memory</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CSlice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="ident">base</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>,
+    <span class="ident">len</span>: <span class="ident">usize</span>
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">CSlice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a `CSlice` from a raw pointer to a buffer with a given length.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Panics if the given pointer is null. The returned vector will not attempt</span>
+    <span class="doccomment">/// to deallocate the vector when dropped.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * base - A raw pointer to a buffer</span>
+    <span class="doccomment">/// * len - The number of elements in the buffer</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">base</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">len</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">CSlice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">base</span> <span class="op">!=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>());
+        <span class="ident">CSlice</span> {
+            <span class="ident">base</span>: <span class="ident">base</span>,
+            <span class="ident">len</span>: <span class="ident">len</span>
+        }
+    }
+
+    <span class="doccomment">/// Retrieves an element at a given index, returning `None` if the requested</span>
+    <span class="doccomment">/// index is greater than the length of the vector.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">ofs</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">ofs</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">len</span> {
+            <span class="prelude-val">Some</span>(<span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">base</span>.<span class="ident">offset</span>(<span class="ident">ofs</span> <span class="kw">as</span> <span class="ident">isize</span>) })
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        }
+    }
+
+    <span class="doccomment">/// Retrieves a mutable element at a given index, returning `None` if the</span>
+    <span class="doccomment">/// requested index is greater than the length of the vector.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ofs</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">ofs</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">len</span> {
+            <span class="prelude-val">Some</span>(<span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">base</span>.<span class="ident">offset</span>(<span class="ident">ofs</span> <span class="kw">as</span> <span class="ident">isize</span>) })
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        }
+    }
+
+    <span class="doccomment">/// Returns the number of items in this vector.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> { <span class="self">self</span>.<span class="ident">len</span> }
+
+    <span class="doccomment">/// Returns whether this vector is empty.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">T</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CSlice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// View the stored data as a slice.</span>
+    <span class="kw">fn</span> <span class="ident">as_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">T</span>] {
+        <span class="kw">unsafe</span> {
+            <span class="ident">slice</span>::<span class="ident">from_raw_parts</span>(<span class="self">self</span>.<span class="ident">base</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">T</span>, <span class="self">self</span>.<span class="ident">len</span>)
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Index</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>CSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>T</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>index</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>_index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span> {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>_index</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>len</span>);
-        <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>.<span class='ident'>base</span>.<span class='ident'>offset</span>(<span class='ident'>_index</span> <span class='kw'>as</span> <span class='ident'>isize</span>) }
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">AsMut</span><span class="op">&lt;</span>[<span class="ident">T</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CSlice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// View the stored data as a slice.</span>
+    <span class="kw">fn</span> <span class="ident">as_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>] {
+        <span class="kw">unsafe</span> {
+            <span class="ident">slice</span>::<span class="ident">from_raw_parts_mut</span>(<span class="self">self</span>.<span class="ident">base</span>, <span class="self">self</span>.<span class="ident">len</span>)
+        }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>IndexMut</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>CSlice</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>index_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>_index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>_index</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>len</span>);
-        <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>base</span>.<span class='ident'>offset</span>(<span class='ident'>_index</span> <span class='kw'>as</span> <span class='ident'>isize</span>) }
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Index</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CSlice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span>;
+
+    <span class="kw">fn</span> <span class="ident">index</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">_index</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">len</span>);
+        <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">base</span>.<span class="ident">offset</span>(<span class="ident">_index</span> <span class="kw">as</span> <span class="ident">isize</span>) }
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">IndexMut</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CSlice</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">index_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_index</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">T</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">_index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">len</span>);
+        <span class="kw">unsafe</span> { <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">base</span>.<span class="ident">offset</span>(<span class="ident">_index</span> <span class="kw">as</span> <span class="ident">isize</span>) }
+    }
+}
 
-    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>CVec</span>, <span class='ident'>CSlice</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
 
-    <span class='comment'>// allocation of CVec</span>
-    <span class='kw'>fn</span> <span class='ident'>v_malloc</span>(<span class='ident'>n</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>CVec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>mem</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>malloc</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>size_t</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>;
-            <span class='ident'>CVec</span>::<span class='ident'>new_with_dtor</span>(<span class='ident'>mem</span>, <span class='ident'>n</span>, <span class='op'>|</span><span class='ident'>mem</span><span class='op'>|</span> { <span class='ident'>libc</span>::<span class='ident'>free</span>((<span class='ident'>mem</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _); })
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">CVec</span>, <span class="ident">CSlice</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+
+    <span class="comment">// allocation of CVec</span>
+    <span class="kw">fn</span> <span class="ident">v_malloc</span>(<span class="ident">n</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">CVec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">mem</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">malloc</span>(<span class="ident">n</span> <span class="kw">as</span> <span class="ident">libc</span>::<span class="ident">size_t</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>;
+            <span class="ident">CVec</span>::<span class="ident">new_with_dtor</span>(<span class="ident">mem</span>, <span class="ident">n</span>, <span class="op">|</span><span class="ident">mem</span><span class="op">|</span> { <span class="ident">libc</span>::<span class="ident">free</span>((<span class="ident">mem</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _); })
         }
     }
 
-    <span class='comment'>// allocation of CSlice</span>
-    <span class='kw'>fn</span> <span class='ident'>s_malloc</span>(<span class='ident'>n</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>CSlice</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>mem</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>malloc</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>size_t</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _;
-            <span class='ident'>CSlice</span>::<span class='ident'>new</span>(<span class='ident'>mem</span>, <span class='ident'>n</span>)
+    <span class="comment">// allocation of CSlice</span>
+    <span class="kw">fn</span> <span class="ident">s_malloc</span>(<span class="ident">n</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">CSlice</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">mem</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">malloc</span>(<span class="ident">n</span> <span class="kw">as</span> <span class="ident">libc</span>::<span class="ident">size_t</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _;
+            <span class="ident">CSlice</span>::<span class="ident">new</span>(<span class="ident">mem</span>, <span class="ident">n</span>)
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>vec_test_basic</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cv</span> <span class='op'>=</span> <span class='ident'>v_malloc</span>(<span class='number'>16</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">vec_test_basic</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cv</span> <span class="op">=</span> <span class="ident">v_malloc</span>(<span class="number">16</span>);
 
-        <span class='op'>*</span><span class='ident'>cv</span>.<span class='ident'>get_mut</span>(<span class='number'>3</span>).<span class='ident'>unwrap</span>() <span class='op'>=</span> <span class='number'>8</span>;
-        <span class='op'>*</span><span class='ident'>cv</span>.<span class='ident'>get_mut</span>(<span class='number'>4</span>).<span class='ident'>unwrap</span>() <span class='op'>=</span> <span class='number'>9</span>;
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>cv</span>.<span class='ident'>get</span>(<span class='number'>3</span>).<span class='ident'>unwrap</span>(), <span class='number'>8</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>cv</span>.<span class='ident'>get</span>(<span class='number'>4</span>).<span class='ident'>unwrap</span>(), <span class='number'>9</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cv</span>.<span class='ident'>len</span>(), <span class='number'>16</span>);
+        <span class="kw-2">*</span><span class="ident">cv</span>.<span class="ident">get_mut</span>(<span class="number">3</span>).<span class="ident">unwrap</span>() <span class="op">=</span> <span class="number">8</span>;
+        <span class="kw-2">*</span><span class="ident">cv</span>.<span class="ident">get_mut</span>(<span class="number">4</span>).<span class="ident">unwrap</span>() <span class="op">=</span> <span class="number">9</span>;
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">cv</span>.<span class="ident">get</span>(<span class="number">3</span>).<span class="ident">unwrap</span>(), <span class="number">8</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">cv</span>.<span class="ident">get</span>(<span class="number">4</span>).<span class="ident">unwrap</span>(), <span class="number">9</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cv</span>.<span class="ident">len</span>(), <span class="number">16</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>slice_test_basic</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cs</span> <span class='op'>=</span> <span class='ident'>s_malloc</span>(<span class='number'>16</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">slice_test_basic</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cs</span> <span class="op">=</span> <span class="ident">s_malloc</span>(<span class="number">16</span>);
 
-        <span class='ident'>cs</span>[<span class='number'>3</span>] <span class='op'>=</span> <span class='number'>8</span>;
-        <span class='ident'>cs</span>[<span class='number'>4</span>] <span class='op'>=</span> <span class='number'>9</span>;
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cs</span>[<span class='number'>3</span>], <span class='number'>8</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cs</span>[<span class='number'>4</span>], <span class='number'>9</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cs</span>.<span class='ident'>len</span>(), <span class='number'>16</span>);
+        <span class="ident">cs</span>[<span class="number">3</span>] <span class="op">=</span> <span class="number">8</span>;
+        <span class="ident">cs</span>[<span class="number">4</span>] <span class="op">=</span> <span class="number">9</span>;
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cs</span>[<span class="number">3</span>], <span class="number">8</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cs</span>[<span class="number">4</span>], <span class="number">9</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cs</span>.<span class="ident">len</span>(), <span class="number">16</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='attribute'>#[<span class='ident'>should_panic</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>vec_test_panic_at_null</span>() {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>CVec</span>::<span class='ident'>new</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>::<span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>(), <span class='number'>9</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="attribute">#[<span class="ident">should_panic</span>]</span>
+    <span class="kw">fn</span> <span class="ident">vec_test_panic_at_null</span>() {
+        <span class="kw">unsafe</span> {
+            <span class="ident">CVec</span>::<span class="ident">new</span>(<span class="ident">ptr</span>::<span class="ident">null_mut</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>(), <span class="number">9</span>);
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='attribute'>#[<span class='ident'>should_panic</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>slice_test_panic_at_null</span>() {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>CSlice</span>::<span class='ident'>new</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>::<span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>(), <span class='number'>9</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="attribute">#[<span class="ident">should_panic</span>]</span>
+    <span class="kw">fn</span> <span class="ident">slice_test_panic_at_null</span>() {
+        <span class="kw">unsafe</span> {
+            <span class="ident">CSlice</span>::<span class="ident">new</span>(<span class="ident">ptr</span>::<span class="ident">null_mut</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>(), <span class="number">9</span>);
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>vec_test_overrun_get</span>() {
-        <span class='kw'>let</span> <span class='ident'>cv</span> <span class='op'>=</span> <span class='ident'>v_malloc</span>(<span class='number'>16</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">vec_test_overrun_get</span>() {
+        <span class="kw">let</span> <span class="ident">cv</span> <span class="op">=</span> <span class="ident">v_malloc</span>(<span class="number">16</span>);
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cv</span>.<span class='ident'>get</span>(<span class='number'>17</span>).<span class='ident'>is_none</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">cv</span>.<span class="ident">get</span>(<span class="number">17</span>).<span class="ident">is_none</span>());
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='attribute'>#[<span class='ident'>should_panic</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>slice_test_overrun_get</span>() {
-        <span class='kw'>let</span> <span class='ident'>cs</span> <span class='op'>=</span> <span class='ident'>s_malloc</span>(<span class='number'>16</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="attribute">#[<span class="ident">should_panic</span>]</span>
+    <span class="kw">fn</span> <span class="ident">slice_test_overrun_get</span>() {
+        <span class="kw">let</span> <span class="ident">cs</span> <span class="op">=</span> <span class="ident">s_malloc</span>(<span class="number">16</span>);
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cs</span>[<span class='number'>17</span>] <span class='op'>==</span> <span class='number'>18</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">cs</span>[<span class="number">17</span>] <span class="op">==</span> <span class="number">18</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>vec_test_overrun_set</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cv</span> <span class='op'>=</span> <span class='ident'>v_malloc</span>(<span class='number'>16</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">vec_test_overrun_set</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cv</span> <span class="op">=</span> <span class="ident">v_malloc</span>(<span class="number">16</span>);
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cv</span>.<span class='ident'>get_mut</span>(<span class='number'>17</span>).<span class='ident'>is_none</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">cv</span>.<span class="ident">get_mut</span>(<span class="number">17</span>).<span class="ident">is_none</span>());
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>vec_test_unwrap</span>() {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>cv</span> <span class='op'>=</span> <span class='ident'>CVec</span>::<span class='ident'>new_with_dtor</span>(<span class='number'>1</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>isize</span>,
-                                         <span class='number'>0</span>,
-                                         <span class='op'>|</span>_<span class='op'>|</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Don&#39;t run this destructor!&quot;</span>));
-            <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>cv</span>.<span class='ident'>into_inner</span>();
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>p</span>, <span class='number'>1</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>isize</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">vec_test_unwrap</span>() {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">cv</span> <span class="op">=</span> <span class="ident">CVec</span>::<span class="ident">new_with_dtor</span>(<span class="number">1</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">isize</span>,
+                                         <span class="number">0</span>,
+                                         <span class="op">|</span>_<span class="op">|</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Don&#39;t run this destructor!&quot;</span>));
+            <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">cv</span>.<span class="ident">into_inner</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">p</span>, <span class="number">1</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">isize</span>);
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>vec_to_slice_test</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cv</span> <span class='op'>=</span> <span class='ident'>v_malloc</span>(<span class='number'>2</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">vec_to_slice_test</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cv</span> <span class="op">=</span> <span class="ident">v_malloc</span>(<span class="number">2</span>);
 
-        <span class='op'>*</span><span class='ident'>cv</span>.<span class='ident'>get_mut</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>() <span class='op'>=</span> <span class='number'>10</span>;
-        <span class='op'>*</span><span class='ident'>cv</span>.<span class='ident'>get_mut</span>(<span class='number'>1</span>).<span class='ident'>unwrap</span>() <span class='op'>=</span> <span class='number'>12</span>;
-        <span class='kw'>let</span> <span class='ident'>cs</span> <span class='op'>=</span> <span class='ident'>cv</span>.<span class='ident'>as_cslice</span>();
+        <span class="kw-2">*</span><span class="ident">cv</span>.<span class="ident">get_mut</span>(<span class="number">0</span>).<span class="ident">unwrap</span>() <span class="op">=</span> <span class="number">10</span>;
+        <span class="kw-2">*</span><span class="ident">cv</span>.<span class="ident">get_mut</span>(<span class="number">1</span>).<span class="ident">unwrap</span>() <span class="op">=</span> <span class="number">12</span>;
+        <span class="kw">let</span> <span class="ident">cs</span> <span class="op">=</span> <span class="ident">cv</span>.<span class="ident">as_cslice</span>();
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cs</span>[<span class='number'>0</span>], <span class='number'>10</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cs</span>[<span class='number'>1</span>], <span class='number'>12</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cs</span>[<span class="number">0</span>], <span class="number">10</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cs</span>[<span class="number">1</span>], <span class="number">12</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>slice_to_vec_test</span>() {
-        <span class='kw'>let</span> <span class='ident'>cv</span> <span class='op'>=</span> <span class='ident'>v_malloc</span>(<span class='number'>2</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>cs</span> <span class='op'>=</span> <span class='ident'>cv</span>.<span class='ident'>as_cslice</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">slice_to_vec_test</span>() {
+        <span class="kw">let</span> <span class="ident">cv</span> <span class="op">=</span> <span class="ident">v_malloc</span>(<span class="number">2</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cs</span> <span class="op">=</span> <span class="ident">cv</span>.<span class="ident">as_cslice</span>();
 
-        <span class='ident'>cs</span>[<span class='number'>0</span>] <span class='op'>=</span> <span class='number'>13</span>;
-        <span class='ident'>cs</span>[<span class='number'>1</span>] <span class='op'>=</span> <span class='number'>26</span>;
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>cv</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>(), <span class='number'>13</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>cv</span>.<span class='ident'>get</span>(<span class='number'>1</span>).<span class='ident'>unwrap</span>(), <span class='number'>26</span>);
+        <span class="ident">cs</span>[<span class="number">0</span>] <span class="op">=</span> <span class="number">13</span>;
+        <span class="ident">cs</span>[<span class="number">1</span>] <span class="op">=</span> <span class="number">26</span>;
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">cv</span>.<span class="ident">get</span>(<span class="number">0</span>).<span class="ident">unwrap</span>(), <span class="number">13</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">cv</span>.<span class="ident">get</span>(<span class="number">1</span>).<span class="ident">unwrap</span>(), <span class="number">26</span>);
     }
 }
 </pre>
@@ -838,11 +839,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "c_vec";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

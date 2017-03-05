@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/.cargo/git/checkouts/gdk-pixbuf-6408a438f82ec9df/master/src/pixbuf.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/gdk-pixbuf-6408a438f82ec9df/b1e6a38/src/pixbuf.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>pixbuf.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -614,576 +615,576 @@
 <span id="570">570</span>
 <span id="571">571</span>
 <span id="572">572</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2013-2016, The Gtk-rs Project Developers.</span>
-<span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2013-2016, The Gtk-rs Project Developers.</span>
+<span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
-<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_void</span>, <span class='ident'>c_uchar</span>};
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>translate</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>glib</span>::<span class='ident'>Error</span>;
-<span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">slice</span>;
+<span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_void</span>, <span class="ident">c_uchar</span>};
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">gdk_pixbuf_ffi</span> <span class="kw">as</span> <span class="ident">ffi</span>;
 
-<span class='kw'>use</span> {
-    <span class='ident'>Colorspace</span>,
-    <span class='ident'>InterpType</span>,
-    <span class='ident'>PixbufFormat</span>,
+<span class="kw">use</span> {
+    <span class="ident">Colorspace</span>,
+    <span class="ident">InterpType</span>,
+    <span class="ident">PixbufFormat</span>,
 };
 
-<span class='macro'>glib_wrapper</span><span class='macro'>!</span> {
-    <span class='doccomment'>/// This is the main structure in the gdk-pixbuf library. It is</span>
-    <span class='doccomment'>/// used to represent images. It contains information about the</span>
-    <span class='doccomment'>/// image&#39;s pixel data, its color space, bits per sample, width and</span>
-    <span class='doccomment'>/// height, and the rowstride (the number of bytes between the start of</span>
-    <span class='doccomment'>/// one row and the start of the next).</span>
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Pixbuf</span>(<span class='ident'>Object</span><span class='op'>&lt;</span><span class='ident'>ffi</span>::<span class='ident'>GdkPixbuf</span><span class='op'>&gt;</span>);
+<span class="macro">glib_wrapper</span><span class="macro">!</span> {
+    <span class="doccomment">/// This is the main structure in the gdk-pixbuf library. It is</span>
+    <span class="doccomment">/// used to represent images. It contains information about the</span>
+    <span class="doccomment">/// image&#39;s pixel data, its color space, bits per sample, width and</span>
+    <span class="doccomment">/// height, and the rowstride (the number of bytes between the start of</span>
+    <span class="doccomment">/// one row and the start of the next).</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pixbuf</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GdkPixbuf</span><span class="op">&gt;</span>);
 
-    <span class='kw'>match</span> <span class='kw'>fn</span> {
-        <span class='ident'>get_type</span> <span class='op'>=&gt;</span> <span class='op'>||</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_type</span>(),
+    <span class="kw">match</span> <span class="kw">fn</span> {
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_type</span>(),
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Pixbuf</span> {
-    <span class='doccomment'>/// Creates a new `Pixbuf` structure and allocates a buffer for it. The</span>
-    <span class='doccomment'>/// buffer has an optimal rowstride. Note that the buffer is not cleared;</span>
-    <span class='doccomment'>/// you will have to fill it completely yourself.</span>
-    <span class='doccomment'>/// ## `colorspace`</span>
-    <span class='doccomment'>/// Color space for image</span>
-    <span class='doccomment'>/// ## `has_alpha`</span>
-    <span class='doccomment'>/// Whether the image should have transparency information</span>
-    <span class='doccomment'>/// ## `bits_per_sample`</span>
-    <span class='doccomment'>/// Number of bits per color sample</span>
-    <span class='doccomment'>/// ## `width`</span>
-    <span class='doccomment'>/// Width of image in pixels, must be &gt; 0</span>
-    <span class='doccomment'>/// ## `height`</span>
-    <span class='doccomment'>/// Height of image in pixels, must be &gt; 0</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A newly-created `Pixbuf` with a reference count of 1, or</span>
-    <span class='doccomment'>/// `None` if not enough memory could be allocated for the image buffer.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>colorspace</span>: <span class='ident'>Colorspace</span>, <span class='ident'>has_alpha</span>: <span class='ident'>bool</span>, <span class='ident'>bits_per_sample</span>: <span class='ident'>i32</span>, <span class='ident'>width</span>: <span class='ident'>i32</span>,
-            <span class='ident'>height</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Pixbuf</span>, ()<span class='op'>&gt;</span> {
-        <span class='prelude-ty'>Option</span>::<span class='ident'>from_glib_full</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_new</span>(<span class='ident'>colorspace</span>, <span class='ident'>has_alpha</span>.<span class='ident'>to_glib</span>(),
-                                                   <span class='ident'>bits_per_sample</span>, <span class='ident'>width</span>, <span class='ident'>height</span>)).<span class='ident'>ok_or</span>(())
+<span class="kw">impl</span> <span class="ident">Pixbuf</span> {
+    <span class="doccomment">/// Creates a new `Pixbuf` structure and allocates a buffer for it. The</span>
+    <span class="doccomment">/// buffer has an optimal rowstride. Note that the buffer is not cleared;</span>
+    <span class="doccomment">/// you will have to fill it completely yourself.</span>
+    <span class="doccomment">/// ## `colorspace`</span>
+    <span class="doccomment">/// Color space for image</span>
+    <span class="doccomment">/// ## `has_alpha`</span>
+    <span class="doccomment">/// Whether the image should have transparency information</span>
+    <span class="doccomment">/// ## `bits_per_sample`</span>
+    <span class="doccomment">/// Number of bits per color sample</span>
+    <span class="doccomment">/// ## `width`</span>
+    <span class="doccomment">/// Width of image in pixels, must be &gt; 0</span>
+    <span class="doccomment">/// ## `height`</span>
+    <span class="doccomment">/// Height of image in pixels, must be &gt; 0</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A newly-created `Pixbuf` with a reference count of 1, or</span>
+    <span class="doccomment">/// `None` if not enough memory could be allocated for the image buffer.</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">colorspace</span>: <span class="ident">Colorspace</span>, <span class="ident">has_alpha</span>: <span class="ident">bool</span>, <span class="ident">bits_per_sample</span>: <span class="ident">i32</span>, <span class="ident">width</span>: <span class="ident">i32</span>,
+            <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pixbuf</span>, ()<span class="op">&gt;</span> {
+        <span class="prelude-ty">Option</span>::<span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_new</span>(<span class="ident">colorspace</span>, <span class="ident">has_alpha</span>.<span class="ident">to_glib</span>(),
+                                                   <span class="ident">bits_per_sample</span>, <span class="ident">width</span>, <span class="ident">height</span>)).<span class="ident">ok_or</span>(())
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_from_vec</span>(<span class='kw-2'>mut</span> <span class='ident'>vec</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='ident'>colorspace</span>: <span class='ident'>Colorspace</span>, <span class='ident'>has_alpha</span>: <span class='ident'>bool</span>,
-            <span class='ident'>bits_per_sample</span>: <span class='ident'>i32</span>, <span class='ident'>width</span>: <span class='ident'>i32</span>, <span class='ident'>height</span>: <span class='ident'>i32</span>, <span class='ident'>row_stride</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>Pixbuf</span> {
-        <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>destroy_vec</span>(_: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_uchar</span>, <span class='ident'>data</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) {
-            <span class='kw'>let</span> <span class='ident'>_vec</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>data</span>); <span class='comment'>// the vector will be destroyed now</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_vec</span>(<span class="kw-2">mut</span> <span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">colorspace</span>: <span class="ident">Colorspace</span>, <span class="ident">has_alpha</span>: <span class="ident">bool</span>,
+            <span class="ident">bits_per_sample</span>: <span class="ident">i32</span>, <span class="ident">width</span>: <span class="ident">i32</span>, <span class="ident">height</span>: <span class="ident">i32</span>, <span class="ident">row_stride</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">Pixbuf</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">destroy_vec</span>(_: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_uchar</span>, <span class="ident">data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) {
+            <span class="kw">let</span> <span class="ident">_vec</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">data</span>); <span class="comment">// the vector will be destroyed now</span>
         }
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>bits_per_sample</span> <span class='op'>==</span> <span class='number'>8</span>);
-        <span class='kw'>let</span> <span class='ident'>n_channels</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>has_alpha</span> { <span class='number'>4</span> } <span class='kw'>else</span> { <span class='number'>3</span> };
-        <span class='kw'>let</span> <span class='ident'>last_row_len</span> <span class='op'>=</span> <span class='ident'>width</span> <span class='op'>*</span> ((<span class='ident'>n_channels</span> <span class='op'>*</span> <span class='ident'>bits_per_sample</span> <span class='op'>+</span> <span class='number'>7</span>) <span class='op'>/</span> <span class='number'>8</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>vec</span>.<span class='ident'>len</span>() <span class='op'>==</span> ((<span class='ident'>height</span> <span class='op'>-</span> <span class='number'>1</span>) <span class='op'>*</span> <span class='ident'>row_stride</span> <span class='op'>+</span> <span class='ident'>last_row_len</span>) <span class='kw'>as</span> <span class='ident'>usize</span>);
-        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>vec</span>.<span class='ident'>as_mut_ptr</span>();
-        <span class='kw'>let</span> <span class='ident'>vec</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>vec</span>);
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_full</span>(
-                <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_new_from_data</span>(<span class='ident'>ptr</span>, <span class='ident'>colorspace</span>, <span class='ident'>has_alpha</span>.<span class='ident'>to_glib</span>(), <span class='ident'>bits_per_sample</span>,
-                    <span class='ident'>width</span>, <span class='ident'>height</span>, <span class='ident'>row_stride</span>, <span class='prelude-val'>Some</span>(<span class='ident'>destroy_vec</span>), <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>vec</span>)))
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">bits_per_sample</span> <span class="op">==</span> <span class="number">8</span>);
+        <span class="kw">let</span> <span class="ident">n_channels</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">has_alpha</span> { <span class="number">4</span> } <span class="kw">else</span> { <span class="number">3</span> };
+        <span class="kw">let</span> <span class="ident">last_row_len</span> <span class="op">=</span> <span class="ident">width</span> <span class="op">*</span> ((<span class="ident">n_channels</span> <span class="op">*</span> <span class="ident">bits_per_sample</span> <span class="op">+</span> <span class="number">7</span>) <span class="op">/</span> <span class="number">8</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">vec</span>.<span class="ident">len</span>() <span class="op">==</span> ((<span class="ident">height</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">*</span> <span class="ident">row_stride</span> <span class="op">+</span> <span class="ident">last_row_len</span>) <span class="kw">as</span> <span class="ident">usize</span>);
+        <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">as_mut_ptr</span>();
+        <span class="kw">let</span> <span class="ident">vec</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">vec</span>);
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_full</span>(
+                <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_new_from_data</span>(<span class="ident">ptr</span>, <span class="ident">colorspace</span>, <span class="ident">has_alpha</span>.<span class="ident">to_glib</span>(), <span class="ident">bits_per_sample</span>,
+                    <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">row_stride</span>, <span class="prelude-val">Some</span>(<span class="ident">destroy_vec</span>), <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">vec</span>)))
         }
     }
 
-    <span class='doccomment'>/// Creates a new pixbuf by loading an image from a file. The file format is</span>
-    <span class='doccomment'>/// detected automatically. If `None` is returned, then `error` will be set.</span>
-    <span class='doccomment'>/// Possible errors are in the `GDK_PIXBUF_ERROR` and `G_FILE_ERROR` domains.</span>
-    <span class='doccomment'>/// ## `filename`</span>
-    <span class='doccomment'>/// Name of file to load, in the GLib file name encoding</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A newly-created pixbuf with a reference count of 1, or `None` if</span>
-    <span class='doccomment'>/// any of several error conditions occurred: the file could not be opened,</span>
-    <span class='doccomment'>/// there was no loader for the file&#39;s format, there was not enough memory to</span>
-    <span class='doccomment'>/// allocate the image buffer, or the image file contained invalid data.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_from_file</span>(<span class='ident'>filename</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Pixbuf</span>, <span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
-        <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span>::<span class='ident'>gdk_pixbuf_new_from_file_utf8</span> <span class='kw'>as</span> <span class='ident'>gdk_pixbuf_new_from_file</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>windows</span>))]</span>
-        <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span>::<span class='ident'>gdk_pixbuf_new_from_file</span>;
+    <span class="doccomment">/// Creates a new pixbuf by loading an image from a file. The file format is</span>
+    <span class="doccomment">/// detected automatically. If `None` is returned, then `error` will be set.</span>
+    <span class="doccomment">/// Possible errors are in the `GDK_PIXBUF_ERROR` and `G_FILE_ERROR` domains.</span>
+    <span class="doccomment">/// ## `filename`</span>
+    <span class="doccomment">/// Name of file to load, in the GLib file name encoding</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A newly-created pixbuf with a reference count of 1, or `None` if</span>
+    <span class="doccomment">/// any of several error conditions occurred: the file could not be opened,</span>
+    <span class="doccomment">/// there was no loader for the file&#39;s format, there was not enough memory to</span>
+    <span class="doccomment">/// allocate the image buffer, or the image file contained invalid data.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_file</span>(<span class="ident">filename</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pixbuf</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+        <span class="kw">use</span> <span class="ident">gdk_pixbuf_ffi</span>::<span class="ident">gdk_pixbuf_new_from_file_utf8</span> <span class="kw">as</span> <span class="ident">gdk_pixbuf_new_from_file</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
+        <span class="kw">use</span> <span class="ident">gdk_pixbuf_ffi</span>::<span class="ident">gdk_pixbuf_new_from_file</span>;
 
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>error</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
-            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>gdk_pixbuf_new_from_file</span>(<span class='ident'>filename</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>error</span>);
-            <span class='kw'>if</span> <span class='ident'>error</span>.<span class='ident'>is_null</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span>))
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Err</span>(<span class='ident'>from_glib_full</span>(<span class='ident'>error</span>))
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">gdk_pixbuf_new_from_file</span>(<span class="ident">filename</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">error</span>);
+            <span class="kw">if</span> <span class="ident">error</span>.<span class="ident">is_null</span>() {
+                <span class="prelude-val">Ok</span>(<span class="ident">from_glib_full</span>(<span class="ident">ptr</span>))
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">from_glib_full</span>(<span class="ident">error</span>))
             }
         }
     }
 
-    <span class='doccomment'>/// Creates a new pixbuf by loading an image from a file.</span>
-    <span class='doccomment'>/// The file format is detected automatically. If `None` is returned, then</span>
-    <span class='doccomment'>/// `error` will be set. Possible errors are in the `GDK_PIXBUF_ERROR` and</span>
-    <span class='doccomment'>/// `G_FILE_ERROR` domains.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The image will be scaled to fit in the requested size, preserving</span>
-    <span class='doccomment'>/// the image&#39;s aspect ratio. Note that the returned pixbuf may be smaller</span>
-    <span class='doccomment'>/// than `width` x `height`, if the aspect ratio requires it. To load</span>
-    <span class='doccomment'>/// and image at the requested size, regardless of aspect ratio, use</span>
-    <span class='doccomment'>/// `Pixbuf::new_from_file_at_scale`.</span>
-    <span class='doccomment'>/// ## `filename`</span>
-    <span class='doccomment'>/// Name of file to load, in the GLib file name encoding</span>
-    <span class='doccomment'>/// ## `width`</span>
-    <span class='doccomment'>/// The width the image should have or -1 to not constrain the width</span>
-    <span class='doccomment'>/// ## `height`</span>
-    <span class='doccomment'>/// The height the image should have or -1 to not constrain the height</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A newly-created pixbuf with a reference count of 1, or</span>
-    <span class='doccomment'>/// `None` if any of several error conditions occurred: the file could not</span>
-    <span class='doccomment'>/// be opened, there was no loader for the file&#39;s format, there was not</span>
-    <span class='doccomment'>/// enough memory to allocate the image buffer, or the image file contained</span>
-    <span class='doccomment'>/// invalid data.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_from_file_at_size</span>(<span class='ident'>filename</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>width</span>: <span class='ident'>i32</span>, <span class='ident'>height</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Pixbuf</span>, <span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
-        <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span>::<span class='ident'>gdk_pixbuf_new_from_file_at_size_utf8</span>
-            <span class='kw'>as</span> <span class='ident'>gdk_pixbuf_new_from_file_at_size</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>windows</span>))]</span>
-        <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span>::<span class='ident'>gdk_pixbuf_new_from_file_at_size</span>;
+    <span class="doccomment">/// Creates a new pixbuf by loading an image from a file.</span>
+    <span class="doccomment">/// The file format is detected automatically. If `None` is returned, then</span>
+    <span class="doccomment">/// `error` will be set. Possible errors are in the `GDK_PIXBUF_ERROR` and</span>
+    <span class="doccomment">/// `G_FILE_ERROR` domains.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The image will be scaled to fit in the requested size, preserving</span>
+    <span class="doccomment">/// the image&#39;s aspect ratio. Note that the returned pixbuf may be smaller</span>
+    <span class="doccomment">/// than `width` x `height`, if the aspect ratio requires it. To load</span>
+    <span class="doccomment">/// and image at the requested size, regardless of aspect ratio, use</span>
+    <span class="doccomment">/// `Pixbuf::new_from_file_at_scale`.</span>
+    <span class="doccomment">/// ## `filename`</span>
+    <span class="doccomment">/// Name of file to load, in the GLib file name encoding</span>
+    <span class="doccomment">/// ## `width`</span>
+    <span class="doccomment">/// The width the image should have or -1 to not constrain the width</span>
+    <span class="doccomment">/// ## `height`</span>
+    <span class="doccomment">/// The height the image should have or -1 to not constrain the height</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A newly-created pixbuf with a reference count of 1, or</span>
+    <span class="doccomment">/// `None` if any of several error conditions occurred: the file could not</span>
+    <span class="doccomment">/// be opened, there was no loader for the file&#39;s format, there was not</span>
+    <span class="doccomment">/// enough memory to allocate the image buffer, or the image file contained</span>
+    <span class="doccomment">/// invalid data.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_file_at_size</span>(<span class="ident">filename</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">width</span>: <span class="ident">i32</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pixbuf</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+        <span class="kw">use</span> <span class="ident">gdk_pixbuf_ffi</span>::<span class="ident">gdk_pixbuf_new_from_file_at_size_utf8</span>
+            <span class="kw">as</span> <span class="ident">gdk_pixbuf_new_from_file_at_size</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
+        <span class="kw">use</span> <span class="ident">gdk_pixbuf_ffi</span>::<span class="ident">gdk_pixbuf_new_from_file_at_size</span>;
 
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>error</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
-            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>gdk_pixbuf_new_from_file_at_size</span>(<span class='ident'>filename</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>width</span>, <span class='ident'>height</span>,
-                <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>error</span>);
-            <span class='kw'>if</span> <span class='ident'>error</span>.<span class='ident'>is_null</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span>))
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Err</span>(<span class='ident'>from_glib_full</span>(<span class='ident'>error</span>))
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">gdk_pixbuf_new_from_file_at_size</span>(<span class="ident">filename</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">width</span>, <span class="ident">height</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">error</span>);
+            <span class="kw">if</span> <span class="ident">error</span>.<span class="ident">is_null</span>() {
+                <span class="prelude-val">Ok</span>(<span class="ident">from_glib_full</span>(<span class="ident">ptr</span>))
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">from_glib_full</span>(<span class="ident">error</span>))
             }
         }
     }
 
-    <span class='doccomment'>/// Creates a new pixbuf by loading an image from a file. The file format is</span>
-    <span class='doccomment'>/// detected automatically. If `None` is returned, then `error` will be set.</span>
-    <span class='doccomment'>/// Possible errors are in the `GDK_PIXBUF_ERROR` and `G_FILE_ERROR` domains.</span>
-    <span class='doccomment'>/// The image will be scaled to fit in the requested size, optionally preserving</span>
-    <span class='doccomment'>/// the image&#39;s aspect ratio.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// When preserving the aspect ratio, a `width` of -1 will cause the image</span>
-    <span class='doccomment'>/// to be scaled to the exact given height, and a `height` of -1 will cause</span>
-    <span class='doccomment'>/// the image to be scaled to the exact given width. When not preserving</span>
-    <span class='doccomment'>/// aspect ratio, a `width` or `height` of -1 means to not scale the image</span>
-    <span class='doccomment'>/// at all in that dimension. Negative values for `width` and `height` are</span>
-    <span class='doccomment'>/// allowed since 2.8.</span>
-    <span class='doccomment'>/// ## `filename`</span>
-    <span class='doccomment'>/// Name of file to load, in the GLib file name encoding</span>
-    <span class='doccomment'>/// ## `width`</span>
-    <span class='doccomment'>/// The width the image should have or -1 to not constrain the width</span>
-    <span class='doccomment'>/// ## `height`</span>
-    <span class='doccomment'>/// The height the image should have or -1 to not constrain the height</span>
-    <span class='doccomment'>/// ## `preserve_aspect_ratio`</span>
-    <span class='doccomment'>/// `true` to preserve the image&#39;s aspect ratio</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A newly-created pixbuf with a reference count of 1, or `None`</span>
-    <span class='doccomment'>/// if any of several error conditions occurred: the file could not be opened,</span>
-    <span class='doccomment'>/// there was no loader for the file&#39;s format, there was not enough memory to</span>
-    <span class='doccomment'>/// allocate the image buffer, or the image file contained invalid data.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_from_file_at_scale</span>(<span class='ident'>filename</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>width</span>: <span class='ident'>i32</span>, <span class='ident'>height</span>: <span class='ident'>i32</span>, <span class='ident'>preserve_aspect_ratio</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Pixbuf</span>, <span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
-        <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span>::<span class='ident'>gdk_pixbuf_new_from_file_at_scale_utf8</span>
-            <span class='kw'>as</span> <span class='ident'>gdk_pixbuf_new_from_file_at_scale</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>windows</span>))]</span>
-        <span class='kw'>use</span> <span class='ident'>gdk_pixbuf_ffi</span>::<span class='ident'>gdk_pixbuf_new_from_file_at_scale</span>;
+    <span class="doccomment">/// Creates a new pixbuf by loading an image from a file. The file format is</span>
+    <span class="doccomment">/// detected automatically. If `None` is returned, then `error` will be set.</span>
+    <span class="doccomment">/// Possible errors are in the `GDK_PIXBUF_ERROR` and `G_FILE_ERROR` domains.</span>
+    <span class="doccomment">/// The image will be scaled to fit in the requested size, optionally preserving</span>
+    <span class="doccomment">/// the image&#39;s aspect ratio.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// When preserving the aspect ratio, a `width` of -1 will cause the image</span>
+    <span class="doccomment">/// to be scaled to the exact given height, and a `height` of -1 will cause</span>
+    <span class="doccomment">/// the image to be scaled to the exact given width. When not preserving</span>
+    <span class="doccomment">/// aspect ratio, a `width` or `height` of -1 means to not scale the image</span>
+    <span class="doccomment">/// at all in that dimension. Negative values for `width` and `height` are</span>
+    <span class="doccomment">/// allowed since 2.8.</span>
+    <span class="doccomment">/// ## `filename`</span>
+    <span class="doccomment">/// Name of file to load, in the GLib file name encoding</span>
+    <span class="doccomment">/// ## `width`</span>
+    <span class="doccomment">/// The width the image should have or -1 to not constrain the width</span>
+    <span class="doccomment">/// ## `height`</span>
+    <span class="doccomment">/// The height the image should have or -1 to not constrain the height</span>
+    <span class="doccomment">/// ## `preserve_aspect_ratio`</span>
+    <span class="doccomment">/// `true` to preserve the image&#39;s aspect ratio</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A newly-created pixbuf with a reference count of 1, or `None`</span>
+    <span class="doccomment">/// if any of several error conditions occurred: the file could not be opened,</span>
+    <span class="doccomment">/// there was no loader for the file&#39;s format, there was not enough memory to</span>
+    <span class="doccomment">/// allocate the image buffer, or the image file contained invalid data.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_file_at_scale</span>(<span class="ident">filename</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">width</span>: <span class="ident">i32</span>, <span class="ident">height</span>: <span class="ident">i32</span>, <span class="ident">preserve_aspect_ratio</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pixbuf</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+        <span class="kw">use</span> <span class="ident">gdk_pixbuf_ffi</span>::<span class="ident">gdk_pixbuf_new_from_file_at_scale_utf8</span>
+            <span class="kw">as</span> <span class="ident">gdk_pixbuf_new_from_file_at_scale</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
+        <span class="kw">use</span> <span class="ident">gdk_pixbuf_ffi</span>::<span class="ident">gdk_pixbuf_new_from_file_at_scale</span>;
 
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>error</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
-            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>gdk_pixbuf_new_from_file_at_scale</span>(<span class='ident'>filename</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>width</span>, <span class='ident'>height</span>,
-                <span class='ident'>preserve_aspect_ratio</span>.<span class='ident'>to_glib</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>error</span>);
-            <span class='kw'>if</span> <span class='ident'>error</span>.<span class='ident'>is_null</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span>))
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Err</span>(<span class='ident'>from_glib_full</span>(<span class='ident'>error</span>))
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">gdk_pixbuf_new_from_file_at_scale</span>(<span class="ident">filename</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">width</span>, <span class="ident">height</span>,
+                <span class="ident">preserve_aspect_ratio</span>.<span class="ident">to_glib</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">error</span>);
+            <span class="kw">if</span> <span class="ident">error</span>.<span class="ident">is_null</span>() {
+                <span class="prelude-val">Ok</span>(<span class="ident">from_glib_full</span>(<span class="ident">ptr</span>))
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">from_glib_full</span>(<span class="ident">error</span>))
             }
         }
     }
 
-    <span class='doccomment'>/// Parses an image file far enough to determine its format and size.</span>
-    <span class='doccomment'>/// ## `filename`</span>
-    <span class='doccomment'>/// The name of the file to identify.</span>
-    <span class='doccomment'>/// ## `width`</span>
-    <span class='doccomment'>/// Return location for the width of the</span>
-    <span class='doccomment'>///  image, or `None`</span>
-    <span class='doccomment'>/// ## `height`</span>
-    <span class='doccomment'>/// Return location for the height of the</span>
-    <span class='doccomment'>///  image, or `None`</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A `PixbufFormat` describing</span>
-    <span class='doccomment'>///  the image format of the file or `None` if the image format wasn&#39;t</span>
-    <span class='doccomment'>///  recognized. The return value is owned by `Pixbuf` and should</span>
-    <span class='doccomment'>///  not be freed.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_file_info</span>(<span class='ident'>filename</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>width</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>i32</span>, <span class='ident'>height</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>i32</span>)
-            <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>PixbufFormat</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_full</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_file_info</span>(<span class='ident'>filename</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>width</span>, <span class='ident'>height</span>))
+    <span class="doccomment">/// Parses an image file far enough to determine its format and size.</span>
+    <span class="doccomment">/// ## `filename`</span>
+    <span class="doccomment">/// The name of the file to identify.</span>
+    <span class="doccomment">/// ## `width`</span>
+    <span class="doccomment">/// Return location for the width of the</span>
+    <span class="doccomment">///  image, or `None`</span>
+    <span class="doccomment">/// ## `height`</span>
+    <span class="doccomment">/// Return location for the height of the</span>
+    <span class="doccomment">///  image, or `None`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A `PixbufFormat` describing</span>
+    <span class="doccomment">///  the image format of the file or `None` if the image format wasn&#39;t</span>
+    <span class="doccomment">///  recognized. The return value is owned by `Pixbuf` and should</span>
+    <span class="doccomment">///  not be freed.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_file_info</span>(<span class="ident">filename</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">width</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">i32</span>, <span class="ident">height</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">i32</span>)
+            <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PixbufFormat</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_file_info</span>(<span class="ident">filename</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">width</span>, <span class="ident">height</span>))
         }
     }
 
-    <span class='doccomment'>/// Creates a new pixbuf by loading an image from an resource.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The file format is detected automatically. If `None` is returned, then</span>
-    <span class='doccomment'>/// `error` will be set.</span>
-    <span class='doccomment'>/// ## `resource_path`</span>
-    <span class='doccomment'>/// the path of the resource file</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A newly-created pixbuf, or `None` if any of several error</span>
-    <span class='doccomment'>/// conditions occurred: the file could not be opened, the image format is</span>
-    <span class='doccomment'>/// not supported, there was not enough memory to allocate the image buffer,</span>
-    <span class='doccomment'>/// the stream contained invalid data, or the operation was cancelled.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_from_resource</span>(<span class='ident'>resource_path</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Pixbuf</span>, <span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>error</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
-            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_new_from_resource</span>(<span class='ident'>resource_path</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>error</span>);
-            <span class='kw'>if</span> <span class='ident'>error</span>.<span class='ident'>is_null</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span>))
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Err</span>(<span class='ident'>from_glib_full</span>(<span class='ident'>error</span>))
+    <span class="doccomment">/// Creates a new pixbuf by loading an image from an resource.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The file format is detected automatically. If `None` is returned, then</span>
+    <span class="doccomment">/// `error` will be set.</span>
+    <span class="doccomment">/// ## `resource_path`</span>
+    <span class="doccomment">/// the path of the resource file</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A newly-created pixbuf, or `None` if any of several error</span>
+    <span class="doccomment">/// conditions occurred: the file could not be opened, the image format is</span>
+    <span class="doccomment">/// not supported, there was not enough memory to allocate the image buffer,</span>
+    <span class="doccomment">/// the stream contained invalid data, or the operation was cancelled.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_resource</span>(<span class="ident">resource_path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pixbuf</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_new_from_resource</span>(<span class="ident">resource_path</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">error</span>);
+            <span class="kw">if</span> <span class="ident">error</span>.<span class="ident">is_null</span>() {
+                <span class="prelude-val">Ok</span>(<span class="ident">from_glib_full</span>(<span class="ident">ptr</span>))
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">from_glib_full</span>(<span class="ident">error</span>))
             }
         }
     }
 
-    <span class='doccomment'>/// Creates a new pixbuf by loading an image from an resource.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The file format is detected automatically. If `None` is returned, then</span>
-    <span class='doccomment'>/// `error` will be set.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The image will be scaled to fit in the requested size, optionally</span>
-    <span class='doccomment'>/// preserving the image&#39;s aspect ratio. When preserving the aspect ratio,</span>
-    <span class='doccomment'>/// a `width` of -1 will cause the image to be scaled to the exact given</span>
-    <span class='doccomment'>/// height, and a `height` of -1 will cause the image to be scaled to the</span>
-    <span class='doccomment'>/// exact given width. When not preserving aspect ratio, a `width` or</span>
-    <span class='doccomment'>/// `height` of -1 means to not scale the image at all in that dimension.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The stream is not closed.</span>
-    <span class='doccomment'>/// ## `resource_path`</span>
-    <span class='doccomment'>/// the path of the resource file</span>
-    <span class='doccomment'>/// ## `width`</span>
-    <span class='doccomment'>/// The width the image should have or -1 to not constrain the width</span>
-    <span class='doccomment'>/// ## `height`</span>
-    <span class='doccomment'>/// The height the image should have or -1 to not constrain the height</span>
-    <span class='doccomment'>/// ## `preserve_aspect_ratio`</span>
-    <span class='doccomment'>/// `true` to preserve the image&#39;s aspect ratio</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A newly-created pixbuf, or `None` if any of several error</span>
-    <span class='doccomment'>/// conditions occurred: the file could not be opened, the image format is</span>
-    <span class='doccomment'>/// not supported, there was not enough memory to allocate the image buffer,</span>
-    <span class='doccomment'>/// the stream contained invalid data, or the operation was cancelled.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_from_resource_at_scale</span>(<span class='ident'>resource_path</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>width</span>: <span class='ident'>i32</span>, <span class='ident'>height</span>: <span class='ident'>i32</span>, <span class='ident'>preserve_aspect_ratio</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Pixbuf</span>, <span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>error</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
-            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_new_from_resource_at_scale</span>(<span class='ident'>resource_path</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>,
-                <span class='ident'>width</span>, <span class='ident'>height</span>, <span class='ident'>preserve_aspect_ratio</span>.<span class='ident'>to_glib</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>error</span>);
-            <span class='kw'>if</span> <span class='ident'>error</span>.<span class='ident'>is_null</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>from_glib_full</span>(<span class='ident'>ptr</span>))
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Err</span>(<span class='ident'>from_glib_full</span>(<span class='ident'>error</span>))
+    <span class="doccomment">/// Creates a new pixbuf by loading an image from an resource.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The file format is detected automatically. If `None` is returned, then</span>
+    <span class="doccomment">/// `error` will be set.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The image will be scaled to fit in the requested size, optionally</span>
+    <span class="doccomment">/// preserving the image&#39;s aspect ratio. When preserving the aspect ratio,</span>
+    <span class="doccomment">/// a `width` of -1 will cause the image to be scaled to the exact given</span>
+    <span class="doccomment">/// height, and a `height` of -1 will cause the image to be scaled to the</span>
+    <span class="doccomment">/// exact given width. When not preserving aspect ratio, a `width` or</span>
+    <span class="doccomment">/// `height` of -1 means to not scale the image at all in that dimension.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The stream is not closed.</span>
+    <span class="doccomment">/// ## `resource_path`</span>
+    <span class="doccomment">/// the path of the resource file</span>
+    <span class="doccomment">/// ## `width`</span>
+    <span class="doccomment">/// The width the image should have or -1 to not constrain the width</span>
+    <span class="doccomment">/// ## `height`</span>
+    <span class="doccomment">/// The height the image should have or -1 to not constrain the height</span>
+    <span class="doccomment">/// ## `preserve_aspect_ratio`</span>
+    <span class="doccomment">/// `true` to preserve the image&#39;s aspect ratio</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A newly-created pixbuf, or `None` if any of several error</span>
+    <span class="doccomment">/// conditions occurred: the file could not be opened, the image format is</span>
+    <span class="doccomment">/// not supported, there was not enough memory to allocate the image buffer,</span>
+    <span class="doccomment">/// the stream contained invalid data, or the operation was cancelled.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_resource_at_scale</span>(<span class="ident">resource_path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">width</span>: <span class="ident">i32</span>, <span class="ident">height</span>: <span class="ident">i32</span>, <span class="ident">preserve_aspect_ratio</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pixbuf</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_new_from_resource_at_scale</span>(<span class="ident">resource_path</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">preserve_aspect_ratio</span>.<span class="ident">to_glib</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">error</span>);
+            <span class="kw">if</span> <span class="ident">error</span>.<span class="ident">is_null</span>() {
+                <span class="prelude-val">Ok</span>(<span class="ident">from_glib_full</span>(<span class="ident">ptr</span>))
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">from_glib_full</span>(<span class="ident">error</span>))
             }
         }
     }
 
-    <span class='doccomment'>/// Creates a new pixbuf which represents a sub-region of `self`.</span>
-    <span class='doccomment'>/// The new pixbuf shares its pixels with the original pixbuf, so</span>
-    <span class='doccomment'>/// writing to one affects both. The new pixbuf holds a reference to</span>
-    <span class='doccomment'>/// `self`, so `self` will not be finalized until the new</span>
-    <span class='doccomment'>/// pixbuf is finalized.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that if `self` is read-only, this function will force it</span>
-    <span class='doccomment'>/// to be mutable.</span>
-    <span class='doccomment'>/// ## `src_x`</span>
-    <span class='doccomment'>/// X coord in `self`</span>
-    <span class='doccomment'>/// ## `src_y`</span>
-    <span class='doccomment'>/// Y coord in `self`</span>
-    <span class='doccomment'>/// ## `width`</span>
-    <span class='doccomment'>/// width of region in `self`</span>
-    <span class='doccomment'>/// ## `height`</span>
-    <span class='doccomment'>/// height of region in `self`</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// a new pixbuf</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_subpixbuf</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>src_x</span>: <span class='ident'>i32</span>, <span class='ident'>src_y</span>: <span class='ident'>i32</span>, <span class='ident'>width</span>: <span class='ident'>i32</span>, <span class='ident'>height</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>Pixbuf</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_full</span>(
-                <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_new_subpixbuf</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>src_x</span>, <span class='ident'>src_y</span>, <span class='ident'>width</span>, <span class='ident'>height</span>))
+    <span class="doccomment">/// Creates a new pixbuf which represents a sub-region of `self`.</span>
+    <span class="doccomment">/// The new pixbuf shares its pixels with the original pixbuf, so</span>
+    <span class="doccomment">/// writing to one affects both. The new pixbuf holds a reference to</span>
+    <span class="doccomment">/// `self`, so `self` will not be finalized until the new</span>
+    <span class="doccomment">/// pixbuf is finalized.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that if `self` is read-only, this function will force it</span>
+    <span class="doccomment">/// to be mutable.</span>
+    <span class="doccomment">/// ## `src_x`</span>
+    <span class="doccomment">/// X coord in `self`</span>
+    <span class="doccomment">/// ## `src_y`</span>
+    <span class="doccomment">/// Y coord in `self`</span>
+    <span class="doccomment">/// ## `width`</span>
+    <span class="doccomment">/// width of region in `self`</span>
+    <span class="doccomment">/// ## `height`</span>
+    <span class="doccomment">/// height of region in `self`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a new pixbuf</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_subpixbuf</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">src_x</span>: <span class="ident">i32</span>, <span class="ident">src_y</span>: <span class="ident">i32</span>, <span class="ident">width</span>: <span class="ident">i32</span>, <span class="ident">height</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">Pixbuf</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_full</span>(
+                <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_new_subpixbuf</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">src_x</span>, <span class="ident">src_y</span>, <span class="ident">width</span>, <span class="ident">height</span>))
         }
     }
 
-    <span class='doccomment'>/// Queries the color space of a pixbuf.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Color space.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_colorspace</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Colorspace</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_colorspace</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Queries the color space of a pixbuf.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Color space.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_colorspace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Colorspace</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_colorspace</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Queries the number of channels of a pixbuf.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Number of channels.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_n_channels</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_n_channels</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Queries the number of channels of a pixbuf.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Number of channels.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_n_channels</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_n_channels</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Queries whether a pixbuf has an alpha channel (opacity information).</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `true` if it has an alpha channel, `false` otherwise.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_has_alpha</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>from_glib</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_has_alpha</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>)) }
+    <span class="doccomment">/// Queries whether a pixbuf has an alpha channel (opacity information).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `true` if it has an alpha channel, `false` otherwise.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_has_alpha</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">unsafe</span> { <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_has_alpha</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class='doccomment'>/// Queries the number of bits per color sample in a pixbuf.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Number of bits per color sample.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_bits_per_sample</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_bits_per_sample</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Queries the number of bits per color sample in a pixbuf.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Number of bits per color sample.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_bits_per_sample</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_bits_per_sample</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Queries a pointer to the pixel data of a pixbuf.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A pointer to the pixbuf&#39;s pixel data.</span>
-    <span class='doccomment'>/// Please see the section on [image data](image-data) for information</span>
-    <span class='doccomment'>/// about how the pixel data is stored in memory.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This function will cause an implicit copy of the pixbuf data if the</span>
-    <span class='doccomment'>/// pixbuf was created from read-only data.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_pixels</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>] {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_pixels_with_length</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>len</span>);
-        <span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='ident'>ptr</span>, <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>usize</span>)
+    <span class="doccomment">/// Queries a pointer to the pixel data of a pixbuf.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A pointer to the pixbuf&#39;s pixel data.</span>
+    <span class="doccomment">/// Please see the section on [image data](image-data) for information</span>
+    <span class="doccomment">/// about how the pixel data is stored in memory.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function will cause an implicit copy of the pixbuf data if the</span>
+    <span class="doccomment">/// pixbuf was created from read-only data.</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">get_pixels</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">len</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_pixels_with_length</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">len</span>);
+        <span class="ident">slice</span>::<span class="ident">from_raw_parts_mut</span>(<span class="ident">ptr</span>, <span class="ident">len</span> <span class="kw">as</span> <span class="ident">usize</span>)
     }
 
-    <span class='doccomment'>/// Queries the width of a pixbuf.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Width in pixels.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_width</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_width</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Queries the width of a pixbuf.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Width in pixels.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_width</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Queries the height of a pixbuf.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Height in pixels.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_height</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_height</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Queries the height of a pixbuf.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Height in pixels.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_height</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Queries the rowstride of a pixbuf, which is the number of bytes between</span>
-    <span class='doccomment'>/// the start of a row and the start of the next row.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Distance between row starts.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_rowstride</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_rowstride</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) }
+    <span class="doccomment">/// Queries the rowstride of a pixbuf, which is the number of bytes between</span>
+    <span class="doccomment">/// the start of a row and the start of the next row.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Distance between row starts.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_rowstride</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_rowstride</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class='doccomment'>/// Returns the length of the pixel data, in bytes.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The length of the pixel data.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_byte_length</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_byte_length</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>) <span class='kw'>as</span> <span class='ident'>usize</span> }
+    <span class="doccomment">/// Returns the length of the pixel data, in bytes.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The length of the pixel data.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_byte_length</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_byte_length</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) <span class="kw">as</span> <span class="ident">usize</span> }
     }
 
-    <span class='doccomment'>/// Looks up `key` in the list of options that may have been attached to the</span>
-    <span class='doccomment'>/// `self` when it was loaded, or that may have been attached by another</span>
-    <span class='doccomment'>/// function using `gdk_pixbuf_set_option`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// For instance, the ANI loader provides &quot;Title&quot; and &quot;Artist&quot; options.</span>
-    <span class='doccomment'>/// The ICO, XBM, and XPM loaders provide &quot;x_hot&quot; and &quot;y_hot&quot; hot-spot</span>
-    <span class='doccomment'>/// options for cursor definitions. The PNG loader provides the tEXt ancillary</span>
-    <span class='doccomment'>/// chunk key/value pairs as options. Since 2.12, the TIFF and JPEG loaders</span>
-    <span class='doccomment'>/// return an &quot;orientation&quot; option string that corresponds to the embedded</span>
-    <span class='doccomment'>/// TIFF/Exif orientation tag (if present). Since 2.32, the TIFF loader sets</span>
-    <span class='doccomment'>/// the &quot;multipage&quot; option string to &quot;yes&quot; when a multi-page TIFF is loaded.</span>
-    <span class='doccomment'>/// Since 2.32 the JPEG and PNG loaders set &quot;x-dpi&quot; and &quot;y-dpi&quot; if the file</span>
-    <span class='doccomment'>/// contains image density information in dots per inch.</span>
-    <span class='doccomment'>/// ## `key`</span>
-    <span class='doccomment'>/// a nul-terminated string.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// the value associated with `key`. This is a nul-terminated</span>
-    <span class='doccomment'>/// string that should not be freed or `None` if `key` was not found.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_option</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>from_glib_none</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_get_option</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>key</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>))
+    <span class="doccomment">/// Looks up `key` in the list of options that may have been attached to the</span>
+    <span class="doccomment">/// `self` when it was loaded, or that may have been attached by another</span>
+    <span class="doccomment">/// function using `gdk_pixbuf_set_option`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For instance, the ANI loader provides &quot;Title&quot; and &quot;Artist&quot; options.</span>
+    <span class="doccomment">/// The ICO, XBM, and XPM loaders provide &quot;x_hot&quot; and &quot;y_hot&quot; hot-spot</span>
+    <span class="doccomment">/// options for cursor definitions. The PNG loader provides the tEXt ancillary</span>
+    <span class="doccomment">/// chunk key/value pairs as options. Since 2.12, the TIFF and JPEG loaders</span>
+    <span class="doccomment">/// return an &quot;orientation&quot; option string that corresponds to the embedded</span>
+    <span class="doccomment">/// TIFF/Exif orientation tag (if present). Since 2.32, the TIFF loader sets</span>
+    <span class="doccomment">/// the &quot;multipage&quot; option string to &quot;yes&quot; when a multi-page TIFF is loaded.</span>
+    <span class="doccomment">/// Since 2.32 the JPEG and PNG loaders set &quot;x-dpi&quot; and &quot;y-dpi&quot; if the file</span>
+    <span class="doccomment">/// contains image density information in dots per inch.</span>
+    <span class="doccomment">/// ## `key`</span>
+    <span class="doccomment">/// a nul-terminated string.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// the value associated with `key`. This is a nul-terminated</span>
+    <span class="doccomment">/// string that should not be freed or `None` if `key` was not found.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_option</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_get_option</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">key</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
         }
     }
 
-    <span class='doccomment'>/// Create a new `Pixbuf` containing a copy of `self` scaled to</span>
-    <span class='doccomment'>/// `dest_width` x `dest_height`. Leaves `self` unaffected. `interp_type`</span>
-    <span class='doccomment'>/// should be `InterpType::Nearest` if you want maximum speed (but when</span>
-    <span class='doccomment'>/// scaling down `InterpType::Nearest` is usually unusably ugly). The</span>
-    <span class='doccomment'>/// default `interp_type` should be `InterpType::Bilinear` which offers</span>
-    <span class='doccomment'>/// reasonable quality and speed.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// You can scale a sub-portion of `self` by creating a sub-pixbuf</span>
-    <span class='doccomment'>/// pointing into `self`; see `Pixbuf::new_subpixbuf`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// For more complicated scaling/compositing see `Pixbuf::scale`</span>
-    <span class='doccomment'>/// and `Pixbuf::composite`.</span>
-    <span class='doccomment'>/// ## `dest_width`</span>
-    <span class='doccomment'>/// the width of destination image</span>
-    <span class='doccomment'>/// ## `dest_height`</span>
-    <span class='doccomment'>/// the height of destination image</span>
-    <span class='doccomment'>/// ## `interp_type`</span>
-    <span class='doccomment'>/// the interpolation type for the transformation.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// the new `Pixbuf`, or `None` if not enough memory could be</span>
-    <span class='doccomment'>/// allocated for it.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>scale_simple</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dest_width</span>: <span class='ident'>i32</span>, <span class='ident'>dest_height</span>: <span class='ident'>i32</span>, <span class='ident'>interp_type</span>: <span class='ident'>InterpType</span>)
-        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Pixbuf</span>, ()<span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='prelude-ty'>Option</span>::<span class='ident'>from_glib_full</span>(<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_scale_simple</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>dest_width</span>,
-                                                                <span class='ident'>dest_height</span>, <span class='ident'>interp_type</span>)).<span class='ident'>ok_or</span>(())
+    <span class="doccomment">/// Create a new `Pixbuf` containing a copy of `self` scaled to</span>
+    <span class="doccomment">/// `dest_width` x `dest_height`. Leaves `self` unaffected. `interp_type`</span>
+    <span class="doccomment">/// should be `InterpType::Nearest` if you want maximum speed (but when</span>
+    <span class="doccomment">/// scaling down `InterpType::Nearest` is usually unusably ugly). The</span>
+    <span class="doccomment">/// default `interp_type` should be `InterpType::Bilinear` which offers</span>
+    <span class="doccomment">/// reasonable quality and speed.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// You can scale a sub-portion of `self` by creating a sub-pixbuf</span>
+    <span class="doccomment">/// pointing into `self`; see `Pixbuf::new_subpixbuf`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For more complicated scaling/compositing see `Pixbuf::scale`</span>
+    <span class="doccomment">/// and `Pixbuf::composite`.</span>
+    <span class="doccomment">/// ## `dest_width`</span>
+    <span class="doccomment">/// the width of destination image</span>
+    <span class="doccomment">/// ## `dest_height`</span>
+    <span class="doccomment">/// the height of destination image</span>
+    <span class="doccomment">/// ## `interp_type`</span>
+    <span class="doccomment">/// the interpolation type for the transformation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// the new `Pixbuf`, or `None` if not enough memory could be</span>
+    <span class="doccomment">/// allocated for it.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scale_simple</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dest_width</span>: <span class="ident">i32</span>, <span class="ident">dest_height</span>: <span class="ident">i32</span>, <span class="ident">interp_type</span>: <span class="ident">InterpType</span>)
+        <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pixbuf</span>, ()<span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="prelude-ty">Option</span>::<span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_scale_simple</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">dest_width</span>,
+                                                                <span class="ident">dest_height</span>, <span class="ident">interp_type</span>)).<span class="ident">ok_or</span>(())
         }
     }
 
-    <span class='doccomment'>/// Creates a transformation of the source image `self` by scaling by</span>
-    <span class='doccomment'>/// `scale_x` and `scale_y` then translating by `offset_x` and `offset_y`,</span>
-    <span class='doccomment'>/// then renders the rectangle (`dest_x`, `dest_y`, `dest_width`,</span>
-    <span class='doccomment'>/// `dest_height`) of the resulting image onto the destination image</span>
-    <span class='doccomment'>/// replacing the previous contents.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Try to use `Pixbuf::scale_simple` first, this function is</span>
-    <span class='doccomment'>/// the industrial-strength power tool you can fall back to if</span>
-    <span class='doccomment'>/// `Pixbuf::scale_simple` isn&#39;t powerful enough.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the source rectangle overlaps the destination rectangle on the</span>
-    <span class='doccomment'>/// same pixbuf, it will be overwritten during the scaling which</span>
-    <span class='doccomment'>/// results in rendering artifacts.</span>
-    <span class='doccomment'>/// ## `dest`</span>
-    <span class='doccomment'>/// the `Pixbuf` into which to render the results</span>
-    <span class='doccomment'>/// ## `dest_x`</span>
-    <span class='doccomment'>/// the left coordinate for region to render</span>
-    <span class='doccomment'>/// ## `dest_y`</span>
-    <span class='doccomment'>/// the top coordinate for region to render</span>
-    <span class='doccomment'>/// ## `dest_width`</span>
-    <span class='doccomment'>/// the width of the region to render</span>
-    <span class='doccomment'>/// ## `dest_height`</span>
-    <span class='doccomment'>/// the height of the region to render</span>
-    <span class='doccomment'>/// ## `offset_x`</span>
-    <span class='doccomment'>/// the offset in the X direction (currently rounded to an integer)</span>
-    <span class='doccomment'>/// ## `offset_y`</span>
-    <span class='doccomment'>/// the offset in the Y direction (currently rounded to an integer)</span>
-    <span class='doccomment'>/// ## `scale_x`</span>
-    <span class='doccomment'>/// the scale factor in the X direction</span>
-    <span class='doccomment'>/// ## `scale_y`</span>
-    <span class='doccomment'>/// the scale factor in the Y direction</span>
-    <span class='doccomment'>/// ## `interp_type`</span>
-    <span class='doccomment'>/// the interpolation type for the transformation.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>scale</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pixbuf</span>, <span class='ident'>dest_x</span>: <span class='ident'>i32</span>, <span class='ident'>dest_y</span>: <span class='ident'>i32</span>, <span class='ident'>dest_width</span>: <span class='ident'>i32</span>, <span class='ident'>dest_height</span>: <span class='ident'>i32</span>,
-                 <span class='ident'>offset_x</span>: <span class='ident'>f64</span>, <span class='ident'>offset_y</span>: <span class='ident'>f64</span>, <span class='ident'>scale_x</span>: <span class='ident'>f64</span>, <span class='ident'>scale_y</span>: <span class='ident'>f64</span>,
-                 <span class='ident'>interp_type</span>: <span class='ident'>InterpType</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_scale</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>dest</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>dest_x</span>, <span class='ident'>dest_y</span>,
-                                  <span class='ident'>dest_width</span>, <span class='ident'>dest_height</span>, <span class='ident'>offset_x</span>, <span class='ident'>offset_y</span>, <span class='ident'>scale_x</span>, <span class='ident'>scale_y</span>,
-                                  <span class='ident'>interp_type</span>);
+    <span class="doccomment">/// Creates a transformation of the source image `self` by scaling by</span>
+    <span class="doccomment">/// `scale_x` and `scale_y` then translating by `offset_x` and `offset_y`,</span>
+    <span class="doccomment">/// then renders the rectangle (`dest_x`, `dest_y`, `dest_width`,</span>
+    <span class="doccomment">/// `dest_height`) of the resulting image onto the destination image</span>
+    <span class="doccomment">/// replacing the previous contents.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Try to use `Pixbuf::scale_simple` first, this function is</span>
+    <span class="doccomment">/// the industrial-strength power tool you can fall back to if</span>
+    <span class="doccomment">/// `Pixbuf::scale_simple` isn&#39;t powerful enough.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the source rectangle overlaps the destination rectangle on the</span>
+    <span class="doccomment">/// same pixbuf, it will be overwritten during the scaling which</span>
+    <span class="doccomment">/// results in rendering artifacts.</span>
+    <span class="doccomment">/// ## `dest`</span>
+    <span class="doccomment">/// the `Pixbuf` into which to render the results</span>
+    <span class="doccomment">/// ## `dest_x`</span>
+    <span class="doccomment">/// the left coordinate for region to render</span>
+    <span class="doccomment">/// ## `dest_y`</span>
+    <span class="doccomment">/// the top coordinate for region to render</span>
+    <span class="doccomment">/// ## `dest_width`</span>
+    <span class="doccomment">/// the width of the region to render</span>
+    <span class="doccomment">/// ## `dest_height`</span>
+    <span class="doccomment">/// the height of the region to render</span>
+    <span class="doccomment">/// ## `offset_x`</span>
+    <span class="doccomment">/// the offset in the X direction (currently rounded to an integer)</span>
+    <span class="doccomment">/// ## `offset_y`</span>
+    <span class="doccomment">/// the offset in the Y direction (currently rounded to an integer)</span>
+    <span class="doccomment">/// ## `scale_x`</span>
+    <span class="doccomment">/// the scale factor in the X direction</span>
+    <span class="doccomment">/// ## `scale_y`</span>
+    <span class="doccomment">/// the scale factor in the Y direction</span>
+    <span class="doccomment">/// ## `interp_type`</span>
+    <span class="doccomment">/// the interpolation type for the transformation.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scale</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="ident">Pixbuf</span>, <span class="ident">dest_x</span>: <span class="ident">i32</span>, <span class="ident">dest_y</span>: <span class="ident">i32</span>, <span class="ident">dest_width</span>: <span class="ident">i32</span>, <span class="ident">dest_height</span>: <span class="ident">i32</span>,
+                 <span class="ident">offset_x</span>: <span class="ident">f64</span>, <span class="ident">offset_y</span>: <span class="ident">f64</span>, <span class="ident">scale_x</span>: <span class="ident">f64</span>, <span class="ident">scale_y</span>: <span class="ident">f64</span>,
+                 <span class="ident">interp_type</span>: <span class="ident">InterpType</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_scale</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">dest</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">dest_x</span>, <span class="ident">dest_y</span>,
+                                  <span class="ident">dest_width</span>, <span class="ident">dest_height</span>, <span class="ident">offset_x</span>, <span class="ident">offset_y</span>, <span class="ident">scale_x</span>, <span class="ident">scale_y</span>,
+                                  <span class="ident">interp_type</span>);
         }
     }
 
-    <span class='doccomment'>/// Creates a transformation of the source image `self` by scaling by</span>
-    <span class='doccomment'>/// `scale_x` and `scale_y` then translating by `offset_x` and `offset_y`.</span>
-    <span class='doccomment'>/// This gives an image in the coordinates of the destination pixbuf.</span>
-    <span class='doccomment'>/// The rectangle (`dest_x`, `dest_y`, `dest_width`, `dest_height`)</span>
-    <span class='doccomment'>/// is then composited onto the corresponding rectangle of the</span>
-    <span class='doccomment'>/// original destination image.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// When the destination rectangle contains parts not in the source</span>
-    <span class='doccomment'>/// image, the data at the edges of the source image is replicated</span>
-    <span class='doccomment'>/// to infinity.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ![](composite.png)</span>
-    <span class='doccomment'>/// ## `dest`</span>
-    <span class='doccomment'>/// the `Pixbuf` into which to render the results</span>
-    <span class='doccomment'>/// ## `dest_x`</span>
-    <span class='doccomment'>/// the left coordinate for region to render</span>
-    <span class='doccomment'>/// ## `dest_y`</span>
-    <span class='doccomment'>/// the top coordinate for region to render</span>
-    <span class='doccomment'>/// ## `dest_width`</span>
-    <span class='doccomment'>/// the width of the region to render</span>
-    <span class='doccomment'>/// ## `dest_height`</span>
-    <span class='doccomment'>/// the height of the region to render</span>
-    <span class='doccomment'>/// ## `offset_x`</span>
-    <span class='doccomment'>/// the offset in the X direction (currently rounded to an integer)</span>
-    <span class='doccomment'>/// ## `offset_y`</span>
-    <span class='doccomment'>/// the offset in the Y direction (currently rounded to an integer)</span>
-    <span class='doccomment'>/// ## `scale_x`</span>
-    <span class='doccomment'>/// the scale factor in the X direction</span>
-    <span class='doccomment'>/// ## `scale_y`</span>
-    <span class='doccomment'>/// the scale factor in the Y direction</span>
-    <span class='doccomment'>/// ## `interp_type`</span>
-    <span class='doccomment'>/// the interpolation type for the transformation.</span>
-    <span class='doccomment'>/// ## `overall_alpha`</span>
-    <span class='doccomment'>/// overall alpha for source image (0..255)</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>composite</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='ident'>Pixbuf</span>, <span class='ident'>dest_x</span>: <span class='ident'>i32</span>, <span class='ident'>dest_y</span>: <span class='ident'>i32</span>, <span class='ident'>dest_width</span>: <span class='ident'>i32</span>,
-                     <span class='ident'>dest_height</span>: <span class='ident'>i32</span>, <span class='ident'>offset_x</span>: <span class='ident'>f64</span>, <span class='ident'>offset_y</span>: <span class='ident'>f64</span>, <span class='ident'>scale_x</span>: <span class='ident'>f64</span>, <span class='ident'>scale_y</span>: <span class='ident'>f64</span>,
-                     <span class='ident'>interp_type</span>: <span class='ident'>InterpType</span>, <span class='ident'>overall_alpha</span>: <span class='ident'>i32</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_composite</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>dest</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>, <span class='ident'>dest_x</span>, <span class='ident'>dest_y</span>,
-                                      <span class='ident'>dest_width</span>, <span class='ident'>dest_height</span>, <span class='ident'>offset_x</span>, <span class='ident'>offset_y</span>, <span class='ident'>scale_x</span>,
-                                      <span class='ident'>scale_y</span>, <span class='ident'>interp_type</span>, <span class='ident'>overall_alpha</span>);
+    <span class="doccomment">/// Creates a transformation of the source image `self` by scaling by</span>
+    <span class="doccomment">/// `scale_x` and `scale_y` then translating by `offset_x` and `offset_y`.</span>
+    <span class="doccomment">/// This gives an image in the coordinates of the destination pixbuf.</span>
+    <span class="doccomment">/// The rectangle (`dest_x`, `dest_y`, `dest_width`, `dest_height`)</span>
+    <span class="doccomment">/// is then composited onto the corresponding rectangle of the</span>
+    <span class="doccomment">/// original destination image.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// When the destination rectangle contains parts not in the source</span>
+    <span class="doccomment">/// image, the data at the edges of the source image is replicated</span>
+    <span class="doccomment">/// to infinity.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ![](composite.png)</span>
+    <span class="doccomment">/// ## `dest`</span>
+    <span class="doccomment">/// the `Pixbuf` into which to render the results</span>
+    <span class="doccomment">/// ## `dest_x`</span>
+    <span class="doccomment">/// the left coordinate for region to render</span>
+    <span class="doccomment">/// ## `dest_y`</span>
+    <span class="doccomment">/// the top coordinate for region to render</span>
+    <span class="doccomment">/// ## `dest_width`</span>
+    <span class="doccomment">/// the width of the region to render</span>
+    <span class="doccomment">/// ## `dest_height`</span>
+    <span class="doccomment">/// the height of the region to render</span>
+    <span class="doccomment">/// ## `offset_x`</span>
+    <span class="doccomment">/// the offset in the X direction (currently rounded to an integer)</span>
+    <span class="doccomment">/// ## `offset_y`</span>
+    <span class="doccomment">/// the offset in the Y direction (currently rounded to an integer)</span>
+    <span class="doccomment">/// ## `scale_x`</span>
+    <span class="doccomment">/// the scale factor in the X direction</span>
+    <span class="doccomment">/// ## `scale_y`</span>
+    <span class="doccomment">/// the scale factor in the Y direction</span>
+    <span class="doccomment">/// ## `interp_type`</span>
+    <span class="doccomment">/// the interpolation type for the transformation.</span>
+    <span class="doccomment">/// ## `overall_alpha`</span>
+    <span class="doccomment">/// overall alpha for source image (0..255)</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">composite</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="ident">Pixbuf</span>, <span class="ident">dest_x</span>: <span class="ident">i32</span>, <span class="ident">dest_y</span>: <span class="ident">i32</span>, <span class="ident">dest_width</span>: <span class="ident">i32</span>,
+                     <span class="ident">dest_height</span>: <span class="ident">i32</span>, <span class="ident">offset_x</span>: <span class="ident">f64</span>, <span class="ident">offset_y</span>: <span class="ident">f64</span>, <span class="ident">scale_x</span>: <span class="ident">f64</span>, <span class="ident">scale_y</span>: <span class="ident">f64</span>,
+                     <span class="ident">interp_type</span>: <span class="ident">InterpType</span>, <span class="ident">overall_alpha</span>: <span class="ident">i32</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_composite</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">dest</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">dest_x</span>, <span class="ident">dest_y</span>,
+                                      <span class="ident">dest_width</span>, <span class="ident">dest_height</span>, <span class="ident">offset_x</span>, <span class="ident">offset_y</span>, <span class="ident">scale_x</span>,
+                                      <span class="ident">scale_y</span>, <span class="ident">interp_type</span>, <span class="ident">overall_alpha</span>);
         }
     }
 
-    <span class='doccomment'>/// Flips a pixbuf horizontally or vertically and returns the</span>
-    <span class='doccomment'>/// result in a new pixbuf.</span>
-    <span class='doccomment'>/// ## `horizontal`</span>
-    <span class='doccomment'>/// `true` to flip horizontally, `false` to flip vertically</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Returns</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// the new `Pixbuf`, or `None`</span>
-    <span class='doccomment'>/// if not enough memory could be allocated for it.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>flip</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>horizontal</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Pixbuf</span>, ()<span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='prelude-ty'>Option</span>::<span class='ident'>from_glib_full</span>((<span class='ident'>ffi</span>::<span class='ident'>gdk_pixbuf_flip</span>(<span class='self'>self</span>.<span class='ident'>to_glib_none</span>().<span class='number'>0</span>,
-                                                         <span class='ident'>horizontal</span>.<span class='ident'>to_glib</span>()))).<span class='ident'>ok_or</span>(())
+    <span class="doccomment">/// Flips a pixbuf horizontally or vertically and returns the</span>
+    <span class="doccomment">/// result in a new pixbuf.</span>
+    <span class="doccomment">/// ## `horizontal`</span>
+    <span class="doccomment">/// `true` to flip horizontally, `false` to flip vertically</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// the new `Pixbuf`, or `None`</span>
+    <span class="doccomment">/// if not enough memory could be allocated for it.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flip</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">horizontal</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pixbuf</span>, ()<span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="prelude-ty">Option</span>::<span class="ident">from_glib_full</span>((<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_flip</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                                                         <span class="ident">horizontal</span>.<span class="ident">to_glib</span>()))).<span class="ident">ok_or</span>(())
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>put_pixel</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>x</span>: <span class='ident'>i32</span>, <span class='ident'>y</span>: <span class='ident'>i32</span>, <span class='ident'>red</span>: <span class='ident'>u8</span>, <span class='ident'>green</span>: <span class='ident'>u8</span>, <span class='ident'>blue</span>: <span class='ident'>u8</span>, <span class='ident'>alpha</span>: <span class='ident'>u8</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>n_channels</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>get_n_channels</span>();
-            <span class='kw'>let</span> <span class='ident'>rowstride</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>get_rowstride</span>();
-            <span class='kw'>let</span> <span class='ident'>pixels</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>get_pixels</span>();
-            <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> (<span class='ident'>y</span> <span class='op'>*</span> <span class='ident'>rowstride</span> <span class='op'>+</span> <span class='ident'>x</span> <span class='op'>*</span> <span class='ident'>n_channels</span>) <span class='kw'>as</span> <span class='ident'>usize</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">put_pixel</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>: <span class="ident">i32</span>, <span class="ident">y</span>: <span class="ident">i32</span>, <span class="ident">red</span>: <span class="ident">u8</span>, <span class="ident">green</span>: <span class="ident">u8</span>, <span class="ident">blue</span>: <span class="ident">u8</span>, <span class="ident">alpha</span>: <span class="ident">u8</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">n_channels</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_n_channels</span>();
+            <span class="kw">let</span> <span class="ident">rowstride</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_rowstride</span>();
+            <span class="kw">let</span> <span class="ident">pixels</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_pixels</span>();
+            <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> (<span class="ident">y</span> <span class="op">*</span> <span class="ident">rowstride</span> <span class="op">+</span> <span class="ident">x</span> <span class="op">*</span> <span class="ident">n_channels</span>) <span class="kw">as</span> <span class="ident">usize</span>;
 
-            <span class='ident'>pixels</span>[<span class='ident'>pos</span>] <span class='op'>=</span> <span class='ident'>red</span>;
-            <span class='ident'>pixels</span>[<span class='ident'>pos</span> <span class='op'>+</span> <span class='number'>1</span>] <span class='op'>=</span> <span class='ident'>green</span>;
-            <span class='ident'>pixels</span>[<span class='ident'>pos</span> <span class='op'>+</span> <span class='number'>2</span>] <span class='op'>=</span> <span class='ident'>blue</span>;
-            <span class='ident'>pixels</span>[<span class='ident'>pos</span> <span class='op'>+</span> <span class='number'>3</span>] <span class='op'>=</span> <span class='ident'>alpha</span>;
+            <span class="ident">pixels</span>[<span class="ident">pos</span>] <span class="op">=</span> <span class="ident">red</span>;
+            <span class="ident">pixels</span>[<span class="ident">pos</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">=</span> <span class="ident">green</span>;
+            <span class="ident">pixels</span>[<span class="ident">pos</span> <span class="op">+</span> <span class="number">2</span>] <span class="op">=</span> <span class="ident">blue</span>;
+            <span class="ident">pixels</span>[<span class="ident">pos</span> <span class="op">+</span> <span class="number">3</span>] <span class="op">=</span> <span class="ident">alpha</span>;
         }
     }
 }
@@ -1244,11 +1245,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "gdk_pixbuf";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

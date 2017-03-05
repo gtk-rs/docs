@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/user/.cargo/git/checkouts/gio-a4b825b310a073b9/master/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/gio-a4b825b310a073b9/14bee75/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -79,44 +80,52 @@
 <span id="35">35</span>
 <span id="36">36</span>
 <span id="37">37</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2013-2016, The Gtk-rs Project Developers.</span>
-<span class='comment'>// See the COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright 2013-2016, The Gtk-rs Project Developers.</span>
+<span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>bitflags</span>;
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>glib</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">bitflags</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">glib</span>;
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>gio_sys</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>glib_sys</span> <span class='kw'>as</span> <span class='ident'>glib_ffi</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>gobject_sys</span> <span class='kw'>as</span> <span class='ident'>gobject_ffi</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gio_sys</span> <span class="kw">as</span> <span class="ident">ffi</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">glib_sys</span> <span class="kw">as</span> <span class="ident">glib_ffi</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gobject_sys</span> <span class="kw">as</span> <span class="ident">gobject_ffi</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>glib</span>::{
-    <span class='ident'>Error</span>,
-    <span class='ident'>Object</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">glib</span>::{
+    <span class="ident">Error</span>,
+    <span class="ident">Object</span>,
 };
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>auto</span>::<span class='op'>*</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>resources</span>::{
-    <span class='ident'>resources_register</span>,
-    <span class='ident'>resources_unregister</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">auto</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">resources</span>::{
+    <span class="ident">resources_register</span>,
+    <span class="ident">resources_unregister</span>,
 };
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>prelude</span> {
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>auto</span>::<span class='ident'>traits</span>::<span class='op'>*</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">signal</span> {
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">signal</span>::<span class="ident">Inhibit</span>;
 }
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>callback_guard</span> {
-    () <span class='op'>=&gt;</span> (
-        <span class='kw'>let</span> <span class='ident'>_guard</span> <span class='op'>=</span> ::<span class='ident'>glib</span>::<span class='ident'>CallbackGuard</span>::<span class='ident'>new</span>();
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">prelude</span> {
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">auto</span>::<span class="ident">traits</span>::<span class="kw-2">*</span>;
+}
+
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">callback_guard</span> {
+    () <span class="op">=&gt;</span> (
+        <span class="kw">let</span> <span class="ident">_guard</span> <span class="op">=</span> ::<span class="ident">glib</span>::<span class="ident">CallbackGuard</span>::<span class="ident">new</span>();
     )
 }
 
-<span class='kw'>mod</span> <span class='ident'>auto</span>;
-<span class='kw'>mod</span> <span class='ident'>resources</span>;
+<span class="kw">mod</span> <span class="ident">auto</span>;
+<span class="kw">mod</span> <span class="ident">resources</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -174,11 +183,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "gio";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>
