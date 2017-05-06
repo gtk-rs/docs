@@ -1,10 +1,10 @@
 (function() {var implementors = {};
 implementors["cairo"] = [];
-implementors["gdk"] = [];
+implementors["gdk"] = ["impl <a class=\"trait\" href=\"glib/translate/trait.GlibPtrDefault.html\" title=\"trait glib::translate::GlibPtrDefault\">GlibPtrDefault</a> for <a class=\"struct\" href=\"gdk/struct.Atom.html\" title=\"struct gdk::Atom\">Atom</a>",];
 implementors["gdk_pixbuf"] = [];
 implementors["gio"] = [];
 implementors["glib"] = [];
-implementors["gtk"] = [];
+implementors["gtk"] = ["impl <a class=\"trait\" href=\"glib/translate/trait.GlibPtrDefault.html\" title=\"trait glib::translate::GlibPtrDefault\">GlibPtrDefault</a> for <a class=\"struct\" href=\"gdk/atom/struct.Atom.html\" title=\"struct gdk::atom::Atom\">Atom</a>",];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);
