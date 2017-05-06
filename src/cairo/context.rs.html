@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/cairo-e6055a6d391c3fc9/6d49b3c/src/context.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/eap/.cargo/registry/src/github.com-1ecc6299db9ec823/cairo-rs-0.1.3/src/context.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>context.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">   1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1518,6 +1518,30 @@
 <span id="1473">1473</span>
 <span id="1474">1474</span>
 <span id="1475">1475</span>
+<span id="1476">1476</span>
+<span id="1477">1477</span>
+<span id="1478">1478</span>
+<span id="1479">1479</span>
+<span id="1480">1480</span>
+<span id="1481">1481</span>
+<span id="1482">1482</span>
+<span id="1483">1483</span>
+<span id="1484">1484</span>
+<span id="1485">1485</span>
+<span id="1486">1486</span>
+<span id="1487">1487</span>
+<span id="1488">1488</span>
+<span id="1489">1489</span>
+<span id="1490">1490</span>
+<span id="1491">1491</span>
+<span id="1492">1492</span>
+<span id="1493">1493</span>
+<span id="1494">1494</span>
+<span id="1495">1495</span>
+<span id="1496">1496</span>
+<span id="1497">1497</span>
+<span id="1498">1498</span>
+<span id="1499">1499</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -1525,12 +1549,14 @@
 
 <span class="doccomment">//! The cairo drawing context</span>
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;glib&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">c_vec</span>::<span class="ident">CVec</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">transmute</span>;
 <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_double</span>, <span class="ident">c_int</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">CString</span>;
 <span class="kw">use</span> ::<span class="ident">paths</span>::<span class="ident">Path</span>;
-<span class="kw">use</span> ::<span class="ident">fonts</span>::{<span class="ident">TextExtents</span>, <span class="ident">TextCluster</span>, <span class="ident">FontExtents</span>, <span class="ident">ScaledFont</span>, <span class="ident">FontOptions</span>, <span class="ident">FontFace</span>, <span class="ident">Glyph</span>};
+<span class="kw">use</span> ::<span class="ident">font</span>::{<span class="ident">TextExtents</span>, <span class="ident">TextCluster</span>, <span class="ident">FontExtents</span>, <span class="ident">ScaledFont</span>, <span class="ident">FontOptions</span>, <span class="ident">FontFace</span>, <span class="ident">Glyph</span>};
 <span class="kw">use</span> ::<span class="ident">matrices</span>::{<span class="ident">Matrix</span>, <span class="ident">MatrixTrait</span>};
 <span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">enums</span>::{
     <span class="ident">FontSlant</span>,
@@ -1564,6 +1590,7 @@
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Context</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_t</span>);
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;glib&quot;</span>)]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ToGlibPtr</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_t</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Context</span> {
     <span class="kw">type</span> <span class="ident">Storage</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Context</span>;
 
@@ -1573,20 +1600,19 @@
     }
 }
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;glib&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">FromGlibPtrNone</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_t</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Context</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_none</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_t</span>) <span class="op">-&gt;</span> <span class="ident">Context</span> {
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">ptr</span>.<span class="ident">is_null</span>());
-        <span class="ident">ffi</span>::<span class="ident">cairo_reference</span>(<span class="ident">ptr</span>);
-        <span class="ident">Context</span>(<span class="ident">ptr</span>)
+        <span class="self">Self</span>::<span class="ident">from_raw_none</span>(<span class="ident">ptr</span>)
     }
 }
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;glib&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">FromGlibPtrFull</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_t</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Context</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_full</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_t</span>) <span class="op">-&gt;</span> <span class="ident">Context</span> {
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">ptr</span>.<span class="ident">is_null</span>());
-        <span class="ident">Context</span>(<span class="ident">ptr</span>)
+        <span class="self">Self</span>::<span class="ident">from_raw_full</span>(<span class="ident">ptr</span>)
     }
 }
 
@@ -1598,7 +1624,7 @@
 
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Context</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Context</span> {
-        <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
+        <span class="kw">unsafe</span> { <span class="self">Self</span>::<span class="ident">from_raw_none</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 }
 
@@ -1609,6 +1635,24 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw_none</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_t</span>) <span class="op">-&gt;</span> <span class="ident">Context</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">ptr</span>.<span class="ident">is_null</span>());
+        <span class="ident">ffi</span>::<span class="ident">cairo_reference</span>(<span class="ident">ptr</span>);
+        <span class="ident">Context</span>(<span class="ident">ptr</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw_full</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_t</span>) <span class="op">-&gt;</span> <span class="ident">Context</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">ptr</span>.<span class="ident">is_null</span>());
+        <span class="ident">Context</span>(<span class="ident">ptr</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_raw_none</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_t</span> {
+        <span class="self">self</span>.<span class="number">0</span>
+    }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ensure_status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="self">self</span>.<span class="ident">status</span>().<span class="ident">ensure_valid</span>();
     }
@@ -1622,7 +1666,7 @@
     <span class="doccomment">/// it if you don&#39;t need to maintain a separate reference to it.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Surface</span><span class="op">&gt;&gt;</span>(<span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Context</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">cairo_create</span>(<span class="ident">target</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="self">Self</span>::<span class="ident">from_raw_full</span>(<span class="ident">ffi</span>::<span class="ident">cairo_create</span>(<span class="ident">target</span>.<span class="ident">as_ref</span>().<span class="ident">to_raw_none</span>()))
         }
     }
 
@@ -1660,7 +1704,7 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_target</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Surface</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_target</span>(<span class="self">self</span>.<span class="number">0</span>))
+            <span class="ident">Surface</span>::<span class="ident">from_raw_none</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_target</span>(<span class="self">self</span>.<span class="number">0</span>))
         }
     }
 
@@ -1749,7 +1793,7 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_group_target</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Surface</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_group_target</span>(<span class="self">self</span>.<span class="number">0</span>))
+            <span class="ident">Surface</span>::<span class="ident">from_raw_none</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_group_target</span>(<span class="self">self</span>.<span class="number">0</span>))
         }
     }
 
@@ -1807,7 +1851,7 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_source_surface</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Surface</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="ident">x</span>: <span class="ident">f64</span>, <span class="ident">y</span>: <span class="ident">f64</span>) {
-        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_set_source_surface</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">x</span>, <span class="ident">y</span>); }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_set_source_surface</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">surface</span>.<span class="ident">as_ref</span>().<span class="ident">to_raw_none</span>(), <span class="ident">x</span>, <span class="ident">y</span>); }
     }
 
     <span class="doccomment">/// Set the antialiasing mode of the rasterizer used for drawing shapes. This value</span>
@@ -2503,7 +2547,7 @@
     <span class="doccomment">/// Context::set_font_face().</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select_font_face</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">family</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">slant</span>: <span class="ident">FontSlant</span>, <span class="ident">weight</span>: <span class="ident">FontWeight</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_select_font_face</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">family</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">slant</span>, <span class="ident">weight</span>)
+            <span class="ident">ffi</span>::<span class="ident">cairo_select_font_face</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">family</span>).<span class="ident">unwrap</span>().<span class="ident">as_ptr</span>(), <span class="ident">slant</span>, <span class="ident">weight</span>)
         }
     }
 
@@ -2540,9 +2584,9 @@
     <span class="doccomment">/// derived by merging these options with the options derived from underlying surface;</span>
     <span class="doccomment">/// if the value in options has a default value (like Antialias::Default), then the value</span>
     <span class="doccomment">/// from the surface is used.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_font_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">options</span>: <span class="ident">FontOptions</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_font_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">FontOptions</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_set_font_options</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">options</span>.<span class="ident">get_ptr</span>())
+            <span class="ident">ffi</span>::<span class="ident">cairo_set_font_options</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">options</span>.<span class="ident">to_raw_none</span>())
         }
     }
 
@@ -2552,7 +2596,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_font_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontOptions</span> {
         <span class="kw">let</span> <span class="ident">out</span> <span class="op">=</span> <span class="ident">FontOptions</span>::<span class="ident">new</span>();
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_get_font_options</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">out</span>.<span class="ident">get_ptr</span>());
+            <span class="ident">ffi</span>::<span class="ident">cairo_get_font_options</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">out</span>.<span class="ident">to_raw_none</span>());
         }
         <span class="ident">out</span>
     }
@@ -2561,14 +2605,14 @@
     <span class="doccomment">/// font face in the cairo_t will be destroyed if there are no other references to it.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_font_face</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">font_face</span>: <span class="ident">FontFace</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_set_font_face</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">font_face</span>.<span class="ident">get_ptr</span>())
+            <span class="ident">ffi</span>::<span class="ident">cairo_set_font_face</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">font_face</span>.<span class="ident">to_raw_none</span>())
         }
     }
 
     <span class="doccomment">/// Gets the current font face for a Context object.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_font_face</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontFace</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">FontFace</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_font_face</span>(<span class="self">self</span>.<span class="number">0</span>))
+            <span class="ident">FontFace</span>::<span class="ident">from_raw_none</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_font_face</span>(<span class="self">self</span>.<span class="number">0</span>))
         }
     }
 
@@ -2578,14 +2622,14 @@
     <span class="doccomment">/// using Context::scaled_font_get_ctm().</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_scaled_font</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">scaled_font</span>: <span class="ident">ScaledFont</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_set_scaled_font</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">scaled_font</span>.<span class="ident">get_ptr</span>())
+            <span class="ident">ffi</span>::<span class="ident">cairo_set_scaled_font</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">scaled_font</span>.<span class="ident">to_raw_none</span>())
         }
     }
 
     <span class="doccomment">/// Gets the current scaled font for a Context.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_scaled_font</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ScaledFont</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">ScaledFont</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_scaled_font</span>(<span class="self">self</span>.<span class="number">0</span>))
+            <span class="ident">ScaledFont</span>::<span class="ident">from_raw_none</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_scaled_font</span>(<span class="self">self</span>.<span class="number">0</span>))
         }
     }
 
@@ -2609,7 +2653,7 @@
     <span class="doccomment">/// Context::show_glyphs() for the &quot;real&quot; text display API in cairo.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">show_text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_show_text</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">text</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)
+            <span class="ident">ffi</span>::<span class="ident">cairo_show_text</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">text</span>).<span class="ident">unwrap</span>().<span class="ident">as_ptr</span>())
         }
     }
 
@@ -2628,7 +2672,7 @@
                             <span class="ident">cluster_flags</span>: <span class="ident">TextClusterFlags</span>) {
         <span class="kw">unsafe</span> {
             <span class="ident">ffi</span>::<span class="ident">cairo_show_text_glyphs</span>(<span class="self">self</span>.<span class="number">0</span>,
-                                        <span class="ident">text</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                                        <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">text</span>).<span class="ident">unwrap</span>().<span class="ident">as_ptr</span>(),
                                         <span class="op">-</span><span class="number">1</span> <span class="kw">as</span> <span class="ident">c_int</span>, <span class="comment">//NULL terminated</span>
                                         <span class="ident">glyphs</span>.<span class="ident">as_ptr</span>(),
                                         <span class="ident">glyphs</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">c_int</span>,
@@ -2676,7 +2720,7 @@
         };
 
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_text_extents</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">text</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">extents</span>);
+            <span class="ident">ffi</span>::<span class="ident">cairo_text_extents</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">text</span>).<span class="ident">unwrap</span>().<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">extents</span>);
         }
         <span class="ident">extents</span>
     }
@@ -2942,11 +2986,15 @@
     <span class="doccomment">/// filled, achieves an effect similar to that of Context::show_glyphs().</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">str_</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_text_path</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">str_</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)
+            <span class="ident">ffi</span>::<span class="ident">cairo_text_path</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">str_</span>).<span class="ident">unwrap</span>().<span class="ident">as_ptr</span>())
         }
     }
 
-    <span class="comment">//fn ffi::cairo_glyph_path(cr: *mut cairo_t, glyphs: *mut cairo_glyph_t, num_glyphs: isize);</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">glyph_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">glyphs</span>: <span class="kw-2">&amp;</span>[<span class="ident">Glyph</span>]) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_glyph_path</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">glyphs</span>.<span class="ident">as_ptr</span>(), <span class="ident">glyphs</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">i32</span>)
+        }
+    }
 
     <span class="doccomment">/// Relative-coordinate version of Context::curve_to(). All offsets are relative to</span>
     <span class="doccomment">/// the current point. Adds a cubic Bézier spline to the path from the current point</span>

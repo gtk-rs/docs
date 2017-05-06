@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/imperio/.cargo/git/checkouts/gdk-0e2106e2e12a0cc1/b1be032/src/device_manager.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/eap/.cargo/registry/src/github.com-1ecc6299db9ec823/gdk-0.5.3/src/device_manager.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>device_manager.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,331 +43,31 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
-<span id="2">  2</span>
-<span id="3">  3</span>
-<span id="4">  4</span>
-<span id="5">  5</span>
-<span id="6">  6</span>
-<span id="7">  7</span>
-<span id="8">  8</span>
-<span id="9">  9</span>
-<span id="10"> 10</span>
-<span id="11"> 11</span>
-<span id="12"> 12</span>
-<span id="13"> 13</span>
-<span id="14"> 14</span>
-<span id="15"> 15</span>
-<span id="16"> 16</span>
-<span id="17"> 17</span>
-<span id="18"> 18</span>
-<span id="19"> 19</span>
-<span id="20"> 20</span>
-<span id="21"> 21</span>
-<span id="22"> 22</span>
-<span id="23"> 23</span>
-<span id="24"> 24</span>
-<span id="25"> 25</span>
-<span id="26"> 26</span>
-<span id="27"> 27</span>
-<span id="28"> 28</span>
-<span id="29"> 29</span>
-<span id="30"> 30</span>
-<span id="31"> 31</span>
-<span id="32"> 32</span>
-<span id="33"> 33</span>
-<span id="34"> 34</span>
-<span id="35"> 35</span>
-<span id="36"> 36</span>
-<span id="37"> 37</span>
-<span id="38"> 38</span>
-<span id="39"> 39</span>
-<span id="40"> 40</span>
-<span id="41"> 41</span>
-<span id="42"> 42</span>
-<span id="43"> 43</span>
-<span id="44"> 44</span>
-<span id="45"> 45</span>
-<span id="46"> 46</span>
-<span id="47"> 47</span>
-<span id="48"> 48</span>
-<span id="49"> 49</span>
-<span id="50"> 50</span>
-<span id="51"> 51</span>
-<span id="52"> 52</span>
-<span id="53"> 53</span>
-<span id="54"> 54</span>
-<span id="55"> 55</span>
-<span id="56"> 56</span>
-<span id="57"> 57</span>
-<span id="58"> 58</span>
-<span id="59"> 59</span>
-<span id="60"> 60</span>
-<span id="61"> 61</span>
-<span id="62"> 62</span>
-<span id="63"> 63</span>
-<span id="64"> 64</span>
-<span id="65"> 65</span>
-<span id="66"> 66</span>
-<span id="67"> 67</span>
-<span id="68"> 68</span>
-<span id="69"> 69</span>
-<span id="70"> 70</span>
-<span id="71"> 71</span>
-<span id="72"> 72</span>
-<span id="73"> 73</span>
-<span id="74"> 74</span>
-<span id="75"> 75</span>
-<span id="76"> 76</span>
-<span id="77"> 77</span>
-<span id="78"> 78</span>
-<span id="79"> 79</span>
-<span id="80"> 80</span>
-<span id="81"> 81</span>
-<span id="82"> 82</span>
-<span id="83"> 83</span>
-<span id="84"> 84</span>
-<span id="85"> 85</span>
-<span id="86"> 86</span>
-<span id="87"> 87</span>
-<span id="88"> 88</span>
-<span id="89"> 89</span>
-<span id="90"> 90</span>
-<span id="91"> 91</span>
-<span id="92"> 92</span>
-<span id="93"> 93</span>
-<span id="94"> 94</span>
-<span id="95"> 95</span>
-<span id="96"> 96</span>
-<span id="97"> 97</span>
-<span id="98"> 98</span>
-<span id="99"> 99</span>
-<span id="100">100</span>
-<span id="101">101</span>
-<span id="102">102</span>
-<span id="103">103</span>
-<span id="104">104</span>
-<span id="105">105</span>
-<span id="106">106</span>
-<span id="107">107</span>
-<span id="108">108</span>
-<span id="109">109</span>
-<span id="110">110</span>
-<span id="111">111</span>
-<span id="112">112</span>
-<span id="113">113</span>
-<span id="114">114</span>
-<span id="115">115</span>
-<span id="116">116</span>
-<span id="117">117</span>
-<span id="118">118</span>
-<span id="119">119</span>
-<span id="120">120</span>
-<span id="121">121</span>
-<span id="122">122</span>
-<span id="123">123</span>
-<span id="124">124</span>
-<span id="125">125</span>
-<span id="126">126</span>
-<span id="127">127</span>
-<span id="128">128</span>
-<span id="129">129</span>
-<span id="130">130</span>
-<span id="131">131</span>
-<span id="132">132</span>
-<span id="133">133</span>
-<span id="134">134</span>
-<span id="135">135</span>
-<span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
+<span id="2"> 2</span>
+<span id="3"> 3</span>
+<span id="4"> 4</span>
+<span id="5"> 5</span>
+<span id="6"> 6</span>
+<span id="7"> 7</span>
+<span id="8"> 8</span>
+<span id="9"> 9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">device</span>::<span class="ident">Device</span>;
-<span class="kw">use</span> <span class="ident">display</span>::<span class="ident">Display</span>;
 <span class="kw">use</span> <span class="ident">ffi</span>;
-
-<span class="macro">glib_wrapper</span><span class="macro">!</span> {
-    <span class="doccomment">/// In addition to a single pointer and keyboard for user interface input,</span>
-    <span class="doccomment">/// GDK contains support for a variety of input devices, including graphics</span>
-    <span class="doccomment">/// tablets, touchscreens and multiple pointers/keyboards interacting</span>
-    <span class="doccomment">/// simultaneously with the user interface. Such input devices often have</span>
-    <span class="doccomment">/// additional features, such as sub-pixel positioning information and</span>
-    <span class="doccomment">/// additional device-dependent information.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In order to query the device hierarchy and be aware of changes in the</span>
-    <span class="doccomment">/// device hierarchy (such as virtual devices being created or removed, or</span>
-    <span class="doccomment">/// physical devices being plugged or unplugged), GDK provides</span>
-    <span class="doccomment">/// `DeviceManager`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// By default, and if the platform supports it, GDK is aware of multiple</span>
-    <span class="doccomment">/// keyboard/pointer pairs and multitouch devices. This behavior can be</span>
-    <span class="doccomment">/// changed by calling `gdk_disable_multidevice` before `Display::open`.</span>
-    <span class="doccomment">/// There should rarely be a need to do that though, since GDK defaults</span>
-    <span class="doccomment">/// to a compatibility mode in which it will emit just one enter/leave</span>
-    <span class="doccomment">/// event pair for all devices on a window. To enable per-device</span>
-    <span class="doccomment">/// enter/leave events and other multi-pointer interaction features,</span>
-    <span class="doccomment">/// `Window::set_support_multidevice` must be called on</span>
-    <span class="doccomment">/// ``GdkWindows`` (or `gtk_widget_set_support_multidevice` on widgets).</span>
-    <span class="doccomment">/// window. See the `Window::set_support_multidevice` documentation</span>
-    <span class="doccomment">/// for more information.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// On X11, multi-device support is implemented through XInput 2.</span>
-    <span class="doccomment">/// Unless `gdk_disable_multidevice` is called, the XInput 2</span>
-    <span class="doccomment">/// `DeviceManager` implementation will be used as the input source.</span>
-    <span class="doccomment">/// Otherwise either the core or XInput 1 implementations will be used.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For simple applications that don’t have any special interest in</span>
-    <span class="doccomment">/// input devices, the so-called “client pointer”</span>
-    <span class="doccomment">/// provides a reasonable approximation to a simple setup with a single</span>
-    <span class="doccomment">/// pointer and keyboard. The device that has been set as the client</span>
-    <span class="doccomment">/// pointer can be accessed via `DeviceManager::get_client_pointer`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Conceptually, in multidevice mode there are 2 device types. Virtual</span>
-    <span class="doccomment">/// devices (or master devices) are represented by the pointer cursors</span>
-    <span class="doccomment">/// and keyboard foci that are seen on the screen. Physical devices (or</span>
-    <span class="doccomment">/// slave devices) represent the hardware that is controlling the virtual</span>
-    <span class="doccomment">/// devices, and thus have no visible cursor on the screen.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Virtual devices are always paired, so there is a keyboard device for every</span>
-    <span class="doccomment">/// pointer device. Associations between devices may be inspected through</span>
-    <span class="doccomment">/// `Device::get_associated_device`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// There may be several virtual devices, and several physical devices could</span>
-    <span class="doccomment">/// be controlling each of these virtual devices. Physical devices may also</span>
-    <span class="doccomment">/// be “floating”, which means they are not attached to any virtual device.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Master and slave devices</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```text</span>
-    <span class="doccomment">/// carlos@sacarino:~$ xinput list</span>
-    <span class="doccomment">/// ⎡ Virtual core pointer                          id=2    [master pointer  (3)]</span>
-    <span class="doccomment">/// ⎜   ↳ Virtual core XTEST pointer                id=4    [slave  pointer  (2)]</span>
-    <span class="doccomment">/// ⎜   ↳ Wacom ISDv4 E6 Pen stylus                 id=10   [slave  pointer  (2)]</span>
-    <span class="doccomment">/// ⎜   ↳ Wacom ISDv4 E6 Finger touch               id=11   [slave  pointer  (2)]</span>
-    <span class="doccomment">/// ⎜   ↳ SynPS/2 Synaptics TouchPad                id=13   [slave  pointer  (2)]</span>
-    <span class="doccomment">/// ⎜   ↳ TPPS/2 IBM TrackPoint                     id=14   [slave  pointer  (2)]</span>
-    <span class="doccomment">/// ⎜   ↳ Wacom ISDv4 E6 Pen eraser                 id=16   [slave  pointer  (2)]</span>
-    <span class="doccomment">/// ⎣ Virtual core keyboard                         id=3    [master keyboard (2)]</span>
-    <span class="doccomment">///     ↳ Virtual core XTEST keyboard               id=5    [slave  keyboard (3)]</span>
-    <span class="doccomment">///     ↳ Power Button                              id=6    [slave  keyboard (3)]</span>
-    <span class="doccomment">///     ↳ Video Bus                                 id=7    [slave  keyboard (3)]</span>
-    <span class="doccomment">///     ↳ Sleep Button                              id=8    [slave  keyboard (3)]</span>
-    <span class="doccomment">///     ↳ Integrated Camera                         id=9    [slave  keyboard (3)]</span>
-    <span class="doccomment">///     ↳ AT Translated Set 2 keyboard              id=12   [slave  keyboard (3)]</span>
-    <span class="doccomment">///     ↳ ThinkPad Extra Buttons                    id=15   [slave  keyboard (3)]</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// By default, GDK will automatically listen for events coming from all</span>
-    <span class="doccomment">/// master devices, setting the `Device` for all events coming from input</span>
-    <span class="doccomment">/// devices. Events containing device information are `EventType::MotionNotify`,</span>
-    <span class="doccomment">/// `EventType::ButtonPress`, `EventType::2buttonPress`, `EventType::3buttonPress`,</span>
-    <span class="doccomment">/// `EventType::ButtonRelease`, `EventType::Scroll`, `EventType::KeyPress`, `EventType::KeyRelease`,</span>
-    <span class="doccomment">/// `EventType::EnterNotify`, `EventType::LeaveNotify`, `EventType::FocusChange`,</span>
-    <span class="doccomment">/// `EventType::ProximityIn`, `EventType::ProximityOut`, `EventType::DragEnter`, `EventType::DragLeave`,</span>
-    <span class="doccomment">/// `EventType::DragMotion`, `EventType::DragStatus`, `EventType::DropStart`, `EventType::DropFinished`</span>
-    <span class="doccomment">/// and `EventType::GrabBroken`. When dealing with an event on a master device,</span>
-    <span class="doccomment">/// it is possible to get the source (slave) device that the event originated</span>
-    <span class="doccomment">/// from via `gdk_event_get_source_device`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// On a standard session, all physical devices are connected by default to</span>
-    <span class="doccomment">/// the &quot;Virtual Core Pointer/Keyboard&quot; master devices, hence routing all events</span>
-    <span class="doccomment">/// through these. This behavior is only modified by device grabs, where the</span>
-    <span class="doccomment">/// slave device is temporarily detached for as long as the grab is held, and</span>
-    <span class="doccomment">/// more permanently by user modifications to the device hierarchy.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// On certain application specific setups, it may make sense</span>
-    <span class="doccomment">/// to detach a physical device from its master pointer, and mapping it to</span>
-    <span class="doccomment">/// an specific window. This can be achieved by the combination of</span>
-    <span class="doccomment">/// `Device::grab` and `Device::set_mode`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In order to listen for events coming from devices</span>
-    <span class="doccomment">/// other than a virtual device, `Window::set_device_events` must be</span>
-    <span class="doccomment">/// called. Generally, this function can be used to modify the event mask</span>
-    <span class="doccomment">/// for any given device.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Input devices may also provide additional information besides X/Y.</span>
-    <span class="doccomment">/// For example, graphics tablets may also provide pressure and X/Y tilt</span>
-    <span class="doccomment">/// information. This information is device-dependent, and may be</span>
-    <span class="doccomment">/// queried through `Device::get_axis`. In multidevice mode, virtual</span>
-    <span class="doccomment">/// devices will change axes in order to always represent the physical</span>
-    <span class="doccomment">/// device that is routing events through it. Whenever the physical device</span>
-    <span class="doccomment">/// changes, the `Device:n-axes` property will be notified, and</span>
-    <span class="doccomment">/// `Device::list_axes` will return the new device axes.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Devices may also have associated “keys” or</span>
-    <span class="doccomment">/// macro buttons. Such keys can be globally set to map into normal X</span>
-    <span class="doccomment">/// keyboard events. The mapping is set using `Device::set_key`.</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DeviceManager</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GdkDeviceManager</span><span class="op">&gt;</span>);
-
-    <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">gdk_device_manager_get_type</span>(),
-    }
-}
+<span class="kw">use</span> <span class="ident">DeviceManager</span>;
 
 <span class="kw">impl</span> <span class="ident">DeviceManager</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">disable_multidevice</span>() {
         <span class="macro">assert_not_initialized</span><span class="macro">!</span>();
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_disable_multidevice</span>() }
-    }
-
-    <span class="doccomment">/// Gets the `Display` associated to `self`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the `Display` to which</span>
-    <span class="doccomment">///  `self` is associated to, or `None`. This memory is</span>
-    <span class="doccomment">///  owned by GDK and must not be freed or unreferenced.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Display</span><span class="op">&gt;</span> {
-        <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_device_manager_get_display</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
-    }
-
-    <span class="doccomment">/// Returns the client pointer, that is, the master pointer that acts as the core pointer</span>
-    <span class="doccomment">/// for this application. In X11, window managers may change this depending on the interaction</span>
-    <span class="doccomment">/// pattern under the presence of several pointers.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// You should use this function seldomly, only in code that isn’t triggered by a ``GdkEvent``</span>
-    <span class="doccomment">/// and there aren’t other means to get a meaningful `Device` to operate on.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The client pointer. This memory is</span>
-    <span class="doccomment">///  owned by GDK and must not be freed or unreferenced.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_client_pointer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Device</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(
-                <span class="ident">ffi</span>::<span class="ident">gdk_device_manager_get_client_pointer</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
-        }
     }
 }
 </pre>
