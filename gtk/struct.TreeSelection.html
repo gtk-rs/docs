@@ -49,7 +49,33 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct TreeSelection(_, _);</pre>
+<pre class='rust struct'>pub struct TreeSelection(_, _);</pre><div class='docblock'><p>The <code>TreeSelection</code> object is a helper object to manage the selection
+for a <code>TreeView</code> widget. The <code>TreeSelection</code> object is
+automatically created when a new <code>TreeView</code> widget is created, and
+cannot exist independently of this widget. The primary reason the
+<code>TreeSelection</code> objects exists is for cleanliness of code and API.
+That is, there is no conceptual reason all these functions could not be
+methods on the <code>TreeView</code> widget instead of a separate function.</p>
+
+<p>The <code>TreeSelection</code> object is gotten from a <code>TreeView</code> by calling
+<code>TreeView::get_selection</code>. It can be manipulated to check the
+selection status of the tree, as well as select and deselect individual
+rows. Selection is done completely view side. As a result, multiple
+views of the same model can have completely different selections.
+Additionally, you cannot change the selection of a row on the model that
+is not currently displayed by the view without expanding its parents
+first.</p>
+
+<p>One of the important things to remember when monitoring the selection of
+a view is that the <code>TreeSelection::changed</code> signal is mostly a hint.
+That is, it may only emit one signal when a range of rows is selected.
+Additionally, it may on occasion emit a <code>TreeSelection::changed</code> signal
+when nothing has happened (mostly as a result of programmers calling
+select_row on an already selected row).</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

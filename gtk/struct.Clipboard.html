@@ -49,15 +49,133 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Clipboard(_, _);</pre>
+<pre class='rust struct'>pub struct Clipboard(_, _);</pre><div class='docblock'><p>The <code>Clipboard</code> object represents a clipboard of data shared
+between different processes or between different widgets in
+the same process. Each clipboard is identified by a name encoded as a
+<code>gdk::Atom</code>. (Conversion to and from strings can be done with
+<code>gdk::Atom_::intern</code> and <code>gdk::Atom_::name</code>.) The default clipboard
+corresponds to the “CLIPBOARD” atom; another commonly used clipboard
+is the “PRIMARY” clipboard, which, in X, traditionally contains
+the currently selected text.</p>
+
+<p>To support having a number of different formats on the clipboard
+at the same time, the clipboard mechanism allows providing
+callbacks instead of the actual data. When you set the contents
+of the clipboard, you can either supply the data directly (via
+functions like <code>Clipboard::set_text</code>), or you can supply a
+callback to be called at a later time when the data is needed (via
+<code>Clipboard::set_with_data</code> or <code>Clipboard::set_with_owner</code>.)
+Providing a callback also avoids having to make copies of the data
+when it is not needed.</p>
+
+<p><code>Clipboard::set_with_data</code> and <code>Clipboard::set_with_owner</code>
+are quite similar; the choice between the two depends mostly on
+which is more convenient in a particular situation.
+The former is most useful when you want to have a blob of data
+with callbacks to convert it into the various data types that you
+advertise. When the <code>clear_func</code> you provided is called, you
+simply free the data blob. The latter is more useful when the
+contents of clipboard reflect the internal state of a <code>gobject::Object</code>
+(As an example, for the PRIMARY clipboard, when an entry widget
+provides the clipboard’s contents the contents are simply the
+text within the selected region.) If the contents change, the
+entry widget can call <code>Clipboard::set_with_owner</code> to update
+the timestamp for clipboard ownership, without having to worry
+about <code>clear_func</code> being called.</p>
+
+<p>Requesting the data from the clipboard is essentially
+asynchronous. If the contents of the clipboard are provided within
+the same process, then a direct function call will be made to
+retrieve the data, but if they are provided by another process,
+then the data needs to be retrieved from the other process, which
+may take some time. To avoid blocking the user interface, the call
+to request the selection, <code>Clipboard::request_contents</code> takes a
+callback that will be called when the contents are received (or
+when the request fails.) If you don’t want to deal with providing
+a separate callback, you can also use <code>Clipboard::wait_for_contents</code>.
+What this does is run the GLib main loop recursively waiting for
+the contents. This can simplify the code flow, but you still have
+to be aware that other callbacks in your program can be called
+while this recursive mainloop is running.</p>
+
+<p>Along with the functions to get the clipboard contents as an
+arbitrary data chunk, there are also functions to retrieve
+it as text, <code>Clipboard::request_text</code> and
+<code>Clipboard::wait_for_text</code>. These functions take care of
+determining which formats are advertised by the clipboard
+provider, asking for the clipboard in the best available format
+and converting the results into the UTF-8 encoding. (The standard
+form for representing strings in GTK+.)</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Clipboard.html" title="struct gtk::Clipboard">Clipboard</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/clipboard.rs.html#25-47' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Clipboard.html" title="struct gtk::Clipboard">Clipboard</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/clipboard.rs.html#86-167' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.get' class="method"><span id='get.v' class='invisible'><code>fn <a href='#method.get' class='fnname'>get</a>(selection: &amp;Atom) -&gt; <a class="struct" href="../gtk/struct.Clipboard.html" title="struct gtk::Clipboard">Clipboard</a></code></span></h4>
-<h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>fn <a href='#method.get_default' class='fnname'>get_default</a>(display: &amp;Display) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.Clipboard.html" title="struct gtk::Clipboard">Clipboard</a>&gt;</code></span></h4>
-<h4 id='method.get_for_display' class="method"><span id='get_for_display.v' class='invisible'><code>fn <a href='#method.get_for_display' class='fnname'>get_for_display</a>(display: &amp;Display, selection: &amp;Atom) -&gt; <a class="struct" href="../gtk/struct.Clipboard.html" title="struct gtk::Clipboard">Clipboard</a></code></span></h4>
-</div>
+<div class='docblock'><p>Returns the clipboard object for the given selection.
+See <code>Clipboard::get_for_display</code> for complete details.</p>
+
+<h2 id='selection' class='section-header'><a href='#selection'><code>selection</code></a></h2>
+<p>a <code>gdk::Atom</code> which identifies the clipboard to use</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>the appropriate clipboard object. If no clipboard
+ already exists, a new one will be created. Once a clipboard
+ object has been created, it is persistent and, since it is
+ owned by GTK+, must not be freed or unreffed.</p>
+</div><h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>fn <a href='#method.get_default' class='fnname'>get_default</a>(display: &amp;Display) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.Clipboard.html" title="struct gtk::Clipboard">Clipboard</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns the default clipboard object for use with cut/copy/paste menu items
+and keyboard shortcuts.</p>
+
+<p>Feature: <code>v3_16</code></p>
+
+<h2 id='display' class='section-header'><a href='#display'><code>display</code></a></h2>
+<p>the <code>gdk::Display</code> for which the clipboard is to be retrieved.</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>the default clipboard object.</p>
+</div><h4 id='method.get_for_display' class="method"><span id='get_for_display.v' class='invisible'><code>fn <a href='#method.get_for_display' class='fnname'>get_for_display</a>(display: &amp;Display, selection: &amp;Atom) -&gt; <a class="struct" href="../gtk/struct.Clipboard.html" title="struct gtk::Clipboard">Clipboard</a></code></span></h4>
+<div class='docblock'><p>Returns the clipboard object for the given selection.
+Cut/copy/paste menu items and keyboard shortcuts should use
+the default clipboard, returned by passing <code>GDK_SELECTION_CLIPBOARD</code> for <code>selection</code>.
+(<code>GDK_NONE</code> is supported as a synonym for GDK_SELECTION_CLIPBOARD
+for backwards compatibility reasons.)
+The currently-selected object or text should be provided on the clipboard
+identified by <code>GDK_SELECTION_PRIMARY</code>. Cut/copy/paste menu items
+conceptually copy the contents of the <code>GDK_SELECTION_PRIMARY</code> clipboard
+to the default clipboard, i.e. they copy the selection to what the
+user sees as the clipboard.</p>
+
+<p>(Passing <code>GDK_NONE</code> is the same as using <code>gdk_atom_intern (&quot;CLIPBOARD&quot;, FALSE)</code>.</p>
+
+<p>See the
+<a href="http://www.freedesktop.org/Standards/clipboards-spec">FreeDesktop Clipboard Specification</a>
+for a detailed discussion of the “CLIPBOARD” vs. “PRIMARY”
+selections under the X window system. On Win32 the
+<code>GDK_SELECTION_PRIMARY</code> clipboard is essentially ignored.)</p>
+
+<p>It’s possible to have arbitrary named clipboards; if you do invent
+new clipboards, you should prefix the selection name with an
+underscore (because the ICCCM requires that nonstandard atoms are
+underscore-prefixed), and namespace it as well. For example,
+if your application called “Foo” has a special-purpose
+clipboard, you might call it “_FOO_SPECIAL_CLIPBOARD”.</p>
+
+<h2 id='display-1' class='section-header'><a href='#display-1'><code>display</code></a></h2>
+<p>the <code>gdk::Display</code> for which the clipboard is to be retrieved or created.</p>
+
+<h2 id='selection-1' class='section-header'><a href='#selection-1'><code>selection</code></a></h2>
+<p>a <code>gdk::Atom</code> which identifies the clipboard to use.</p>
+
+<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<p>the appropriate clipboard object. If no
+ clipboard already exists, a new one will be created. Once a clipboard
+ object has been created, it is persistent and, since it is owned by
+ GTK+, must not be freed or unrefd.</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

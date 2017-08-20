@@ -49,7 +49,115 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct DeviceManager(_, _);</pre>
+<pre class='rust struct'>pub struct DeviceManager(_, _);</pre><div class='docblock'><p>In addition to a single pointer and keyboard for user interface input,
+GDK contains support for a variety of input devices, including graphics
+tablets, touchscreens and multiple pointers/keyboards interacting
+simultaneously with the user interface. Such input devices often have
+additional features, such as sub-pixel positioning information and
+additional device-dependent information.</p>
+
+<p>In order to query the device hierarchy and be aware of changes in the
+device hierarchy (such as virtual devices being created or removed, or
+physical devices being plugged or unplugged), GDK provides
+<code>DeviceManager</code>.</p>
+
+<p>By default, and if the platform supports it, GDK is aware of multiple
+keyboard/pointer pairs and multitouch devices. This behavior can be
+changed by calling <code>gdk_disable_multidevice</code> before <code>Display::open</code>.
+There should rarely be a need to do that though, since GDK defaults
+to a compatibility mode in which it will emit just one enter/leave
+event pair for all devices on a window. To enable per-device
+enter/leave events and other multi-pointer interaction features,
+<code>Window::set_support_multidevice</code> must be called on
+<code>GdkWindows</code> (or <code>gtk_widget_set_support_multidevice</code> on widgets).
+window. See the <code>Window::set_support_multidevice</code> documentation
+for more information.</p>
+
+<p>On X11, multi-device support is implemented through XInput 2.
+Unless <code>gdk_disable_multidevice</code> is called, the XInput 2
+<code>DeviceManager</code> implementation will be used as the input source.
+Otherwise either the core or XInput 1 implementations will be used.</p>
+
+<p>For simple applications that don’t have any special interest in
+input devices, the so-called “client pointer”
+provides a reasonable approximation to a simple setup with a single
+pointer and keyboard. The device that has been set as the client
+pointer can be accessed via <code>DeviceManager::get_client_pointer</code>.</p>
+
+<p>Conceptually, in multidevice mode there are 2 device types. Virtual
+devices (or master devices) are represented by the pointer cursors
+and keyboard foci that are seen on the screen. Physical devices (or
+slave devices) represent the hardware that is controlling the virtual
+devices, and thus have no visible cursor on the screen.</p>
+
+<p>Virtual devices are always paired, so there is a keyboard device for every
+pointer device. Associations between devices may be inspected through
+<code>Device::get_associated_device</code>.</p>
+
+<p>There may be several virtual devices, and several physical devices could
+be controlling each of these virtual devices. Physical devices may also
+be “floating”, which means they are not attached to any virtual device.</p>
+
+<h1 id='master-and-slave-devices' class='section-header'><a href='#master-and-slave-devices'>Master and slave devices</a></h1>
+<pre><code class="language-text">carlos@sacarino:~$ xinput list
+⎡ Virtual core pointer                          id=2    [master pointer  (3)]
+⎜   ↳ Virtual core XTEST pointer                id=4    [slave  pointer  (2)]
+⎜   ↳ Wacom ISDv4 E6 Pen stylus                 id=10   [slave  pointer  (2)]
+⎜   ↳ Wacom ISDv4 E6 Finger touch               id=11   [slave  pointer  (2)]
+⎜   ↳ SynPS/2 Synaptics TouchPad                id=13   [slave  pointer  (2)]
+⎜   ↳ TPPS/2 IBM TrackPoint                     id=14   [slave  pointer  (2)]
+⎜   ↳ Wacom ISDv4 E6 Pen eraser                 id=16   [slave  pointer  (2)]
+⎣ Virtual core keyboard                         id=3    [master keyboard (2)]
+    ↳ Virtual core XTEST keyboard               id=5    [slave  keyboard (3)]
+    ↳ Power Button                              id=6    [slave  keyboard (3)]
+    ↳ Video Bus                                 id=7    [slave  keyboard (3)]
+    ↳ Sleep Button                              id=8    [slave  keyboard (3)]
+    ↳ Integrated Camera                         id=9    [slave  keyboard (3)]
+    ↳ AT Translated Set 2 keyboard              id=12   [slave  keyboard (3)]
+    ↳ ThinkPad Extra Buttons                    id=15   [slave  keyboard (3)]
+</code></pre>
+
+<p>By default, GDK will automatically listen for events coming from all
+master devices, setting the <code>Device</code> for all events coming from input
+devices. Events containing device information are <code>EventType::MotionNotify</code>,
+<code>EventType::ButtonPress</code>, <code>EventType::2buttonPress</code>, <code>EventType::3buttonPress</code>,
+<code>EventType::ButtonRelease</code>, <code>EventType::Scroll</code>, <code>EventType::KeyPress</code>, <code>EventType::KeyRelease</code>,
+<code>EventType::EnterNotify</code>, <code>EventType::LeaveNotify</code>, <code>EventType::FocusChange</code>,
+<code>EventType::ProximityIn</code>, <code>EventType::ProximityOut</code>, <code>EventType::DragEnter</code>, <code>EventType::DragLeave</code>,
+<code>EventType::DragMotion</code>, <code>EventType::DragStatus</code>, <code>EventType::DropStart</code>, <code>EventType::DropFinished</code>
+and <code>EventType::GrabBroken</code>. When dealing with an event on a master device,
+it is possible to get the source (slave) device that the event originated
+from via <code>gdk_event_get_source_device</code>.</p>
+
+<p>On a standard session, all physical devices are connected by default to
+the &quot;Virtual Core Pointer/Keyboard&quot; master devices, hence routing all events
+through these. This behavior is only modified by device grabs, where the
+slave device is temporarily detached for as long as the grab is held, and
+more permanently by user modifications to the device hierarchy.</p>
+
+<p>On certain application specific setups, it may make sense
+to detach a physical device from its master pointer, and mapping it to
+an specific window. This can be achieved by the combination of
+<code>Device::grab</code> and <code>Device::set_mode</code>.</p>
+
+<p>In order to listen for events coming from devices
+other than a virtual device, <code>Window::set_device_events</code> must be
+called. Generally, this function can be used to modify the event mask
+for any given device.</p>
+
+<p>Input devices may also provide additional information besides X/Y.
+For example, graphics tablets may also provide pressure and X/Y tilt
+information. This information is device-dependent, and may be
+queried through <code>Device::get_axis</code>. In multidevice mode, virtual
+devices will change axes in order to always represent the physical
+device that is routing events through it. Whenever the physical device
+changes, the <code>Device:n-axes</code> property will be notified, and
+<code>Device::list_axes</code> will return the new device axes.</p>
+
+<p>Devices may also have associated “keys” or
+macro buttons. Such keys can be globally set to map into normal X
+keyboard events. The mapping is set using <code>Device::set_key</code>.</p>
+</div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

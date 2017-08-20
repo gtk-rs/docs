@@ -49,7 +49,43 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Editable(_, _);</pre>
+<pre class='rust struct'>pub struct Editable(_, _);</pre><div class='docblock'><p>The <code>Editable</code> interface is an interface which should be implemented by
+text editing widgets, such as <code>Entry</code> and <code>SpinButton</code>. It contains functions
+for generically manipulating an editable widget, a large number of action
+signals used for key bindings, and several signals that an application can
+connect to to modify the behavior of a widget.</p>
+
+<p>As an example of the latter usage, by connecting
+the following handler to <code>Editable::insert-text</code>, an application
+can convert all entry into a widget into uppercase.</p>
+
+<h2 id='forcing-entry-to-uppercase' class='section-header'><a href='#forcing-entry-to-uppercase'>Forcing entry to uppercase.</a></h2>
+<pre><code class="language-C">#include &lt;ctype.h&gt;;
+
+void
+insert_text_handler (GtkEditable *editable,
+                     const gchar *text,
+                     gint         length,
+                     gint        *position,
+                     gpointer     data)
+{
+  gchar *result = g_utf8_strup (text, length);
+
+  g_signal_handlers_block_by_func (editable,
+                               (gpointer) insert_text_handler, data);
+  gtk_editable_insert_text (editable, result, length, position);
+  g_signal_handlers_unblock_by_func (editable,
+                                     (gpointer) insert_text_handler, data);
+
+  g_signal_stop_emission_by_name (editable, &quot;insert_text&quot;);
+
+  g_free (result);
+}
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.EditableExt.html"><code>EditableExt</code></a></p>
+</div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

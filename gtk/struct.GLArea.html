@@ -49,13 +49,119 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct GLArea(_, _);</pre>
+<pre class='rust struct'>pub struct GLArea(_, _);</pre><div class='docblock'><p><code>GLArea</code> is a widget that allows drawing with OpenGL.</p>
+
+<p><code>GLArea</code> sets up its own <code>gdk::GLContext</code> for the window it creates, and
+creates a custom GL framebuffer that the widget will do GL rendering onto.
+It also ensures that this framebuffer is the default GL rendering target
+when rendering.</p>
+
+<p>In order to draw, you have to connect to the <code>GLArea::render</code> signal,
+or subclass <code>GLArea</code> and override the <code>GLAreaClass.render</code>() virtual
+function.</p>
+
+<p>The <code>GLArea</code> widget ensures that the <code>gdk::GLContext</code> is associated with
+the widget&#39;s drawing area, and it is kept updated when the size and
+position of the drawing area changes.</p>
+
+<h2 id='drawing-with-glarea' class='section-header'><a href='#drawing-with-glarea'>Drawing with <code>GLArea</code></a></h2>
+<p>The simplest way to draw using OpenGL commands in a <code>GLArea</code> is to
+create a widget instance and connect to the <code>GLArea::render</code> signal:</p>
+
+<pre><code class="language-C">  // create a GtkGLArea instance
+  GtkWidget *gl_area = gtk_gl_area_new ();
+
+  // connect to the &quot;render&quot; signal
+  g_signal_connect (gl_area, &quot;render&quot;, G_CALLBACK (render), NULL);
+</code></pre>
+
+<p>The <code>render()</code> function will be called when the <code>GLArea</code> is ready
+for you to draw its content:</p>
+
+<pre><code class="language-C">  static gboolean
+  render (GtkGLArea *area, GdkGLContext *context)
+  {
+    // inside this function it&#39;s safe to use GL; the given
+    // #GdkGLContext has been made current to the drawable
+    // surface used by the #GtkGLArea and the viewport has
+    // already been set to be the size of the allocation
+
+    // we can start by clearing the buffer
+    glClearColor (0, 0, 0, 0);
+    glClear (GL_COLOR_BUFFER_BIT);
+
+    // draw your object
+    draw_an_object ();
+
+    // we completed our drawing; the draw commands will be
+    // flushed at the end of the signal emission chain, and
+    // the buffers will be drawn on the window
+    return TRUE;
+  }
+</code></pre>
+
+<p>If you need to initialize OpenGL state, e.g. buffer objects or
+shaders, you should use the <code>Widget::realize</code> signal; you
+can use the <code>Widget::unrealize</code> signal to clean up. Since the
+<code>gdk::GLContext</code> creation and initialization may fail, you will
+need to check for errors, using <code>GLArea::get_error</code>. An example
+of how to safely initialize the GL state is:</p>
+
+<pre><code class="language-C">  static void
+  on_realize (GtkGLarea *area)
+  {
+    // We need to make the context current if we want to
+    // call GL API
+    gtk_gl_area_make_current (area);
+
+    // If there were errors during the initialization or
+    // when trying to make the context current, this
+    // function will return a #GError for you to catch
+    if (gtk_gl_area_get_error (area) != NULL)
+      return;
+
+    // You can also use gtk_gl_area_set_error() in order
+    // to show eventual initialization errors on the
+    // GtkGLArea widget itself
+    GError *internal_error = NULL;
+    init_buffer_objects (&amp;error);
+    if (error != NULL)
+      {
+        gtk_gl_area_set_error (area, error);
+        g_error_free (error);
+        return;
+      }
+
+    init_shaders (&amp;error);
+    if (error != NULL)
+      {
+        gtk_gl_area_set_error (area, error);
+        g_error_free (error);
+        return;
+      }
+  }
+</code></pre>
+
+<p>If you need to change the options for creating the <code>gdk::GLContext</code>
+you should use the <code>GLArea::create-context</code> signal.</p>
+
+<p>Feature: <code>v3_16</code></p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/gl_area.rs.html#39-47' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/gl_area.rs.html#147-163' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new <code>GLArea</code> widget.</p>
+
+<p>Feature: <code>v3_16</code></p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>the newly created <code>GLArea</code></p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>
@@ -83,7 +189,7 @@
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/gl_area.rs.html#50-54' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/gl_area.rs.html#166-170' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>

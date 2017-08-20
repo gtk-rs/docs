@@ -49,13 +49,82 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct InfoBar(_, _);</pre>
+<pre class='rust struct'>pub struct InfoBar(_, _);</pre><div class='docblock'><p><code>InfoBar</code> is a widget that can be used to show messages to
+the user without showing a dialog. It is often temporarily shown
+at the top or bottom of a document. In contrast to <code>Dialog</code>, which
+has a action area at the bottom, <code>InfoBar</code> has an action area
+at the side.</p>
+
+<p>The API of <code>InfoBar</code> is very similar to <code>Dialog</code>, allowing you
+to add buttons to the action area with <code>InfoBar::add_button</code> or
+<code>InfoBar::new_with_buttons</code>. The sensitivity of action widgets
+can be controlled with <code>InfoBar::set_response_sensitive</code>.
+To add widgets to the main content area of a <code>InfoBar</code>, use
+<code>InfoBar::get_content_area</code> and add your widgets to the container.</p>
+
+<p>Similar to <code>MessageDialog</code>, the contents of a <code>InfoBar</code> can by
+classified as error message, warning, informational message, etc,
+by using <code>InfoBar::set_message_type</code>. GTK+ may use the message type
+to determine how the message is displayed.</p>
+
+<p>A simple example for using a <code>InfoBar</code>:</p>
+
+<pre><code class="language-C">// set up info bar
+GtkWidget *widget;
+GtkInfoBar *bar;
+
+widget = gtk_info_bar_new ();
+bar = GTK_INFO_BAR (bar);
+
+gtk_widget_set_no_show_all (widget, TRUE);
+message_label = gtk_label_new (&quot;&quot;);
+gtk_widget_show (message_label);
+content_area = gtk_info_bar_get_content_area (bar);
+gtk_container_add (GTK_CONTAINER (content_area),
+                   message_label);
+gtk_info_bar_add_button (bar,
+                         _(&quot;_OK&quot;),
+                         GTK_RESPONSE_OK);
+g_signal_connect (bar,
+                  &quot;response&quot;,
+                  G_CALLBACK (gtk_widget_hide),
+                  NULL);
+gtk_grid_attach (GTK_GRID (grid),
+                 widget,
+                 0, 2, 1, 1);
+
+...
+
+// show an error message
+gtk_label_set_text (GTK_LABEL (message_label), message);
+gtk_info_bar_set_message_type (bar,
+                               GTK_MESSAGE_ERROR);
+gtk_widget_show (bar);
+</code></pre>
+
+<h1 id='infobar-as-buildable' class='section-header'><a href='#infobar-as-buildable'><code>InfoBar</code> as <code>Buildable</code></a></h1>
+<p>The <code>InfoBar</code> implementation of the <code>Buildable</code> interface exposes
+the content area and action area as internal children with the names
+“content_area” and “action_area”.</p>
+
+<p><code>InfoBar</code> supports a custom <code>&lt;action-widgets&gt;</code> element, which can contain
+multiple <code>&lt;action-widget&gt;</code> elements. The “response” attribute specifies a
+numeric response, and the content of the element is the id of widget
+(which should be a child of the dialogs <code>action_area</code>).</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.BoxExt.html"><code>BoxExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.OrientableExt.html"><code>OrientableExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.InfoBar.html" title="struct gtk::InfoBar">InfoBar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/info_bar.rs.html#32-43' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.InfoBar.html" title="struct gtk::InfoBar">InfoBar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/info_bar.rs.html#100-116' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.InfoBar.html" title="struct gtk::InfoBar">InfoBar</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new <code>InfoBar</code> object.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>InfoBar</code> object</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>
@@ -86,7 +155,7 @@
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.InfoBar.html" title="struct gtk::InfoBar">InfoBar</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Orientable.html" title="struct gtk::Orientable">Orientable</a>&gt; for <a class="struct" href="../gtk/struct.InfoBar.html" title="struct gtk::InfoBar">InfoBar</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.InfoBar.html" title="struct gtk::InfoBar">InfoBar</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.InfoBar.html" title="struct gtk::InfoBar">InfoBar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/info_bar.rs.html#45-49' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.InfoBar.html" title="struct gtk::InfoBar">InfoBar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/info_bar.rs.html#118-122' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>

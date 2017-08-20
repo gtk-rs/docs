@@ -49,14 +49,177 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Label(_, _);</pre>
+<pre class='rust struct'>pub struct Label(_, _);</pre><div class='docblock'><p>The <code>Label</code> widget displays a small amount of text. As the name
+implies, most labels are used to label another widget such as a
+<code>Button</code>, a <code>MenuItem</code>, or a <code>ComboBox</code>.</p>
+
+<h1 id='label-as-buildable' class='section-header'><a href='#label-as-buildable'><code>Label</code> as <code>Buildable</code></a></h1>
+<p>The <code>Label</code> implementation of the <code>Buildable</code> interface supports a
+custom <code>&lt;attributes&gt;</code> element, which supports any number of <code>&lt;attribute&gt;</code>
+elements. The <code>&lt;attribute&gt;</code> element has attributes named “name“, “value“,
+“start“ and “end“ and allows you to specify <code>pango::Attribute</code> values for
+this label.</p>
+
+<p>An example of a UI definition fragment specifying Pango attributes:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">gtk</span>::{<span class="ident">Button</span>, <span class="ident">Label</span>};
+    <span class="kw">use</span> <span class="ident">gtk</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+
+    <span class="comment">// Pressing Alt+H will activate this button</span>
+    <span class="kw">let</span> <span class="ident">button</span> <span class="op">=</span> <span class="ident">Button</span>::<span class="ident">new</span>();
+    <span class="kw">let</span> <span class="ident">label</span> <span class="op">=</span> <span class="ident">Label</span>::<span class="ident">new_with_mnemonic</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;_Hello&quot;</span>));
+    <span class="ident">button</span>.<span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">label</span>);</pre>
+
+<p>There’s a convenience function to create buttons with a mnemonic label
+already inside:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">gtk</span>::<span class="ident">Button</span>;
+
+    <span class="comment">// Pressing Alt+H will activate this button</span>
+    <span class="kw">let</span> <span class="ident">button</span> <span class="op">=</span> <span class="ident">Button</span>::<span class="ident">new_with_mnemonic</span>(<span class="string">&quot;_Hello&quot;</span>);</pre>
+
+<p>To create a mnemonic for a widget alongside the label, such as a
+<code>Entry</code>, you have to point the label at the entry with
+<code>Label::set_mnemonic_widget</code>:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">gtk</span>::{<span class="ident">Entry</span>, <span class="ident">Label</span>};
+    <span class="kw">use</span> <span class="ident">gtk</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+
+    <span class="comment">// Pressing Alt+H will focus the entry</span>
+    <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="ident">Entry</span>::<span class="ident">new</span>();
+    <span class="kw">let</span> <span class="ident">label</span> <span class="op">=</span> <span class="ident">Label</span>::<span class="ident">new_with_mnemonic</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;_Hello&quot;</span>));
+    <span class="ident">label</span>.<span class="ident">set_mnemonic_widget</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">entry</span>));</pre>
+
+<h1 id='markup-styled-text' class='section-header'><a href='#markup-styled-text'>Markup (styled text)</a></h1>
+<p>To make it easy to format text in a label (changing colors,
+fonts, etc.), label text can be provided in a simple
+<a href="https://developer.gnome.org/pygtk/stable/pango-markup-language.html">markup format</a>.</p>
+
+<p>Here’s how to create a label with a small font:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">gtk</span>::<span class="ident">Label</span>;
+    <span class="kw">use</span> <span class="ident">gtk</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+
+    <span class="kw">let</span> <span class="ident">label</span> <span class="op">=</span> <span class="ident">Label</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>);
+    <span class="ident">label</span>.<span class="ident">set_markup</span>(<span class="string">&quot;&lt;small&gt;Small text&lt;/small&gt;&quot;</span>);</pre>
+
+<p>(See <a href="https://developer.gnome.org/pygtk/stable/pango-markup-language.html">complete documentation</a> of available
+tags in the Pango manual.)</p>
+
+<p>The markup passed to <code>Label::set_markup</code> must be valid; for example,
+literal &lt;, &gt; and &amp; characters must be escaped as <code>&amp;lt;</code>, <code>&amp;gt;</code>, and <code>&amp;amp;</code>.
+If you pass text obtained from the user, file, or a network to
+<code>Label::set_markup</code>, you’ll want to escape it with
+<code>g_markup_escape_text</code> or <code>g_markup_printf_escaped</code>.</p>
+
+<p>Markup strings are just a convenient way to set the <code>pango::AttrList</code> on
+a label; <code>Label::set_attributes</code> may be a simpler way to set
+attributes in some cases. Be careful though; <code>pango::AttrList</code> tends to
+cause internationalization problems, unless you’re applying attributes
+to the entire string (i.e. unless you set the range of each attribute
+to [0, <code>G_MAXINT</code>)). The reason is that specifying the start_index and
+end_index for a <code>pango::Attribute</code> requires knowledge of the exact string
+being displayed, so translations will cause problems.</p>
+
+<h1 id='selectable-labels' class='section-header'><a href='#selectable-labels'>Selectable labels</a></h1>
+<p>Labels can be made selectable with <code>Label::set_selectable</code>.
+Selectable labels allow the user to copy the label contents to
+the clipboard. Only labels that contain useful-to-copy information
+— such as error messages — should be made selectable.</p>
+
+<h1 id='text-layout--label-text-layout' class='section-header'><a href='#text-layout--label-text-layout'>Text layout # {<code>label</code>-text-layout}</a></h1>
+<p>A label can contain any number of paragraphs, but will have
+performance problems if it contains more than a small number.
+Paragraphs are separated by newlines or other paragraph separators
+understood by Pango.</p>
+
+<p>Labels can automatically wrap text if you call
+<code>Label::set_line_wrap</code>.</p>
+
+<p><code>Label::set_justify</code> sets how the lines in a label align
+with one another. If you want to set how the label as a whole
+aligns in its available space, see the <code>Widget::halign</code> and
+<code>Widget:valign</code> properties.</p>
+
+<p>The <code>Label:width-chars</code> and <code>Label:max-width-chars</code> properties
+can be used to control the size allocation of ellipsized or wrapped
+labels. For ellipsizing labels, if either is specified (and less
+than the actual text size), it is used as the minimum width, and the actual
+text size is used as the natural width of the label. For wrapping labels,
+width-chars is used as the minimum width, if specified, and max-width-chars
+is used as the natural width. Even if max-width-chars specified, wrapping
+labels will be rewrapped to use all of the available width.</p>
+
+<p>Note that the interpretation of <code>Label:width-chars</code> and
+<code>Label:max-width-chars</code> has changed a bit with the introduction of
+<a href="geometry-management">width-for-height geometry management.</a></p>
+
+<h1 id='links' class='section-header'><a href='#links'>Links</a></h1>
+<p>Since 2.18, GTK+ supports markup for clickable hyperlinks in addition
+to regular Pango markup. The markup for links is borrowed from HTML,
+using the <code>&lt;a&gt;</code> with “href“ and “title“ attributes. GTK+ renders links
+similar to the way they appear in web browsers, with colored, underlined
+text. The “title“ attribute is displayed as a tooltip on the link.</p>
+
+<p>An example looks like this:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">gtk</span>::<span class="ident">Label</span>;
+    <span class="kw">use</span> <span class="ident">gtk</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+
+    <span class="kw">let</span> <span class="ident">label</span> <span class="op">=</span> <span class="ident">Label</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>);
+    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span>
+<span class="string">r#&quot;Go to the
+ &lt;a href=&quot;http://www.gtk.org&quot; title=&quot;&amp;lt;i&amp;gt;Our&amp;lt;/i&amp;gt; website&quot;&gt;
+ GTK+ website&lt;/a&gt; for more...&quot;#</span>;
+    <span class="ident">label</span>.<span class="ident">set_markup</span>(<span class="ident">text</span>);</pre>
+
+<p>It is possible to implement custom handling for links and their tooltips with
+the <code>Label::activate-link</code> signal and the <code>Label::get_current_uri</code> function.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.MiscExt.html"><code>MiscExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Label.html" title="struct gtk::Label">Label</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/label.rs.html#34-52' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Label.html" title="struct gtk::Label">Label</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/label.rs.html#181-228' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(str: P) -&gt; <a class="struct" href="../gtk/struct.Label.html" title="struct gtk::Label">Label</a></code></span></h4>
-<h4 id='method.new_with_mnemonic' class="method"><span id='new_with_mnemonic.v' class='invisible'><code>fn <a href='#method.new_with_mnemonic' class='fnname'>new_with_mnemonic</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(str: P) -&gt; <a class="struct" href="../gtk/struct.Label.html" title="struct gtk::Label">Label</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new label with the given text inside it. You can
+pass <code>None</code> to get an empty label widget.</p>
+
+<h2 id='str' class='section-header'><a href='#str'><code>str</code></a></h2>
+<p>The text of the label</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>the new <code>Label</code></p>
+</div><h4 id='method.new_with_mnemonic' class="method"><span id='new_with_mnemonic.v' class='invisible'><code>fn <a href='#method.new_with_mnemonic' class='fnname'>new_with_mnemonic</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(str: P) -&gt; <a class="struct" href="../gtk/struct.Label.html" title="struct gtk::Label">Label</a></code></span></h4>
+<div class='docblock'><p>Creates a new <code>Label</code>, containing the text in <code>str</code>.</p>
+
+<p>If characters in <code>str</code> are preceded by an underscore, they are
+underlined. If you need a literal underscore character in a label, use
+&#39;__&#39; (two underscores). The first underlined character represents a
+keyboard accelerator called a mnemonic. The mnemonic key can be used
+to activate another widget, chosen automatically, or explicitly using
+<code>Label::set_mnemonic_widget</code>.</p>
+
+<p>If <code>Label::set_mnemonic_widget</code> is not called, then the first
+activatable ancestor of the <code>Label</code> will be chosen as the mnemonic
+widget. For instance, if the label is inside a button or menu item,
+the button or menu item will automatically become the mnemonic widget
+and be activated by the mnemonic.</p>
+
+<h2 id='str-1' class='section-header'><a href='#str-1'><code>str</code></a></h2>
+<p>The text of the label, with an underscore in front of the
+ mnemonic character</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>the new <code>Label</code></p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

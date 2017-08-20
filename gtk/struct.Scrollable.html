@@ -49,7 +49,35 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Scrollable(_, _);</pre>
+<pre class='rust struct'>pub struct Scrollable(_, _);</pre><div class='docblock'><p><code>Scrollable</code> is an interface that is implemented by widgets with native
+scrolling ability.</p>
+
+<p>To implement this interface you should override the
+<code>Scrollable:hadjustment</code> and <code>Scrollable:vadjustment</code> properties.</p>
+
+<h2 id='creating-a-scrollable-widget' class='section-header'><a href='#creating-a-scrollable-widget'>Creating a scrollable widget</a></h2>
+<p>All scrollable widgets should do the following.</p>
+
+<ul>
+<li><p>When a parent widget sets the scrollable child widget’s adjustments,
+the widget should populate the adjustments’
+<code>Adjustment:lower</code>, <code>Adjustment:upper</code>,
+<code>Adjustment:step-increment</code>, <code>Adjustment:page-increment</code> and
+<code>Adjustment:page-size</code> properties and connect to the
+<code>Adjustment::value-changed</code> signal.</p></li>
+<li><p>Because its preferred size is the size for a fully expanded widget,
+the scrollable widget must be able to cope with underallocations.
+This means that it must accept any value passed to its
+<code>WidgetClass.size_allocate</code>() function.</p></li>
+<li><p>When the parent allocates space to the scrollable child widget,
+the widget should update the adjustments’ properties with new values.</p></li>
+<li><p>When any of the adjustments emits the <code>Adjustment::value-changed</code> signal,
+the scrollable widget should scroll its contents.</p></li>
+</ul>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ScrollableExt.html"><code>ScrollableExt</code></a></p>
+</div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

@@ -49,15 +49,1095 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct CssProvider(_, _);</pre>
+<pre class='rust struct'>pub struct CssProvider(_, _);</pre><div class='docblock'><p><code>CssProvider</code> is an object implementing the <code>StyleProvider</code> interface.
+It is able to parse <a href="http://www.w3.org/TR/CSS2">CSS-like</a>
+input in order to style widgets.</p>
+
+<h2 id='default-files' class='section-header'><a href='#default-files'>Default files</a></h2>
+<p>An application can cause GTK+ to parse a specific CSS style sheet by
+calling <code>CssProvider::load_from_file</code> and adding the provider with
+<code>StyleContext::add_provider</code> or <code>StyleContext::add_provider_for_screen</code>.
+In addition, certain files will be read when GTK+ is initialized. First,
+the file <code>$XDG_CONFIG_HOME/gtk-3.0/gtk.css</code>
+is loaded if it exists. Then, GTK+ tries to load
+<code>$HOME/.themes/theme-name/gtk-3.0/gtk.css</code>,
+falling back to
+<code>datadir/share/themes/theme-name/gtk-3.0/gtk.css</code>,
+where theme-name is the name of the current theme
+(see the <code>Settings:gtk-theme-name</code> setting) and datadir
+is the prefix configured when GTK+ was compiled, unless overridden by the
+<code>GTK_DATA_PREFIX</code> environment variable.</p>
+
+<h1 id='style-sheets' class='section-header'><a href='#style-sheets'>Style sheets</a></h1>
+<p>The basic structure of the style sheets understood by this provider is
+a series of statements, which are either rule sets or “@-rules”, separated
+by whitespace.</p>
+
+<p>A rule set consists of a selector and a declaration block, which is
+a series of declarations enclosed in curly braces ({ and }). The
+declarations are separated by semicolons (;). Multiple selectors can
+share the same declaration block, by putting all the separators in
+front of the block, separated by commas.</p>
+
+<p>An example of a rule set with two selectors:</p>
+
+<pre><code class="language-text">GtkButton, GtkEntry {
+    color: #ff00ea;
+    font: Comic Sans 12
+}
+</code></pre>
+
+<h1 id='selectors--gtkcssprovider-selectors' class='section-header'><a href='#selectors--gtkcssprovider-selectors'>Selectors # {<code>gtkcssprovider</code>-selectors}</a></h1>
+<p>Selectors work very similar to the way they do in CSS, with widget class
+names taking the role of element names, and widget names taking the role
+of IDs. When used in a selector, widget names must be prefixed with a
+&#39;#&#39; character. The “*” character represents the so-called universal
+selector, which matches any widget.</p>
+
+<p>To express more complicated situations, selectors can be combined in
+various ways:
+- To require that a widget satisfies several conditions,
+ combine several selectors into one by concatenating them. E.g.
+ <code>GtkButton#button1</code> matches a <code>Button</code> widget
+ with the name button1.
+- To only match a widget when it occurs inside some other
+ widget, write the two selectors after each other, separated by whitespace.
+ E.g. <code>GtkToolBar GtkButton</code> matches <code>Button</code> widgets
+ that occur inside a <code>GtkToolBar</code>.
+- In the previous example, the <code>Button</code> is matched even
+ if it occurs deeply nested inside the toolbar. To restrict the match
+ to direct children of the parent widget, insert a “&gt;” character between
+ the two selectors. E.g. <code>GtkNotebook &gt; GtkLabel</code> matches
+ <code>Label</code> widgets that are direct children of a <code>Notebook</code>.</p>
+
+<h2 id='examples-of-widget-classes-and-names-in-selectors' class='section-header'><a href='#examples-of-widget-classes-and-names-in-selectors'>Examples of widget classes and names in selectors</a></h2>
+<p>Theme labels that are descendants of a window:</p>
+
+<pre><code class="language-text">GtkWindow GtkLabel {
+    background-color: #898989
+}
+</code></pre>
+
+<p>Theme notebooks, and anything that’s within these:</p>
+
+<pre><code class="language-text">GtkNotebook {
+    background-color: #a939f0
+}
+</code></pre>
+
+<p>Theme combo boxes, and entries that are direct children of a notebook:</p>
+
+<pre><code class="language-text">GtkComboBox,
+GtkNotebook &gt; GtkEntry {
+    color: @fg_color;
+    background-color: #1209a2
+}
+</code></pre>
+
+<p>Theme any widget within a <code>Bin</code>:</p>
+
+<pre><code class="language-text">GtkBin * {
+    font: Sans 20
+}
+</code></pre>
+
+<p>Theme a label named title-label:</p>
+
+<pre><code class="language-text">GtkLabel#title-label {
+    font: Sans 15
+}
+</code></pre>
+
+<p>Theme any widget named main-entry:</p>
+
+<pre><code class="language-text">#main-entry {
+    background-color: #f0a810
+}
+</code></pre>
+
+<p>Widgets may also define style classes, which can be used for matching.
+When used in a selector, style classes must be prefixed with a “.”
+character.</p>
+
+<p>Refer to the documentation of individual widgets to learn which
+style classes they define and see
+[Style Classes and Regions][gtkstylecontext-classes]
+for a list of all style classes used by GTK+ widgets.</p>
+
+<p>Note that there is some ambiguity in the selector syntax when it comes
+to differentiation widget class names from regions. GTK+ currently treats
+a string as a widget class name if it contains any uppercase characters
+(which should work for more widgets with names like <code>Label</code>).</p>
+
+<h2 id='examples-for-style-classes-in-selectors' class='section-header'><a href='#examples-for-style-classes-in-selectors'>Examples for style classes in selectors</a></h2>
+<p>Theme all widgets defining the class entry:</p>
+
+<pre><code class="language-text">.entry {
+    color: #39f1f9;
+}
+</code></pre>
+
+<p>Theme spinbuttons’ entry:</p>
+
+<pre><code class="language-text">GtkSpinButton.entry {
+    color: #900185
+}
+</code></pre>
+
+<p>In complicated widgets like e.g. a <code>Notebook</code>, it may be desirable
+to style different parts of the widget differently. To make this
+possible, container widgets may define regions, whose names
+may be used for matching in selectors.</p>
+
+<p>Some containers allow to further differentiate between regions by
+applying so-called pseudo-classes to the region. For example, the
+tab region in <code>Notebook</code> allows to single out the first or last
+tab by using the :first-child or :last-child pseudo-class.
+When used in selectors, pseudo-classes must be prefixed with a
+&#39;:&#39; character.</p>
+
+<p>Refer to the documentation of individual widgets to learn which
+regions and pseudo-classes they define and see
+[Style Classes and Regions][gtkstylecontext-classes]
+for a list of all regions
+used by GTK+ widgets.</p>
+
+<h2 id='examples-for-regions-in-selectors' class='section-header'><a href='#examples-for-regions-in-selectors'>Examples for regions in selectors</a></h2>
+<p>Theme any label within a notebook:</p>
+
+<pre><code class="language-text">GtkNotebook GtkLabel {
+    color: #f90192;
+}
+</code></pre>
+
+<p>Theme labels within notebook tabs:</p>
+
+<pre><code class="language-text">GtkNotebook tab GtkLabel {
+    color: #703910;
+}
+</code></pre>
+
+<p>Theme labels in the any first notebook tab, both selectors are
+equivalent:</p>
+
+<pre><code class="language-text">GtkNotebook tab:nth-child(first) GtkLabel,
+GtkNotebook tab:first-child GtkLabel {
+    color: #89d012;
+}
+</code></pre>
+
+<p>Another use of pseudo-classes is to match widgets depending on their
+state. This is conceptually similar to the :hover, :active or :focus
+pseudo-classes in CSS. The available pseudo-classes for widget states
+are :active, :prelight (or :hover), :insensitive, :selected, :focused
+and :inconsistent.</p>
+
+<h2 id='examples-for-styling-specific-widget-states' class='section-header'><a href='#examples-for-styling-specific-widget-states'>Examples for styling specific widget states</a></h2>
+<p>Theme active (pressed) buttons:</p>
+
+<pre><code class="language-text">GtkButton:active {
+    background-color: #0274d9;
+}
+</code></pre>
+
+<p>Theme buttons with the mouse pointer on it, both are equivalent:</p>
+
+<pre><code class="language-text">GtkButton:hover,
+GtkButton:prelight {
+    background-color: #3085a9;
+}
+</code></pre>
+
+<p>Theme insensitive widgets, both are equivalent:</p>
+
+<pre><code class="language-text">:insensitive,
+*:insensitive {
+    background-color: #320a91;
+}
+</code></pre>
+
+<p>Theme selection colors in entries:</p>
+
+<pre><code class="language-text">GtkEntry:selected {
+    background-color: #56f9a0;
+}
+</code></pre>
+
+<p>Theme focused labels:</p>
+
+<pre><code class="language-text">GtkLabel:focused {
+    background-color: #b4940f;
+}
+</code></pre>
+
+<p>Theme inconsistent checkbuttons:</p>
+
+<pre><code class="language-text">GtkCheckButton:inconsistent {
+    background-color: #20395a;
+}
+</code></pre>
+
+<p>Widget state pseudoclasses may only apply to the last element
+in a selector.</p>
+
+<p>To determine the effective style for a widget, all the matching rule
+sets are merged. As in CSS, rules apply by specificity, so the rules
+whose selectors more closely match a widget path will take precedence
+over the others.</p>
+
+<h1 id='-rules' class='section-header'><a href='#-rules'>@ Rules</a></h1>
+<p>GTK+’s CSS supports the \@import rule, in order to load another
+CSS style sheet in addition to the currently parsed one.</p>
+
+<p>An example for using the \@import rule:</p>
+
+<pre><code class="language-text">@import url (&quot;path/to/common.css&quot;);
+</code></pre>
+
+<p>In order to extend key bindings affecting different widgets, GTK+
+supports the \@binding-set rule to parse a set of bind/unbind
+directives, see <code>BindingSet</code> for the supported syntax. Note that
+the binding sets defined in this way must be associated with rule sets
+by setting the gtk-key-bindings style property.</p>
+
+<p>Customized key bindings are typically defined in a separate
+<code>gtk-keys.css</code> CSS file and GTK+ loads this file
+according to the current key theme, which is defined by the
+<code>Settings:gtk-key-theme-name</code> setting.</p>
+
+<p>An example for using the \@binding rule:</p>
+
+<pre><code class="language-text">@binding-set binding-set1 {
+  bind &quot;&lt;alt&gt;Left&quot; { &quot;move-cursor&quot; (visual-positions, -3, 0) };
+  unbind &quot;End&quot;;
+};
+
+@binding-set binding-set2 {
+  bind &quot;&lt;alt&gt;Right&quot; { &quot;move-cursor&quot; (visual-positions, 3, 0) };
+  bind &quot;&lt;alt&gt;KP_space&quot; { &quot;delete-from-cursor&quot; (whitespace, 1)
+                         &quot;insert-at-cursor&quot; (&quot; &quot;) };
+};
+
+GtkEntry {
+  gtk-key-bindings: binding-set1, binding-set2;
+}
+</code></pre>
+
+<p>GTK+ also supports an additional \@define-color rule, in order
+to define a color name which may be used instead of color numeric
+representations. Also see the <code>Settings:gtk-color-scheme</code> setting
+for a way to override the values of these named colors.</p>
+
+<p>An example for defining colors:</p>
+
+<pre><code class="language-text">@define-color bg_color #f9a039;
+
+* {
+    background-color: @bg_color;
+}
+</code></pre>
+
+<h1 id='symbolic-colors' class='section-header'><a href='#symbolic-colors'>Symbolic colors</a></h1>
+<p>Besides being able to define color names, the CSS parser is also able
+to read different color expressions, which can also be nested, providing
+a rich language to define colors which are derived from a set of base
+colors.</p>
+
+<p>An example for using symbolic colors:</p>
+
+<pre><code class="language-text">@define-color entry-color shade (@bg_color, 0.7);
+
+GtkEntry {
+    background-color: @entry-color;
+}
+
+GtkEntry:focused {
+    background-color: mix (@entry-color,
+                           shade (#fff, 0.5),
+                           0.8);
+}
+</code></pre>
+
+<h1 id='specifying-colors--specifying-colors' class='section-header'><a href='#specifying-colors--specifying-colors'>Specifying Colors # {<code>specifying</code>-colors}</a></h1>
+<p>There are various ways to express colors in GTK+ CSS.</p>
+
+<h2 id='rgbr-g-b' class='section-header'><a href='#rgbr-g-b'>rgb(r, g, b)</a></h2>
+<p>An opaque color.</p>
+
+<ul>
+<li><code>r</code>, <code>g</code>, <code>b</code> can be either integers between 0 and 255, or percentages.</li>
+</ul>
+
+<pre><code class="language-text">  color: rgb(128, 10, 54);
+  background-color: rgb(20%, 30%, 0%);
+</code></pre>
+
+<h2 id='rgbar-g-b-a' class='section-header'><a href='#rgbar-g-b-a'>rgba(r, g, b, a)</a></h2>
+<p>A translucent color.</p>
+
+<ul>
+<li><code>r</code>, <code>g</code>, <code>b</code> can be either integers between 0 and 255, or percentages.</li>
+<li><code>a</code> is a floating point number between 0 and 1.</li>
+</ul>
+
+<pre><code class="language-text">  color: rgb(128, 10, 54, 0.5);
+</code></pre>
+
+<h2 id='xxyyzz' class='section-header'><a href='#xxyyzz'>#xxyyzz</a></h2>
+<p>An opaque color.</p>
+
+<ul>
+<li><code>xx</code>, <code>yy</code>, <code>zz</code> are hexadecimal numbers specifying <code>r</code>, <code>g</code>, <code>b</code>
+variants with between 1 and 4 hexadecimal digits per component.</li>
+</ul>
+
+<pre><code class="language-text">  color: #f0c;
+  background-color: #ff00cc;
+  border-color: #ffff0000cccc;
+</code></pre>
+
+<h2 id='name' class='section-header'><a href='#name'>\@name</a></h2>
+<p>Reference to a color that has been defined with \@define-color</p>
+
+<pre><code class="language-text">  color: @bg_color;
+</code></pre>
+
+<h2 id='mixcolor1-color2-factor' class='section-header'><a href='#mixcolor1-color2-factor'>mix(color1, color2, factor)</a></h2>
+<p>A linear combination of <code>color1</code> and <code>color2</code>.</p>
+
+<ul>
+<li><code>factor</code> is a floating point number between 0 and 1.</li>
+</ul>
+
+<pre><code class="language-text">  color: mix(#ff1e0a, @bg_color, 0.8);
+</code></pre>
+
+<h2 id='shadecolor-factor' class='section-header'><a href='#shadecolor-factor'>shade(color, factor)</a></h2>
+<p>A lighter or darker variant of <code>color</code>.</p>
+
+<ul>
+<li><code>factor</code> is a floating point number.</li>
+</ul>
+
+<pre><code class="language-text">  color: shade(@fg_color, 0.5);
+</code></pre>
+
+<h2 id='lightercolor' class='section-header'><a href='#lightercolor'>lighter(color)</a></h2>
+<p>A lighter variant of <code>color</code>.</p>
+
+<pre><code class="language-text">  color: lighter(@fg_color);
+</code></pre>
+
+<h2 id='darkercolor' class='section-header'><a href='#darkercolor'>darker(color)</a></h2>
+<p>A darker variant of <code>color</code>.</p>
+
+<pre><code class="language-text">  color: darker(@bg_color);
+</code></pre>
+
+<h2 id='alphacolor-factor' class='section-header'><a href='#alphacolor-factor'>alpha(color, factor)</a></h2>
+<p>Modifies passed color’s alpha by a factor.</p>
+
+<ul>
+<li><code>factor</code> is a floating point number. <code>factor</code> &lt; 1.0 results in a more
+transparent color while <code>factor</code> &gt; 1.0 results in a more opaque color.</li>
+</ul>
+
+<pre><code class="language-text">  color: alpha(@fg_color, 0.5);
+</code></pre>
+
+<h1 id='gradients' class='section-header'><a href='#gradients'>Gradients</a></h1>
+<p>Linear or radial gradients can be used as background images.</p>
+
+<h2 id='linear-gradients' class='section-header'><a href='#linear-gradients'>Linear Gradients</a></h2>
+<p>A linear gradient along the line from (<code>start_x</code>, <code>start_y</code>) to
+(<code>end_x</code>, <code>end_y</code>) is specified using the following syntax:</p>
+
+<blockquote>
+<p><code>-gtk-gradient (linear, start_x start_y, end_x end_y, color-stop (position, color), ...)</code></p>
+</blockquote>
+
+<ul>
+<li><code>start_x</code> and <code>end_x</code> can be either a floating point number between
+0 and 1, or one of the special values: “left”, “right”, or “center”.</li>
+<li><code>start_y</code> and <code>end_y</code> can be either a floating point number between 0 and 1, or one
+of the special values: “top”, “bottom” or “center”.</li>
+<li><code>position</code> is a floating point number between 0 and 1.</li>
+<li><code>color</code> is a color expression (see above).</li>
+</ul>
+
+<p>The color-stop can be repeated multiple times to add more than one color
+stop. “from (color)” and “to (color)” can be used as abbreviations for
+color stops with position 0 and 1, respectively.</p>
+
+<h2 id='example-linear-gradient' class='section-header'><a href='#example-linear-gradient'>Example: Linear Gradient</a></h2>
+<p><img src="gradient1.png" alt=""></p>
+
+<pre><code class="language-text">-gtk-gradient (linear,
+               left top, right bottom,
+               from(@yellow), to(@blue));
+</code></pre>
+
+<h2 id='example-linear-gradient-2' class='section-header'><a href='#example-linear-gradient-2'>Example: Linear Gradient 2</a></h2>
+<p><img src="gradient2.png" alt=""></p>
+
+<pre><code class="language-text">-gtk-gradient (linear,
+               0 0, 0 1,
+               color-stop(0, @yellow),
+               color-stop(0.2, @blue),
+               color-stop(1, #0f0))
+</code></pre>
+
+<h2 id='radial-gradients' class='section-header'><a href='#radial-gradients'>Radial Gradients</a></h2>
+<p>A radial gradient along the two circles defined by (<code>start_x</code>,
+<code>start_y</code>, <code>start_radius</code>) and (<code>end_x</code>, <code>end_y</code>, <code>end_radius</code>) is
+specified using the following syntax:</p>
+
+<blockquote>
+<p><code>-gtk-gradient (radial, start_x start_y, start_radius, end_x end_y, end_radius, color-stop (position, color), ...)</code></p>
+</blockquote>
+
+<p>where <code>start_radius</code> and <code>end_radius</code> are floating point numbers
+and the other parameters are as before.</p>
+
+<h2 id='example-radial-gradient' class='section-header'><a href='#example-radial-gradient'>Example: Radial Gradient</a></h2>
+<p><img src="gradient3.png" alt=""></p>
+
+<pre><code class="language-text">-gtk-gradient (radial,
+               center center, 0,
+               center center, 1,
+               from(@yellow), to(@green))
+</code></pre>
+
+<h2 id='example-radial-gradient-2' class='section-header'><a href='#example-radial-gradient-2'>Example: Radial Gradient 2</a></h2>
+<p><img src="gradient4.png" alt=""></p>
+
+<pre><code class="language-text">-gtk-gradient (radial,
+               0.4 0.4, 0.1,
+               0.6 0.6, 0.7,
+               color-stop (0, #f00),
+               color-stop (0.1, #a0f),
+               color-stop (0.2, @yellow),
+               color-stop (1, @green))
+</code></pre>
+
+<h1 id='border-images--border-images' class='section-header'><a href='#border-images--border-images'>Border images # {<code>border</code>-images}</a></h1>
+<p>Images and gradients can also be used in slices for the purpose of creating
+scalable borders.
+For more information, see the <a href="http://www.w3.org/TR/css3-background/%60border%60-images">CSS3 documentation for the border-image property</a>.</p>
+
+<p><img src="slices.png" alt=""></p>
+
+<p>The parameters of the slicing process are controlled by four
+separate properties.</p>
+
+<ul>
+<li>Image Source</li>
+<li>Image Slice</li>
+<li>Image Width</li>
+<li>Image Repeat</li>
+</ul>
+
+<p>Note that you can use the <code>border-image</code> shorthand property to set
+values for the properties at the same time.</p>
+
+<h2 id='image-source' class='section-header'><a href='#image-source'>Image Source</a></h2>
+<p>The border image source can be specified either as a
+URL or a gradient:</p>
+
+<pre><code class="language-text">  border-image-source: url(path);
+</code></pre>
+
+<p>or</p>
+
+<pre><code class="language-text">  border-image-source: -gtk-gradient(...);
+</code></pre>
+
+<h2 id='image-slice' class='section-header'><a href='#image-slice'>Image Slice</a></h2>
+<pre><code class="language-text">  border-image-slice: top right bottom left;
+</code></pre>
+
+<p>The sizes specified by the <code>top</code>, <code>right</code>, <code>bottom</code>, and <code>left</code> parameters
+are the offsets (in pixels) from the relevant edge where the image
+should be “cut off” to build the slices used for the rendering
+of the border.</p>
+
+<h2 id='image-width' class='section-header'><a href='#image-width'>Image Width</a></h2>
+<pre><code class="language-text">  border-image-width: top right bottom left;
+</code></pre>
+
+<p>The sizes specified by the <code>top</code>, <code>right</code>, <code>bottom</code> and <code>left</code> parameters
+are inward distances from the border box edge, used to specify the
+rendered size of each slice determined by border-image-slice.
+If this property is not specified, the values of border-width will
+be used as a fallback.</p>
+
+<h2 id='image-repeat' class='section-header'><a href='#image-repeat'>Image Repeat</a></h2>
+<p>Specifies how the image slices should be rendered in the area
+outlined by border-width.</p>
+
+<pre><code class="language-text">  border-image-repeat: [stretch|repeat|round|space];
+</code></pre>
+
+<p>or</p>
+
+<pre><code class="language-text">  border-image-repeat: [stretch|repeat|round|space] [stretch|repeat|round|space];
+</code></pre>
+
+<ul>
+<li><p>The default (stretch) is to resize the slice to fill in the
+whole allocated area.</p></li>
+<li><p>If the value of this property is “repeat”, the image slice will
+be tiled to fill the area.</p></li>
+<li><p>If the value of this property is “round”, the image slice will be
+tiled to fill the area, and scaled to fit it exactly a whole number
+of times.</p></li>
+<li><p>If the value of this property is “space”, the image slice will be
+tiled to fill the area, and if it doesn’t fit it exactly a whole
+number of times, the extra space is distributed as padding around
+the slices.</p></li>
+<li><p>If two options are specified, the first one affects the
+horizontal behaviour and the second one the vertical behaviour. If
+only one option is specified, it affects both.</p></li>
+</ul>
+
+<h2 id='example-border-image' class='section-header'><a href='#example-border-image'>Example: Border Image</a></h2>
+<p><img src="border1.png" alt=""></p>
+
+<pre><code class="language-text">border-image: url(&quot;gradient1.png&quot;) 10 10 10 10;
+</code></pre>
+
+<h2 id='example-repeating-border-image' class='section-header'><a href='#example-repeating-border-image'>Example: Repeating Border Image</a></h2>
+<p><img src="border2.png" alt=""></p>
+
+<pre><code class="language-text">border-image: url(&quot;gradient1.png&quot;) 10 10 10 10 repeat;
+</code></pre>
+
+<h2 id='example-stetched-border-image' class='section-header'><a href='#example-stetched-border-image'>Example: Stetched Border Image</a></h2>
+<p><img src="border3.png" alt=""></p>
+
+<pre><code class="language-text">border-image: url(&quot;gradient1.png&quot;) 10 10 10 10 stretch;
+</code></pre>
+
+<h1 id='supported-properties' class='section-header'><a href='#supported-properties'>Supported Properties</a></h1>
+<p>Properties are the part that differ the most to common CSS, not all
+properties are supported (some are planned to be supported
+eventually, some others are meaningless or don&#39;t map intuitively in
+a widget based environment).</p>
+
+<p>The currently supported properties are:</p>
+
+<h2 id='engine-namenone' class='section-header'><a href='#engine-namenone'>engine: [name|none];</a></h2>
+<ul>
+<li><code>none</code> means to use the default (ie. builtin engine)</li>
+</ul>
+
+<pre><code class="language-text"> engine: clearlooks;
+</code></pre>
+
+<h2 id='background-color-colortransparent' class='section-header'><a href='#background-color-colortransparent'>background-color: [color|transparent];</a></h2>
+<ul>
+<li><code>color</code>: See [Specifying Colors][specifying-colors]</li>
+</ul>
+
+<pre><code class="language-text"> background-color: shade (@color1, 0.5);
+</code></pre>
+
+<h2 id='color-colortransparent' class='section-header'><a href='#color-colortransparent'>color: [color|transparent];</a></h2>
+<ul>
+<li><code>color</code>: See [Specifying Colors][specifying-colors]</li>
+</ul>
+
+<pre><code class="language-text"> color: #fff;
+</code></pre>
+
+<h2 id='border-color-colortransparent14' class='section-header'><a href='#border-color-colortransparent14'>border-color: [color|transparent]{1,4};</a></h2>
+<ul>
+<li><code>color</code>: See [Specifying Colors][specifying-colors]</li>
+<li>Four values used to specify: top right bottom left</li>
+<li>Three values used to specify: top vertical bottom</li>
+<li>Two values used to specify: horizontal vertical</li>
+<li>One value used to specify: color</li>
+</ul>
+
+<pre><code class="language-text"> border-color: red green blue;
+</code></pre>
+
+<h2 id='border-top-color-colortransparent' class='section-header'><a href='#border-top-color-colortransparent'>border-top-color: [color|transparent];</a></h2>
+<ul>
+<li><code>color</code>: See [Specifying Colors][specifying-colors]</li>
+</ul>
+
+<pre><code class="language-text"> border-top-color: @borders;
+</code></pre>
+
+<h2 id='border-right-color-colortransparent' class='section-header'><a href='#border-right-color-colortransparent'>border-right-color: [color|transparent];</a></h2>
+<ul>
+<li><code>color</code>: See [Specifying Colors][specifying-colors]</li>
+</ul>
+
+<pre><code class="language-text"> border-right-color: @borders;
+</code></pre>
+
+<h2 id='border-bottom-color-colortransparent' class='section-header'><a href='#border-bottom-color-colortransparent'>border-bottom-color: [color|transparent];</a></h2>
+<ul>
+<li><code>color</code>: See [Specifying Colors][specifying-colors]</li>
+</ul>
+
+<pre><code class="language-text"> border-bottom-color: @borders;
+</code></pre>
+
+<h2 id='border-left-color-colortransparent' class='section-header'><a href='#border-left-color-colortransparent'>border-left-color: [color|transparent];</a></h2>
+<ul>
+<li><code>color</code>: See [Specifying Colors][specifying-colors]</li>
+</ul>
+
+<pre><code class="language-text"> border-left-color: @borders;
+</code></pre>
+
+<h2 id='font-family-name' class='section-header'><a href='#font-family-name'>font-family: name;</a></h2>
+<p>The name of the font family or font name to use.</p>
+
+<ul>
+<li>Note: unlike the CSS2 Specification this does not support using a
+prioritized list of font family names and/or generic family
+names.</li>
+</ul>
+
+<pre><code class="language-text"> font-family: Sans, Cantarell;
+</code></pre>
+
+<h2 id='font-style-normalobliqueitalic' class='section-header'><a href='#font-style-normalobliqueitalic'>font-style: [normal|oblique|italic];</a></h2>
+<p>Selects between normal, italic and oblique faces within a font family.</p>
+
+<pre><code class="language-text"> font-style: italic;
+</code></pre>
+
+<h2 id='font-variant-normalsmall-caps' class='section-header'><a href='#font-variant-normalsmall-caps'>font-variant: [normal|small-caps];</a></h2>
+<p>In a small-caps font the lower case letters look similar to the
+uppercase ones, but in a smaller size and with slightly different
+proportions.</p>
+
+<pre><code class="language-text"> font-variant: normal;
+</code></pre>
+
+<h2 id='font-weight-normalboldbolderlighter100200300400500600700800900' class='section-header'><a href='#font-weight-normalboldbolderlighter100200300400500600700800900'>font-weight: [normal|bold|bolder|lighter|100|200|300|400|500|600|700|800|900];</a></h2>
+<p>Selects the weight of the font. The values &#39;100&#39; to &#39;900&#39; form an
+ordered sequence, where each number indicates a weight that is at
+least as dark as its predecessor. The keyword &#39;normal&#39; is
+synonymous with &#39;400&#39;, and &#39;bold&#39; is synonymous with
+&#39;700&#39;. Keywords other than &#39;normal&#39; and &#39;bold&#39; have been shown to
+be often confused with font names and a numerical scale was
+therefore chosen for the 9-value list.
+- Maps to <code>PANGO_TYPE_WEIGHT</code></p>
+
+<pre><code class="language-text"> font-weight: bold;
+</code></pre>
+
+<h2 id='font-size-absolute-sizerelative-sizepercentage' class='section-header'><a href='#font-size-absolute-sizerelative-sizepercentage'>font-size: [absolute-size|relative-size|percentage];</a></h2>
+<ul>
+<li><code>absolute-size</code>: The size in normal size units like <code>px</code>, <code>pt</code>,
+and <code>em</code>. Or symbolic sizes like <code>xx-small</code>, <code>x-small</code>, <code>small</code>,
+<code>medium</code>, <code>large</code>, <code>x-large</code>, <code>xx-large</code>.</li>
+<li><code>relative-size</code>: <code>larger</code> or <code>smaller</code> relative to the parent.</li>
+<li><code>percentage</code>: A percentage difference from the nominal size.</li>
+</ul>
+
+<pre><code class="language-text"> font-size: 12px;
+</code></pre>
+
+<h2 id='font-stretch-face' class='section-header'><a href='#font-stretch-face'>font-stretch: [face]</a></h2>
+<p>Selects a normal, condensed, or expanded face from a font family.</p>
+
+<p>Absolute keyword values have the following ordering, from narrowest to widest:</p>
+
+<ul>
+<li>ultra-condensed</li>
+<li>extra-condensed</li>
+<li>condensed</li>
+<li>semi-condensed</li>
+<li>normal</li>
+<li>semi-expanded</li>
+<li>expanded</li>
+<li>extra-expanded</li>
+<li>ultra-expanded</li>
+</ul>
+
+<h2 id='font-family-style-variant-stretch-size' class='section-header'><a href='#font-family-style-variant-stretch-size'>font: [family] [style] [variant] [stretch] [size];</a></h2>
+<p>A shorthand for setting a few font properties at once.
+- Supports any format accepted by <code>pango::FontDescription::from_string</code>
+- Note: this is somewhat different from the CSS2 Specification for this property.</p>
+
+<pre><code class="language-text"> font: Bold 11;
+</code></pre>
+
+<h2 id='margin-lengthpercentage14' class='section-header'><a href='#margin-lengthpercentage14'>margin: [length|percentage]{1,4};</a></h2>
+<p>A shorthand for setting the margin space required on all sides of
+an element.
+- Four values used to specify: top right bottom left
+- Three values used to specify: top horizontal bottom
+- Two values used to specify: vertical horizontal
+- One value used to specify: margin</p>
+
+<pre><code class="language-text"> margin: 1em 2em 4em;
+</code></pre>
+
+<h2 id='margin-top-lengthpercentage' class='section-header'><a href='#margin-top-lengthpercentage'>margin-top: [length|percentage];</a></h2>
+<p>Sets the margin space required on the top of an element.</p>
+
+<pre><code class="language-text"> margin-top: 10px;
+</code></pre>
+
+<h2 id='margin-right-lengthpercentage' class='section-header'><a href='#margin-right-lengthpercentage'>margin-right: [length|percentage];</a></h2>
+<p>Sets the margin space required on the right of an element.</p>
+
+<pre><code class="language-text"> margin-right: 0px;
+</code></pre>
+
+<h2 id='margin-bottom-lengthpercentage' class='section-header'><a href='#margin-bottom-lengthpercentage'>margin-bottom: [length|percentage];</a></h2>
+<p>Sets the margin space required on the bottom of an element.</p>
+
+<pre><code class="language-text"> margin-bottom: 10px;
+</code></pre>
+
+<h2 id='margin-left-lengthpercentage' class='section-header'><a href='#margin-left-lengthpercentage'>margin-left: [length|percentage];</a></h2>
+<p>Sets the margin space required on the left of an element.</p>
+
+<pre><code class="language-text"> margin-left: 1em;
+</code></pre>
+
+<h2 id='padding-lengthpercentage14' class='section-header'><a href='#padding-lengthpercentage14'>padding: [length|percentage]{1,4};</a></h2>
+<p>A shorthand for setting the padding space required on all sides of
+an element. The padding area is the space between the content of
+the element and its border.
+- Four values used to specify: top right bottom left
+- Three values used to specify: top horizontal bottom
+- Two values used to specify: vertical horizontal
+- One value used to specify: padding</p>
+
+<pre><code class="language-text"> padding: 1em 2em 4em;
+</code></pre>
+
+<h2 id='padding-top-lengthpercentage' class='section-header'><a href='#padding-top-lengthpercentage'>padding-top: [length|percentage];</a></h2>
+<p>Sets the padding space required on the top of an element.</p>
+
+<pre><code class="language-text"> padding-top: 10px;
+</code></pre>
+
+<h2 id='padding-right-lengthpercentage' class='section-header'><a href='#padding-right-lengthpercentage'>padding-right: [length|percentage];</a></h2>
+<p>Sets the padding space required on the right of an element.</p>
+
+<pre><code class="language-text"> padding-right: 0px;
+</code></pre>
+
+<h2 id='padding-bottom-lengthpercentage' class='section-header'><a href='#padding-bottom-lengthpercentage'>padding-bottom: [length|percentage];</a></h2>
+<p>Sets the padding space required on the bottom of an element.</p>
+
+<pre><code class="language-text"> padding-bottom: 10px;
+</code></pre>
+
+<h2 id='padding-left-lengthpercentage' class='section-header'><a href='#padding-left-lengthpercentage'>padding-left: [length|percentage];</a></h2>
+<p>Sets the padding space required on the left of an element.</p>
+
+<pre><code class="language-text"> padding-left: 1em;
+</code></pre>
+
+<h2 id='border-width-width14' class='section-header'><a href='#border-width-width14'>border-width: [width]{1,4};</a></h2>
+<p>A shorthand for setting the border width on all sides of
+an element.
+- Four values used to specify: top right bottom left
+- Three values used to specify: top vertical bottom
+- Two values used to specify: horizontal vertical
+- One value used to specify: width</p>
+
+<pre><code class="language-text"> border-width: 1px 2px 4px;
+</code></pre>
+
+<h2 id='border-top-width-width' class='section-header'><a href='#border-top-width-width'>border-top-width: [width];</a></h2>
+<p>Sets the border width required on the top of an element.</p>
+
+<pre><code class="language-text"> border-top: 10px;
+</code></pre>
+
+<h2 id='border-right-width-width' class='section-header'><a href='#border-right-width-width'>border-right-width: [width];</a></h2>
+<p>Sets the border width required on the right of an element.</p>
+
+<pre><code class="language-text"> border-right: 0px;
+</code></pre>
+
+<h2 id='border-bottom-width-width' class='section-header'><a href='#border-bottom-width-width'>border-bottom-width: [width];</a></h2>
+<p>Sets the border width required on the bottom of an element.</p>
+
+<pre><code class="language-text"> border-bottom: 10px;
+</code></pre>
+
+<h2 id='border-left-width-width' class='section-header'><a href='#border-left-width-width'>border-left-width: [width];</a></h2>
+<p>Sets the border width required on the left of an element.</p>
+
+<pre><code class="language-text"> border-left: 1em;
+</code></pre>
+
+<h2 id='border-radius-lengthpercentage14' class='section-header'><a href='#border-radius-lengthpercentage14'>border-radius: [length|percentage]{1,4};</a></h2>
+<p>Allows setting how rounded all border corners are.
+- Four values used to specify: top-left top-right bottom-right bottom-left
+- Three values used to specify: top-left top-right-and-bottom-left bottom-right
+- Two values used to specify: top-left-and-bottom-right top-right-and-bottom-left
+- One value used to specify: radius on all sides</p>
+
+<pre><code class="language-text"> border-radius: 8px
+</code></pre>
+
+<h2 id='border-style-nonesolidinsetoutset14' class='section-header'><a href='#border-style-nonesolidinsetoutset14'>border-style: [none|solid|inset|outset]{1,4};</a></h2>
+<p>A shorthand property for setting the line style for all four sides
+of the elements border.
+- Four values used to specify: top right bottom left;
+- Three values used to specify: top horizontal bottom
+- Two values used to specify: vertical horizontal
+- One value used to specify: style</p>
+
+<pre><code class="language-text"> border-style: solid;
+</code></pre>
+
+<h2 id='border-image-source-slice---width--repeat-a-shorthand' class='section-header'><a href='#border-image-source-slice---width--repeat-a-shorthand'>border-image: [source] [slice] [ / width ] [repeat]; A shorthand</a></h2>
+<p>for setting an image on the borders of elements. See [Border
+Images][border-images].</p>
+
+<pre><code class="language-text"> border-image: url(&quot;/path/to/image.png&quot;) 3 4 4 3 repeat stretch;
+</code></pre>
+
+<h2 id='border-image-source-noneurllinear-gradient14' class='section-header'><a href='#border-image-source-noneurllinear-gradient14'>border-image-source: [none|url|linear-gradient]{1,4};</a></h2>
+<p>Defines the image to use instead of the style of the border. If
+this property is set to none, the style defined by border-style is
+used instead.</p>
+
+<pre><code class="language-text"> border-image-source: url(&quot;/path/to/image.png&quot;);
+</code></pre>
+
+<h2 id='border-image-slice-numberpercentage14' class='section-header'><a href='#border-image-slice-numberpercentage14'>border-image-slice: [number|percentage]{1,4};</a></h2>
+<p>Divides the image specified by border-image-source in nine regions:
+the four corners, the four edges and the middle. It does this by
+specifying 4 inwards offsets.
+- Four values used to specify: top right bottom left;
+- Three values used to specify: top vertical bottom
+- Two values used to specify: horizontal vertical
+- One value used to specify: slice</p>
+
+<pre><code class="language-text"> border-image-slice: 3 3 4 3;
+</code></pre>
+
+<h2 id='border-image-width-lengthpercentage14' class='section-header'><a href='#border-image-width-lengthpercentage14'>border-image-width: [length|percentage]{1,4};</a></h2>
+<p>Defines the offset to use for dividing the border image in nine
+parts, the top-left corner, central top edge, top-right-corner,
+central right edge, bottom-right corner, central bottom edge,
+bottom-left corner, and central right edge. They represent inward
+distance from the top, right, bottom, and left edges.
+- Four values used to specify: top right bottom left;
+- Three values used to specify: top horizontal bottom
+- Two values used to specify: vertical horizontal
+- One value used to specify: width</p>
+
+<pre><code class="language-text"> border-image-width: 4px 0 4px 0;
+</code></pre>
+
+<h2 id='border-image-repeat-noneurllinear-gradient14' class='section-header'><a href='#border-image-repeat-noneurllinear-gradient14'>border-image-repeat: [none|url|linear-gradient]{1,4};</a></h2>
+<p>Defines how the middle part of a border image is handled to match
+the size of the border. It has a one-value syntax which describes
+the behavior for all sides, and a two-value syntax that sets a
+different value for the horizontal and vertical behavior.
+- Two values used to specify: horizontal vertical
+- One value used to specify: repeat</p>
+
+<pre><code class="language-text"> border-image-repeat: stretch;
+</code></pre>
+
+<h2 id='background-image-noneurllinear-gradient-' class='section-header'><a href='#background-image-noneurllinear-gradient-'>background-image: [none|url|linear-gradient], ...</a></h2>
+<p>Sets one or several background images for an element. The images
+are drawn on successive stacking context layers, with the first
+specified being drawn as if it is the closest to the user. The
+borders of the element are then drawn on top of them, and the
+background-color is drawn beneath them.
+- There can be several sources listed, separated by commas.</p>
+
+<pre><code class="language-text"> background-image: gtk-gradient (linear,
+                                 left top, right top,
+                                 from (#fff), to (#000));
+</code></pre>
+
+<h2 id='background-repeat-repeatno-repeatspaceroundrepeat-xrepeat-y' class='section-header'><a href='#background-repeat-repeatno-repeatspaceroundrepeat-xrepeat-y'>background-repeat: [repeat|no-repeat|space|round|repeat-x|repeat-y];</a></h2>
+<p>Defines how background images are repeated. A background image can
+be repeated along the horizontal axis, the vertical axis, both, or
+not repeated at all.
+- <code>repeat</code>: The image is repeated in the given direction as much as
+ needed to cover the whole background image painting area. The
+ last image may be clipped if the whole thing won&#39;t fit in the
+ remaining area.
+- <code>space</code>: The image is repeated in the given direction as much as
+ needed to cover most of the background image painting area,
+ without clipping an image. The remaining non-covered space is
+ spaced out evenly between the images. The first and last images
+ touches the edge of the element. The value of the
+ background-position CSS property is ignored for the concerned
+ direction, except if one single image is greater than the
+ background image painting area, which is the only case where an
+ image can be clipped when the space value is used.
+- <code>round</code>: The image is repeated in the given direction as much as
+ needed to cover most of the background image painting area,
+ without clipping an image. If it doesn&#39;t cover exactly the area,
+ the tiles are resized in that direction in order to match it.
+- <code>no-repeat</code>: The image is not repeated (and hence the background
+ image painting area will not necessarily been entirely
+ covered). The position of the non-repeated background image is
+ defined by the background-position CSS property.
+- Note if not specified, the style doesn’t respect the CSS3
+ specification, since the background will be stretched to fill
+ the area.</p>
+
+<pre><code class="language-text"> background-repeat: no-repeat;
+</code></pre>
+
+<h2 id='text-shadow-horizontal_offset-vertical_offset--blur_radius--color' class='section-header'><a href='#text-shadow-horizontal_offset-vertical_offset--blur_radius--color'>text-shadow: horizontal_offset vertical_offset [ blur_radius ] color;</a></h2>
+<p>A shadow list can be applied to text or symbolic icons, using the CSS3
+text-shadow syntax, as defined in the
+<a href="http://www.w3.org/TR/css3-text/%60text%60-shadow">CSS3 Specification</a>.</p>
+
+<ul>
+<li>The offset of the shadow is specified with the
+<code>horizontal_offset</code> and <code>vertical_offset</code> parameters.</li>
+<li>The optional blur radius is parsed, but it is currently not
+rendered by the GTK+ theming engine.</li>
+</ul>
+
+<p>To set a shadow on an icon, use the <code>icon-shadow</code> property instead,
+with the same syntax.</p>
+
+<p>To set multiple shadows on an element, you can specify a comma-separated list
+of shadow elements in the <code>text-shadow</code> or <code>icon-shadow</code> property. Shadows are
+always rendered front to back (i.e. the first shadow specified is on top of the
+others). Shadows can thus overlay each other, but they can never overlay the
+text or icon itself, which is always rendered on top of the shadow layer.</p>
+
+<pre><code class="language-text">  text-shadow: 1 1 0 blue, -4 -4 red;
+</code></pre>
+
+<h2 id='box-shadow--inset--horizontal_offset-vertical_offset--blur_radius---spread--color' class='section-header'><a href='#box-shadow--inset--horizontal_offset-vertical_offset--blur_radius---spread--color'>box-shadow: [ inset ] horizontal_offset vertical_offset [ blur_radius ] [ spread ] color;</a></h2>
+<p>Themes can apply shadows on framed elements using the CSS3 box-shadow syntax,
+as defined in the
+<a href="http://www.w3.org/TR/css3-background/%60the%60-box-shadow">CSS3 Specification</a>.</p>
+
+<ul>
+<li>A positive offset will draw a shadow that is offset to the right (down) of the box,</li>
+<li>A negative offset to the left (top).</li>
+<li>The optional spread parameter defines an additional distance to
+expand the shadow shape in all directions, by the specified radius.</li>
+<li>The optional blur radius parameter is parsed, but it is currently not rendered by
+the GTK+ theming engine.</li>
+<li>The inset parameter defines whether the drop shadow should be rendered inside or outside
+the box canvas.</li>
+</ul>
+
+<p>To set multiple box-shadows on an element, you can specify a comma-separated list
+of shadow elements in the <code>box-shadow</code> property. Shadows are always rendered
+front to back (i.e. the first shadow specified is on top of the others) so they may
+overlap other boxes or other shadows.</p>
+
+<pre><code class="language-text">  box-shadow: inset 0 1px 1px alpha(black, 0.1);
+</code></pre>
+
+<h2 id='transition-duration-sms-lineareaseease-inease-outease-in-out-loop' class='section-header'><a href='#transition-duration-sms-lineareaseease-inease-outease-in-out-loop'>transition: duration [s|ms] [linear|ease|ease-in|ease-out|ease-in-out] [loop];</a></h2>
+<p>Styles can specify transitions that will be used to create a
+gradual change in the appearance when a widget state changes.
+- The <code>duration</code> is the amount of time that the animation will take
+for a complete cycle from start to end.
+- If the loop option is given, the animation will be repated until
+the state changes again.
+- The option after the duration determines the transition function
+from a small set of predefined functions.</p>
+
+<ul>
+<li><p>Linear</p>
+
+<p><img src="linear.png" alt=""></p></li>
+<li><p>Ease transition</p></li>
+</ul>
+
+<p><img src="ease.png" alt=""></p>
+
+<ul>
+<li>Ease-in-out transition</li>
+</ul>
+
+<p><img src="ease-in-out.png" alt=""></p>
+
+<ul>
+<li>Ease-in transition</li>
+</ul>
+
+<p><img src="ease-in.png" alt=""></p>
+
+<ul>
+<li>Ease-out transition</li>
+</ul>
+
+<p><img src="ease-out.png" alt=""></p>
+
+<pre><code class="language-text">  transition: 150ms ease-in-out;
+</code></pre>
+
+<h2 id='gtk-key-bindings-binding1-binding2-' class='section-header'><a href='#gtk-key-bindings-binding1-binding2-'>gtk-key-bindings: binding1, binding2, ...;</a></h2>
+<p>Key binding set name list.</p>
+
+<h2 id='other-properties' class='section-header'><a href='#other-properties'>Other Properties</a></h2>
+<p><code>GtkThemingEngines</code> can register their own, engine-specific style properties
+with the function <code>ThemingEngine::register_property</code>. These properties
+can be set in CSS like other properties, using a name of the form
+<code>-namespace-name</code>, where namespace is typically
+the name of the theming engine, and name is the
+name of the property. Style properties that have been registered by widgets
+using <code>WidgetClass::install_style_property</code> can also be set in this
+way, using the widget class name for namespace.</p>
+
+<p>An example for using engine-specific style properties:</p>
+
+<pre><code class="language-text">* {
+    engine: clearlooks;
+    border-radius: 4;
+    -GtkPaned-handle-size: 6;
+    -clearlooks-colorize-scrollbar: false;
+}
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.StyleProviderExt.html"><code>StyleProviderExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/css_provider.rs.html#29-52' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/css_provider.rs.html#1212-1258' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a></code></span></h4>
-<h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>fn <a href='#method.get_default' class='fnname'>get_default</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a>&gt;</code></span></h4>
-<h4 id='method.get_named' class="method"><span id='get_named.v' class='invisible'><code>fn <a href='#method.get_named' class='fnname'>get_named</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;variant: P<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a>&gt;</code></span></h4>
-</div>
+<div class='docblock'><p>Returns a newly created <code>CssProvider</code>.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>A new <code>CssProvider</code></p>
+</div><h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>fn <a href='#method.get_default' class='fnname'>get_default</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns the provider containing the style settings used as a
+fallback for all widgets.</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>The provider used for fallback styling.
+ This memory is owned by GTK+, and you must not free it.</p>
+</div><h4 id='method.get_named' class="method"><span id='get_named.v' class='invisible'><code>fn <a href='#method.get_named' class='fnname'>get_named</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;variant: P<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a>&gt;</code></span></h4>
+<div class='docblock'><p>Loads a theme from the usual theme paths</p>
+
+<h2 id='name-1' class='section-header'><a href='#name-1'><code>name</code></a></h2>
+<p>A theme name</p>
+
+<h2 id='variant' class='section-header'><a href='#variant'><code>variant</code></a></h2>
+<p>variant to load, for example, &quot;dark&quot;, or
+ <code>None</code> for the default</p>
+
+<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<p>a <code>CssProvider</code> with the theme loaded.
+ This memory is owned by GTK+, and you must not free it.</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>
@@ -85,10 +1165,10 @@
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.StyleProvider.html" title="struct gtk::StyleProvider">StyleProvider</a>&gt; for <a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/css_provider.rs.html#54-58' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/css_provider.rs.html#1260-1264' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html" title="trait core::fmt::Display">Display</a> for <a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/css_provider.rs.html#60-65' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html" title="trait core::fmt::Display">Display</a> for <a class="struct" href="../gtk/struct.CssProvider.html" title="struct gtk::CssProvider">CssProvider</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/css_provider.rs.html#1266-1271' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt-1' class="method"><span id='fmt.v-1' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt">Read more</a></p>
 </div></div></section>

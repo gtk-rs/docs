@@ -49,7 +49,72 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct CellLayout(_, _);</pre>
+<pre class='rust struct'>pub struct CellLayout(_, _);</pre><div class='docblock'><p><code>CellLayout</code> is an interface to be implemented by all objects which
+want to provide a <code>TreeViewColumn</code> like API for packing cells,
+setting attributes and data funcs.</p>
+
+<p>One of the notable features provided by implementations of
+<code>CellLayout</code> are attributes. Attributes let you set the properties
+in flexible ways. They can just be set to constant values like regular
+properties. But they can also be mapped to a column of the underlying
+tree model with <code>CellLayout::set_attributes</code>, which means that the value
+of the attribute can change from cell to cell as they are rendered by
+the cell renderer. Finally, it is possible to specify a function with
+<code>CellLayout::set_cell_data_func</code> that is called to determine the
+value of the attribute for each cell that is rendered.</p>
+
+<h1 id='gtkcelllayouts-as-buildable' class='section-header'><a href='#gtkcelllayouts-as-buildable'><code>GtkCellLayouts</code> as <code>Buildable</code></a></h1>
+<p>Implementations of <code>CellLayout</code> which also implement the <code>Buildable</code>
+interface (<code>CellView</code>, <code>IconView</code>, <code>ComboBox</code>,
+<code>EntryCompletion</code>, <code>TreeViewColumn</code>) accept <code>CellRenderer</code> objects
+as <code>&lt;child&gt;</code> elements in UI definitions. They support a custom <code>&lt;attributes&gt;</code>
+element for their children, which can contain multiple <code>&lt;attribute&gt;</code>
+elements. Each <code>&lt;attribute&gt;</code> element has a name attribute which specifies
+a property of the cell renderer; the content of the element is the
+attribute value.</p>
+
+<p>This is an example of a UI definition fragment specifying attributes:</p>
+
+<pre><code class="language-C">combo = g_object_new (GTK_TYPE_COMBO_BOX, &quot;cell-area&quot;, my_cell_area, NULL);
+</code></pre>
+
+<p>to use a custom cell area with a combo box. But construct properties
+are only initialized after instance <code>init</code>
+functions have run, which means that using functions which rely on
+the existence of the cell area in your subclass’ <code>init</code> function will
+cause the default cell area to be instantiated. In this case, a provided
+construct property value will be ignored (with a warning, to alert
+you to the problem).</p>
+
+<pre><code class="language-C">static void
+my_combo_box_init (MyComboBox *b)
+{
+  GtkCellRenderer *cell;
+
+  cell = gtk_cell_renderer_pixbuf_new ();
+  // The following call causes the default cell area for combo boxes,
+  // a GtkCellAreaBox, to be instantiated
+  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (b), cell, FALSE);
+  ...
+}
+
+GtkWidget *
+my_combo_box_new (GtkCellArea *area)
+{
+  // This call is going to cause a warning about area being ignored
+  return g_object_new (MY_TYPE_COMBO_BOX, &quot;cell-area&quot;, area, NULL);
+}
+</code></pre>
+
+<p>If supporting alternative cell areas with your derived widget is
+not important, then this does not have to concern you. If you want
+to support alternative cell areas, you can do so by moving the
+problematic calls out of <code>init</code> and into a <code>constructor</code>
+for your class.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.CellLayoutExt.html"><code>CellLayoutExt</code></a></p>
+</div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

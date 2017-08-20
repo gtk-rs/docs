@@ -49,13 +49,178 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct FileChooserDialog(_, _);</pre>
+<pre class='rust struct'>pub struct FileChooserDialog(_, _);</pre><div class='docblock'><p><code>FileChooserDialog</code> is a dialog box suitable for use with
+“File/Open” or “File/Save as” commands. This widget works by
+putting a <code>FileChooserWidget</code> inside a <code>Dialog</code>. It exposes
+the <code>FileChooser</code> interface, so you can use all of the
+<code>FileChooser</code> functions on the file chooser dialog as well as
+those for <code>Dialog</code>.</p>
+
+<p>Note that <code>FileChooserDialog</code> does not have any methods of its
+own. Instead, you should use the functions that work on a
+<code>FileChooser</code>.</p>
+
+<h2 id='typical-usage--gtkfilechooser-typical-usage' class='section-header'><a href='#typical-usage--gtkfilechooser-typical-usage'>Typical usage ## {<code>gtkfilechooser</code>-typical-usage}</a></h2>
+<p>In the simplest of cases, you can the following code to use
+<code>FileChooserDialog</code> to select a file for opening:</p>
+
+<pre><code class="language-text">GtkWidget *dialog;
+GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+gint res;
+
+dialog = gtk_file_chooser_dialog_new (&quot;Open File&quot;,
+                                      parent_window,
+                                      action,
+                                      _(&quot;_Cancel&quot;),
+                                      GTK_RESPONSE_CANCEL,
+                                      _(&quot;_Open&quot;),
+                                      GTK_RESPONSE_ACCEPT,
+                                      NULL);
+
+res = gtk_dialog_run (GTK_DIALOG (dialog));
+if (res == GTK_RESPONSE_ACCEPT)
+  {
+    char *filename;
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+    filename = gtk_file_chooser_get_filename (chooser);
+    open_file (filename);
+    g_free (filename);
+  }
+
+gtk_widget_destroy (dialog);
+</code></pre>
+
+<p>To use a dialog for saving, you can use this:</p>
+
+<pre><code class="language-text">GtkWidget *dialog;
+GtkFileChooser *chooser;
+GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
+gint res;
+
+dialog = gtk_file_chooser_dialog_new (&quot;Save File&quot;,
+                                      parent_window,
+                                      action,
+                                      _(&quot;_Cancel&quot;),
+                                      GTK_RESPONSE_CANCEL,
+                                      _(&quot;_Save&quot;),
+                                      GTK_RESPONSE_ACCEPT,
+                                      NULL);
+chooser = GTK_FILE_CHOOSER (dialog);
+
+gtk_file_chooser_set_do_overwrite_confirmation (chooser, TRUE);
+
+if (user_edited_a_new_document)
+  gtk_file_chooser_set_current_name (chooser,
+                                     _(&quot;Untitled document&quot;));
+else
+  gtk_file_chooser_set_filename (chooser,
+                                 existing_filename);
+
+res = gtk_dialog_run (GTK_DIALOG (dialog));
+if (res == GTK_RESPONSE_ACCEPT)
+  {
+    char *filename;
+
+    filename = gtk_file_chooser_get_filename (chooser);
+    save_to_file (filename);
+    g_free (filename);
+  }
+
+gtk_widget_destroy (dialog);
+</code></pre>
+
+<h2 id='setting-up-a-file-chooser-dialog--gtkfilechooserdialog-setting-up' class='section-header'><a href='#setting-up-a-file-chooser-dialog--gtkfilechooserdialog-setting-up'>Setting up a file chooser dialog ## {<code>gtkfilechooserdialog</code>-setting-up}</a></h2>
+<p>There are various cases in which you may need to use a <code>FileChooserDialog</code>:</p>
+
+<ul>
+<li><p>To select a file for opening. Use <code>FileChooserAction::Open</code>.</p></li>
+<li><p>To save a file for the first time. Use <code>FileChooserAction::Save</code>,
+and suggest a name such as “Untitled” with <code>FileChooser::set_current_name</code>.</p></li>
+<li><p>To save a file under a different name. Use <code>FileChooserAction::Save</code>,
+and set the existing filename with <code>FileChooser::set_filename</code>.</p></li>
+<li><p>To choose a folder instead of a file. Use <code>FileChooserAction::SelectFolder</code>.</p></li>
+</ul>
+
+<p>Note that old versions of the file chooser’s documentation suggested
+using <code>FileChooser::set_current_folder</code> in various
+situations, with the intention of letting the application
+suggest a reasonable default folder. This is no longer
+considered to be a good policy, as now the file chooser is
+able to make good suggestions on its own. In general, you
+should only cause the file chooser to show a specific folder
+when it is appropriate to use <code>FileChooser::set_filename</code>,
+i.e. when you are doing a Save As command and you already
+have a file saved somewhere.</p>
+
+<h2 id='response-codes--gtkfilechooserdialog-responses' class='section-header'><a href='#response-codes--gtkfilechooserdialog-responses'>Response Codes ## {<code>gtkfilechooserdialog</code>-responses}</a></h2>
+<p><code>FileChooserDialog</code> inherits from <code>Dialog</code>, so buttons that
+go in its action area have response codes such as
+<code>ResponseType::Accept</code> and <code>ResponseType::Cancel</code>. For example, you
+could call <code>FileChooserDialog::new</code> as follows:</p>
+
+<pre><code class="language-text">GtkWidget *dialog;
+GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+
+dialog = gtk_file_chooser_dialog_new (&quot;Open File&quot;,
+                                      parent_window,
+                                      action,
+                                      _(&quot;_Cancel&quot;),
+                                      GTK_RESPONSE_CANCEL,
+                                      _(&quot;_Open&quot;),
+                                      GTK_RESPONSE_ACCEPT,
+                                      NULL);
+</code></pre>
+
+<p>This will create buttons for “Cancel” and “Open” that use stock
+response identifiers from <code>ResponseType</code>. For most dialog
+boxes you can use your own custom response codes rather than the
+ones in <code>ResponseType</code>, but <code>FileChooserDialog</code> assumes that
+its “accept”-type action, e.g. an “Open” or “Save” button,
+will have one of the following response codes:</p>
+
+<ul>
+<li><code>ResponseType::Accept</code></li>
+<li><code>ResponseType::Ok</code></li>
+<li><code>ResponseType::Yes</code></li>
+<li><code>ResponseType::Apply</code></li>
+</ul>
+
+<p>This is because <code>FileChooserDialog</code> must intercept responses
+and switch to folders if appropriate, rather than letting the
+dialog terminate — the implementation uses these known
+response codes to know which responses can be blocked if
+appropriate.</p>
+
+<p>To summarize, make sure you use a
+[stock response code][gtkfilechooserdialog-responses]
+when you use <code>FileChooserDialog</code> to ensure proper operation.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.DialogExt.html"><code>DialogExt</code></a>, <a href="trait.WindowExt.html"><code>WindowExt</code></a>, <a href="trait.BinExt.html"><code>BinExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.FileChooserExt.html"><code>FileChooserExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.FileChooserDialog.html" title="struct gtk::FileChooserDialog">FileChooserDialog</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/file_chooser_dialog.rs.html#14-25' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.FileChooserDialog.html" title="struct gtk::FileChooserDialog">FileChooserDialog</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/file_chooser_dialog.rs.html#14-39' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Window.html" title="struct gtk::Window">Window</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;title: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;parent: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;T&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;action: <a class="enum" href="../gtk/enum.FileChooserAction.html" title="enum gtk::FileChooserAction">FileChooserAction</a><br>) -&gt; <a class="struct" href="../gtk/struct.FileChooserDialog.html" title="struct gtk::FileChooserDialog">FileChooserDialog</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new <code>FileChooserDialog</code>. This function is analogous to
+<code>Dialog::new_with_buttons</code>.</p>
+
+<h2 id='title' class='section-header'><a href='#title'><code>title</code></a></h2>
+<p>Title of the dialog, or <code>None</code></p>
+
+<h2 id='parent' class='section-header'><a href='#parent'><code>parent</code></a></h2>
+<p>Transient parent of the dialog, or <code>None</code></p>
+
+<h2 id='action' class='section-header'><a href='#action'><code>action</code></a></h2>
+<p>Open or save mode for the dialog</p>
+
+<h2 id='first_button_text' class='section-header'><a href='#first_button_text'><code>first_button_text</code></a></h2>
+<p>stock ID or text to go in the first button, or <code>None</code></p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>FileChooserDialog</code></p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

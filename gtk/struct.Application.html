@@ -49,13 +49,113 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Application(_, _);</pre>
+<pre class='rust struct'>pub struct Application(_, _);</pre><div class='docblock'><p><code>Application</code> is a class that handles many important aspects
+of a GTK+ application in a convenient fashion, without enforcing
+a one-size-fits-all application model.</p>
+
+<p>Currently, <code>Application</code> handles GTK+ initialization, application
+uniqueness, session management, provides some basic scriptability and
+desktop shell integration by exporting actions and menus and manages a
+list of toplevel windows whose life-cycle is automatically tied to the
+life-cycle of your application.</p>
+
+<p>While <code>Application</code> works fine with plain <code>GtkWindows</code>, it is recommended
+to use it together with <code>ApplicationWindow</code>.</p>
+
+<p>When GDK threads are enabled, <code>Application</code> will acquire the GDK
+lock when invoking actions that arrive from other processes. The GDK
+lock is not touched for local action invocations. In order to have
+actions invoked in a predictable context it is therefore recommended
+that the GDK lock be held while invoking actions locally with
+<code>gio::ActionGroup::activate_action</code>. The same applies to actions
+associated with <code>ApplicationWindow</code> and to the “activate” and
+“open” <code>gio::Application</code> methods.</p>
+
+<h2 id='automatic-resources--automatic-resources' class='section-header'><a href='#automatic-resources--automatic-resources'>Automatic resources ## {<code>automatic</code>-resources}</a></h2>
+<p><code>Application</code> will automatically load menus from the <code>Builder</code>
+file located at &quot;gtk/menus.ui&quot;, relative to the application&#39;s
+resource base path (see <code>gio::Application::set_resource_base_path</code>). The
+menu with the ID &quot;app-menu&quot; is taken as the application&#39;s app menu
+and the menu with the ID &quot;menubar&quot; is taken as the application&#39;s
+menubar. Additional menus (most interesting submenus) can be named
+and accessed via <code>Application::get_menu_by_id</code> which allows for
+dynamic population of a part of the menu structure.</p>
+
+<p>If the files &quot;gtk/menus-appmenu.ui&quot; or &quot;gtk/menus-traditional.ui&quot; are
+present then these files will be used in preference, depending on the
+value of <code>Application::prefers_app_menu</code>.</p>
+
+<p>It is also possible to provide the menus manually using
+<code>Application::set_app_menu</code> and <code>Application::set_menubar</code>.</p>
+
+<p><code>Application</code> will also automatically setup an icon search path for
+the default icon theme by appending &quot;icons&quot; to the resource base
+path. This allows your application to easily store its icons as
+resources. See <code>IconTheme::add_resource_path</code> for more
+information.</p>
+
+<h2 id='a-simple-application--gtkapplication' class='section-header'><a href='#a-simple-application--gtkapplication'>A simple application ## {<code>gtkapplication</code>}</a></h2>
+<p><a href="https://git.gnome.org/browse/gtk+/tree/examples/bp/bloatpad.c">A simple example</a></p>
+
+<p><code>Application</code> optionally registers with a session manager
+of the users session (if you set the <code>Application:register-session</code>
+property) and offers various functionality related to the session
+life-cycle.</p>
+
+<p>An application can block various ways to end the session with
+the <code>Application::inhibit</code> function. Typical use cases for
+this kind of inhibiting are long-running, uninterruptible operations,
+such as burning a CD or performing a disk backup. The session
+manager may not honor the inhibitor, but it can be expected to
+inform the user about the negative consequences of ending the
+session while inhibitors are present.</p>
+
+<h2 id='see-also--seealso' class='section-header'><a href='#see-also--seealso'>See Also ## {<code>seealso</code>}</a></h2>
+<p><a href="https://wiki.gnome.org/HowDoI/%60Application%60">HowDoI: Using <code>Application</code></a>,
+<a href="https://developer.gnome.org/gtk3/stable/gtk-getting-started.html%60id%60-1.2.3.3">Getting Started with GTK+: Basics</a></p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ApplicationExt.html"><code>ApplicationExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.ActionGroupExt.html"><code>ActionGroupExt</code></a>, <a href="trait.ActionMapExt.html"><code>ActionMapExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/application.rs.html#8-30' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/application.rs.html#8-62' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;'a, I:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;application_id: I, <br>&nbsp;&nbsp;&nbsp;&nbsp;flags: ApplicationFlags<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a>, BoolError&gt;</code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new <code>Application</code> instance.</p>
+
+<p>When using <code>Application</code>, it is not necessary to call <code>gtk_init</code>
+manually. It is called as soon as the application gets registered as
+the primary instance.</p>
+
+<p>Concretely, <code>gtk_init</code> is called in the default handler for the
+<code>gio::Application::startup</code> signal. Therefore, <code>Application</code> subclasses should
+chain up in their <code>gio::Application::startup</code> handler before using any GTK+ API.</p>
+
+<p>Note that commandline arguments are not passed to <code>gtk_init</code>.
+All GTK+ functionality that is available via commandline arguments
+can also be achieved by setting suitable environment variables
+such as <code>G_DEBUG</code>, so this should not be a big
+problem. If you absolutely must support GTK+ commandline arguments,
+you can explicitly call <code>gtk_init</code> before creating the application
+instance.</p>
+
+<p>If non-<code>None</code>, the application ID must be valid. See
+<code>gio::Application::id_is_valid</code>.</p>
+
+<p>If no application ID is given then some features (most notably application
+uniqueness) will be disabled. A null application ID is only allowed with
+GTK+ 3.6 or later.</p>
+
+<h2 id='application_id' class='section-header'><a href='#application_id'><code>application_id</code></a></h2>
+<p>The application ID.</p>
+
+<h2 id='flags' class='section-header'><a href='#flags'><code>flags</code></a></h2>
+<p>the application flags</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>Application</code> instance</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

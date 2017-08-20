@@ -49,14 +49,97 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Expander(_, _);</pre>
+<pre class='rust struct'>pub struct Expander(_, _);</pre><div class='docblock'><p>A <code>Expander</code> allows the user to hide or show its child by clicking
+on an expander triangle similar to the triangles used in a <code>TreeView</code>.</p>
+
+<p>Normally you use an expander as you would use any other descendant
+of <code>Bin</code>; you create the child widget and use <code>ContainerExt::add</code>
+to add it to the expander. When the expander is toggled, it will take
+care of showing and hiding the child automatically.</p>
+
+<h1 id='special-usage' class='section-header'><a href='#special-usage'>Special Usage</a></h1>
+<p>There are situations in which you may prefer to show and hide the
+expanded widget yourself, such as when you want to actually create
+the widget at expansion time. In this case, create a <code>Expander</code>
+but do not add a child to it. The expander widget has an
+<code>Expander:expanded</code> property which can be used to monitor
+its expansion state. You should watch this property with a signal
+connection as follows:</p>
+
+<pre><code class="language-C">expander = gtk_expander_new_with_mnemonic (&quot;_More Options&quot;);
+g_signal_connect (expander, &quot;notify::expanded&quot;,
+                  G_CALLBACK (expander_callback), NULL);
+
+...
+
+static void
+expander_callback (GObject    *object,
+                   GParamSpec *param_spec,
+                   gpointer    user_data)
+{
+  GtkExpander *expander;
+
+  expander = GTK_EXPANDER (object);
+
+  if (gtk_expander_get_expanded (expander))
+    {
+      // Show or create widgets
+    }
+  else
+    {
+      // Hide or destroy widgets
+    }
+}
+</code></pre>
+
+<h1 id='expander-as-buildable' class='section-header'><a href='#expander-as-buildable'><code>Expander</code> as <code>Buildable</code></a></h1>
+<p>The <code>Expander</code> implementation of the <code>Buildable</code> interface supports
+placing a child in the label position by specifying “label” as the
+“type” attribute of a <code>&lt;child&gt;</code> element. A normal content child can be
+specified without specifying a <code>&lt;child&gt;</code> type attribute.</p>
+
+<p>An example of a UI definition fragment with <code>Expander</code>:</p>
+
+<pre><code class="language-text">&lt;object class=&quot;GtkExpander&quot;&gt;
+  &lt;child type=&quot;label&quot;&gt;
+    &lt;object class=&quot;GtkLabel&quot; id=&quot;expander-label&quot;/&gt;
+  &lt;/child&gt;
+  &lt;child&gt;
+    &lt;object class=&quot;GtkEntry&quot; id=&quot;expander-content&quot;/&gt;
+  &lt;/child&gt;
+&lt;/object&gt;
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.BinExt.html"><code>BinExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Expander.html" title="struct gtk::Expander">Expander</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/expander.rs.html#28-44' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Expander.html" title="struct gtk::Expander">Expander</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/expander.rs.html#97-133' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(label: P) -&gt; <a class="struct" href="../gtk/struct.Expander.html" title="struct gtk::Expander">Expander</a></code></span></h4>
-<h4 id='method.new_with_mnemonic' class="method"><span id='new_with_mnemonic.v' class='invisible'><code>fn <a href='#method.new_with_mnemonic' class='fnname'>new_with_mnemonic</a>(label: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gtk/struct.Expander.html" title="struct gtk::Expander">Expander</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new expander using <code>label</code> as the text of the label.</p>
+
+<h2 id='label' class='section-header'><a href='#label'><code>label</code></a></h2>
+<p>the text of the label</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>Expander</code> widget.</p>
+</div><h4 id='method.new_with_mnemonic' class="method"><span id='new_with_mnemonic.v' class='invisible'><code>fn <a href='#method.new_with_mnemonic' class='fnname'>new_with_mnemonic</a>(label: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gtk/struct.Expander.html" title="struct gtk::Expander">Expander</a></code></span></h4>
+<div class='docblock'><p>Creates a new expander using <code>label</code> as the text of the label.
+If characters in <code>label</code> are preceded by an underscore, they are underlined.
+If you need a literal underscore character in a label, use “__” (two
+underscores). The first underlined character represents a keyboard
+accelerator called a mnemonic.
+Pressing Alt and that key activates the button.</p>
+
+<h2 id='label-1' class='section-header'><a href='#label-1'><code>label</code></a></h2>
+<p>the text of the label with an underscore
+ in front of the mnemonic character</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>a new <code>Expander</code> widget.</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

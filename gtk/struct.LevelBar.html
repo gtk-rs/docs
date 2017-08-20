@@ -49,14 +49,98 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct LevelBar(_, _);</pre>
+<pre class='rust struct'>pub struct LevelBar(_, _);</pre><div class='docblock'><p>The <code>LevelBar</code> is a bar widget that can be used
+as a level indicator. Typical use cases are displaying the strength
+of a password, or showing the charge level of a battery.</p>
+
+<p>Use <code>LevelBar::set_value</code> to set the current value, and
+<code>LevelBar::add_offset_value</code> to set the value offsets at which
+the bar will be considered in a different state. GTK will add two offsets
+by default on the level bar: <code>GTK_LEVEL_BAR_OFFSET_LOW</code> and
+<code>GTK_LEVEL_BAR_OFFSET_HIGH</code>, with values 0.25 and 0.75 respectively.</p>
+
+<h2 id='adding-a-custom-offset-on-the-bar' class='section-header'><a href='#adding-a-custom-offset-on-the-bar'>Adding a custom offset on the bar</a></h2>
+<pre><code class="language-C">
+static GtkWidget *
+create_level_bar (void)
+{
+  GtkWidget *widget;
+  GtkLevelBar *bar;
+
+  widget = gtk_level_bar_new ();
+  bar = GTK_LEVEL_BAR (widget);
+
+  /&lt;!----&gt;* This changes the value of the default low offset
+  *&lt;!----&gt;/
+
+  gtk_level_bar_add_offset_value (bar,
+                                  GTK_LEVEL_BAR_OFFSET_LOW,
+                                  0.10);
+
+  /&lt;!----&gt;* This adds a new offset to the bar; the application will
+   be able to change its color by using the following selector,
+   either by adding it to its CSS file or using
+   gtk_css_provider_load_from_data() and
+   gtk_style_context_add_provider()
+
+   * .level-bar.fill-block.level-my-offset {
+   *   background-color: green;
+   *   border-style: solid;
+   *   border-color: black;
+   *   border-style: 1px;
+   * }
+   *&lt;!----&gt;/
+
+  gtk_level_bar_add_offset_value (bar, &quot;my-offset&quot;, 0.60);
+
+  return widget;
+}
+</code></pre>
+
+<p>The default interval of values is between zero and one, but it’s possible to
+modify the interval using <code>LevelBar::set_min_value</code> and
+<code>LevelBar::set_max_value</code>. The value will be always drawn in proportion to
+the admissible interval, i.e. a value of 15 with a specified interval between
+10 and 20 is equivalent to a value of 0.5 with an interval between 0 and 1.
+When <code>LevelBarMode::Discrete</code> is used, the bar level is rendered
+as a finite and number of separated blocks instead of a single one. The number
+of blocks that will be rendered is equal to the number of units specified by
+the admissible interval.
+For instance, to build a bar rendered with five blocks, it’s sufficient to
+set the minimum value to 0 and the maximum value to 5 after changing the indicator
+mode to discrete.</p>
+
+<p>Feature: <code>v3_6</code></p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.OrientableExt.html"><code>OrientableExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.LevelBar.html" title="struct gtk::LevelBar">LevelBar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/level_bar.rs.html#34-50' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.LevelBar.html" title="struct gtk::LevelBar">LevelBar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/level_bar.rs.html#103-140' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.LevelBar.html" title="struct gtk::LevelBar">LevelBar</a></code></span></h4>
-<h4 id='method.new_for_interval' class="method"><span id='new_for_interval.v' class='invisible'><code>fn <a href='#method.new_for_interval' class='fnname'>new_for_interval</a>(min_value: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, max_value: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>) -&gt; <a class="struct" href="../gtk/struct.LevelBar.html" title="struct gtk::LevelBar">LevelBar</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new <code>LevelBar</code>.</p>
+
+<p>Feature: <code>v3_6</code></p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a <code>LevelBar</code>.</p>
+</div><h4 id='method.new_for_interval' class="method"><span id='new_for_interval.v' class='invisible'><code>fn <a href='#method.new_for_interval' class='fnname'>new_for_interval</a>(min_value: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, max_value: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>) -&gt; <a class="struct" href="../gtk/struct.LevelBar.html" title="struct gtk::LevelBar">LevelBar</a></code></span></h4>
+<div class='docblock'><p>Utility constructor that creates a new <code>LevelBar</code> for the specified
+interval.</p>
+
+<p>Feature: <code>v3_6</code></p>
+
+<h2 id='min_value' class='section-header'><a href='#min_value'><code>min_value</code></a></h2>
+<p>a positive value</p>
+
+<h2 id='max_value' class='section-header'><a href='#max_value'><code>max_value</code></a></h2>
+<p>a positive value</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>a <code>LevelBar</code></p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>
@@ -85,7 +169,7 @@
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.LevelBar.html" title="struct gtk::LevelBar">LevelBar</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Orientable.html" title="struct gtk::Orientable">Orientable</a>&gt; for <a class="struct" href="../gtk/struct.LevelBar.html" title="struct gtk::LevelBar">LevelBar</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.LevelBar.html" title="struct gtk::LevelBar">LevelBar</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.LevelBar.html" title="struct gtk::LevelBar">LevelBar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/level_bar.rs.html#53-57' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.LevelBar.html" title="struct gtk::LevelBar">LevelBar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/level_bar.rs.html#143-147' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>
