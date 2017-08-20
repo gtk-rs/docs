@@ -49,14 +49,71 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct PageSetup(_, _);</pre>
+<pre class='rust struct'>pub struct PageSetup(_, _);</pre><div class='docblock'><p>A <code>PageSetup</code> object stores the page size, orientation and margins.
+The idea is that you can get one of these from the page setup dialog
+and then pass it to the <code>PrintOperation</code> when printing.
+The benefit of splitting this out of the <code>PrintSettings</code> is that
+these affect the actual layout of the page, and thus need to be set
+long before user prints.</p>
+
+<h2 id='margins--print-margins' class='section-header'><a href='#margins--print-margins'>Margins ## {<code>print</code>-margins}</a></h2>
+<p>The margins specified in this object are the “print margins”, i.e. the
+parts of the page that the printer cannot print on. These are different
+from the layout margins that a word processor uses; they are typically
+used to determine the minimal size for the layout
+margins.</p>
+
+<p>To obtain a <code>PageSetup</code> use <code>PageSetup::new</code> to get the defaults,
+or use <code>gtk_print_run_page_setup_dialog</code> to show the page setup dialog
+and receive the resulting page setup.</p>
+
+<h2 id='a-page-setup-dialog' class='section-header'><a href='#a-page-setup-dialog'>A page setup dialog</a></h2>
+<pre><code class="language-C">static GtkPrintSettings *settings = NULL;
+static GtkPageSetup *page_setup = NULL;
+
+static void
+do_page_setup (void)
+{
+  GtkPageSetup *new_page_setup;
+
+  if (settings == NULL)
+    settings = gtk_print_settings_new ();
+
+  new_page_setup = gtk_print_run_page_setup_dialog (GTK_WINDOW (main_window),
+                                                    page_setup, settings);
+
+  if (page_setup)
+    g_object_unref (page_setup);
+
+  page_setup = new_page_setup;
+}
+</code></pre>
+
+<p>Printing support was added in GTK+ 2.10.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/page_setup.rs.html#26-61' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/page_setup.rs.html#74-123' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a></code></span></h4>
-<h4 id='method.new_from_file' class="method"><span id='new_from_file.v' class='invisible'><code>fn <a href='#method.new_from_file' class='fnname'>new_from_file</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(file_name: P) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a>, <a class="struct" href="../gtk/struct.Error.html" title="struct gtk::Error">Error</a>&gt;</code></span></h4>
-<h4 id='method.new_from_gvariant' class="method"><span id='new_from_gvariant.v' class='invisible'><code>fn <a href='#method.new_from_gvariant' class='fnname'>new_from_gvariant</a>(variant: &amp;Variant) -&gt; <a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a></code></span></h4>
+<div class='docblock'><p>Creates a new <code>PageSetup</code>.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>PageSetup</code>.</p>
+</div><h4 id='method.new_from_file' class="method"><span id='new_from_file.v' class='invisible'><code>fn <a href='#method.new_from_file' class='fnname'>new_from_file</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(file_name: P) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a>, <a class="struct" href="../gtk/struct.Error.html" title="struct gtk::Error">Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Reads the page setup from the file <code>file_name</code>. Returns a
+new <code>PageSetup</code> object with the restored page setup,
+or <code>None</code> if an error occurred. See <code>PageSetup::to_file</code>.</p>
+
+<h2 id='file_name' class='section-header'><a href='#file_name'><code>file_name</code></a></h2>
+<p>the filename to read the page setup from</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>the restored <code>PageSetup</code></p>
+</div><h4 id='method.new_from_gvariant' class="method"><span id='new_from_gvariant.v' class='invisible'><code>fn <a href='#method.new_from_gvariant' class='fnname'>new_from_gvariant</a>(variant: &amp;Variant) -&gt; <a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a></code></span></h4>
 <h4 id='method.new_from_key_file' class="method"><span id='new_from_key_file.v' class='invisible'><code>fn <a href='#method.new_from_key_file' class='fnname'>new_from_key_file</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;key_file: &amp;KeyFile, <br>&nbsp;&nbsp;&nbsp;&nbsp;group_name: P<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a>, <a class="struct" href="../gtk/struct.Error.html" title="struct gtk::Error">Error</a>&gt;</code></span></h4>
 </div>
             <h2 id='implementations' class='section-header'>
@@ -85,7 +142,7 @@
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/page_setup.rs.html#63-67' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.PageSetup.html" title="struct gtk::PageSetup">PageSetup</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/page_setup.rs.html#125-129' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>

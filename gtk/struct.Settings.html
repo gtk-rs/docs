@@ -49,14 +49,66 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Settings(_, _);</pre>
+<pre class='rust struct'>pub struct Settings(_, _);</pre><div class='docblock'><p><code>Settings</code> provide a mechanism to share global settings between
+applications.</p>
+
+<p>On the X window system, this sharing is realized by an
+<a href="http://www.freedesktop.org/wiki/Specifications/xsettings-spec">XSettings</a>
+manager that is usually part of the desktop environment, along with
+utilities that let the user change these settings. In the absence of
+an Xsettings manager, GTK+ reads default values for settings from
+<code>settings.ini</code> files in
+<code>/etc/gtk-3.0</code>, <code>$XDG_CONFIG_DIRS/gtk-3.0</code>
+and <code>$XDG_CONFIG_HOME/gtk-3.0</code>.
+These files must be valid key files (see <code>glib::KeyFile</code>), and have
+a section called Settings. Themes can also provide default values
+for settings by installing a <code>settings.ini</code> file
+next to their <code>gtk.css</code> file.</p>
+
+<p>Applications can override system-wide settings by setting the property
+of the <code>Settings</code> object with <code>gobject::Object::set</code>. This should be restricted
+to special cases though; <code>Settings</code> are not meant as an application
+configuration facility. When doing so, you need to be aware that settings
+that are specific to individual widgets may not be available before the
+widget type has been realized at least once. The following example
+demonstrates a way to do this:</p>
+
+<pre><code class="language-C">  gtk_init (&amp;argc, &amp;argv);
+
+  // make sure the type is realized
+  g_type_class_unref (g_type_class_ref (GTK_TYPE_IMAGE_MENU_ITEM));
+
+  g_object_set (gtk_settings_get_default (), &quot;gtk-enable-animations&quot;, FALSE, NULL);
+</code></pre>
+
+<p>There is one <code>Settings</code> instance per screen. It can be obtained with
+<code>Settings::get_for_screen</code>, but in many cases, it is more convenient
+to use <code>Widget::get_settings</code>. <code>Settings::get_default</code> returns the
+<code>Settings</code> instance for the default screen.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.StyleProviderExt.html"><code>StyleProviderExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Settings.html" title="struct gtk::Settings">Settings</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/settings.rs.html#35-57' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Settings.html" title="struct gtk::Settings">Settings</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/settings.rs.html#76-112' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>fn <a href='#method.get_default' class='fnname'>get_default</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.Settings.html" title="struct gtk::Settings">Settings</a>&gt;</code></span></h4>
-<h4 id='method.get_for_screen' class="method"><span id='get_for_screen.v' class='invisible'><code>fn <a href='#method.get_for_screen' class='fnname'>get_for_screen</a>(screen: &amp;Screen) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.Settings.html" title="struct gtk::Settings">Settings</a>&gt;</code></span></h4>
-</div>
+<div class='docblock'><p>Gets the <code>Settings</code> object for the default GDK screen, creating
+it if necessary. See <code>Settings::get_for_screen</code>.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a <code>Settings</code> object. If there is no default
+ screen, then returns <code>None</code>.</p>
+</div><h4 id='method.get_for_screen' class="method"><span id='get_for_screen.v' class='invisible'><code>fn <a href='#method.get_for_screen' class='fnname'>get_for_screen</a>(screen: &amp;Screen) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.Settings.html" title="struct gtk::Settings">Settings</a>&gt;</code></span></h4>
+<div class='docblock'><p>Gets the <code>Settings</code> object for <code>screen</code>, creating it if necessary.</p>
+
+<h2 id='screen' class='section-header'><a href='#screen'><code>screen</code></a></h2>
+<p>a <code>gdk::Screen</code>.</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>a <code>Settings</code> object.</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

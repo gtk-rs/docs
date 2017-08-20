@@ -49,15 +49,98 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Menu(_, _);</pre>
+<pre class='rust struct'>pub struct Menu(_, _);</pre><div class='docblock'><p>A <code>Menu</code> is a <code>MenuShell</code> that implements a drop down menu
+consisting of a list of <code>MenuItem</code> objects which can be navigated
+and activated by the user to perform application functions.</p>
+
+<p>A <code>Menu</code> is most commonly dropped down by activating a
+<code>MenuItem</code> in a <code>MenuBar</code> or popped up by activating a
+<code>MenuItem</code> in another <code>Menu</code>.</p>
+
+<p>A <code>Menu</code> can also be popped up by activating a <code>ComboBox</code>.
+Other composite widgets such as the <code>Notebook</code> can pop up a
+<code>Menu</code> as well.</p>
+
+<p>Applications can display a <code>Menu</code> as a popup menu by calling the
+<code>Menu::popup</code> function. The example below shows how an application
+can pop up a menu when the 3rd mouse button is pressed.</p>
+
+<h2 id='connecting-the-popup-signal-handler' class='section-header'><a href='#connecting-the-popup-signal-handler'>Connecting the popup signal handler.</a></h2>
+<pre><code class="language-C">  // connect our handler which will popup the menu
+  g_signal_connect_swapped (window, &quot;button_press_event&quot;,
+G_CALLBACK (my_popup_handler), menu);
+</code></pre>
+
+<h2 id='signal-handler-which-displays-a-popup-menu' class='section-header'><a href='#signal-handler-which-displays-a-popup-menu'>Signal handler which displays a popup menu.</a></h2>
+<pre><code class="language-C">static gint
+my_popup_handler (GtkWidget *widget, GdkEvent *event)
+{
+  GtkMenu *menu;
+  GdkEventButton *event_button;
+
+  g_return_val_if_fail (widget != NULL, FALSE);
+  g_return_val_if_fail (GTK_IS_MENU (widget), FALSE);
+  g_return_val_if_fail (event != NULL, FALSE);
+
+  // The &quot;widget&quot; is the menu that was supplied when
+  // g_signal_connect_swapped() was called.
+  menu = GTK_MENU (widget);
+
+  if (event-&gt;type == GDK_BUTTON_PRESS)
+    {
+      event_button = (GdkEventButton *) event;
+      if (event_button-&gt;button == GDK_BUTTON_SECONDARY)
+        {
+          gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
+                          event_button-&gt;button, event_button-&gt;time);
+          return TRUE;
+        }
+    }
+
+  return FALSE;
+}
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.MenuShellExt.html"><code>MenuShellExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Menu.html" title="struct gtk::Menu">Menu</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/menu.rs.html#34-55' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Menu.html" title="struct gtk::Menu">Menu</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/menu.rs.html#95-146' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.Menu.html" title="struct gtk::Menu">Menu</a></code></span></h4>
-<h4 id='method.new_from_model' class="method"><span id='new_from_model.v' class='invisible'><code>fn <a href='#method.new_from_model' class='fnname'>new_from_model</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;MenuModel&gt;&gt;(model: &amp;P) -&gt; <a class="struct" href="../gtk/struct.Menu.html" title="struct gtk::Menu">Menu</a></code></span></h4>
-<h4 id='method.get_for_attach_widget' class="method"><span id='get_for_attach_widget.v' class='invisible'><code>fn <a href='#method.get_for_attach_widget' class='fnname'>get_for_attach_widget</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt;&gt;(widget: &amp;P) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt;</code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new <code>Menu</code></p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>Menu</code></p>
+</div><h4 id='method.new_from_model' class="method"><span id='new_from_model.v' class='invisible'><code>fn <a href='#method.new_from_model' class='fnname'>new_from_model</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;MenuModel&gt;&gt;(model: &amp;P) -&gt; <a class="struct" href="../gtk/struct.Menu.html" title="struct gtk::Menu">Menu</a></code></span></h4>
+<div class='docblock'><p>Creates a <code>Menu</code> and populates it with menu items and
+submenus according to <code>model</code>.</p>
+
+<p>The created menu items are connected to actions found in the
+<code>ApplicationWindow</code> to which the menu belongs - typically
+by means of being attached to a widget (see <code>Menu::attach_to_widget</code>)
+that is contained within the <code>GtkApplicationWindows</code> widget hierarchy.</p>
+
+<p>Actions can also be added using <code>Widget::insert_action_group</code> on the menu&#39;s
+attach widget or on any of its parent widgets.</p>
+
+<h2 id='model' class='section-header'><a href='#model'><code>model</code></a></h2>
+<p>a <code>gio::MenuModel</code></p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>a new <code>Menu</code></p>
+</div><h4 id='method.get_for_attach_widget' class="method"><span id='get_for_attach_widget.v' class='invisible'><code>fn <a href='#method.get_for_attach_widget' class='fnname'>get_for_attach_widget</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt;&gt;(widget: &amp;P) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns a list of the menus which are attached to this widget.
+This list is owned by GTK+ and must not be modified.</p>
+
+<h2 id='widget' class='section-header'><a href='#widget'><code>widget</code></a></h2>
+<p>a <code>Widget</code></p>
+
+<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<p>the list
+ of menus attached to his widget.</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>
@@ -87,7 +170,7 @@
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Container.html" title="struct gtk::Container">Container</a>&gt; for <a class="struct" href="../gtk/struct.Menu.html" title="struct gtk::Menu">Menu</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.Menu.html" title="struct gtk::Menu">Menu</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.Menu.html" title="struct gtk::Menu">Menu</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.Menu.html" title="struct gtk::Menu">Menu</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/menu.rs.html#57-61' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.Menu.html" title="struct gtk::Menu">Menu</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/menu.rs.html#148-152' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>

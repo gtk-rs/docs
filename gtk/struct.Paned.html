@@ -49,13 +49,68 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Paned(_, _);</pre>
+<pre class='rust struct'>pub struct Paned(_, _);</pre><div class='docblock'><p><code>Paned</code> has two panes, arranged either
+horizontally or vertically. The division between
+the two panes is adjustable by the user by dragging
+a handle.</p>
+
+<p>Child widgets are
+added to the panes of the widget with <code>Paned::pack1</code> and
+<code>Paned::pack2</code>. The division between the two children is set by default
+from the size requests of the children, but it can be adjusted by the
+user.</p>
+
+<p>A paned widget draws a separator between the two child widgets and a
+small handle that the user can drag to adjust the division. It does not
+draw any relief around the children or around the separator. (The space
+in which the separator is called the gutter.) Often, it is useful to put
+each child inside a <code>Frame</code> with the shadow type set to <code>ShadowType::In</code>
+so that the gutter appears as a ridge. No separator is drawn if one of
+the children is missing.</p>
+
+<p>Each child has two options that can be set, <code>resize</code> and <code>shrink</code>. If
+<code>resize</code> is true, then when the <code>Paned</code> is resized, that child will
+expand or shrink along with the paned widget. If <code>shrink</code> is true, then
+that child can be made smaller than its requisition by the user.
+Setting <code>shrink</code> to <code>false</code> allows the application to set a minimum size.
+If <code>resize</code> is false for both children, then this is treated as if
+<code>resize</code> is true for both children.</p>
+
+<p>The application can set the position of the slider as if it were set
+by the user, by calling <code>Paned::set_position</code>.</p>
+
+<h2 id='creating-a-paned-widget-with-minimum-sizes' class='section-header'><a href='#creating-a-paned-widget-with-minimum-sizes'>Creating a paned widget with minimum sizes.</a></h2>
+<pre><code class="language-C">GtkWidget *hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
+GtkWidget *frame1 = gtk_frame_new (NULL);
+GtkWidget *frame2 = gtk_frame_new (NULL);
+gtk_frame_set_shadow_type (GTK_FRAME (frame1), GTK_SHADOW_IN);
+gtk_frame_set_shadow_type (GTK_FRAME (frame2), GTK_SHADOW_IN);
+
+gtk_widget_set_size_request (hpaned, 200, -1);
+
+gtk_paned_pack1 (GTK_PANED (hpaned), frame1, TRUE, FALSE);
+gtk_widget_set_size_request (frame1, 50, -1);
+
+gtk_paned_pack2 (GTK_PANED (hpaned), frame2, FALSE, FALSE);
+gtk_widget_set_size_request (frame2, 50, -1);
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.OrientableExt.html"><code>OrientableExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Paned.html" title="struct gtk::Paned">Paned</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/paned.rs.html#32-39' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Paned.html" title="struct gtk::Paned">Paned</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/paned.rs.html#84-98' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(orientation: <a class="enum" href="../gtk/enum.Orientation.html" title="enum gtk::Orientation">Orientation</a>) -&gt; <a class="struct" href="../gtk/struct.Paned.html" title="struct gtk::Paned">Paned</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new <code>Paned</code> widget.</p>
+
+<h2 id='orientation' class='section-header'><a href='#orientation'><code>orientation</code></a></h2>
+<p>the paned’s orientation.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>Paned</code>.</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

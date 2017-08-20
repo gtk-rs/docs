@@ -49,14 +49,76 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct GLContext(_, _);</pre>
+<pre class='rust struct'>pub struct GLContext(_, _);</pre><div class='docblock'><p><code>GLContext</code> is an object representing the platform-specific
+OpenGL drawing context.</p>
+
+<p><code>GdkGLContexts</code> are created for a <code>Window</code> using
+<code>Window::create_gl_context</code>, and the context will match
+the <code>Visual</code> of the window.</p>
+
+<p>A <code>GLContext</code> is not tied to any particular normal framebuffer.
+For instance, it cannot draw to the <code>Window</code> back buffer. The GDK
+repaint system is in full control of the painting to that. Instead,
+you can create render buffers or textures and use <code>gdk_cairo_draw_from_gl</code>
+in the draw function of your widget to draw them. Then GDK will handle
+the integration of your rendering with that of other widgets.</p>
+
+<p>Support for <code>GLContext</code> is platform-specific, context creation
+can fail, returning <code>None</code> context.</p>
+
+<p>A <code>GLContext</code> has to be made &quot;current&quot; in order to start using
+it, otherwise any OpenGL call will be ignored.</p>
+
+<h2 id='creating-a-new-opengl-context' class='section-header'><a href='#creating-a-new-opengl-context'>Creating a new OpenGL context</a></h2>
+<p>In order to create a new <code>GLContext</code> instance you need a
+<code>Window</code>, which you typically get during the realize call
+of a widget.</p>
+
+<p>A <code>GLContext</code> is not realized until either <code>GLContext::make_current</code>,
+or until it is realized using <code>GLContext::realize</code>. It is possible to
+specify details of the GL context like the OpenGL version to be used, or
+whether the GL context should have extra state validation enabled after
+calling <code>Window::create_gl_context</code> by calling <code>GLContext::realize</code>.
+If the realization fails you have the option to change the settings of the
+<code>GLContext</code> and try again.</p>
+
+<h2 id='using-a-glcontext' class='section-header'><a href='#using-a-glcontext'>Using a <code>GLContext</code></a></h2>
+<p>You will need to make the <code>GLContext</code> the current context
+before issuing OpenGL calls; the system sends OpenGL commands to
+whichever context is current. It is possible to have multiple
+contexts, so you always need to ensure that the one which you
+want to draw with is the current one before issuing commands:</p>
+
+<pre><code class="language-C">  gdk_gl_context_make_current (context);
+</code></pre>
+
+<p>You can now perform your drawing using OpenGL commands.</p>
+
+<p>You can check which <code>GLContext</code> is the current one by using
+<code>GLContext::get_current</code>; you can also unset any <code>GLContext</code>
+that is currently set by calling <code>GLContext::clear_current</code>.</p>
+
+<p>Feature: <code>v3_16</code></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/auto/g_l_context.rs.html#35-51' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/auto/g_l_context.rs.html#89-120' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clear_current' class="method"><span id='clear_current.v' class='invisible'><code>fn <a href='#method.clear_current' class='fnname'>clear_current</a>()</code></span></h4>
-<h4 id='method.get_current' class="method"><span id='get_current.v' class='invisible'><code>fn <a href='#method.get_current' class='fnname'>get_current</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a>&gt;</code></span></h4>
-</div>
+<div class='docblock'><p>Clears the current <code>GLContext</code>.</p>
+
+<p>Any OpenGL call after this function returns will be ignored
+until <code>GLContext::make_current</code> is called.</p>
+
+<p>Feature: <code>v3_16</code></p>
+</div><h4 id='method.get_current' class="method"><span id='get_current.v' class='invisible'><code>fn <a href='#method.get_current' class='fnname'>get_current</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a>&gt;</code></span></h4>
+<div class='docblock'><p>Retrieves the current <code>GLContext</code>.</p>
+
+<p>Feature: <code>v3_16</code></p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>the current <code>GLContext</code>, or <code>None</code></p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

@@ -49,13 +49,74 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct RecentFilter(_, _);</pre>
+<pre class='rust struct'>pub struct RecentFilter(_, _);</pre><div class='docblock'><p>A <code>RecentFilter</code> can be used to restrict the files being shown
+in a <code>RecentChooser</code>. Files can be filtered based on their name
+(with <code>RecentFilter::add_pattern</code>), on their mime type (with
+<code>FileFilter::add_mime_type</code>), on the application that has
+registered them (with <code>RecentFilter::add_application</code>), or by
+a custom filter function (with <code>RecentFilter::add_custom</code>).</p>
+
+<p>Filtering by mime type handles aliasing and subclassing of mime
+types; e.g. a filter for text/plain also matches a file with mime
+type application/rtf, since application/rtf is a subclass of text/plain.
+Note that <code>RecentFilter</code> allows wildcards for the subtype of a
+mime type, so you can e.g. filter for image/*.</p>
+
+<p>Normally, filters are used by adding them to a <code>RecentChooser</code>,
+see <code>RecentChooser::add_filter</code>, but it is also possible to
+manually use a filter on a file with <code>RecentFilter::filter</code>.</p>
+
+<p>Recently used files are supported since GTK+ 2.10.</p>
+
+<h2 id='recentfilter-as-buildable' class='section-header'><a href='#recentfilter-as-buildable'><code>RecentFilter</code> as <code>Buildable</code></a></h2>
+<p>The <code>RecentFilter</code> implementation of the <code>Buildable</code> interface
+supports adding rules using the <code>&lt;mime-types&gt;</code>, <code>&lt;patterns&gt;</code> and
+<code>&lt;applications&gt;</code> elements and listing the rules within. Specifying
+a <code>&lt;mime-type&gt;</code>, <code>&lt;pattern&gt;</code> or <code>&lt;application&gt;</code> has the same effect as
+calling <code>RecentFilter::add_mime_type</code>,
+<code>RecentFilter::add_pattern</code> or <code>RecentFilter::add_application</code>.</p>
+
+<p>An example of a UI definition fragment specifying <code>RecentFilter</code> rules:</p>
+
+<pre><code class="language-text">&lt;object class=&quot;GtkRecentFilter&quot;&gt;
+  &lt;mime-types&gt;
+    &lt;mime-type&gt;text/plain&lt;/mime-type&gt;
+    &lt;mime-type&gt;image/png&lt;/mime-type&gt;
+  &lt;/mime-types&gt;
+  &lt;patterns&gt;
+    &lt;pattern&gt;*.txt&lt;/pattern&gt;
+    &lt;pattern&gt;*.png&lt;/pattern&gt;
+  &lt;/patterns&gt;
+  &lt;applications&gt;
+    &lt;application&gt;gimp&lt;/application&gt;
+    &lt;application&gt;gedit&lt;/application&gt;
+    &lt;application&gt;glade&lt;/application&gt;
+  &lt;/applications&gt;
+&lt;/object&gt;
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.RecentFilter.html" title="struct gtk::RecentFilter">RecentFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/recent_filter.rs.html#21-28' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.RecentFilter.html" title="struct gtk::RecentFilter">RecentFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/recent_filter.rs.html#72-94' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.RecentFilter.html" title="struct gtk::RecentFilter">RecentFilter</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new <code>RecentFilter</code> with no rules added to it.
+Such filter does not accept any recently used resources, so is not
+particularly useful until you add rules with
+<code>RecentFilter::add_pattern</code>, <code>RecentFilter::add_mime_type</code>,
+<code>RecentFilter::add_application</code>, <code>RecentFilter::add_age</code>.
+To create a filter that accepts any recently used resource, use:</p>
+
+<pre><code class="language-C">GtkRecentFilter *filter = gtk_recent_filter_new ();
+gtk_recent_filter_add_pattern (filter, &quot;*&quot;);
+</code></pre>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>RecentFilter</code></p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>
@@ -82,7 +143,7 @@
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.RecentFilter.html" title="struct gtk::RecentFilter">RecentFilter</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.RecentFilter.html" title="struct gtk::RecentFilter">RecentFilter</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.RecentFilter.html" title="struct gtk::RecentFilter">RecentFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/recent_filter.rs.html#30-34' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.RecentFilter.html" title="struct gtk::RecentFilter">RecentFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/recent_filter.rs.html#96-100' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>

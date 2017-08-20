@@ -49,13 +49,93 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct DrawingArea(_, _);</pre>
+<pre class='rust struct'>pub struct DrawingArea(_, _);</pre><div class='docblock'><p>The <code>DrawingArea</code> widget is used for creating custom user interface
+elements. It’s essentially a blank widget; you can draw on it. After
+creating a drawing area, the application may want to connect to:</p>
+
+<ul>
+<li><p>Mouse and button press signals to respond to input from
+the user. (Use <code>Widget::add_events</code> to enable events
+you wish to receive.)</p></li>
+<li><p>The <code>Widget::realize</code> signal to take any necessary actions
+when the widget is instantiated on a particular display.
+(Create GDK resources in response to this signal.)</p></li>
+<li><p>The <code>Widget::size-allocate</code> signal to take any necessary
+actions when the widget changes size.</p></li>
+<li><p>The <code>Widget::draw</code> signal to handle redrawing the
+contents of the widget.</p></li>
+</ul>
+
+<p>The following code portion demonstrates using a drawing
+area to display a circle in the normal widget foreground
+color.</p>
+
+<p>Note that GDK automatically clears the exposed area to the
+background color before sending the expose event, and that
+drawing is implicitly clipped to the exposed area.</p>
+
+<h2 id='simple-drawingarea-usage' class='section-header'><a href='#simple-drawingarea-usage'>Simple <code>DrawingArea</code> usage</a></h2>
+<pre><code class="language-C">gboolean
+draw_callback (GtkWidget *widget, cairo_t *cr, gpointer data)
+{
+  guint width, height;
+  GdkRGBA color;
+
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
+  cairo_arc (cr,
+             width / 2.0, height / 2.0,
+             MIN (width, height) / 2.0,
+             0, 2 * G_PI);
+
+  gtk_style_context_get_color (gtk_widget_get_style_context (widget),
+                               0,
+                               &amp;color);
+  gdk_cairo_set_source_rgba (cr, &amp;color);
+
+  cairo_fill (cr);
+
+ return FALSE;
+}
+[...]
+  GtkWidget *drawing_area = gtk_drawing_area_new ();
+  gtk_widget_set_size_request (drawing_area, 100, 100);
+  g_signal_connect (G_OBJECT (drawing_area), &quot;draw&quot;,
+                    G_CALLBACK (draw_callback), NULL);
+</code></pre>
+
+<p>Draw signals are normally delivered when a drawing area first comes
+onscreen, or when it’s covered by another window and then uncovered.
+You can also force an expose event by adding to the “damage region”
+of the drawing area’s window; <code>Widget::queue_draw_area</code> and
+<code>gdk::Window::invalidate_rect</code> are equally good ways to do this.
+You’ll then get a draw signal for the invalid region.</p>
+
+<p>The available routines for drawing are documented on the
+[GDK Drawing Primitives][gdk3-Cairo-Interaction] page
+and the cairo documentation.</p>
+
+<p>To receive mouse events on a drawing area, you will need to enable
+them with <code>Widget::add_events</code>. To receive keyboard events, you
+will need to set the “can-focus” property on the drawing area, and you
+should probably draw some user-visible indication that the drawing
+area is focused. Use <code>Widget::has_focus</code> in your expose event
+handler to decide whether to draw the focus indicator. See
+<code>gtk_render_focus</code> for one way to draw focus.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.DrawingArea.html" title="struct gtk::DrawingArea">DrawingArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/drawing_area.rs.html#21-28' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.DrawingArea.html" title="struct gtk::DrawingArea">DrawingArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/drawing_area.rs.html#102-114' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.DrawingArea.html" title="struct gtk::DrawingArea">DrawingArea</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new drawing area.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>DrawingArea</code></p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>
@@ -83,7 +163,7 @@
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.DrawingArea.html" title="struct gtk::DrawingArea">DrawingArea</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.DrawingArea.html" title="struct gtk::DrawingArea">DrawingArea</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.DrawingArea.html" title="struct gtk::DrawingArea">DrawingArea</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.DrawingArea.html" title="struct gtk::DrawingArea">DrawingArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/drawing_area.rs.html#30-34' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.DrawingArea.html" title="struct gtk::DrawingArea">DrawingArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/drawing_area.rs.html#116-120' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>

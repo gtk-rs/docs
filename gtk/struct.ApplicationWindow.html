@@ -49,13 +49,102 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct ApplicationWindow(_, _);</pre>
+<pre class='rust struct'>pub struct ApplicationWindow(_, _);</pre><div class='docblock'><p><code>ApplicationWindow</code> is a <code>Window</code> subclass that offers some
+extra functionality for better integration with <code>Application</code>
+features. Notably, it can handle both the application menu as well
+as the menubar. See <code>Application::set_app_menu</code> and
+<code>Application::set_menubar</code>.</p>
+
+<p>This class implements the <code>gio::ActionGroup</code> and <code>gio::ActionMap</code> interfaces,
+to let you add window-specific actions that will be exported by the
+associated <code>Application</code>, together with its application-wide
+actions. Window-specific actions are prefixed with the “win.”
+prefix and application-wide actions are prefixed with the “app.”
+prefix. Actions must be addressed with the prefixed name when
+referring to them from a <code>gio::MenuModel</code>.</p>
+
+<p>Note that widgets that are placed inside a <code>ApplicationWindow</code>
+can also activate these actions, if they implement the
+<code>Actionable</code> interface.</p>
+
+<p>As with <code>Application</code>, the GDK lock will be acquired when
+processing actions arriving from other processes and should therefore
+be held when activating actions locally (if GDK threads are enabled).</p>
+
+<p>The settings <code>Settings:gtk-shell-shows-app-menu</code> and
+<code>Settings:gtk-shell-shows-menubar</code> tell GTK+ whether the
+desktop environment is showing the application menu and menubar
+models outside the application as part of the desktop shell.
+For instance, on OS X, both menus will be displayed remotely;
+on Windows neither will be. gnome-shell (starting with version 3.4)
+will display the application menu, but not the menubar.</p>
+
+<p>If the desktop environment does not display the menubar, then
+<code>ApplicationWindow</code> will automatically show a <code>MenuBar</code> for it.
+(see the <code>Application</code> docs for some screenshots of how this
+looks on different platforms).
+This behaviour can be overridden with the <code>ApplicationWindow:show-menubar</code>
+property. If the desktop environment does not display the application
+menu, then it will automatically be included in the menubar. It can
+also be shown as part of client-side window decorations, e.g. by
+using <code>HeaderBar::set_show_close_button</code>.</p>
+
+<h2 id='a-applicationwindow-with-a-menubar' class='section-header'><a href='#a-applicationwindow-with-a-menubar'>A <code>ApplicationWindow</code> with a menubar</a></h2>
+<pre><code class="language-C">app = gtk_application_new ();
+
+builder = gtk_builder_new_from_string (
+    &quot;&lt;interface&gt;&quot;
+    &quot;  &lt;menu id=&#39;menubar&#39;&gt;&quot;
+    &quot;    &lt;submenu label=&#39;_Edit&#39;&gt;&quot;
+    &quot;      &lt;item label=&#39;_Copy&#39; action=&#39;win.copy&#39;/&gt;&quot;
+    &quot;      &lt;item label=&#39;_Paste&#39; action=&#39;win.paste&#39;/&gt;&quot;
+    &quot;    &lt;/submenu&gt;&quot;
+    &quot;  &lt;/menu&gt;&quot;
+    &quot;&lt;/interface&gt;&quot;,
+    -1);
+
+menubar = G_MENU_MODEL (gtk_builder_get_object (builder,
+                                                &quot;menubar&quot;));
+gtk_application_set_menubar (G_APPLICATION (app), menubar);
+g_object_unref (builder);
+
+...
+
+window = gtk_application_window_new (app);
+</code></pre>
+
+<h2 id='handling-fallback-yourself' class='section-header'><a href='#handling-fallback-yourself'>Handling fallback yourself</a></h2>
+<p><a href="https://git.gnome.org/browse/gtk+/tree/examples/sunny.c">A simple example</a></p>
+
+<p>The XML format understood by <code>Builder</code> for <code>gio::MenuModel</code> consists
+of a toplevel <code>&lt;menu&gt;</code> element, which contains one or more <code>&lt;item&gt;</code>
+elements. Each <code>&lt;item&gt;</code> element contains <code>&lt;attribute&gt;</code> and <code>&lt;link&gt;</code>
+elements with a mandatory name attribute. <code>&lt;link&gt;</code> elements have the
+same content model as <code>&lt;menu&gt;</code>.</p>
+
+<p>Attribute values can be translated using gettext, like other <code>Builder</code>
+content. <code>&lt;attribute&gt;</code> elements can be marked for translation with a
+<code>translatable=&quot;yes&quot;</code> attribute. It is also possible to specify message
+context and translator comments, using the context and comments attributes.
+To make use of this, the <code>Builder</code> must have been given the gettext
+domain to use.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.WindowExt.html"><code>WindowExt</code></a>, <a href="trait.BinExt.html"><code>BinExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.ActionGroupExt.html"><code>ActionGroupExt</code></a>, <a href="trait.ActionMapExt.html"><code>ActionMapExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/application_window.rs.html#41-48' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/application_window.rs.html#128-142' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(application: &amp;<a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a>) -&gt; <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new <code>ApplicationWindow</code>.</p>
+
+<h2 id='application' class='section-header'><a href='#application'><code>application</code></a></h2>
+<p>a <code>Application</code></p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a newly created <code>ApplicationWindow</code></p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

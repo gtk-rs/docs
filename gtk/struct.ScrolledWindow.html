@@ -49,13 +49,82 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct ScrolledWindow(_, _);</pre>
+<pre class='rust struct'>pub struct ScrolledWindow(_, _);</pre><div class='docblock'><p><code>ScrolledWindow</code> is a <code>Bin</code> subclass: it’s a container
+the accepts a single child widget. <code>ScrolledWindow</code> adds scrollbars
+to the child widget and optionally draws a beveled frame around the
+child widget.</p>
+
+<p>The scrolled window can work in two ways. Some widgets have native
+scrolling support; these widgets implement the <code>Scrollable</code> interface.
+Widgets with native scroll support include <code>TreeView</code>, <code>TextView</code>,
+and <code>Layout</code>.</p>
+
+<p>For widgets that lack native scrolling support, the <code>Viewport</code>
+widget acts as an adaptor class, implementing scrollability for child
+widgets that lack their own scrolling capabilities. Use <code>Viewport</code>
+to scroll child widgets such as <code>Grid</code>, <code>Box</code>, and so on.</p>
+
+<p>If a widget has native scrolling abilities, it can be added to the
+<code>ScrolledWindow</code> with <code>ContainerExt::add</code>. If a widget does not, you
+must first add the widget to a <code>Viewport</code>, then add the <code>Viewport</code>
+to the scrolled window. <code>ContainerExt::add</code> will do this for you for
+widgets that don’t implement <code>Scrollable</code> natively, so you can
+ignore the presence of the viewport.</p>
+
+<p>The position of the scrollbars is controlled by the scroll adjustments.
+See <code>Adjustment</code> for the fields in an adjustment — for
+<code>Scrollbar</code>, used by <code>ScrolledWindow</code>, the “value” field
+represents the position of the scrollbar, which must be between the
+“lower” field and “upper - page_size.” The “page_size” field
+represents the size of the visible scrollable area. The
+“step_increment” and “page_increment” fields are used when the user
+asks to step down (using the small stepper arrows) or page down (using
+for example the PageDown key).</p>
+
+<p>If a <code>ScrolledWindow</code> doesn’t behave quite as you would like, or
+doesn’t have exactly the right layout, it’s very possible to set up
+your own scrolling with <code>Scrollbar</code> and for example a <code>Grid</code>.</p>
+
+<h1 id='touch-support' class='section-header'><a href='#touch-support'>Touch support</a></h1>
+<p><code>ScrolledWindow</code> has built-in support for touch devices. When a
+touchscreen is used, swiping will move the scrolled window, and will
+expose &#39;kinetic&#39; behavior. This can be turned off with the
+<code>ScrolledWindow:kinetic-scrolling</code> property if it is undesired.</p>
+
+<p><code>ScrolledWindow</code> also displays visual &#39;overshoot&#39; indication when
+the content is pulled beyond the end, and this situation can be
+captured with the <code>ScrolledWindow::edge-overshot</code> signal.</p>
+
+<p>If no mouse device is present, the scrollbars will overlayed as
+narrow, auto-hiding indicators over the content. If traditional
+scrollbars are desired although no mouse is present, this behaviour
+can be turned off with the <code>ScrolledWindow:overlay-scrolling</code>
+property.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ScrolledWindowExt.html"><code>ScrolledWindowExt</code></a>, <a href="trait.BinExt.html"><code>BinExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrolled_window.rs.html#37-48' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrolled_window.rs.html#93-118' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;'a, 'b, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'b <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;hadjustment: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;vadjustment: Q<br>) -&gt; <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new scrolled window.</p>
+
+<p>The two arguments are the scrolled window’s adjustments; these will be
+shared with the scrollbars and the child widget to keep the bars in sync
+with the child. Usually you want to pass <code>None</code> for the adjustments, which
+will cause the scrolled window to create them for you.</p>
+
+<h2 id='hadjustment' class='section-header'><a href='#hadjustment'><code>hadjustment</code></a></h2>
+<p>horizontal adjustment</p>
+
+<h2 id='vadjustment' class='section-header'><a href='#vadjustment'><code>vadjustment</code></a></h2>
+<p>vertical adjustment</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new scrolled window</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

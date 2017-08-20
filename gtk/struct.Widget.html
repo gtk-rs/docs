@@ -49,16 +49,314 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Widget(_, _);</pre>
+<pre class='rust struct'>pub struct Widget(_, _);</pre><div class='docblock'><p><code>Widget</code> is the base class all widgets in GTK+ derive from. It manages the
+widget lifecycle, states and style.</p>
+
+<h1 id='height-for-width-geometry-management--geometry-management' class='section-header'><a href='#height-for-width-geometry-management--geometry-management'>Height-for-width Geometry Management # {<code>geometry</code>-management}</a></h1>
+<p>GTK+ uses a height-for-width (and width-for-height) geometry management
+system. Height-for-width means that a widget can change how much
+vertical space it needs, depending on the amount of horizontal space
+that it is given (and similar for width-for-height). The most common
+example is a label that reflows to fill up the available width, wraps
+to fewer lines, and therefore needs less height.</p>
+
+<p>Height-for-width geometry management is implemented in GTK+ by way
+of five virtual methods:</p>
+
+<ul>
+<li><code>WidgetClass.get_request_mode</code>()</li>
+<li><code>WidgetClass.get_preferred_width</code>()</li>
+<li><code>WidgetClass.get_preferred_height</code>()</li>
+<li><code>WidgetClass.get_preferred_height_for_width</code>()</li>
+<li><code>WidgetClass.get_preferred_width_for_height</code>()</li>
+<li><code>WidgetClass.get_preferred_height_and_baseline_for_width</code>()</li>
+</ul>
+
+<p>There are some important things to keep in mind when implementing
+height-for-width and when using it in container implementations.</p>
+
+<p>The geometry management system will query a widget hierarchy in
+only one orientation at a time. When widgets are initially queried
+for their minimum sizes it is generally done in two initial passes
+in the <code>SizeRequestMode</code> chosen by the toplevel.</p>
+
+<p>For example, when queried in the normal
+<code>SizeRequestMode::HeightForWidth</code> mode:
+First, the default minimum and natural width for each widget
+in the interface will be computed using <code>WidgetExt::get_preferred_width</code>.
+Because the preferred widths for each container depend on the preferred
+widths of their children, this information propagates up the hierarchy,
+and finally a minimum and natural width is determined for the entire
+toplevel. Next, the toplevel will use the minimum width to query for the
+minimum height contextual to that width using
+<code>WidgetExt::get_preferred_height_for_width</code>, which will also be a highly
+recursive operation. The minimum height for the minimum width is normally
+used to set the minimum size constraint on the toplevel
+(unless <code>Window::set_geometry_hints</code> is explicitly used instead).</p>
+
+<p>After the toplevel window has initially requested its size in both
+dimensions it can go on to allocate itself a reasonable size (or a size
+previously specified with <code>Window::set_default_size</code>). During the
+recursive allocation process it’s important to note that request cycles
+will be recursively executed while container widgets allocate their children.
+Each container widget, once allocated a size, will go on to first share the
+space in one orientation among its children and then request each child&#39;s
+height for its target allocated width or its width for allocated height,
+depending. In this way a <code>Widget</code> will typically be requested its size
+a number of times before actually being allocated a size. The size a
+widget is finally allocated can of course differ from the size it has
+requested. For this reason, <code>Widget</code> caches a small number of results
+to avoid re-querying for the same sizes in one allocation cycle.</p>
+
+<p>See
+[<code>Container</code>’s geometry management section][container-geometry-management]
+to learn more about how height-for-width allocations are performed
+by container widgets.</p>
+
+<p>If a widget does move content around to intelligently use up the
+allocated size then it must support the request in both
+<code>GtkSizeRequestModes</code> even if the widget in question only
+trades sizes in a single orientation.</p>
+
+<p>For instance, a <code>Label</code> that does height-for-width word wrapping
+will not expect to have <code>WidgetClass.get_preferred_height</code>() called
+because that call is specific to a width-for-height request. In this
+case the label must return the height required for its own minimum
+possible width. By following this rule any widget that handles
+height-for-width or width-for-height requests will always be allocated
+at least enough space to fit its own content.</p>
+
+<p>Here are some examples of how a <code>SizeRequestMode::HeightForWidth</code> widget
+generally deals with width-for-height requests, for <code>WidgetClass.get_preferred_height</code>()
+it will do:</p>
+
+<pre><code class="language-C">static void
+foo_widget_get_preferred_height (GtkWidget *widget,
+                                 gint *min_height,
+                                 gint *nat_height)
+{
+   if (i_am_in_height_for_width_mode)
+     {
+       gint min_width, nat_width;
+
+       GTK_WIDGET_GET_CLASS (widget)-&gt;get_preferred_width (widget,
+                                                           &amp;min_width,
+                                                           &amp;nat_width);
+       GTK_WIDGET_GET_CLASS (widget)-&gt;get_preferred_height_for_width
+                                                          (widget,
+                                                           min_width,
+                                                           min_height,
+                                                           nat_height);
+     }
+   else
+     {
+        ... some widgets do both. For instance, if a GtkLabel is
+        rotated to 90 degrees it will return the minimum and
+        natural height for the rotated label here.
+     }
+}
+</code></pre>
+
+<p>And in <code>WidgetClass.get_preferred_width_for_height</code>() it will simply return
+the minimum and natural width:</p>
+
+<pre><code class="language-C">static void
+foo_widget_get_preferred_width_for_height (GtkWidget *widget,
+                                           gint for_height,
+                                           gint *min_width,
+                                           gint *nat_width)
+{
+   if (i_am_in_height_for_width_mode)
+     {
+       GTK_WIDGET_GET_CLASS (widget)-&gt;get_preferred_width (widget,
+                                                           min_width,
+                                                           nat_width);
+     }
+   else
+     {
+        ... again if a widget is sometimes operating in
+        width-for-height mode (like a rotated GtkLabel) it can go
+        ahead and do its real width for height calculation here.
+     }
+}
+</code></pre>
+
+<p>Often a widget needs to get its own request during size request or
+allocation. For example, when computing height it may need to also
+compute width. Or when deciding how to use an allocation, the widget
+may need to know its natural size. In these cases, the widget should
+be careful to call its virtual methods directly, like this:</p>
+
+<pre><code class="language-C">GTK_WIDGET_GET_CLASS(widget)-&gt;get_preferred_width (widget,
+                                                   &amp;min,
+                                                   &amp;natural);
+</code></pre>
+
+<p>It will not work to use the wrapper functions, such as
+<code>WidgetExt::get_preferred_width</code> inside your own size request
+implementation. These return a request adjusted by <code>SizeGroup</code>
+and by the <code>WidgetClass.adjust_size_request</code>() virtual method. If a
+widget used the wrappers inside its virtual method implementations,
+then the adjustments (such as widget margins) would be applied
+twice. GTK+ therefore does not allow this and will warn if you try
+to do it.</p>
+
+<p>Of course if you are getting the size request for
+another widget, such as a child of a
+container, you must use the wrapper APIs.
+Otherwise, you would not properly consider widget margins,
+<code>SizeGroup</code>, and so forth.</p>
+
+<p>Since 3.10 Gtk+ also supports baseline vertical alignment of widgets. This
+means that widgets are positioned such that the typographical baseline of
+widgets in the same row are aligned. This happens if a widget supports baselines,
+has a vertical alignment of <code>Align::Baseline</code>, and is inside a container
+that supports baselines and has a natural “row” that it aligns to the baseline,
+or a baseline assigned to it by the grandparent.</p>
+
+<p>Baseline alignment support for a widget is done by the <code>WidgetClass.get_preferred_height_and_baseline_for_width</code>()
+virtual function. It allows you to report a baseline in combination with the
+minimum and natural height. If there is no baseline you can return -1 to indicate
+this. The default implementation of this virtual function calls into the
+<code>WidgetClass.get_preferred_height</code>() and <code>WidgetClass.get_preferred_height_for_width</code>(),
+so if baselines are not supported it doesn’t need to be implemented.</p>
+
+<p>If a widget ends up baseline aligned it will be allocated all the space in the parent
+as if it was <code>Align::Fill</code>, but the selected baseline can be found via <code>WidgetExt::get_allocated_baseline</code>.
+If this has a value other than -1 you need to align the widget such that the baseline
+appears at the position.</p>
+
+<h1 id='style-properties' class='section-header'><a href='#style-properties'>Style Properties</a></h1>
+<p><code>Widget</code> introduces “style
+properties” - these are basically object properties that are stored
+not on the object, but in the style object associated to the widget. Style
+properties are set in [resource files][gtk3-Resource-Files].
+This mechanism is used for configuring such things as the location of the
+scrollbar arrows through the theme, giving theme authors more control over the
+look of applications without the need to write a theme engine in C.</p>
+
+<p>Use <code>WidgetClass::install_style_property</code> to install style properties for
+a widget class, <code>WidgetClass::find_style_property</code> or
+<code>WidgetClass::list_style_properties</code> to get information about existing
+style properties and <code>Widget::style_get_property</code>, <code>WidgetExt::style_get</code> or
+<code>WidgetExt::style_get_valist</code> to obtain the value of a style property.</p>
+
+<h1 id='widget-as-buildable' class='section-header'><a href='#widget-as-buildable'><code>Widget</code> as <code>Buildable</code></a></h1>
+<p>The <code>Widget</code> implementation of the <code>Buildable</code> interface supports a
+custom <code>&lt;accelerator&gt;</code> element, which has attributes named ”key”, ”modifiers”
+and ”signal” and allows to specify accelerators.</p>
+
+<p>An example of a UI definition fragment specifying an accelerator:</p>
+
+<pre><code class="language-C">static void
+foo_widget_class_init (FooWidgetClass *klass)
+{
+  // ...
+
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass),
+                                               &quot;/com/example/ui/foowidget.ui&quot;);
+}
+</code></pre>
+
+<p>You will also need to call <code>WidgetExt::init_template</code> from the instance
+initialization function:</p>
+
+<pre><code class="language-C">static void
+foo_widget_init (FooWidget *self)
+{
+  // ...
+  gtk_widget_init_template (GTK_WIDGET (self));
+}
+</code></pre>
+
+<p>You can access widgets defined in the template using the
+<code>WidgetExt::get_template_child</code> function, but you will typically declare
+a pointer in the instance private data structure of your type using the same
+name as the widget in the template definition, and call
+<code>gtk_widget_class_bind_template_child_private</code> with that name, e.g.</p>
+
+<pre><code class="language-C">typedef struct {
+  GtkWidget *hello_button;
+  GtkWidget *goodbye_button;
+} FooWidgetPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (FooWidget, foo_widget, GTK_TYPE_BOX)
+
+static void
+foo_widget_class_init (FooWidgetClass *klass)
+{
+  // ...
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass),
+                                               &quot;/com/example/ui/foowidget.ui&quot;);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass),
+                                                FooWidget, hello_button);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass),
+                                                FooWidget, goodbye_button);
+}
+</code></pre>
+
+<p>You can also use <code>gtk_widget_class_bind_template_callback</code> to connect a signal
+callback defined in the template with a function visible in the scope of the
+class, e.g.</p>
+
+<pre><code class="language-C">// the signal handler has the instance and user data swapped
+// because of the swapped=&quot;yes&quot; attribute in the template XML
+static void
+hello_button_clicked (FooWidget *self,
+                      GtkButton *button)
+{
+  g_print (&quot;Hello, world!\n&quot;);
+}
+
+static void
+foo_widget_class_init (FooWidgetClass *klass)
+{
+  // ...
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass),
+                                               &quot;/com/example/ui/foowidget.ui&quot;);
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), hello_button_clicked);
+}
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/widget.rs.html#54-86' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/widget.rs.html#339-400' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.get_default_direction' class="method"><span id='get_default_direction.v' class='invisible'><code>fn <a href='#method.get_default_direction' class='fnname'>get_default_direction</a>() -&gt; <a class="enum" href="../gtk/enum.TextDirection.html" title="enum gtk::TextDirection">TextDirection</a></code></span></h4>
-<h4 id='method.pop_composite_child' class="method"><span id='pop_composite_child.v' class='invisible'><code>fn <a href='#method.pop_composite_child' class='fnname'>pop_composite_child</a>()</code></span></h4>
-<h4 id='method.push_composite_child' class="method"><span id='push_composite_child.v' class='invisible'><code>fn <a href='#method.push_composite_child' class='fnname'>push_composite_child</a>()</code></span></h4>
-<h4 id='method.set_default_direction' class="method"><span id='set_default_direction.v' class='invisible'><code>fn <a href='#method.set_default_direction' class='fnname'>set_default_direction</a>(dir: <a class="enum" href="../gtk/enum.TextDirection.html" title="enum gtk::TextDirection">TextDirection</a>)</code></span></h4>
-</div>
+<div class='docblock'><p>Obtains the current default reading direction. See
+<code>Widget::set_default_direction</code>.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>the current default direction.</p>
+</div><h4 id='method.pop_composite_child' class="method"><span id='pop_composite_child.v' class='invisible'><code>fn <a href='#method.pop_composite_child' class='fnname'>pop_composite_child</a>()</code></span></h4>
+<div class='docblock'><p>Cancels the effect of a previous call to <code>Widget::push_composite_child</code>.</p>
+
+<h1 id='deprecated-since-310' class='section-header'><a href='#deprecated-since-310'>Deprecated since 3.10</a></h1>
+<p>Use <code>WidgetClass::set_template</code>, or don’t use this API at all.</p>
+</div><h4 id='method.push_composite_child' class="method"><span id='push_composite_child.v' class='invisible'><code>fn <a href='#method.push_composite_child' class='fnname'>push_composite_child</a>()</code></span></h4>
+<div class='docblock'><p>Makes all newly-created widgets as composite children until
+the corresponding <code>Widget::pop_composite_child</code> call.</p>
+
+<p>A composite child is a child that’s an implementation detail of the
+container it’s inside and should not be visible to people using the
+container. Composite children aren’t treated differently by GTK (but
+see <code>ContainerExt::foreach</code> vs. <code>ContainerExt::forall</code>), but e.g. GUI
+builders might want to treat them in a different way.</p>
+
+<h1 id='deprecated-since-310-1' class='section-header'><a href='#deprecated-since-310-1'>Deprecated since 3.10</a></h1>
+<p>This API never really worked well and was mostly unused, now
+we have a more complete mechanism for composite children, see <code>WidgetClass::set_template</code>.</p>
+</div><h4 id='method.set_default_direction' class="method"><span id='set_default_direction.v' class='invisible'><code>fn <a href='#method.set_default_direction' class='fnname'>set_default_direction</a>(dir: <a class="enum" href="../gtk/enum.TextDirection.html" title="enum gtk::TextDirection">TextDirection</a>)</code></span></h4>
+<div class='docblock'><p>Sets the default reading direction for widgets where the
+direction has not been explicitly set by <code>WidgetExt::set_direction</code>.</p>
+
+<h2 id='dir' class='section-header'><a href='#dir'><code>dir</code></a></h2>
+<p>the new default direction. This cannot be
+ <code>TextDirection::None</code>.</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

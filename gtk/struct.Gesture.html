@@ -49,7 +49,90 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Gesture(_, _);</pre>
+<pre class='rust struct'>pub struct Gesture(_, _);</pre><div class='docblock'><p><code>Gesture</code> is the base object for gesture recognition, although this
+object is quite generalized to serve as a base for multi-touch gestures,
+it is suitable to implement single-touch and pointer-based gestures (using
+the special <code>None</code> <code>gdk::EventSequence</code> value for these).</p>
+
+<p>The number of touches that a <code>Gesture</code> need to be recognized is controlled
+by the <code>Gesture:n-points</code> property, if a gesture is keeping track of less
+or more than that number of sequences, it won&#39;t check wether the gesture
+is recognized.</p>
+
+<p>As soon as the gesture has the expected number of touches, the gesture will
+run the <code>Gesture::check</code> signal regularly on input events until the gesture
+is recognized, the criteria to consider a gesture as &quot;recognized&quot; is left to
+<code>Gesture</code> subclasses.</p>
+
+<p>A recognized gesture will then emit the following signals:
+- <code>Gesture::begin</code> when the gesture is recognized.
+- A number of <code>Gesture::update</code>, whenever an input event is processed.
+- <code>Gesture::end</code> when the gesture is no longer recognized.</p>
+
+<h2 id='event-propagation' class='section-header'><a href='#event-propagation'>Event propagation</a></h2>
+<p>In order to receive events, a gesture needs to either set a propagation phase
+through <code>EventControllerExt::set_propagation_phase</code>, or feed those manually
+through <code>EventControllerExt::handle_event</code>.</p>
+
+<p>In the capture phase, events are propagated from the toplevel down to the
+target widget, and gestures that are attached to containers above the widget
+get a chance to interact with the event before it reaches the target.</p>
+
+<p>After the capture phase, GTK+ emits the traditional <code>Widget::button-press</code>,
+<code>Widget::button-release</code>, <code>Widget::touch-event</code>, etc signals. Gestures
+with the <code>PropagationPhase::Target</code> phase are fed events from the default <code>Widget::event</code>
+handlers.</p>
+
+<p>In the bubble phase, events are propagated up from the target widget to the
+toplevel, and gestures that are attached to containers above the widget get
+a chance to interact with events that have not been handled yet.</p>
+
+<h2 id='states-of-a-sequence--touch-sequence-states' class='section-header'><a href='#states-of-a-sequence--touch-sequence-states'>States of a sequence # {<code>touch</code>-sequence-states}</a></h2>
+<p>Whenever input interaction happens, a single event may trigger a cascade of
+<code>GtkGestures</code>, both across the parents of the widget receiving the event and
+in parallel within an individual widget. It is a responsibility of the
+widgets using those gestures to set the state of touch sequences accordingly
+in order to enable cooperation of gestures around the <code>GdkEventSequences</code>
+triggering those.</p>
+
+<p>Within a widget, gestures can be grouped through <code>GestureExt::group</code>,
+grouped gestures synchronize the state of sequences, so calling
+<code>GestureExt::set_sequence_state</code> on one will effectively propagate
+the state throughout the group.</p>
+
+<p>By default, all sequences start out in the <code>EventSequenceState::None</code> state,
+sequences in this state trigger the gesture event handler, but event
+propagation will continue unstopped by gestures.</p>
+
+<p>If a sequence enters into the <code>EventSequenceState::Denied</code> state, the gesture
+group will effectively ignore the sequence, letting events go unstopped
+through the gesture, but the &quot;slot&quot; will still remain occupied while
+the touch is active.</p>
+
+<p>If a sequence enters in the <code>EventSequenceState::Claimed</code> state, the gesture
+group will grab all interaction on the sequence, by:
+- Setting the same sequence to <code>EventSequenceState::Denied</code> on every other gesture
+ group within the widget, and every gesture on parent widgets in the propagation
+ chain.
+- calling <code>Gesture::cancel</code> on every gesture in widgets underneath in the
+ propagation chain.
+- Stopping event propagation after the gesture group handles the event.</p>
+
+<p>Note: if a sequence is set early to <code>EventSequenceState::Claimed</code> on
+<code>gdk::EventType::TouchBegin</code>/<code>gdk::EventType::ButtonPress</code> (so those events are captured before
+reaching the event widget, this implies <code>PropagationPhase::Capture</code>), one similar
+event will emulated if the sequence changes to <code>EventSequenceState::Denied</code>.
+This way event coherence is preserved before event propagation is unstopped
+again.</p>
+
+<p>Sequence states can&#39;t be changed freely, see <code>GestureExt::set_sequence_state</code>
+to know about the possible lifetimes of a <code>gdk::EventSequence</code>.</p>
+
+<p>Feature: <code>v3_14</code></p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.GestureExt.html"><code>GestureExt</code></a>, <a href="trait.EventControllerExt.html"><code>EventControllerExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>

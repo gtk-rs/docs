@@ -49,13 +49,66 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct FileFilter(_, _);</pre>
+<pre class='rust struct'>pub struct FileFilter(_, _);</pre><div class='docblock'><p>A <code>FileFilter</code> can be used to restrict the files being shown in a
+<code>FileChooser</code>. Files can be filtered based on their name (with
+<code>FileFilter::add_pattern</code>), on their mime type (with
+<code>FileFilter::add_mime_type</code>), or by a custom filter function
+(with <code>FileFilter::add_custom</code>).</p>
+
+<p>Filtering by mime types handles aliasing and subclassing of mime
+types; e.g. a filter for text/plain also matches a file with mime
+type application/rtf, since application/rtf is a subclass of
+text/plain. Note that <code>FileFilter</code> allows wildcards for the
+subtype of a mime type, so you can e.g. filter for image/*.</p>
+
+<p>Normally, filters are used by adding them to a <code>FileChooser</code>,
+see <code>FileChooser::add_filter</code>, but it is also possible
+to manually use a filter on a file with <code>FileFilter::filter</code>.</p>
+
+<h1 id='filefilter-as-buildable' class='section-header'><a href='#filefilter-as-buildable'><code>FileFilter</code> as <code>Buildable</code></a></h1>
+<p>The <code>FileFilter</code> implementation of the <code>Buildable</code> interface
+supports adding rules using the <code>&lt;mime-types&gt;</code>, <code>&lt;patterns&gt;</code> and
+<code>&lt;applications&gt;</code> elements and listing the rules within. Specifying
+a <code>&lt;mime-type&gt;</code> or <code>&lt;pattern&gt;</code> has the same effect as as calling
+<code>FileFilter::add_mime_type</code> or <code>FileFilter::add_pattern</code>.</p>
+
+<p>An example of a UI definition fragment specifying <code>FileFilter</code>
+rules:</p>
+
+<pre><code class="language-text">&lt;object class=&quot;GtkFileFilter&quot;&gt;
+  &lt;mime-types&gt;
+    &lt;mime-type&gt;text/plain&lt;/mime-type&gt;
+    &lt;mime-type&gt;image/ *&lt;/mime-type&gt;
+  &lt;/mime-types&gt;
+  &lt;patterns&gt;
+    &lt;pattern&gt;*.txt&lt;/pattern&gt;
+    &lt;pattern&gt;*.png&lt;/pattern&gt;
+  &lt;/patterns&gt;
+&lt;/object&gt;
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.FileFilter.html" title="struct gtk::FileFilter">FileFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/file_filter.rs.html#23-38' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.FileFilter.html" title="struct gtk::FileFilter">FileFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/file_filter.rs.html#66-96' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.FileFilter.html" title="struct gtk::FileFilter">FileFilter</a></code></span></h4>
-<h4 id='method.new_from_gvariant' class="method"><span id='new_from_gvariant.v' class='invisible'><code>fn <a href='#method.new_from_gvariant' class='fnname'>new_from_gvariant</a>(variant: &amp;Variant) -&gt; <a class="struct" href="../gtk/struct.FileFilter.html" title="struct gtk::FileFilter">FileFilter</a></code></span></h4>
+<div class='docblock'><p>Creates a new <code>FileFilter</code> with no rules added to it.
+Such a filter doesn’t accept any files, so is not
+particularly useful until you add rules with
+<code>FileFilter::add_mime_type</code>, <code>FileFilter::add_pattern</code>,
+or <code>FileFilter::add_custom</code>. To create a filter
+that accepts any file, use:</p>
+
+<pre><code class="language-C">GtkFileFilter *filter = gtk_file_filter_new ();
+gtk_file_filter_add_pattern (filter, &quot;*&quot;);
+</code></pre>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>FileFilter</code></p>
+</div><h4 id='method.new_from_gvariant' class="method"><span id='new_from_gvariant.v' class='invisible'><code>fn <a href='#method.new_from_gvariant' class='fnname'>new_from_gvariant</a>(variant: &amp;Variant) -&gt; <a class="struct" href="../gtk/struct.FileFilter.html" title="struct gtk::FileFilter">FileFilter</a></code></span></h4>
 </div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
@@ -83,7 +136,7 @@
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.FileFilter.html" title="struct gtk::FileFilter">FileFilter</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.FileFilter.html" title="struct gtk::FileFilter">FileFilter</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.FileFilter.html" title="struct gtk::FileFilter">FileFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/file_filter.rs.html#40-44' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.FileFilter.html" title="struct gtk::FileFilter">FileFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/file_filter.rs.html#98-102' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>

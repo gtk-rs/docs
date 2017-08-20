@@ -49,14 +49,83 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct TreeView(_, _);</pre>
+<pre class='rust struct'>pub struct TreeView(_, _);</pre><div class='docblock'><p>Widget that displays any object that implements the <code>TreeModel</code> interface.</p>
+
+<p>Please refer to the
+[tree widget conceptual overview][TreeWidget]
+for an overview of all the objects and data types related
+to the tree widget and how they work together.</p>
+
+<p>Several different coordinate systems are exposed in the <code>TreeView</code> API.
+These are:</p>
+
+<p><img src="tree-view-coordinates.png" alt=""></p>
+
+<p>Coordinate systems in <code>TreeView</code> API:</p>
+
+<ul>
+<li><p>Widget coordinates: Coordinates relative to the widget (usually <code>widget-&gt;window</code>).</p></li>
+<li><p>Bin window coordinates: Coordinates relative to the window that <code>TreeView</code> renders to.</p></li>
+<li><p>Tree coordinates: Coordinates relative to the entire scrollable area of <code>TreeView</code>. These
+coordinates start at (0, 0) for row 0 of the tree.</p></li>
+</ul>
+
+<p>Several functions are available for converting between the different
+coordinate systems. The most common translations are between widget and bin
+window coordinates and between bin window and tree coordinates. For the
+former you can use <code>TreeView::convert_widget_to_bin_window_coords</code>
+(and vice versa), for the latter <code>TreeView::convert_bin_window_to_tree_coords</code>
+(and vice versa).</p>
+
+<h1 id='treeview-as-buildable' class='section-header'><a href='#treeview-as-buildable'><code>TreeView</code> as <code>Buildable</code></a></h1>
+<p>The <code>TreeView</code> implementation of the <code>Buildable</code> interface accepts
+<code>TreeViewColumn</code> objects as <code>&lt;child&gt;</code> elements and exposes the internal
+<code>TreeSelection</code> in UI definitions.</p>
+
+<p>An example of a UI definition fragment with <code>TreeView</code>:</p>
+
+<pre><code class="language-text">&lt;object class=&quot;GtkTreeView&quot; id=&quot;treeview&quot;&gt;
+  &lt;property name=&quot;model&quot;&gt;liststore1&lt;/property&gt;
+  &lt;child&gt;
+    &lt;object class=&quot;GtkTreeViewColumn&quot; id=&quot;test-column&quot;&gt;
+      &lt;property name=&quot;title&quot;&gt;Test&lt;/property&gt;
+      &lt;child&gt;
+        &lt;object class=&quot;GtkCellRendererText&quot; id=&quot;test-renderer&quot;/&gt;
+        &lt;attributes&gt;
+          &lt;attribute name=&quot;text&quot;&gt;1&lt;/attribute&gt;
+        &lt;/attributes&gt;
+      &lt;/child&gt;
+    &lt;/object&gt;
+  &lt;/child&gt;
+  &lt;child internal-child=&quot;selection&quot;&gt;
+    &lt;object class=&quot;GtkTreeSelection&quot; id=&quot;selection&quot;&gt;
+      &lt;signal name=&quot;changed&quot; handler=&quot;on_treeview_selection_changed&quot;/&gt;
+    &lt;/object&gt;
+  &lt;/child&gt;
+&lt;/object&gt;
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.ScrollableExt.html"><code>ScrollableExt</code></a></p>
+</div>
                     <h2 id='methods' class='section-header'>
                       <a href='#methods'>Methods</a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.TreeView.html" title="struct gtk::TreeView">TreeView</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/tree_view.rs.html#44-58' title='goto source code'>[src]</a></span></h3>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.TreeView.html" title="struct gtk::TreeView">TreeView</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/tree_view.rs.html#105-131' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.TreeView.html" title="struct gtk::TreeView">TreeView</a></code></span></h4>
-<h4 id='method.new_with_model' class="method"><span id='new_with_model.v' class='invisible'><code>fn <a href='#method.new_with_model' class='fnname'>new_with_model</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt;&gt;(model: &amp;P) -&gt; <a class="struct" href="../gtk/struct.TreeView.html" title="struct gtk::TreeView">TreeView</a></code></span></h4>
-</div>
+<div class='docblock'><p>Creates a new <code>TreeView</code> widget.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>A newly created <code>TreeView</code> widget.</p>
+</div><h4 id='method.new_with_model' class="method"><span id='new_with_model.v' class='invisible'><code>fn <a href='#method.new_with_model' class='fnname'>new_with_model</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt;&gt;(model: &amp;P) -&gt; <a class="struct" href="../gtk/struct.TreeView.html" title="struct gtk::TreeView">TreeView</a></code></span></h4>
+<div class='docblock'><p>Creates a new <code>TreeView</code> widget with the model initialized to <code>model</code>.</p>
+
+<h2 id='model' class='section-header'><a href='#model'><code>model</code></a></h2>
+<p>the model.</p>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p>A newly created <code>TreeView</code> widget.</p>
+</div></div>
             <h2 id='implementations' class='section-header'>
               <a href='#implementations'>Trait Implementations</a>
             </h2>
@@ -86,7 +155,7 @@
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.TreeView.html" title="struct gtk::TreeView">TreeView</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Scrollable.html" title="struct gtk::Scrollable">Scrollable</a>&gt; for <a class="struct" href="../gtk/struct.TreeView.html" title="struct gtk::TreeView">TreeView</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.TreeView.html" title="struct gtk::TreeView">TreeView</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.TreeView.html" title="struct gtk::TreeView">TreeView</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/tree_view.rs.html#60-64' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.TreeView.html" title="struct gtk::TreeView">TreeView</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/tree_view.rs.html#133-137' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>
