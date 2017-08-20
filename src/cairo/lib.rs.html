@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/eap/.cargo/registry/src/github.com-1ecc6299db9ec823/cairo-rs-0.1.3/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -171,21 +171,29 @@
 <span id="126">126</span>
 <span id="127">127</span>
 <span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2013-2016, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class="doccomment">//! </span>
-<span class="doccomment">//! </span>
-
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">cairo_sys</span> <span class="kw">as</span> <span class="ident">ffi</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">c_vec</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;glib&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_glib&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">glib</span>;
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_glib&quot;</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">glib_sys</span> <span class="kw">as</span> <span class="ident">glib_ffi</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">enums</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">cairo_rectangle_t</span> <span class="kw">as</span> <span class="ident">Rectangle</span>;
@@ -213,6 +221,7 @@
     <span class="ident">Operator</span>,
     <span class="ident">PathDataType</span>,
     <span class="ident">Format</span>,
+    <span class="ident">RegionOverlap</span>,
     <span class="ident">SurfaceType</span>,
 };
 
@@ -260,12 +269,16 @@
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">rectangle</span>::<span class="ident">RectangleInt</span>;
 
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">region</span>::<span class="ident">Region</span>;
+
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">surface</span>::<span class="ident">Surface</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">image_surface</span>::{
     <span class="ident">ImageSurface</span>,
     <span class="ident">ImageSurfaceData</span>,
 };
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pdf_surface</span>::<span class="ident">PDFSurface</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;xcb&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">xcb</span>::{
@@ -284,12 +297,14 @@
 <span class="kw">mod</span> <span class="ident">font</span>;
 <span class="kw">mod</span> <span class="ident">context</span>;
 <span class="kw">mod</span> <span class="ident">error</span>;
+<span class="kw">mod</span> <span class="ident">pdf_surface</span>;
 <span class="kw">mod</span> <span class="ident">image_surface</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;png&quot;</span>)]</span>
 <span class="kw">mod</span> <span class="ident">image_surface_png</span>;
 <span class="kw">mod</span> <span class="ident">paths</span>;
 <span class="kw">mod</span> <span class="ident">patterns</span>;
 <span class="kw">mod</span> <span class="ident">rectangle</span>;
+<span class="kw">mod</span> <span class="ident">region</span>;
 <span class="kw">mod</span> <span class="ident">surface</span>;
 <span class="kw">mod</span> <span class="ident">matrices</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;xcb&quot;</span>)]</span>
@@ -300,6 +315,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">win32_surface</span>::<span class="ident">Win32Surface</span>;
+
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -358,7 +374,6 @@
         window.rootPath = "../../";
         window.currentCrate = "cairo";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

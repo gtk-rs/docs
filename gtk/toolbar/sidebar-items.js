@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Toolbar","A toolbar is created with a call to `Toolbar::new`."]]});

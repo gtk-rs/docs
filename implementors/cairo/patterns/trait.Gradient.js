@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["gdk"] = [];
 implementors["gtk"] = [];
 
             if (window.register_implementors) {

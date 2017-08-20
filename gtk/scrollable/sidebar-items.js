@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Scrollable","`Scrollable` is an interface that is implemented by widgets with native scrolling ability."]],"trait":[["ScrollableExt","Trait containing all `Scrollable` methods."]]});

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Switch","`Switch` is a widget that has two states: on or off. The user can control which state should be active by clicking the empty area, or by dragging the handle."]]});

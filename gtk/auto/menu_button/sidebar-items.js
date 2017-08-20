@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["MenuButton","The `MenuButton` widget is used to display a popup when clicked on. This popup can be provided either as a `Menu`, a `Popover` or an abstract `gio::MenuModel`."]]});

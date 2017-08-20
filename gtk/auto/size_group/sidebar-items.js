@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["SizeGroup","`SizeGroup` provides a mechanism for grouping a number of widgets together so they all request the same amount of space. This is typically useful when you want a column of widgets to have the same size, but you can’t use a `Grid` widget."]]});

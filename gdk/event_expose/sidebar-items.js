@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["EventExpose","Generated when all or part of a window becomes visible and needs to be redrawn."]]});

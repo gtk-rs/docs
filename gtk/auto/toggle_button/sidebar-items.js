@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["ToggleButton","A `ToggleButton` is a `Button` which will remain “pressed-in” when clicked. Clicking again will cause the toggle button to return to its normal state."]],"trait":[["ToggleButtonExt","Trait containing all `ToggleButton` methods."]]});

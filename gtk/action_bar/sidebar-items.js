@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["ActionBar","`ActionBar` is designed to present contextual actions. It is expected to be displayed below the content and expand horizontally to fill the area."]]});

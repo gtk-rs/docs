@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["EventDND","Generated during DND operations."]]});

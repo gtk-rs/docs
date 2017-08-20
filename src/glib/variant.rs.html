@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/eap/.cargo/registry/src/github.com-1ecc6299db9ec823/glib-0.1.3/src/variant.rs`.">
+    <meta name="description" content="Source to the Rust file `src/variant.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>variant.rs.html -- source</title>
@@ -396,6 +396,10 @@
 <span id="351">351</span>
 <span id="352">352</span>
 <span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2013-2016, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -439,6 +443,7 @@
 
 <span class="kw">use</span> <span class="ident">VariantTy</span>;
 <span class="kw">use</span> <span class="ident">ffi</span> <span class="kw">as</span> <span class="ident">glib_ffi</span>;
+<span class="kw">use</span> <span class="ident">gobject_ffi</span>;
 <span class="kw">use</span> <span class="ident">translate</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>::{<span class="ident">PartialEq</span>, <span class="ident">Eq</span>};
@@ -446,6 +451,8 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">hash</span>::{<span class="ident">Hash</span>, <span class="ident">Hasher</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">slice</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="doccomment">/// A generic immutable value capable of carrying various types.</span>
@@ -456,6 +463,7 @@
     <span class="kw">match</span> <span class="kw">fn</span> {
         <span class="kw-2">ref</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">glib_ffi</span>::<span class="ident">g_variant_ref_sink</span>(<span class="ident">ptr</span>),
         <span class="ident">unref</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">glib_ffi</span>::<span class="ident">g_variant_unref</span>(<span class="ident">ptr</span>),
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">glib_ffi</span>::<span class="ident">g_variant_type_get_gtype</span>(),
     }
 }
 
@@ -808,7 +816,6 @@
         window.rootPath = "../../";
         window.currentCrate = "glib";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

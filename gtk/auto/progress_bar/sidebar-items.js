@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["ProgressBar","The `ProgressBar` is typically used to display the progress of a long running operation. It provides a visual clue that processing is underway. The `ProgressBar` can be used in two different modes: percentage mode and activity mode."]]});

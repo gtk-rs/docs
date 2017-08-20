@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Actionable","This interface provides a convenient way of associating widgets with actions on a `ApplicationWindow` or `Application`."]],"trait":[["ActionableExt","Trait containing all `Actionable` methods."]]});

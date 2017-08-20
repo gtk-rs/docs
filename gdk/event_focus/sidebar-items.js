@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["EventFocus","Describes a change of keyboard focus."]]});

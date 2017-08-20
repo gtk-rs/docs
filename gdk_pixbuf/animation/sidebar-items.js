@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["PixbufAnimation","An opaque struct representing an animation."],["PixbufAnimationIter","An opaque struct representing an iterator which points to a certain position in an animation."],["PixbufSimpleAnim","An opaque struct representing a simple animation."]],"trait":[["PixbufAnimationExt","Trait containing all `PixbufAnimation` methods."]]});

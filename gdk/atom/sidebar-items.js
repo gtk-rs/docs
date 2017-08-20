@@ -1,1 +1,0 @@
-initSidebarItems({"constant":[["NONE",""]],"struct":[["Atom",""]]});

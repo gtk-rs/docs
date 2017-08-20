@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["MenuToolButton","A `MenuToolButton` is a `ToolItem` that contains a button and a small additional button with an arrow. When clicked, the arrow button pops up a dropdown menu."]]});

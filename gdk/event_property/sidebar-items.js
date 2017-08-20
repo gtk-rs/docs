@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["EventProperty","Describes a property change on a window."]]});

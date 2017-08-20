@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'RadioButton', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct RadioButton</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'RadioButton', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -49,187 +49,23 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct RadioButton(_, _);</pre><div class='docblock'><p>A single radio button performs the same basic function as a <code>CheckButton</code>,
-as its position in the object hierarchy reflects. It is only when multiple
-radio buttons are grouped together that they become a different user
-interface component in their own right.</p>
-
-<p>Every radio button is a member of some group of radio buttons. When one is
-selected, all other radio buttons in the same group are deselected. A
-<code>RadioButton</code> is one way of giving the user a choice from many options.</p>
-
-<p>Radio button widgets are created with <code>RadioButton::new</code>, passing <code>None</code>
-as the argument if this is the first radio button in a group. In subsequent
-calls, the group you wish to add this button to should be passed as an
-argument. Optionally, <code>RadioButton::new_with_label</code> can be used if you
-want a text label on the radio button.</p>
-
-<p>Alternatively, when adding widgets to an existing group of radio buttons,
-use <code>RadioButton::new_from_widget</code> with a <code>RadioButton</code> that already
-has a group assigned to it. The convenience function
-<code>RadioButton::new_with_label_from_widget</code> is also provided.</p>
-
-<p>To retrieve the group a <code>RadioButton</code> is assigned to, use
-<code>RadioButton::get_group</code>.</p>
-
-<p>To remove a <code>RadioButton</code> from one group and make it part of a new one,
-use <code>RadioButton::set_group</code>.</p>
-
-<p>The group list does not need to be freed, as each <code>RadioButton</code> will remove
-itself and its list item when it is destroyed.</p>
-
-<h2 id='how-to-create-a-group-of-two-radio-buttons' class='section-header'><a href='#how-to-create-a-group-of-two-radio-buttons'>How to create a group of two radio buttons.</a></h2>
-<pre><code class="language-C">void create_radio_buttons (void) {
-
-   GtkWidget *window, *radio1, *radio2, *box, *entry;
-   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-   box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
-   gtk_box_set_homogeneous (GTK_BOX (box), TRUE);
-
-   // Create a radio button with a GtkEntry widget
-   radio1 = gtk_radio_button_new (NULL);
-   entry = gtk_entry_new ();
-   gtk_container_add (GTK_CONTAINER (radio1), entry);
-
-
-   // Create a radio button with a label
-   radio2 = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (radio1),
-                                                         &quot;I’m the second radio button.&quot;);
-
-   // Pack them into a box, then show all the widgets
-   gtk_box_pack_start (GTK_BOX (box), radio1, TRUE, TRUE, 2);
-   gtk_box_pack_start (GTK_BOX (box), radio2, TRUE, TRUE, 2);
-   gtk_container_add (GTK_CONTAINER (window), box);
-   gtk_widget_show_all (window);
-   return;
-}
-</code></pre>
-
-<p>When an unselected button in the group is clicked the clicked button
-receives the <code>ToggleButton::toggled</code> signal, as does the previously
-selected button.
-Inside the <code>ToggleButton::toggled</code> handler, <code>ToggleButton::get_active</code>
-can be used to determine if the button has been selected or deselected.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
-<p><a href="trait.CheckButtonExt.html"><code>CheckButtonExt</code></a>, <a href="trait.ToggleButtonExt.html"><code>ToggleButtonExt</code></a>, <a href="trait.ButtonExt.html"><code>ButtonExt</code></a>, <a href="trait.BinExt.html"><code>BinExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.ActionableExt.html"><code>ActionableExt</code></a></p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/radio_button.rs.html#95-272' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(group: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>RadioButton</code>. To be of any practical value, a widget should
-then be packed into the radio button.</p>
-
-<h2 id='group' class='section-header'><a href='#group'><code>group</code></a></h2>
-<p>an existing
- radio button group, or <code>None</code> if you are creating a new group.</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
-<p>a new radio button</p>
-</div><h4 id='method.new_from_widget' class="method"><span id='new_from_widget.v' class='invisible'><code>fn <a href='#method.new_from_widget' class='fnname'>new_from_widget</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a>&gt;&gt;&gt;(radio_group_member: P)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>RadioButton</code>, adding it to the same group as
-<code>radio_group_member</code>. As with <code>RadioButton::new</code>, a widget
-should be packed into the radio button.</p>
-
-<h2 id='radio_group_member' class='section-header'><a href='#radio_group_member'><code>radio_group_member</code></a></h2>
-<p>an existing <code>RadioButton</code>.</p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
-<p>a new radio button.</p>
-</div><h4 id='method.new_with_label' class="method"><span id='new_with_label.v' class='invisible'><code>fn <a href='#method.new_with_label' class='fnname'>new_with_label</a>(group: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, label: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>RadioButton</code> with a text label.</p>
-
-<h2 id='group-1' class='section-header'><a href='#group-1'><code>group</code></a></h2>
-<p>an existing
- radio button group, or <code>None</code> if you are creating a new group.</p>
-
-<h2 id='label' class='section-header'><a href='#label'><code>label</code></a></h2>
-<p>the text label to display next to the radio button.</p>
-
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
-<p>a new radio button.</p>
-</div><h4 id='method.new_with_label_from_widget' class="method"><span id='new_with_label_from_widget.v' class='invisible'><code>fn <a href='#method.new_with_label_from_widget' class='fnname'>new_with_label_from_widget</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a>&gt;&gt;&gt;(radio_group_member: P,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; label: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>RadioButton</code> with a text label, adding it to
-the same group as <code>radio_group_member</code>.</p>
-
-<h2 id='radio_group_member-1' class='section-header'><a href='#radio_group_member-1'><code>radio_group_member</code></a></h2>
-<p>widget to get radio group from or <code>None</code></p>
-
-<h2 id='label-1' class='section-header'><a href='#label-1'><code>label</code></a></h2>
-<p>a text string to display next to the radio button.</p>
-
-<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
-<p>a new radio button.</p>
-</div><h4 id='method.new_with_mnemonic' class="method"><span id='new_with_mnemonic.v' class='invisible'><code>fn <a href='#method.new_with_mnemonic' class='fnname'>new_with_mnemonic</a>(group: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, label: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>RadioButton</code> containing a label, adding it to the same
-group as <code>group</code>. The label will be created using
-<code>Label::new_with_mnemonic</code>, so underscores in <code>label</code> indicate the
-mnemonic for the button.</p>
-
-<h2 id='group-2' class='section-header'><a href='#group-2'><code>group</code></a></h2>
-<p>the radio button
- group, or <code>None</code></p>
-
-<h2 id='label-2' class='section-header'><a href='#label-2'><code>label</code></a></h2>
-<p>the text of the button, with an underscore in front of the
- mnemonic character</p>
-
-<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
-<p>a new <code>RadioButton</code></p>
-</div><h4 id='method.new_with_mnemonic_from_widget' class="method"><span id='new_with_mnemonic_from_widget.v' class='invisible'><code>fn <a href='#method.new_with_mnemonic_from_widget' class='fnname'>new_with_mnemonic_from_widget</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a>&gt;&gt;&gt;(radio_group_member: P,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; label: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>RadioButton</code> containing a label. The label
-will be created using <code>Label::new_with_mnemonic</code>, so underscores
-in <code>label</code> indicate the mnemonic for the button.</p>
-
-<h2 id='radio_group_member-2' class='section-header'><a href='#radio_group_member-2'><code>radio_group_member</code></a></h2>
-<p>widget to get radio group from or <code>None</code></p>
-
-<h2 id='label-3' class='section-header'><a href='#label-3'><code>label</code></a></h2>
-<p>the text of the button, with an underscore in front of the
- mnemonic character</p>
-
-<h1 id='returns-5' class='section-header'><a href='#returns-5'>Returns</a></h1>
-<p>a new <code>RadioButton</code></p>
-</div><h4 id='method.get_group' class="method"><span id='get_group.v' class='invisible'><code>fn <a href='#method.get_group' class='fnname'>get_group</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a>&gt;</code></span></h4>
-<div class='docblock'><p>Retrieves the group assigned to a radio button.</p>
-
-<h1 id='returns-6' class='section-header'><a href='#returns-6'>Returns</a></h1>
-<p>a linked list
-containing all the radio buttons in the same group
-as <code>self</code>. The returned list is owned by the radio button
-and must not be modified or freed.</p>
-</div><h4 id='method.join_group' class="method"><span id='join_group.v' class='invisible'><code>fn <a href='#method.join_group' class='fnname'>join_group</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a>&gt;&gt;&gt;(&amp;self, group_source: P)</code></span></h4>
-<div class='docblock'><p>Joins a <code>RadioButton</code> object to the group of another <code>RadioButton</code> object</p>
-
-<p>Use this in language bindings instead of the <code>RadioButton::get_group</code>
-and <code>RadioButton::set_group</code> methods</p>
-
-<p>A common way to set up a group of radio buttons is the following:</p>
-
-<pre><code class="language-C">  GtkRadioButton *radio_button;
-  GtkRadioButton *last_button;
-
-  while ( ...more buttons to add... )
-    {
-       radio_button = gtk_radio_button_new (...);
-
-       gtk_radio_button_join_group (radio_button, last_button);
-       last_button = radio_button;
-    }
-</code></pre>
-
-<h2 id='group_source' class='section-header'><a href='#group_source'><code>group_source</code></a></h2>
-<p>a radio button object whos group we are
- joining, or <code>None</code> to remove the radio button from its group</p>
-</div><h4 id='method.set_group' class="method"><span id='set_group.v' class='invisible'><code>fn <a href='#method.set_group' class='fnname'>set_group</a>(&amp;self, group: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>)</code></span></h4>
-<div class='docblock'><p>Sets a <code>RadioButton</code>’s group. It should be noted that this does not change
-the layout of your interface in any way, so if you are changing the group,
-it is likely you will need to re-arrange the user interface to reflect these
-changes.</p>
-
-<h2 id='group-3' class='section-header'><a href='#group-3'><code>group</code></a></h2>
-<p>an existing radio
- button group, such as one returned from <code>RadioButton::get_group</code>, or <code>None</code>.</p>
-</div><h4 id='method.connect_group_changed' class="method"><span id='connect_group_changed.v' class='invisible'><code>fn <a href='#method.connect_group_changed' class='fnname'>connect_group_changed</a>&lt;F:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html" title="trait core::ops::Fn">Fn</a>(&amp;<a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a>) + 'static&gt;(&amp;self, f: F) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span></h4>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span><span class='out-of-band'></span></h3>
+<pre class='rust struct'>pub struct RadioButton(_, _);</pre>
+                    <h2 id='methods' class='section-header'>
+                      <a href='#methods'>Methods</a>
+                    </h2>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/radio_button.rs.html#32-53' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new_from_widget' class="method"><span id='new_from_widget.v' class='invisible'><code>fn <a href='#method.new_from_widget' class='fnname'>new_from_widget</a>(radio_group_member: &amp;<a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a>) -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
+<h4 id='method.new_with_label_from_widget' class="method"><span id='new_with_label_from_widget.v' class='invisible'><code>fn <a href='#method.new_with_label_from_widget' class='fnname'>new_with_label_from_widget</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;radio_group_member: &amp;<a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;label: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><br>) -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
+<h4 id='method.new_with_mnemonic_from_widget' class="method"><span id='new_with_mnemonic_from_widget.v' class='invisible'><code>fn <a href='#method.new_with_mnemonic_from_widget' class='fnname'>new_with_mnemonic_from_widget</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;radio_group_member: &amp;<a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;label: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><br>) -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
+</div><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/radio_button.rs.html#9-30' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
+<h4 id='method.new_with_label' class="method"><span id='new_with_label.v' class='invisible'><code>fn <a href='#method.new_with_label' class='fnname'>new_with_label</a>(label: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
+<h4 id='method.new_with_mnemonic' class="method"><span id='new_with_mnemonic.v' class='invisible'><code>fn <a href='#method.new_with_mnemonic' class='fnname'>new_with_mnemonic</a>(label: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
@@ -239,9 +75,9 @@ changes.</p>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
-<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
-<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.RadioButton.html" title="struct gtk::RadioButton">RadioButton</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
@@ -316,7 +152,6 @@ changes.</p>
         window.rootPath = "../";
         window.currentCrate = "gtk";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

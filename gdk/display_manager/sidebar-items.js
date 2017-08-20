@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["DisplayManager","The purpose of the `DisplayManager` singleton object is to offer notification when displays appear or disappear or the default display changes."]]});

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["CellRendererText","A `CellRendererText` renders a given text in its cell, using the font, color and style information provided by its properties. The text will be ellipsized if it is too long and the `CellRendererText:ellipsize` property allows it."]],"trait":[["CellRendererTextExt","Trait containing all `CellRendererText` methods."]]});

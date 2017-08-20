@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Box","The `Box` widget organizes child widgets into a rectangular area."]],"trait":[["BoxExt","Trait containing all `Box` methods."]]});

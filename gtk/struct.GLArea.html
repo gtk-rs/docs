@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'GLArea', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct GLArea</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'GLArea', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -49,269 +49,17 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct GLArea(_, _);</pre><div class='docblock'><p><code>GLArea</code> is a widget that allows drawing with OpenGL.</p>
-
-<p><code>GLArea</code> sets up its own <code>gdk::GLContext</code> for the window it creates, and
-creates a custom GL framebuffer that the widget will do GL rendering onto.
-It also ensures that this framebuffer is the default GL rendering target
-when rendering.</p>
-
-<p>In order to draw, you have to connect to the <code>GLArea::render</code> signal,
-or subclass <code>GLArea</code> and override the <code>GLAreaClass.render</code>() virtual
-function.</p>
-
-<p>The <code>GLArea</code> widget ensures that the <code>gdk::GLContext</code> is associated with
-the widget&#39;s drawing area, and it is kept updated when the size and
-position of the drawing area changes.</p>
-
-<h2 id='drawing-with-glarea' class='section-header'><a href='#drawing-with-glarea'>Drawing with <code>GLArea</code></a></h2>
-<p>The simplest way to draw using OpenGL commands in a <code>GLArea</code> is to
-create a widget instance and connect to the <code>GLArea::render</code> signal:</p>
-
-<pre><code class="language-C">  // create a GtkGLArea instance
-  GtkWidget *gl_area = gtk_gl_area_new ();
-
-  // connect to the &quot;render&quot; signal
-  g_signal_connect (gl_area, &quot;render&quot;, G_CALLBACK (render), NULL);
-</code></pre>
-
-<p>The <code>render()</code> function will be called when the <code>GLArea</code> is ready
-for you to draw its content:</p>
-
-<pre><code class="language-C">  static gboolean
-  render (GtkGLArea *area, GdkGLContext *context)
-  {
-    // inside this function it&#39;s safe to use GL; the given
-    // #GdkGLContext has been made current to the drawable
-    // surface used by the #GtkGLArea and the viewport has
-    // already been set to be the size of the allocation
-
-    // we can start by clearing the buffer
-    glClearColor (0, 0, 0, 0);
-    glClear (GL_COLOR_BUFFER_BIT);
-
-    // draw your object
-    draw_an_object ();
-
-    // we completed our drawing; the draw commands will be
-    // flushed at the end of the signal emission chain, and
-    // the buffers will be drawn on the window
-    return TRUE;
-  }
-</code></pre>
-
-<p>If you need to initialize OpenGL state, e.g. buffer objects or
-shaders, you should use the <code>Widget::realize</code> signal; you
-can use the <code>Widget::unrealize</code> signal to clean up. Since the
-<code>gdk::GLContext</code> creation and initialization may fail, you will
-need to check for errors, using <code>GLArea::get_error</code>. An example
-of how to safely initialize the GL state is:</p>
-
-<pre><code class="language-C">  static void
-  on_realize (GtkGLarea *area)
-  {
-    // We need to make the context current if we want to
-    // call GL API
-    gtk_gl_area_make_current (area);
-
-    // If there were errors during the initialization or
-    // when trying to make the context current, this
-    // function will return a #GError for you to catch
-    if (gtk_gl_area_get_error (area) != NULL)
-      return;
-
-    // You can also use gtk_gl_area_set_error() in order
-    // to show eventual initialization errors on the
-    // GtkGLArea widget itself
-    GError *internal_error = NULL;
-    init_buffer_objects (&amp;error);
-    if (error != NULL)
-      {
-        gtk_gl_area_set_error (area, error);
-        g_error_free (error);
-        return;
-      }
-
-    init_shaders (&amp;error);
-    if (error != NULL)
-      {
-        gtk_gl_area_set_error (area, error);
-        g_error_free (error);
-        return;
-      }
-  }
-</code></pre>
-
-<p>If you need to change the options for creating the <code>gdk::GLContext</code>
-you should use the <code>GLArea::create-context</code> signal.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
-<p><a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/gl_area.rs.html#145-465' title='goto source code'>[src]</a></span></h3>
+<pre class='rust struct'>pub struct GLArea(_, _);</pre>
+                    <h2 id='methods' class='section-header'>
+                      <a href='#methods'>Methods</a>
+                    </h2>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/gl_area.rs.html#39-47' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>GLArea</code> widget.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
-<p>the newly created <code>GLArea</code></p>
-</div><h4 id='method.attach_buffers' class="method"><span id='attach_buffers.v' class='invisible'><code>fn <a href='#method.attach_buffers' class='fnname'>attach_buffers</a>(&amp;self)</code></span></h4>
-<div class='docblock'><p>Ensures that the <code>self</code> framebuffer object is made the current draw
-and read target, and that all the required buffers for the <code>self</code>
-are created and bound to the frambuffer.</p>
-
-<p>This function is automatically called before emitting the
-<code>GLArea::render</code> signal, and doesn&#39;t normally need to be called
-by application code.</p>
-
-<p>Feature: <code>v3_16</code></p>
-</div><h4 id='method.get_auto_render' class="method"><span id='get_auto_render.v' class='invisible'><code>fn <a href='#method.get_auto_render' class='fnname'>get_auto_render</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
-<div class='docblock'><p>Returns whether the area is in auto render mode or not.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
-<p><code>true</code> if the <code>self</code> is auto rendering, <code>false</code> otherwise</p>
-</div><h4 id='method.get_context' class="method"><span id='get_context.v' class='invisible'><code>fn <a href='#method.get_context' class='fnname'>get_context</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gdk/auto/g_l_context/struct.GLContext.html" title="struct gdk::auto::g_l_context::GLContext">GLContext</a>&gt;</code></span></h4>
-<div class='docblock'><p>Retrieves the <code>gdk::GLContext</code> used by <code>self</code>.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
-<p>the <code>gdk::GLContext</code></p>
-</div><h4 id='method.get_error' class="method"><span id='get_error.v' class='invisible'><code>fn <a href='#method.get_error' class='fnname'>get_error</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.Error.html" title="struct gtk::Error">Error</a>&gt;</code></span></h4>
-<div class='docblock'><p>Gets the current error set on the <code>self</code>.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
-<p>the <code>glib::Error</code> or <code>None</code></p>
-</div><h4 id='method.get_has_alpha' class="method"><span id='get_has_alpha.v' class='invisible'><code>fn <a href='#method.get_has_alpha' class='fnname'>get_has_alpha</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
-<div class='docblock'><p>Returns whether the area has an alpha component.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
-<p><code>true</code> if the <code>self</code> has an alpha component, <code>false</code> otherwise</p>
-</div><h4 id='method.get_has_depth_buffer' class="method"><span id='get_has_depth_buffer.v' class='invisible'><code>fn <a href='#method.get_has_depth_buffer' class='fnname'>get_has_depth_buffer</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
-<div class='docblock'><p>Returns whether the area has a depth buffer.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h1 id='returns-5' class='section-header'><a href='#returns-5'>Returns</a></h1>
-<p><code>true</code> if the <code>self</code> has a depth buffer, <code>false</code> otherwise</p>
-</div><h4 id='method.get_has_stencil_buffer' class="method"><span id='get_has_stencil_buffer.v' class='invisible'><code>fn <a href='#method.get_has_stencil_buffer' class='fnname'>get_has_stencil_buffer</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
-<div class='docblock'><p>Returns whether the area has a stencil buffer.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h1 id='returns-6' class='section-header'><a href='#returns-6'>Returns</a></h1>
-<p><code>true</code> if the <code>self</code> has a stencil buffer, <code>false</code> otherwise</p>
-</div><h4 id='method.get_required_version' class="method"><span id='get_required_version.v' class='invisible'><code>fn <a href='#method.get_required_version' class='fnname'>get_required_version</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span></h4>
-<div class='docblock'><p>Retrieves the required version of OpenGL set
-using <code>GLArea::set_required_version</code>.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h2 id='major' class='section-header'><a href='#major'><code>major</code></a></h2>
-<p>return location for the required major version</p>
-
-<h2 id='minor' class='section-header'><a href='#minor'><code>minor</code></a></h2>
-<p>return location for the required minor version</p>
-</div><h4 id='method.get_use_es' class="method"><span id='get_use_es.v' class='invisible'><code>fn <a href='#method.get_use_es' class='fnname'>get_use_es</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
-<h4 id='method.make_current' class="method"><span id='make_current.v' class='invisible'><code>fn <a href='#method.make_current' class='fnname'>make_current</a>(&amp;self)</code></span></h4>
-<div class='docblock'><p>Ensures that the <code>gdk::GLContext</code> used by <code>self</code> is associated with
-the <code>GLArea</code>.</p>
-
-<p>This function is automatically called before emitting the
-<code>GLArea::render</code> signal, and doesn&#39;t normally need to be called
-by application code.</p>
-
-<p>Feature: <code>v3_16</code></p>
-</div><h4 id='method.queue_render' class="method"><span id='queue_render.v' class='invisible'><code>fn <a href='#method.queue_render' class='fnname'>queue_render</a>(&amp;self)</code></span></h4>
-<div class='docblock'><p>Marks the currently rendered data (if any) as invalid, and queues
-a redraw of the widget, ensuring that the <code>GLArea::render</code> signal
-is emitted during the draw.</p>
-
-<p>This is only needed when the <code>GLArea::set_auto_render</code> has
-been called with a <code>false</code> value. The default behaviour is to
-emit <code>GLArea::render</code> on each draw.</p>
-
-<p>Feature: <code>v3_16</code></p>
-</div><h4 id='method.set_auto_render' class="method"><span id='set_auto_render.v' class='invisible'><code>fn <a href='#method.set_auto_render' class='fnname'>set_auto_render</a>(&amp;self, auto_render: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)</code></span></h4>
-<div class='docblock'><p>If <code>auto_render</code> is <code>true</code> the <code>GLArea::render</code> signal will be
-emitted every time the widget draws. This is the default and is
-useful if drawing the widget is faster.</p>
-
-<p>If <code>auto_render</code> is <code>false</code> the data from previous rendering is kept
-around and will be used for drawing the widget the next time,
-unless the window is resized. In order to force a rendering
-<code>GLArea::queue_render</code> must be called. This mode is useful when
-the scene changes seldomly, but takes a long time to redraw.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h2 id='auto_render' class='section-header'><a href='#auto_render'><code>auto_render</code></a></h2>
-<p>a boolean</p>
-</div><h4 id='method.set_error' class="method"><span id='set_error.v' class='invisible'><code>fn <a href='#method.set_error' class='fnname'>set_error</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.Error.html" title="struct gtk::Error">Error</a>&gt;&gt;&gt;(&amp;self, error: P)</code></span></h4>
-<div class='docblock'><p>Sets an error on the area which will be shown instead of the
-GL rendering. This is useful in the <code>GLArea::create-context</code>
-signal if GL context creation fails.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h2 id='error' class='section-header'><a href='#error'><code>error</code></a></h2>
-<p>a new <code>glib::Error</code>, or <code>None</code> to unset the error</p>
-</div><h4 id='method.set_has_alpha' class="method"><span id='set_has_alpha.v' class='invisible'><code>fn <a href='#method.set_has_alpha' class='fnname'>set_has_alpha</a>(&amp;self, has_alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)</code></span></h4>
-<div class='docblock'><p>If <code>has_alpha</code> is <code>true</code> the buffer allocated by the widget will have
-an alpha channel component, and when rendering to the window the
-result will be composited over whatever is below the widget.</p>
-
-<p>If <code>has_alpha</code> is <code>false</code> there will be no alpha channel, and the
-buffer will fully replace anything below the widget.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h2 id='has_alpha' class='section-header'><a href='#has_alpha'><code>has_alpha</code></a></h2>
-<p><code>true</code> to add an alpha component</p>
-</div><h4 id='method.set_has_depth_buffer' class="method"><span id='set_has_depth_buffer.v' class='invisible'><code>fn <a href='#method.set_has_depth_buffer' class='fnname'>set_has_depth_buffer</a>(&amp;self, has_depth_buffer: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)</code></span></h4>
-<div class='docblock'><p>If <code>has_depth_buffer</code> is <code>true</code> the widget will allocate and
-enable a depth buffer for the target framebuffer. Otherwise
-there will be none.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h2 id='has_depth_buffer' class='section-header'><a href='#has_depth_buffer'><code>has_depth_buffer</code></a></h2>
-<p><code>true</code> to add a depth buffer</p>
-</div><h4 id='method.set_has_stencil_buffer' class="method"><span id='set_has_stencil_buffer.v' class='invisible'><code>fn <a href='#method.set_has_stencil_buffer' class='fnname'>set_has_stencil_buffer</a>(&amp;self, has_stencil_buffer: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)</code></span></h4>
-<div class='docblock'><p>If <code>has_stencil_buffer</code> is <code>true</code> the widget will allocate and
-enable a stencil buffer for the target framebuffer. Otherwise
-there will be none.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h2 id='has_stencil_buffer' class='section-header'><a href='#has_stencil_buffer'><code>has_stencil_buffer</code></a></h2>
-<p><code>true</code> to add a stencil buffer</p>
-</div><h4 id='method.set_required_version' class="method"><span id='set_required_version.v' class='invisible'><code>fn <a href='#method.set_required_version' class='fnname'>set_required_version</a>(&amp;self, major: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, minor: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>)</code></span></h4>
-<div class='docblock'><p>Sets the required version of OpenGL to be used when creating the context
-for the widget.</p>
-
-<p>This function must be called before the area has been realized.</p>
-
-<p>Feature: <code>v3_16</code></p>
-
-<h2 id='major-1' class='section-header'><a href='#major-1'><code>major</code></a></h2>
-<p>the major version</p>
-
-<h2 id='minor-1' class='section-header'><a href='#minor-1'><code>minor</code></a></h2>
-<p>the minor version</p>
-</div><h4 id='method.set_use_es' class="method"><span id='set_use_es.v' class='invisible'><code>fn <a href='#method.set_use_es' class='fnname'>set_use_es</a>(&amp;self, use_es: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)</code></span></h4>
-<h4 id='method.connect_create_context' class="method"><span id='connect_create_context.v' class='invisible'><code>fn <a href='#method.connect_create_context' class='fnname'>connect_create_context</a>&lt;F:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html" title="trait core::ops::Fn">Fn</a>(&amp;<a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a>) -&gt; <a class="struct" href="../gdk/auto/g_l_context/struct.GLContext.html" title="struct gdk::auto::g_l_context::GLContext">GLContext</a> + 'static&gt;(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; f: F)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span></h4>
-<h4 id='method.connect_render' class="method"><span id='connect_render.v' class='invisible'><code>fn <a href='#method.connect_render' class='fnname'>connect_render</a>&lt;F:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html" title="trait core::ops::Fn">Fn</a>(&amp;<a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a>, &amp;<a class="struct" href="../gdk/auto/g_l_context/struct.GLContext.html" title="struct gdk::auto::g_l_context::GLContext">GLContext</a>) -&gt; <a class="struct" href="../gtk/prelude/struct.Inhibit.html" title="struct gtk::prelude::Inhibit">Inhibit</a> + 'static&gt;(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; f: F)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span></h4>
-<h4 id='method.connect_resize' class="method"><span id='connect_resize.v' class='invisible'><code>fn <a href='#method.connect_resize' class='fnname'>connect_resize</a>&lt;F:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html" title="trait core::ops::Fn">Fn</a>(&amp;<a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) + 'static&gt;(&amp;self, f: F) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span></h4>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'></span></h3>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
@@ -321,9 +69,9 @@ for the widget.</p>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
-<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
-<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
@@ -335,7 +83,10 @@ for the widget.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.GLArea.html" title="struct gtk::GLArea">GLArea</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/gl_area.rs.html#50-54' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -392,7 +143,6 @@ for the widget.</p>
         window.rootPath = "../";
         window.currentCrate = "gtk";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Widget","`Widget` is the base class all widgets in GTK+ derive from. It manages the widget lifecycle, states and style."]],"trait":[["WidgetExt","Trait containing all `Widget` methods."]]});

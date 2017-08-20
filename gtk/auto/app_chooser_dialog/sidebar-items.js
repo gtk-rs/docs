@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["AppChooserDialog","`AppChooserDialog` shows a `AppChooserWidget` inside a `Dialog`."]]});

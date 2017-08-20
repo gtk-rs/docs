@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Screen","`Screen` objects are the GDK representation of the screen on which windows can be displayed and on which the pointer moves. X originally identified screens with physical screens, but nowadays it is more common to have a single `Screen` which combines several physical monitors (see `Screen::get_n_monitors`)."]]});

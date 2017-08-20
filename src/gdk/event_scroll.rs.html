@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/eap/.cargo/registry/src/github.com-1ecc6299db9ec823/gdk-0.5.3/src/event_scroll.rs`.">
+    <meta name="description" content="Source to the Rust file `src/event_scroll.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>event_scroll.rs.html -- source</title>
@@ -88,6 +88,8 @@
 <span id="43">43</span>
 <span id="44">44</span>
 <span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2016, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -95,14 +97,6 @@
 
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// Generated from button presses for the buttons 4 to 7. Wheel mice are</span>
-<span class="doccomment">/// usually configured to generate button press events for buttons 4 and 5</span>
-<span class="doccomment">/// when the wheel is turned.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Some GDK backends can also generate “smooth” scroll events, which</span>
-<span class="doccomment">/// can be recognized by the `ScrollDirection::Smooth` scroll direction. For</span>
-<span class="doccomment">/// these, the scroll deltas can be obtained with</span>
-<span class="doccomment">/// `gdk_event_get_scroll_deltas`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EventScroll</span>(::<span class="ident">Event</span>);
 
@@ -126,6 +120,16 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_device</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">Device</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">device</span>) }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_direction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> ::<span class="ident">ScrollDirection</span> {
+        <span class="ident">from_glib</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">direction</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_root</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>) {
+        <span class="kw">let</span> <span class="ident">x_root</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">x_root</span>;
+        <span class="kw">let</span> <span class="ident">y_root</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">y_root</span>;
+        (<span class="ident">x_root</span>, <span class="ident">y_root</span>)
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_delta</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>) {
@@ -192,7 +196,6 @@
         window.rootPath = "../../";
         window.currentCrate = "gdk";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

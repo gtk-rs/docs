@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["CellLayout","`CellLayout` is an interface to be implemented by all objects which want to provide a `TreeViewColumn` like API for packing cells, setting attributes and data funcs."]],"trait":[["CellLayoutExt","Trait containing all `CellLayout` methods."]]});

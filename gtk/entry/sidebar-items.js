@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Entry","The `Entry` widget is a single line text entry widget. A fairly large set of key bindings are supported by default. If the entered text is longer than the allocation of the widget, the widget will scroll so that the cursor position is visible."]],"trait":[["EntryExt","Trait containing all `Entry` methods."]]});

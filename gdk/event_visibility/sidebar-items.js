@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["EventVisibility","`[Deprecated since 3.12]` Generated when the window visibility status has changed."]]});
