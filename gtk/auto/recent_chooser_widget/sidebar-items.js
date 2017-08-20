@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["RecentChooserWidget","`RecentChooserWidget` is a widget suitable for selecting recently used files. It is the main building block of a `RecentChooserDialog`. Most applications will only need to use the latter; you can use `RecentChooserWidget` as part of a larger window if you have special needs."]]});

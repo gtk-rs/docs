@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'CellLayout', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct CellLayout</p><div class="block items"><ul><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'CellLayout', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -49,72 +49,11 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct CellLayout(_, _);</pre><div class='docblock'><p><code>CellLayout</code> is an interface to be implemented by all objects which
-want to provide a <code>TreeViewColumn</code> like API for packing cells,
-setting attributes and data funcs.</p>
-
-<p>One of the notable features provided by implementations of
-<code>CellLayout</code> are attributes. Attributes let you set the properties
-in flexible ways. They can just be set to constant values like regular
-properties. But they can also be mapped to a column of the underlying
-tree model with <code>CellLayout::set_attributes</code>, which means that the value
-of the attribute can change from cell to cell as they are rendered by
-the cell renderer. Finally, it is possible to specify a function with
-<code>CellLayout::set_cell_data_func</code> that is called to determine the
-value of the attribute for each cell that is rendered.</p>
-
-<h1 id='gtkcelllayouts-as-buildable' class='section-header'><a href='#gtkcelllayouts-as-buildable'><code>GtkCellLayouts</code> as <code>Buildable</code></a></h1>
-<p>Implementations of <code>CellLayout</code> which also implement the <code>Buildable</code>
-interface (<code>CellView</code>, <code>IconView</code>, <code>ComboBox</code>,
-<code>EntryCompletion</code>, <code>TreeViewColumn</code>) accept <code>CellRenderer</code> objects
-as <code>&lt;child&gt;</code> elements in UI definitions. They support a custom <code>&lt;attributes&gt;</code>
-element for their children, which can contain multiple <code>&lt;attribute&gt;</code>
-elements. Each <code>&lt;attribute&gt;</code> element has a name attribute which specifies
-a property of the cell renderer; the content of the element is the
-attribute value.</p>
-
-<p>This is an example of a UI definition fragment specifying attributes:</p>
-
-<pre><code class="language-C">combo = g_object_new (GTK_TYPE_COMBO_BOX, &quot;cell-area&quot;, my_cell_area, NULL);
-</code></pre>
-
-<p>to use a custom cell area with a combo box. But construct properties
-are only initialized after instance <code>init</code>
-functions have run, which means that using functions which rely on
-the existence of the cell area in your subclass’ <code>init</code> function will
-cause the default cell area to be instantiated. In this case, a provided
-construct property value will be ignored (with a warning, to alert
-you to the problem).</p>
-
-<pre><code class="language-C">static void
-my_combo_box_init (MyComboBox *b)
-{
-  GtkCellRenderer *cell;
-
-  cell = gtk_cell_renderer_pixbuf_new ();
-  // The following call causes the default cell area for combo boxes,
-  // a GtkCellAreaBox, to be instantiated
-  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (b), cell, FALSE);
-  ...
-}
-
-GtkWidget *
-my_combo_box_new (GtkCellArea *area)
-{
-  // This call is going to cause a warning about area being ignored
-  return g_object_new (MY_TYPE_COMBO_BOX, &quot;cell-area&quot;, area, NULL);
-}
-</code></pre>
-
-<p>If supporting alternative cell areas with your derived widget is
-not important, then this does not have to concern you. If you want
-to support alternative cell areas, you can do so by moving the
-problematic calls out of <code>init</code> and into a <code>constructor</code>
-for your class.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
-<p><a href="trait.CellLayoutExt.html"><code>CellLayoutExt</code></a></p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code></span><span class='out-of-band'></span></h3>
+<pre class='rust struct'>pub struct CellLayout(_, _);</pre>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
@@ -124,9 +63,9 @@ for your class.</p>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
-<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
-<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
@@ -194,7 +133,6 @@ for your class.</p>
         window.rootPath = "../";
         window.currentCrate = "gtk";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

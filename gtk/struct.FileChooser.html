@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'FileChooser', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct FileChooser</p><div class="block items"><ul><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'FileChooser', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -49,130 +49,11 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct FileChooser(_, _);</pre><div class='docblock'><p><code>FileChooser</code> is an interface that can be implemented by file
-selection widgets. In GTK+, the main objects that implement this
-interface are <code>FileChooserWidget</code>, <code>FileChooserDialog</code>, and
-<code>FileChooserButton</code>. You do not need to write an object that
-implements the <code>FileChooser</code> interface unless you are trying to
-adapt an existing file selector to expose a standard programming
-interface.</p>
-
-<p><code>FileChooser</code> allows for shortcuts to various places in the filesystem.
-In the default implementation these are displayed in the left pane. It
-may be a bit confusing at first that these shortcuts come from various
-sources and in various flavours, so lets explain the terminology here:</p>
-
-<ul>
-<li><p>Bookmarks: are created by the user, by dragging folders from the
-right pane to the left pane, or by using the “Add”. Bookmarks
-can be renamed and deleted by the user.</p></li>
-<li><p>Shortcuts: can be provided by the application. For example, a Paint
-program may want to add a shortcut for a Clipart folder. Shortcuts
-cannot be modified by the user.</p></li>
-<li><p>Volumes: are provided by the underlying filesystem abstraction. They are
-the “roots” of the filesystem.</p></li>
-</ul>
-
-<h1 id='file-names-and-encodings' class='section-header'><a href='#file-names-and-encodings'>File Names and Encodings</a></h1>
-<p>When the user is finished selecting files in a
-<code>FileChooser</code>, your program can get the selected names
-either as filenames or as URIs. For URIs, the normal escaping
-rules are applied if the URI contains non-ASCII characters.
-However, filenames are always returned in
-the character set specified by the
-<code>G_FILENAME_ENCODING</code> environment variable.
-Please see the GLib documentation for more details about this
-variable.</p>
-
-<p>This means that while you can pass the result of
-<code>FileChooser::get_filename</code> to <code>open</code> or <code>fopen</code>,
-you may not be able to directly set it as the text of a
-<code>Label</code> widget unless you convert it first to UTF-8,
-which all GTK+ widgets expect. You should use <code>g_filename_to_utf8</code>
-to convert filenames into strings that can be passed to GTK+
-widgets.</p>
-
-<h1 id='adding-a-preview-widget' class='section-header'><a href='#adding-a-preview-widget'>Adding a Preview Widget</a></h1>
-<p>You can add a custom preview widget to a file chooser and then
-get notification about when the preview needs to be updated.
-To install a preview widget, use
-<code>FileChooser::set_preview_widget</code>. Then, connect to the
-<code>FileChooser::update-preview</code> signal to get notified when
-you need to update the contents of the preview.</p>
-
-<p>Your callback should use
-<code>FileChooser::get_preview_filename</code> to see what needs
-previewing. Once you have generated the preview for the
-corresponding file, you must call
-<code>FileChooser::set_preview_widget_active</code> with a boolean
-flag that indicates whether your callback could successfully
-generate a preview.</p>
-
-<h2 id='example-using-a-preview-widget--gtkfilechooser-preview' class='section-header'><a href='#example-using-a-preview-widget--gtkfilechooser-preview'>Example: Using a Preview Widget ## {<code>gtkfilechooser</code>-preview}</a></h2>
-<pre><code class="language-C">{
-  GtkImage *preview;
-
-  ...
-
-  preview = gtk_image_new ();
-
-  gtk_file_chooser_set_preview_widget (my_file_chooser, preview);
-  g_signal_connect (my_file_chooser, &quot;update-preview&quot;,
-            G_CALLBACK (update_preview_cb), preview);
-}
-
-static void
-update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
-{
-  GtkWidget *preview;
-  char *filename;
-  GdkPixbuf *pixbuf;
-  gboolean have_preview;
-
-  preview = GTK_WIDGET (data);
-  filename = gtk_file_chooser_get_preview_filename (file_chooser);
-
-  pixbuf = gdk_pixbuf_new_from_file_at_size (filename, 128, 128, NULL);
-  have_preview = (pixbuf != NULL);
-  g_free (filename);
-
-  gtk_image_set_from_pixbuf (GTK_IMAGE (preview), pixbuf);
-  if (pixbuf)
-    g_object_unref (pixbuf);
-
-  gtk_file_chooser_set_preview_widget_active (file_chooser, have_preview);
-}
-</code></pre>
-
-<h1 id='adding-extra-widgets' class='section-header'><a href='#adding-extra-widgets'>Adding Extra Widgets</a></h1>
-<p>You can add extra widgets to a file chooser to provide options
-that are not present in the default design. For example, you
-can add a toggle button to give the user the option to open a
-file in read-only mode. You can use
-<code>FileChooser::set_extra_widget</code> to insert additional
-widgets in a file chooser.</p>
-
-<p>An example for adding extra widgets:</p>
-
-<pre><code class="language-C">
-  GtkWidget *toggle;
-
-  ...
-
-  toggle = gtk_check_button_new_with_label (&quot;Open file read-only&quot;);
-  gtk_widget_show (toggle);
-  gtk_file_chooser_set_extra_widget (my_file_chooser, toggle);
-}
-</code></pre>
-
-<p>If you want to set more than one extra widget in the file
-chooser, you can a container such as a <code>Box</code> or a <code>Grid</code>
-and include your widgets in it. Then, set the container as
-the whole extra widget.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
-<p><a href="trait.FileChooserExt.html"><code>FileChooserExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.FileChooser.html" title="struct gtk::FileChooser">FileChooser</a></code></span><span class='out-of-band'></span></h3>
+<pre class='rust struct'>pub struct FileChooser(_, _);</pre>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.FileChooser.html" title="struct gtk::FileChooser">FileChooser</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.FileChooser.html" title="struct gtk::FileChooser">FileChooser</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
@@ -182,9 +63,9 @@ the whole extra widget.</p>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.FileChooser.html" title="struct gtk::FileChooser">FileChooser</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
-<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
-<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.FileChooser.html" title="struct gtk::FileChooser">FileChooser</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
@@ -252,7 +133,6 @@ the whole extra widget.</p>
         window.rootPath = "../";
         window.currentCrate = "gtk";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

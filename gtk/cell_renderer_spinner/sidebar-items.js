@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["CellRendererSpinner","`CellRendererSpinner` renders a spinning animation in a cell, very similar to `Spinner`. It can often be used as an alternative to a `CellRendererProgress` for displaying indefinite activity, instead of actual progress."]]});

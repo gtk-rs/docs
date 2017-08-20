@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["TreeSortable","`TreeSortable` is an interface to be implemented by tree models which support sorting. The `TreeView` uses the methods provided by this interface to sort the model."]],"trait":[["TreeSortableExt","Trait containing all `TreeSortable` methods."]]});

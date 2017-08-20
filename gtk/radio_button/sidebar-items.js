@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["RadioButton","A single radio button performs the same basic function as a `CheckButton`, as its position in the object hierarchy reflects. It is only when multiple radio buttons are grouped together that they become a different user interface component in their own right."]]});

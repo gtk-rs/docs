@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["StyleProvider","`StyleProvider` is an interface used to provide style information to a `StyleContext`. See `StyleContext::add_provider` and `StyleContext::add_provider_for_screen`."]],"trait":[["StyleProviderExt","Trait containing all `StyleProvider` methods."]]});

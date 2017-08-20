@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["CellRendererToggle","`CellRendererToggle` renders a toggle button in a cell. The button is drawn as a radio or a checkbutton, depending on the `CellRendererToggle:radio` property. When activated, it emits the `CellRendererToggle::toggled` signal."]]});

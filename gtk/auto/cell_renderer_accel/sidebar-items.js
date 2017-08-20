@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["CellRendererAccel","`CellRendererAccel` displays a keyboard accelerator (i.e. a key combination like `Control + a`). If the cell renderer is editable, the accelerator can be changed by simply typing the new combination."]]});

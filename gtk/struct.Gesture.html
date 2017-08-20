@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Gesture', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Gesture</p><div class="block items"><ul><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Gesture', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -49,90 +49,11 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Gesture(_, _);</pre><div class='docblock'><p><code>Gesture</code> is the base object for gesture recognition, although this
-object is quite generalized to serve as a base for multi-touch gestures,
-it is suitable to implement single-touch and pointer-based gestures (using
-the special <code>None</code> <code>gdk::EventSequence</code> value for these).</p>
-
-<p>The number of touches that a <code>Gesture</code> need to be recognized is controlled
-by the <code>Gesture:n-points</code> property, if a gesture is keeping track of less
-or more than that number of sequences, it won&#39;t check wether the gesture
-is recognized.</p>
-
-<p>As soon as the gesture has the expected number of touches, the gesture will
-run the <code>Gesture::check</code> signal regularly on input events until the gesture
-is recognized, the criteria to consider a gesture as &quot;recognized&quot; is left to
-<code>Gesture</code> subclasses.</p>
-
-<p>A recognized gesture will then emit the following signals:
-- <code>Gesture::begin</code> when the gesture is recognized.
-- A number of <code>Gesture::update</code>, whenever an input event is processed.
-- <code>Gesture::end</code> when the gesture is no longer recognized.</p>
-
-<h2 id='event-propagation' class='section-header'><a href='#event-propagation'>Event propagation</a></h2>
-<p>In order to receive events, a gesture needs to either set a propagation phase
-through <code>EventControllerExt::set_propagation_phase</code>, or feed those manually
-through <code>EventControllerExt::handle_event</code>.</p>
-
-<p>In the capture phase, events are propagated from the toplevel down to the
-target widget, and gestures that are attached to containers above the widget
-get a chance to interact with the event before it reaches the target.</p>
-
-<p>After the capture phase, GTK+ emits the traditional <code>Widget::button-press</code>,
-<code>Widget::button-release</code>, <code>Widget::touch-event</code>, etc signals. Gestures
-with the <code>PropagationPhase::Target</code> phase are fed events from the default <code>Widget::event</code>
-handlers.</p>
-
-<p>In the bubble phase, events are propagated up from the target widget to the
-toplevel, and gestures that are attached to containers above the widget get
-a chance to interact with events that have not been handled yet.</p>
-
-<h2 id='states-of-a-sequence--touch-sequence-states' class='section-header'><a href='#states-of-a-sequence--touch-sequence-states'>States of a sequence # {<code>touch</code>-sequence-states}</a></h2>
-<p>Whenever input interaction happens, a single event may trigger a cascade of
-<code>GtkGestures</code>, both across the parents of the widget receiving the event and
-in parallel within an individual widget. It is a responsibility of the
-widgets using those gestures to set the state of touch sequences accordingly
-in order to enable cooperation of gestures around the <code>GdkEventSequences</code>
-triggering those.</p>
-
-<p>Within a widget, gestures can be grouped through <code>GestureExt::group</code>,
-grouped gestures synchronize the state of sequences, so calling
-<code>GestureExt::set_sequence_state</code> on one will effectively propagate
-the state throughout the group.</p>
-
-<p>By default, all sequences start out in the <code>EventSequenceState::None</code> state,
-sequences in this state trigger the gesture event handler, but event
-propagation will continue unstopped by gestures.</p>
-
-<p>If a sequence enters into the <code>EventSequenceState::Denied</code> state, the gesture
-group will effectively ignore the sequence, letting events go unstopped
-through the gesture, but the &quot;slot&quot; will still remain occupied while
-the touch is active.</p>
-
-<p>If a sequence enters in the <code>EventSequenceState::Claimed</code> state, the gesture
-group will grab all interaction on the sequence, by:
-- Setting the same sequence to <code>EventSequenceState::Denied</code> on every other gesture
- group within the widget, and every gesture on parent widgets in the propagation
- chain.
-- calling <code>Gesture::cancel</code> on every gesture in widgets underneath in the
- propagation chain.
-- Stopping event propagation after the gesture group handles the event.</p>
-
-<p>Note: if a sequence is set early to <code>EventSequenceState::Claimed</code> on
-<code>gdk::EventType::TouchBegin</code>/<code>gdk::EventType::ButtonPress</code> (so those events are captured before
-reaching the event widget, this implies <code>PropagationPhase::Capture</code>), one similar
-event will emulated if the sequence changes to <code>EventSequenceState::Denied</code>.
-This way event coherence is preserved before event propagation is unstopped
-again.</p>
-
-<p>Sequence states can&#39;t be changed freely, see <code>GestureExt::set_sequence_state</code>
-to know about the possible lifetimes of a <code>gdk::EventSequence</code>.</p>
-
-<p>Feature: <code>v3_14</code></p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
-<p><a href="trait.GestureExt.html"><code>GestureExt</code></a>, <a href="trait.EventControllerExt.html"><code>EventControllerExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Gesture.html" title="struct gtk::Gesture">Gesture</a></code></span><span class='out-of-band'></span></h3>
+<pre class='rust struct'>pub struct Gesture(_, _);</pre>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Gesture.html" title="struct gtk::Gesture">Gesture</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.Gesture.html" title="struct gtk::Gesture">Gesture</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
@@ -142,9 +63,9 @@ to know about the possible lifetimes of a <code>gdk::EventSequence</code>.</p>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.Gesture.html" title="struct gtk::Gesture">Gesture</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
-<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
-<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.Gesture.html" title="struct gtk::Gesture">Gesture</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
@@ -213,7 +134,6 @@ to know about the possible lifetimes of a <code>gdk::EventSequence</code>.</p>
         window.rootPath = "../";
         window.currentCrate = "gtk";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

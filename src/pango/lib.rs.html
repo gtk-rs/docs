@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/eap/.cargo/registry/src/github.com-1ecc6299db9ec823/pango-0.1.3/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -68,32 +68,56 @@
 <span id="23">23</span>
 <span id="24">24</span>
 <span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2015, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pango_sys</span> <span class="kw">as</span> <span class="ident">ffi</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">glib_sys</span> <span class="kw">as</span> <span class="ident">glib_ffi</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gobject_sys</span> <span class="kw">as</span> <span class="ident">gobject_ffi</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">glib</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">bitflags</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
 
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">Error</span>;
+
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">allow</span>(<span class="ident">too_many_arguments</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">allow</span>(<span class="ident">useless_transmute</span>))]</span>
 <span class="kw">mod</span> <span class="ident">auto</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">auto</span>::<span class="kw-2">*</span>;
-
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">widgets</span>::{
-    <span class="ident">Item</span>,
-    <span class="ident">Rectangle</span>,
-    <span class="ident">Matrix</span>,
-    <span class="ident">GlyphString</span>,
-    <span class="ident">FontDescription</span>,
-};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">auto</span>::<span class="ident">functions</span>::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">PANGO_SCALE</span> <span class="kw">as</span> <span class="ident">SCALE</span>;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">widgets</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">prelude</span>;
+
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">attr_class</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">attr_class</span>::<span class="ident">AttrClass</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">attr_list</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">attribute</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">font_description</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">item</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">item</span>::<span class="ident">Item</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">language</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">language</span>::<span class="ident">Language</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">matrix</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">rectangle</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">rectangle</span>::<span class="ident">Rectangle</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -152,7 +176,6 @@
         window.rootPath = "../../";
         window.currentCrate = "pango";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

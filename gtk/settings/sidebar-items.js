@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Settings","`Settings` provide a mechanism to share global settings between applications."]]});

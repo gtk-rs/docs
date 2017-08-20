@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/eap/.cargo/registry/src/github.com-1ecc6299db9ec823/gdk-0.5.3/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -159,6 +159,16 @@
 <span id="114">114</span>
 <span id="115">115</span>
 <span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -167,11 +177,13 @@
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">glib_sys</span> <span class="kw">as</span> <span class="ident">glib_ffi</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gdk_sys</span> <span class="kw">as</span> <span class="ident">ffi</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gdk_pixbuf</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gio</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">glib</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gobject_sys</span> <span class="kw">as</span> <span class="ident">gobject_ffi</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">cairo</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">cairo_sys</span> <span class="kw">as</span> <span class="ident">cairo_ffi</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pango</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">bitflags</span>;
@@ -181,11 +193,16 @@
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">mod</span> <span class="ident">event</span>;
 
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">allow</span>(<span class="ident">transmute_ptr_to_ref</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">allow</span>(<span class="ident">type_complexity</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">allow</span>(<span class="ident">unreadable_literal</span>))]</span>
 <span class="kw">mod</span> <span class="ident">auto</span>;
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">prelude</span>;
 
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">auto</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">auto</span>::<span class="ident">functions</span>::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">enums</span>;
 
@@ -214,7 +231,9 @@
 <span class="kw">mod</span> <span class="ident">event_window_state</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_8&quot;</span>)]</span>
 <span class="kw">mod</span> <span class="ident">frame_clock</span>;
+<span class="kw">mod</span> <span class="ident">geometry</span>;
 <span class="kw">mod</span> <span class="ident">keys</span>;
+<span class="kw">mod</span> <span class="ident">screen</span>;
 <span class="kw">mod</span> <span class="ident">rectangle</span>;
 <span class="kw">mod</span> <span class="ident">rgba</span>;
 <span class="kw">mod</span> <span class="ident">visual</span>;
@@ -226,26 +245,26 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">rt</span>::{
     <span class="ident">init</span>,
     <span class="ident">set_initialized</span>,
-    <span class="ident">get_display_arg_name</span>,
-    <span class="ident">notify_startup_complete</span>,
-    <span class="ident">notify_startup_complete_with_id</span>,
-    <span class="ident">get_program_class</span>,
-    <span class="ident">set_program_class</span>,
-    <span class="ident">flush</span>,
-    <span class="ident">screen_width</span>,
-    <span class="ident">screen_height</span>,
-    <span class="ident">screen_width_mm</span>,
-    <span class="ident">screen_height_mm</span>,
-    <span class="ident">beep</span>,
-    <span class="ident">error_trap_push</span>,
-    <span class="ident">error_trap_pop</span>,
-    <span class="ident">error_trap_pop_ignored</span>
 };
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_10&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">rt</span>::<span class="ident">set_allowed_backends</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">Atom</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">NONE</span> <span class="kw">as</span> <span class="ident">ATOM_NONE</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_PRIMARY</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_SECONDARY</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_CLIPBOARD</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">TARGET_BITMAP</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">TARGET_COLORMAP</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">TARGET_DRAWABLE</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">TARGET_PIXMAP</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">TARGET_STRING</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_TYPE_ATOM</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_TYPE_BITMAP</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_TYPE_COLORMAP</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_TYPE_DRAWABLE</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_TYPE_INTEGER</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_TYPE_PIXMAP</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_TYPE_WINDOW</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">atom</span>::<span class="ident">SELECTION_TYPE_STRING</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">event</span>::<span class="ident">Event</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">event_button</span>::<span class="ident">EventButton</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">event_configure</span>::<span class="ident">EventConfigure</span>;
@@ -265,6 +284,7 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">event_touch</span>::<span class="ident">EventTouch</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">event_visibility</span>::<span class="ident">EventVisibility</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">event_window_state</span>::<span class="ident">EventWindowState</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">geometry</span>::<span class="ident">Geometry</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">rectangle</span>::<span class="ident">Rectangle</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">rgba</span>::{<span class="ident">RGBA</span>, <span class="ident">RgbaParseError</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">window</span>::<span class="ident">WindowAttr</span>;
@@ -334,7 +354,6 @@
         window.rootPath = "../../";
         window.currentCrate = "gdk";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

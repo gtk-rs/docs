@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Image', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Image</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Image', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -49,318 +49,26 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct Image(_, _);</pre><div class='docblock'><p>The <code>Image</code> widget displays an image. Various kinds of object
-can be displayed as an image; most typically, you would load a
-<code>gdk_pixbuf::Pixbuf</code> (&quot;pixel buffer&quot;) from a file, and then display that.
-There’s a convenience function to do this, <code>Image::new_from_file</code>,
-used as follows:</p>
-
-<pre><code class="language-C">  GtkWidget *image;
-  image = gtk_image_new_from_file (&quot;myfile.png&quot;);
-</code></pre>
-
-<p>If the file isn’t loaded successfully, the image will contain a
-“broken image” icon similar to that used in many web browsers.
-If you want to handle errors in loading the file yourself,
-for example by displaying an error message, then load the image with
-<code>gdk_pixbuf::Pixbuf::new_from_file</code>, then create the <code>Image</code> with
-<code>Image::new_from_pixbuf</code>.</p>
-
-<p>The image file may contain an animation, if so the <code>Image</code> will
-display an animation (<code>gdk_pixbuf::PixbufAnimation</code>) instead of a static image.</p>
-
-<p><code>Image</code> is a subclass of <code>Misc</code>, which implies that you can
-align it (center, left, right) and add padding to it, using
-<code>Misc</code> methods.</p>
-
-<p><code>Image</code> is a “no window” widget (has no <code>gdk::Window</code> of its own),
-so by default does not receive events. If you want to receive events
-on the image, such as button clicks, place the image inside a
-<code>EventBox</code>, then connect to the event signals on the event box.</p>
-
-<h2 id='handling-button-press-events-on-a-image' class='section-header'><a href='#handling-button-press-events-on-a-image'>Handling button press events on a <code>Image</code>.</a></h2>
-<pre><code class="language-C">  static gboolean
-  button_press_callback (GtkWidget      *event_box,
-                         GdkEventButton *event,
-                         gpointer        data)
-  {
-    g_print (&quot;Event box clicked at coordinates %f,%f\n&quot;,
-             event-&gt;x, event-&gt;y);
-
-    // Returning TRUE means we handled the event, so the signal
-    // emission should be stopped (don’t call any further callbacks
-    // that may be connected). Return FALSE to continue invoking callbacks.
-    return TRUE;
-  }
-
-  static GtkWidget*
-  create_image (void)
-  {
-    GtkWidget *image;
-    GtkWidget *event_box;
-
-    image = gtk_image_new_from_file (&quot;myfile.png&quot;);
-
-    event_box = gtk_event_box_new ();
-
-    gtk_container_add (GTK_CONTAINER (event_box), image);
-
-    g_signal_connect (G_OBJECT (event_box),
-                      &quot;button_press_event&quot;,
-                      G_CALLBACK (button_press_callback),
-                      image);
-
-    return image;
-  }
-</code></pre>
-
-<p>When handling events on the event box, keep in mind that coordinates
-in the image may be different from event box coordinates due to
-the alignment and padding settings on the image (see <code>Misc</code>).
-The simplest way to solve this is to set the alignment to 0.0
-(left/top), and set the padding to zero. Then the origin of
-the image will be the same as the origin of the event box.</p>
-
-<p>Sometimes an application will want to avoid depending on external data
-files, such as image files. GTK+ comes with a program to avoid this,
-called “gdk-pixbuf-csource”. This library
-allows you to convert an image into a C variable declaration, which
-can then be loaded into a <code>gdk_pixbuf::Pixbuf</code> using
-<code>gdk_pixbuf::Pixbuf::new_from_inline</code>.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
-<p><a href="trait.MiscExt.html"><code>MiscExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/image.rs.html#111-580' title='goto source code'>[src]</a></span></h3>
+<pre class='rust struct'>pub struct Image(_, _);</pre>
+                    <h2 id='methods' class='section-header'>
+                      <a href='#methods'>Methods</a>
+                    </h2>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/image.rs.html#35-109' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
-<div class='docblock'><p>Creates a new empty <code>Image</code> widget.</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
-<p>a newly created <code>Image</code> widget.</p>
-</div><h4 id='method.new_from_animation' class="method"><span id='new_from_animation.v' class='invisible'><code>fn <a href='#method.new_from_animation' class='fnname'>new_from_animation</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gdk_pixbuf/animation/struct.PixbufAnimation.html" title="struct gdk_pixbuf::animation::PixbufAnimation">PixbufAnimation</a>&gt;&gt;(animation: &amp;P) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
-<div class='docblock'><p>Creates a <code>Image</code> displaying the given animation.
-The <code>Image</code> does not assume a reference to the
-animation; you still need to unref it if you own references.
-<code>Image</code> will add its own reference rather than adopting yours.</p>
-
-<p>Note that the animation frames are shown using a timeout with
-<code>G_PRIORITY_DEFAULT</code>. When using animations to indicate busyness,
-keep in mind that the animation will only be shown if the main loop
-is not busy with something that has a higher priority.</p>
-
-<h2 id='animation' class='section-header'><a href='#animation'><code>animation</code></a></h2>
-<p>an animation</p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
-<p>a new <code>Image</code> widget</p>
-</div><h4 id='method.new_from_file' class="method"><span id='new_from_file.v' class='invisible'><code>fn <a href='#method.new_from_file' class='fnname'>new_from_file</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(filename: P) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>Image</code> displaying the file <code>filename</code>. If the file
-isn’t found or can’t be loaded, the resulting <code>Image</code> will
-display a “broken image” icon. This function never returns <code>None</code>,
-it always returns a valid <code>Image</code> widget.</p>
-
-<p>If the file contains an animation, the image will contain an
-animation.</p>
-
-<p>If you need to detect failures to load the file, use
-<code>gdk_pixbuf::Pixbuf::new_from_file</code> to load the file yourself, then create
-the <code>Image</code> from the pixbuf. (Or for animations, use
-<code>gdk_pixbuf::PixbufAnimation::new_from_file</code>).</p>
-
-<p>The storage type (<code>Image::get_storage_type</code>) of the returned
-image is not defined, it will be whatever is appropriate for
-displaying the file.</p>
-
-<h2 id='filename' class='section-header'><a href='#filename'><code>filename</code></a></h2>
-<p>a filename</p>
-
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
-<p>a new <code>Image</code></p>
-</div><h4 id='method.new_from_icon_name' class="method"><span id='new_from_icon_name.v' class='invisible'><code>fn <a href='#method.new_from_icon_name' class='fnname'>new_from_icon_name</a>(icon_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
-<div class='docblock'><p>Creates a <code>Image</code> displaying an icon from the current icon theme.
-If the icon name isn’t known, a “broken image” icon will be
-displayed instead. If the current icon theme is changed, the icon
-will be updated appropriately.</p>
-
-<h2 id='icon_name' class='section-header'><a href='#icon_name'><code>icon_name</code></a></h2>
-<p>an icon name</p>
-
-<h2 id='size' class='section-header'><a href='#size'><code>size</code></a></h2>
-<p>a stock icon size</p>
-
-<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
-<p>a new <code>Image</code> displaying the themed icon</p>
-</div><h4 id='method.new_from_pixbuf' class="method"><span id='new_from_pixbuf.v' class='invisible'><code>fn <a href='#method.new_from_pixbuf' class='fnname'>new_from_pixbuf</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gdk_pixbuf/pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::pixbuf::Pixbuf">Pixbuf</a>&gt;&gt;&gt;(pixbuf: P) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>Image</code> displaying <code>pixbuf</code>.
-The <code>Image</code> does not assume a reference to the
-pixbuf; you still need to unref it if you own references.
-<code>Image</code> will add its own reference rather than adopting yours.</p>
-
-<p>Note that this function just creates an <code>Image</code> from the pixbuf. The
-<code>Image</code> created will not react to state changes. Should you want that,
-you should use <code>Image::new_from_icon_name</code>.</p>
-
-<h2 id='pixbuf' class='section-header'><a href='#pixbuf'><code>pixbuf</code></a></h2>
-<p>a <code>gdk_pixbuf::Pixbuf</code>, or <code>None</code></p>
-
-<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
-<p>a new <code>Image</code></p>
-</div><h4 id='method.new_from_resource' class="method"><span id='new_from_resource.v' class='invisible'><code>fn <a href='#method.new_from_resource' class='fnname'>new_from_resource</a>(resource_path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>Image</code> displaying the resource file <code>resource_path</code>. If the file
-isn’t found or can’t be loaded, the resulting <code>Image</code> will
-display a “broken image” icon. This function never returns <code>None</code>,
-it always returns a valid <code>Image</code> widget.</p>
-
-<p>If the file contains an animation, the image will contain an
-animation.</p>
-
-<p>If you need to detect failures to load the file, use
-<code>gdk_pixbuf::Pixbuf::new_from_file</code> to load the file yourself, then create
-the <code>Image</code> from the pixbuf. (Or for animations, use
-<code>gdk_pixbuf::PixbufAnimation::new_from_file</code>).</p>
-
-<p>The storage type (<code>Image::get_storage_type</code>) of the returned
-image is not defined, it will be whatever is appropriate for
-displaying the file.</p>
-
-<h2 id='resource_path' class='section-header'><a href='#resource_path'><code>resource_path</code></a></h2>
-<p>a resource path</p>
-
-<h1 id='returns-5' class='section-header'><a href='#returns-5'>Returns</a></h1>
-<p>a new <code>Image</code></p>
-</div><h4 id='method.new_from_stock' class="method"><span id='new_from_stock.v' class='invisible'><code>fn <a href='#method.new_from_stock' class='fnname'>new_from_stock</a>(stock_id: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
-<div class='docblock'><p>Creates a <code>Image</code> displaying a stock icon. Sample stock icon
-names are <code>GTK_STOCK_OPEN</code>, <code>GTK_STOCK_QUIT</code>. Sample stock sizes
-are <code>IconSize::Menu</code>, <code>IconSize::SmallToolbar</code>. If the stock
-icon name isn’t known, the image will be empty.
-You can register your own stock icon names, see
-<code>IconFactory::add_default</code> and <code>IconFactory::add</code>.</p>
-
-<h1 id='deprecated-since-310' class='section-header'><a href='#deprecated-since-310'>Deprecated since 3.10</a></h1>
-<p>Use <code>Image::new_from_icon_name</code> instead.</p>
-
-<h2 id='stock_id' class='section-header'><a href='#stock_id'><code>stock_id</code></a></h2>
-<p>a stock icon name</p>
-
-<h2 id='size-1' class='section-header'><a href='#size-1'><code>size</code></a></h2>
-<p>a stock icon size</p>
-
-<h1 id='returns-6' class='section-header'><a href='#returns-6'>Returns</a></h1>
-<p>a new <code>Image</code> displaying the stock icon</p>
-</div><h4 id='method.new_from_surface' class="method"><span id='new_from_surface.v' class='invisible'><code>fn <a href='#method.new_from_surface' class='fnname'>new_from_surface</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../cairo/surface/struct.Surface.html" title="struct cairo::surface::Surface">Surface</a>&gt;&gt;&gt;(surface: P) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
-<div class='docblock'><p>Creates a new <code>Image</code> displaying <code>surface</code>.
-The <code>Image</code> does not assume a reference to the
-surface; you still need to unref it if you own references.
-<code>Image</code> will add its own reference rather than adopting yours.</p>
-
-<p>Feature: <code>v3_10</code></p>
-
-<h2 id='surface' class='section-header'><a href='#surface'><code>surface</code></a></h2>
-<p>a <code>cairo::Surface</code>, or <code>None</code></p>
-
-<h1 id='returns-7' class='section-header'><a href='#returns-7'>Returns</a></h1>
-<p>a new <code>Image</code></p>
-</div><h4 id='method.clear' class="method"><span id='clear.v' class='invisible'><code>fn <a href='#method.clear' class='fnname'>clear</a>(&amp;self)</code></span></h4>
-<div class='docblock'><p>Resets the image to be empty.</p>
-</div><h4 id='method.get_animation' class="method"><span id='get_animation.v' class='invisible'><code>fn <a href='#method.get_animation' class='fnname'>get_animation</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gdk_pixbuf/animation/struct.PixbufAnimation.html" title="struct gdk_pixbuf::animation::PixbufAnimation">PixbufAnimation</a>&gt;</code></span></h4>
-<div class='docblock'><p>Gets the <code>gdk_pixbuf::PixbufAnimation</code> being displayed by the <code>Image</code>.
-The storage type of the image must be <code>ImageType::Empty</code> or
-<code>ImageType::Animation</code> (see <code>Image::get_storage_type</code>).
-The caller of this function does not own a reference to the
-returned animation.</p>
-
-<h1 id='returns-8' class='section-header'><a href='#returns-8'>Returns</a></h1>
-<p>the displayed animation, or <code>None</code> if
-the image is empty</p>
-</div><h4 id='method.get_pixbuf' class="method"><span id='get_pixbuf.v' class='invisible'><code>fn <a href='#method.get_pixbuf' class='fnname'>get_pixbuf</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gdk_pixbuf/pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::pixbuf::Pixbuf">Pixbuf</a>&gt;</code></span></h4>
-<div class='docblock'><p>Gets the <code>gdk_pixbuf::Pixbuf</code> being displayed by the <code>Image</code>.
-The storage type of the image must be <code>ImageType::Empty</code> or
-<code>ImageType::Pixbuf</code> (see <code>Image::get_storage_type</code>).
-The caller of this function does not own a reference to the
-returned pixbuf.</p>
-
-<h1 id='returns-9' class='section-header'><a href='#returns-9'>Returns</a></h1>
-<p>the displayed pixbuf, or <code>None</code> if
-the image is empty</p>
-</div><h4 id='method.get_pixel_size' class="method"><span id='get_pixel_size.v' class='invisible'><code>fn <a href='#method.get_pixel_size' class='fnname'>get_pixel_size</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span></h4>
-<div class='docblock'><p>Gets the pixel size used for named icons.</p>
-
-<h1 id='returns-10' class='section-header'><a href='#returns-10'>Returns</a></h1>
-<p>the pixel size used for named icons.</p>
-</div><h4 id='method.get_storage_type' class="method"><span id='get_storage_type.v' class='invisible'><code>fn <a href='#method.get_storage_type' class='fnname'>get_storage_type</a>(&amp;self) -&gt; <a class="enum" href="../gtk/enum.ImageType.html" title="enum gtk::ImageType">ImageType</a></code></span></h4>
-<div class='docblock'><p>Gets the type of representation being used by the <code>Image</code>
-to store image data. If the <code>Image</code> has no image data,
-the return value will be <code>ImageType::Empty</code>.</p>
-
-<h1 id='returns-11' class='section-header'><a href='#returns-11'>Returns</a></h1>
-<p>image representation being used</p>
-</div><h4 id='method.set_from_animation' class="method"><span id='set_from_animation.v' class='invisible'><code>fn <a href='#method.set_from_animation' class='fnname'>set_from_animation</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gdk_pixbuf/animation/struct.PixbufAnimation.html" title="struct gdk_pixbuf::animation::PixbufAnimation">PixbufAnimation</a>&gt;&gt;(&amp;self, animation: &amp;P)</code></span></h4>
-<div class='docblock'><p>Causes the <code>Image</code> to display the given animation (or display
-nothing, if you set the animation to <code>None</code>).</p>
-
-<h2 id='animation-1' class='section-header'><a href='#animation-1'><code>animation</code></a></h2>
-<p>the <code>gdk_pixbuf::PixbufAnimation</code></p>
-</div><h4 id='method.set_from_file' class="method"><span id='set_from_file.v' class='invisible'><code>fn <a href='#method.set_from_file' class='fnname'>set_from_file</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(&amp;self, filename: P)</code></span></h4>
-<div class='docblock'><p>See <code>Image::new_from_file</code> for details.</p>
-
-<h2 id='filename-1' class='section-header'><a href='#filename-1'><code>filename</code></a></h2>
-<p>a filename or <code>None</code></p>
-</div><h4 id='method.set_from_icon_name' class="method"><span id='set_from_icon_name.v' class='invisible'><code>fn <a href='#method.set_from_icon_name' class='fnname'>set_from_icon_name</a>(&amp;self, icon_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>)</code></span></h4>
-<div class='docblock'><p>See <code>Image::new_from_icon_name</code> for details.</p>
-
-<h2 id='icon_name-1' class='section-header'><a href='#icon_name-1'><code>icon_name</code></a></h2>
-<p>an icon name</p>
-
-<h2 id='size-2' class='section-header'><a href='#size-2'><code>size</code></a></h2>
-<p>an icon size</p>
-</div><h4 id='method.set_from_pixbuf' class="method"><span id='set_from_pixbuf.v' class='invisible'><code>fn <a href='#method.set_from_pixbuf' class='fnname'>set_from_pixbuf</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gdk_pixbuf/pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::pixbuf::Pixbuf">Pixbuf</a>&gt;&gt;&gt;(&amp;self, pixbuf: P)</code></span></h4>
-<div class='docblock'><p>See <code>Image::new_from_pixbuf</code> for details.</p>
-
-<h2 id='pixbuf-1' class='section-header'><a href='#pixbuf-1'><code>pixbuf</code></a></h2>
-<p>a <code>gdk_pixbuf::Pixbuf</code> or <code>None</code></p>
-</div><h4 id='method.set_from_resource' class="method"><span id='set_from_resource.v' class='invisible'><code>fn <a href='#method.set_from_resource' class='fnname'>set_from_resource</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(&amp;self, resource_path: P)</code></span></h4>
-<div class='docblock'><p>See <code>Image::new_from_resource</code> for details.</p>
-
-<h2 id='resource_path-1' class='section-header'><a href='#resource_path-1'><code>resource_path</code></a></h2>
-<p>a resource path or <code>None</code></p>
-</div><h4 id='method.set_from_stock' class="method"><span id='set_from_stock.v' class='invisible'><code>fn <a href='#method.set_from_stock' class='fnname'>set_from_stock</a>(&amp;self, stock_id: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>)</code></span></h4>
-<div class='docblock'><p>See <code>Image::new_from_stock</code> for details.</p>
-
-<h1 id='deprecated-since-310-1' class='section-header'><a href='#deprecated-since-310-1'>Deprecated since 3.10</a></h1>
-<p>Use <code>Image::set_from_icon_name</code> instead.</p>
-
-<h2 id='stock_id-1' class='section-header'><a href='#stock_id-1'><code>stock_id</code></a></h2>
-<p>a stock icon name</p>
-
-<h2 id='size-3' class='section-header'><a href='#size-3'><code>size</code></a></h2>
-<p>a stock icon size</p>
-</div><h4 id='method.set_from_surface' class="method"><span id='set_from_surface.v' class='invisible'><code>fn <a href='#method.set_from_surface' class='fnname'>set_from_surface</a>(&amp;self, surface: &amp;<a class="struct" href="../cairo/surface/struct.Surface.html" title="struct cairo::surface::Surface">Surface</a>)</code></span></h4>
-<div class='docblock'><p>See <code>Image::new_from_surface</code> for details.</p>
-
-<p>Feature: <code>v3_10</code></p>
-
-<h2 id='surface-1' class='section-header'><a href='#surface-1'><code>surface</code></a></h2>
-<p>a cairo_surface_t</p>
-</div><h4 id='method.set_pixel_size' class="method"><span id='set_pixel_size.v' class='invisible'><code>fn <a href='#method.set_pixel_size' class='fnname'>set_pixel_size</a>(&amp;self, pixel_size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>)</code></span></h4>
-<div class='docblock'><p>Sets the pixel size to use for named icons. If the pixel size is set
-to a value != -1, it is used instead of the icon size set by
-<code>Image::set_from_icon_name</code>.</p>
-
-<h2 id='pixel_size' class='section-header'><a href='#pixel_size'><code>pixel_size</code></a></h2>
-<p>the new pixel size</p>
-</div><h4 id='method.get_property_file' class="method"><span id='get_property_file.v' class='invisible'><code>fn <a href='#method.get_property_file' class='fnname'>get_property_file</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>&gt;</code></span></h4>
-<h4 id='method.set_property_file' class="method"><span id='set_property_file.v' class='invisible'><code>fn <a href='#method.set_property_file' class='fnname'>set_property_file</a>(&amp;self, file: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;)</code></span></h4>
-<h4 id='method.set_property_icon_name' class="method"><span id='set_property_icon_name.v' class='invisible'><code>fn <a href='#method.set_property_icon_name' class='fnname'>set_property_icon_name</a>(&amp;self, icon_name: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;)</code></span></h4>
-<h4 id='method.get_property_icon_size' class="method"><span id='get_property_icon_size.v' class='invisible'><code>fn <a href='#method.get_property_icon_size' class='fnname'>get_property_icon_size</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span></h4>
-<h4 id='method.set_property_icon_size' class="method"><span id='set_property_icon_size.v' class='invisible'><code>fn <a href='#method.set_property_icon_size' class='fnname'>set_property_icon_size</a>(&amp;self, icon_size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>)</code></span></h4>
-<h4 id='method.set_property_pixbuf' class="method"><span id='set_property_pixbuf.v' class='invisible'><code>fn <a href='#method.set_property_pixbuf' class='fnname'>set_property_pixbuf</a>(&amp;self, pixbuf: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../gdk_pixbuf/pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::pixbuf::Pixbuf">Pixbuf</a>&gt;)</code></span></h4>
-<h4 id='method.get_property_pixbuf_animation' class="method"><span id='get_property_pixbuf_animation.v' class='invisible'><code>fn <a href='#method.get_property_pixbuf_animation' class='fnname'>get_property_pixbuf_animation</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gdk_pixbuf/animation/struct.PixbufAnimation.html" title="struct gdk_pixbuf::animation::PixbufAnimation">PixbufAnimation</a>&gt;</code></span></h4>
-<h4 id='method.set_property_pixbuf_animation' class="method"><span id='set_property_pixbuf_animation.v' class='invisible'><code>fn <a href='#method.set_property_pixbuf_animation' class='fnname'>set_property_pixbuf_animation</a>(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pixbuf_animation: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../gdk_pixbuf/animation/struct.PixbufAnimation.html" title="struct gdk_pixbuf::animation::PixbufAnimation">PixbufAnimation</a>&gt;)</code></span></h4>
-<h4 id='method.get_property_resource' class="method"><span id='get_property_resource.v' class='invisible'><code>fn <a href='#method.get_property_resource' class='fnname'>get_property_resource</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>&gt;</code></span></h4>
-<h4 id='method.set_property_resource' class="method"><span id='set_property_resource.v' class='invisible'><code>fn <a href='#method.set_property_resource' class='fnname'>set_property_resource</a>(&amp;self, resource: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;)</code></span></h4>
-<h4 id='method.set_property_stock' class="method"><span id='set_property_stock.v' class='invisible'><code>fn <a href='#method.set_property_stock' class='fnname'>set_property_stock</a>(&amp;self, stock: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;)</code></span></h4>
-<h4 id='method.get_property_use_fallback' class="method"><span id='get_property_use_fallback.v' class='invisible'><code>fn <a href='#method.get_property_use_fallback' class='fnname'>get_property_use_fallback</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
-<h4 id='method.set_property_use_fallback' class="method"><span id='set_property_use_fallback.v' class='invisible'><code>fn <a href='#method.set_property_use_fallback' class='fnname'>set_property_use_fallback</a>(&amp;self, use_fallback: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)</code></span></h4>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span><span class='out-of-band'></span></h3>
+<h4 id='method.new_from_animation' class="method"><span id='new_from_animation.v' class='invisible'><code>fn <a href='#method.new_from_animation' class='fnname'>new_from_animation</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;PixbufAnimation&gt;&gt;(animation: &amp;P) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
+<h4 id='method.new_from_file' class="method"><span id='new_from_file.v' class='invisible'><code>fn <a href='#method.new_from_file' class='fnname'>new_from_file</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(filename: P) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
+<h4 id='method.new_from_gicon' class="method"><span id='new_from_gicon.v' class='invisible'><code>fn <a href='#method.new_from_gicon' class='fnname'>new_from_gicon</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;Icon&gt;&gt;(icon: &amp;P, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
+<h4 id='method.new_from_icon_name' class="method"><span id='new_from_icon_name.v' class='invisible'><code>fn <a href='#method.new_from_icon_name' class='fnname'>new_from_icon_name</a>(icon_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
+<h4 id='method.new_from_icon_set' class="method"><span id='new_from_icon_set.v' class='invisible'><code>fn <a href='#method.new_from_icon_set' class='fnname'>new_from_icon_set</a>(icon_set: &amp;<a class="struct" href="../gtk/struct.IconSet.html" title="struct gtk::IconSet">IconSet</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
+<h4 id='method.new_from_pixbuf' class="method"><span id='new_from_pixbuf.v' class='invisible'><code>fn <a href='#method.new_from_pixbuf' class='fnname'>new_from_pixbuf</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a Pixbuf&gt;&gt;&gt;(pixbuf: P) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
+<h4 id='method.new_from_resource' class="method"><span id='new_from_resource.v' class='invisible'><code>fn <a href='#method.new_from_resource' class='fnname'>new_from_resource</a>(resource_path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
+<h4 id='method.new_from_stock' class="method"><span id='new_from_stock.v' class='invisible'><code>fn <a href='#method.new_from_stock' class='fnname'>new_from_stock</a>(stock_id: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
+<h4 id='method.new_from_surface' class="method"><span id='new_from_surface.v' class='invisible'><code>fn <a href='#method.new_from_surface' class='fnname'>new_from_surface</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a Surface&gt;&gt;&gt;(surface: P) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
@@ -370,9 +78,9 @@ to a value != -1, it is used instead of the icon size set by
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
-<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
-<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
@@ -385,7 +93,10 @@ to a value != -1, it is used instead of the icon size set by
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Misc.html" title="struct gtk::Misc">Misc</a>&gt; for <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.Image.html" title="struct gtk::Image">Image</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/image.rs.html#111-115' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -442,7 +153,6 @@ to a value != -1, it is used instead of the icon size set by
         window.rootPath = "../";
         window.currentCrate = "gtk";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

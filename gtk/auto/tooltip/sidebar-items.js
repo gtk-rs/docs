@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Tooltip","Basic tooltips can be realized simply by using `Widget::set_tooltip_text` or `Widget::set_tooltip_markup` without any explicit tooltip object."]]});

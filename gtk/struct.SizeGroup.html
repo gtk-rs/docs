@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'SizeGroup', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct SizeGroup</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'SizeGroup', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -49,133 +49,17 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct SizeGroup(_, _);</pre><div class='docblock'><p><code>SizeGroup</code> provides a mechanism for grouping a number of widgets
-together so they all request the same amount of space. This is
-typically useful when you want a column of widgets to have the same
-size, but you can’t use a <code>Grid</code> widget.</p>
-
-<p>In detail, the size requested for each widget in a <code>SizeGroup</code> is
-the maximum of the sizes that would have been requested for each
-widget in the size group if they were not in the size group. The mode
-of the size group (see <code>SizeGroup::set_mode</code>) determines whether
-this applies to the horizontal size, the vertical size, or both sizes.</p>
-
-<p>Note that size groups only affect the amount of space requested, not
-the size that the widgets finally receive. If you want the widgets in
-a <code>SizeGroup</code> to actually be the same size, you need to pack them in
-such a way that they get the size they request and not more. For
-example, if you are packing your widgets into a table, you would not
-include the <code>AttachOptions::Fill</code> flag.</p>
-
-<p><code>SizeGroup</code> objects are referenced by each widget in the size group,
-so once you have added all widgets to a <code>SizeGroup</code>, you can drop
-the initial reference to the size group with <code>gobject::Object::unref</code>. If the
-widgets in the size group are subsequently destroyed, then they will
-be removed from the size group and drop their references on the size
-group; when all widgets have been removed, the size group will be
-freed.</p>
-
-<p>Widgets can be part of multiple size groups; GTK+ will compute the
-horizontal size of a widget from the horizontal requisition of all
-widgets that can be reached from the widget by a chain of size groups
-of type <code>SizeGroupMode::Horizontal</code> or <code>SizeGroupMode::Both</code>, and the
-vertical size from the vertical requisition of all widgets that can be
-reached from the widget by a chain of size groups of type
-<code>SizeGroupMode::Vertical</code> or <code>SizeGroupMode::Both</code>.</p>
-
-<p>Note that only non-contextual sizes of every widget are ever consulted
-by size groups (since size groups have no knowledge of what size a widget
-will be allocated in one dimension, it cannot derive how much height
-a widget will receive for a given width). When grouping widgets that
-trade height for width in mode <code>SizeGroupMode::Vertical</code> or <code>SizeGroupMode::Both</code>:
-the height for the minimum width will be the requested height for all
-widgets in the group. The same is of course true when horizontally grouping
-width for height widgets.</p>
-
-<p>Widgets that trade height-for-width should set a reasonably large minimum width
-by way of <code>Label:width-chars</code> for instance. Widgets with static sizes as well
-as widgets that grow (such as ellipsizing text) need no such considerations.</p>
-
-<h1 id='sizegroup-as-buildable' class='section-header'><a href='#sizegroup-as-buildable'><code>SizeGroup</code> as <code>Buildable</code></a></h1>
-<p>Size groups can be specified in a UI definition by placing an <code>&lt;object&gt;</code>
-element with <code>class=&quot;GtkSizeGroup&quot;</code> somewhere in the UI definition. The
-widgets that belong to the size group are specified by a <code>&lt;widgets&gt;</code> element
-that may contain multiple <code>&lt;widget&gt;</code> elements, one for each member of the
-size group. The ”name” attribute gives the id of the widget.</p>
-
-<p>An example of a UI definition fragment with <code>SizeGroup</code>:</p>
-
-<pre><code class="language-text">&lt;object class=&quot;GtkSizeGroup&quot;&gt;
-  &lt;property name=&quot;mode&quot;&gt;GTK_SIZE_GROUP_HORIZONTAL&lt;/property&gt;
-  &lt;widgets&gt;
-    &lt;widget name=&quot;radio1&quot;/&gt;
-    &lt;widget name=&quot;radio2&quot;/&gt;
-  &lt;/widgets&gt;
-&lt;/object&gt;
-</code></pre>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
-<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.SizeGroup.html" title="struct gtk::SizeGroup">SizeGroup</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/size_group.rs.html#88-186' title='goto source code'>[src]</a></span></h3>
+<pre class='rust struct'>pub struct SizeGroup(_, _);</pre>
+                    <h2 id='methods' class='section-header'>
+                      <a href='#methods'>Methods</a>
+                    </h2>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.SizeGroup.html" title="struct gtk::SizeGroup">SizeGroup</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/size_group.rs.html#27-34' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(mode: <a class="enum" href="../gtk/enum.SizeGroupMode.html" title="enum gtk::SizeGroupMode">SizeGroupMode</a>) -&gt; <a class="struct" href="../gtk/struct.SizeGroup.html" title="struct gtk::SizeGroup">SizeGroup</a></code></span></h4>
-<div class='docblock'><p>Create a new <code>SizeGroup</code>.</p>
-
-<h2 id='mode' class='section-header'><a href='#mode'><code>mode</code></a></h2>
-<p>the mode for the new size group.</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
-<p>a newly created <code>SizeGroup</code></p>
-</div><h4 id='method.add_widget' class="method"><span id='add_widget.v' class='invisible'><code>fn <a href='#method.add_widget' class='fnname'>add_widget</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt;&gt;(&amp;self, widget: &amp;P)</code></span></h4>
-<div class='docblock'><p>Adds a widget to a <code>SizeGroup</code>. In the future, the requisition
-of the widget will be determined as the maximum of its requisition
-and the requisition of the other widgets in the size group.
-Whether this applies horizontally, vertically, or in both directions
-depends on the mode of the size group. See <code>SizeGroup::set_mode</code>.</p>
-
-<p>When the widget is destroyed or no longer referenced elsewhere, it will
-be removed from the size group.</p>
-
-<h2 id='widget' class='section-header'><a href='#widget'><code>widget</code></a></h2>
-<p>the <code>Widget</code> to add</p>
-</div><h4 id='method.get_ignore_hidden' class="method"><span id='get_ignore_hidden.v' class='invisible'><code>fn <a href='#method.get_ignore_hidden' class='fnname'>get_ignore_hidden</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
-<div class='docblock'><p>Returns if invisible widgets are ignored when calculating the size.</p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
-<p><code>true</code> if invisible widgets are ignored.</p>
-</div><h4 id='method.get_mode' class="method"><span id='get_mode.v' class='invisible'><code>fn <a href='#method.get_mode' class='fnname'>get_mode</a>(&amp;self) -&gt; <a class="enum" href="../gtk/enum.SizeGroupMode.html" title="enum gtk::SizeGroupMode">SizeGroupMode</a></code></span></h4>
-<div class='docblock'><p>Gets the current mode of the size group. See <code>SizeGroup::set_mode</code>.</p>
-
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
-<p>the current mode of the size group.</p>
-</div><h4 id='method.get_widgets' class="method"><span id='get_widgets.v' class='invisible'><code>fn <a href='#method.get_widgets' class='fnname'>get_widgets</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt;</code></span></h4>
-<div class='docblock'><p>Returns the list of widgets associated with <code>self</code>.</p>
-
-<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
-<p>a <code>glib::SList</code> of
- widgets. The list is owned by GTK+ and should not be modified.</p>
-</div><h4 id='method.remove_widget' class="method"><span id='remove_widget.v' class='invisible'><code>fn <a href='#method.remove_widget' class='fnname'>remove_widget</a>&lt;P:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt;&gt;(&amp;self, widget: &amp;P)</code></span></h4>
-<div class='docblock'><p>Removes a widget from a <code>SizeGroup</code>.</p>
-
-<h2 id='widget-1' class='section-header'><a href='#widget-1'><code>widget</code></a></h2>
-<p>the <code>Widget</code> to remove</p>
-</div><h4 id='method.set_ignore_hidden' class="method"><span id='set_ignore_hidden.v' class='invisible'><code>fn <a href='#method.set_ignore_hidden' class='fnname'>set_ignore_hidden</a>(&amp;self, ignore_hidden: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)</code></span></h4>
-<div class='docblock'><p>Sets whether unmapped widgets should be ignored when
-calculating the size.</p>
-
-<h2 id='ignore_hidden' class='section-header'><a href='#ignore_hidden'><code>ignore_hidden</code></a></h2>
-<p>whether unmapped widgets should be ignored
- when calculating the size</p>
-</div><h4 id='method.set_mode' class="method"><span id='set_mode.v' class='invisible'><code>fn <a href='#method.set_mode' class='fnname'>set_mode</a>(&amp;self, mode: <a class="enum" href="../gtk/enum.SizeGroupMode.html" title="enum gtk::SizeGroupMode">SizeGroupMode</a>)</code></span></h4>
-<div class='docblock'><p>Sets the <code>SizeGroupMode</code> of the size group. The mode of the size
-group determines whether the widgets in the size group should
-all have the same horizontal requisition (<code>SizeGroupMode::Horizontal</code>)
-all have the same vertical requisition (<code>SizeGroupMode::Vertical</code>),
-or should all have the same requisition in both directions
-(<code>SizeGroupMode::Both</code>).</p>
-
-<h2 id='mode-1' class='section-header'><a href='#mode-1'><code>mode</code></a></h2>
-<p>the mode to set for the size group.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.SizeGroup.html" title="struct gtk::SizeGroup">SizeGroup</a></code></span><span class='out-of-band'></span></h3>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.SizeGroup.html" title="struct gtk::SizeGroup">SizeGroup</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.SizeGroup.html" title="struct gtk::SizeGroup">SizeGroup</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
@@ -185,9 +69,9 @@ or should all have the same requisition in both directions
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.SizeGroup.html" title="struct gtk::SizeGroup">SizeGroup</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
-<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
-<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.SizeGroup.html" title="struct gtk::SizeGroup">SizeGroup</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
@@ -255,7 +139,6 @@ or should all have the same requisition in both directions
         window.rootPath = "../";
         window.currentCrate = "gtk";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

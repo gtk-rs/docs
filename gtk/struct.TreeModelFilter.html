@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'TreeModelFilter', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct TreeModelFilter</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'TreeModelFilter', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -49,195 +49,17 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct TreeModelFilter(_, _);</pre><div class='docblock'><p>A <code>TreeModelFilter</code> is a tree model which wraps another tree model,
-and can do the following things:</p>
-
-<ul>
-<li><p>Filter specific rows, based on data from a “visible column”, a column
-storing booleans indicating whether the row should be filtered or not,
-or based on the return value of a “visible function”, which gets a
-model, iter and user_data and returns a boolean indicating whether the
-row should be filtered or not.</p></li>
-<li><p>Modify the “appearance” of the model, using a modify function.
-This is extremely powerful and allows for just changing some
-values and also for creating a completely different model based
-on the given child model.</p></li>
-<li><p>Set a different root node, also known as a “virtual root”. You can pass
-in a <code>TreePath</code> indicating the root node for the filter at construction
-time.</p></li>
-</ul>
-
-<p>The basic API is similar to <code>TreeModelSort</code>. For an example on its usage,
-see the section on <code>TreeModelSort</code>.</p>
-
-<p>When using <code>TreeModelFilter</code>, it is important to realize that
-<code>TreeModelFilter</code> maintains an internal cache of all nodes which are
-visible in its clients. The cache is likely to be a subtree of the tree
-exposed by the child model. <code>TreeModelFilter</code> will not cache the entire
-child model when unnecessary to not compromise the caching mechanism
-that is exposed by the reference counting scheme. If the child model
-implements reference counting, unnecessary signals may not be emitted
-because of reference counting rule 3, see the <code>TreeModel</code>
-documentation. (Note that e.g. <code>TreeStore</code> does not implement
-reference counting and will always emit all signals, even when
-the receiving node is not visible).</p>
-
-<p>Because of this, limitations for possible visible functions do apply.
-In general, visible functions should only use data or properties from
-the node for which the visibility state must be determined, its siblings
-or its parents. Usually, having a dependency on the state of any child
-node is not possible, unless references are taken on these explicitly.
-When no such reference exists, no signals may be received for these child
-nodes (see reference couting rule number 3 in the <code>TreeModel</code> section).</p>
-
-<p>Determining the visibility state of a given node based on the state
-of its child nodes is a frequently occurring use case. Therefore,
-<code>TreeModelFilter</code> explicitly supports this. For example, when a node
-does not have any children, you might not want the node to be visible.
-As soon as the first row is added to the node’s child level (or the
-last row removed), the node’s visibility should be updated.</p>
-
-<p>This introduces a dependency from the node on its child nodes. In order
-to accommodate this, <code>TreeModelFilter</code> must make sure the necessary
-signals are received from the child model. This is achieved by building,
-for all nodes which are exposed as visible nodes to <code>TreeModelFilter</code>&#39;s
-clients, the child level (if any) and take a reference on the first node
-in this level. Furthermore, for every row-inserted, row-changed or
-row-deleted signal (also these which were not handled because the node
-was not cached), <code>TreeModelFilter</code> will check if the visibility state
-of any parent node has changed.</p>
-
-<p>Beware, however, that this explicit support is limited to these two
-cases. For example, if you want a node to be visible only if two nodes
-in a child’s child level (2 levels deeper) are visible, you are on your
-own. In this case, either rely on <code>TreeStore</code> to emit all signals
-because it does not implement reference counting, or for models that
-do implement reference counting, obtain references on these child levels
-yourself.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
-<p><a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.TreeModelExt.html"><code>TreeModelExt</code></a></p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/tree_model_filter.rs.html#89-218' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clear_cache' class="method"><span id='clear_cache.v' class='invisible'><code>fn <a href='#method.clear_cache' class='fnname'>clear_cache</a>(&amp;self)</code></span></h4>
-<div class='docblock'><p>This function should almost never be called. It clears the <code>self</code>
-of any cached iterators that haven’t been reffed with
-<code>TreeModel::ref_node</code>. This might be useful if the child model
-being filtered is static (and doesn’t change often) and there has been
-a lot of unreffed access to nodes. As a side effect of this function,
-all unreffed iters will be invalid.</p>
-</div><h4 id='method.convert_child_iter_to_iter' class="method"><span id='convert_child_iter_to_iter.v' class='invisible'><code>fn <a href='#method.convert_child_iter_to_iter' class='fnname'>convert_child_iter_to_iter</a>(&amp;self, child_iter: &amp;<a class="struct" href="../gtk/struct.TreeIter.html" title="struct gtk::TreeIter">TreeIter</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.TreeIter.html" title="struct gtk::TreeIter">TreeIter</a>&gt;</code></span></h4>
-<div class='docblock'><p>Sets <code>filter_iter</code> to point to the row in <code>self</code> that corresponds to the
-row pointed at by <code>child_iter</code>. If <code>filter_iter</code> was not set, <code>false</code> is
-returned.</p>
-
-<h2 id='filter_iter' class='section-header'><a href='#filter_iter'><code>filter_iter</code></a></h2>
-<p>An uninitialized <code>TreeIter</code>.</p>
-
-<h2 id='child_iter' class='section-header'><a href='#child_iter'><code>child_iter</code></a></h2>
-<p>A valid <code>TreeIter</code> pointing to a row on the child model.</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
-<p><code>true</code>, if <code>filter_iter</code> was set, i.e. if <code>child_iter</code> is a
-valid iterator pointing to a visible row in child model.</p>
-</div><h4 id='method.convert_child_path_to_path' class="method"><span id='convert_child_path_to_path.v' class='invisible'><code>fn <a href='#method.convert_child_path_to_path' class='fnname'>convert_child_path_to_path</a>(&amp;self, child_path: &amp;<a class="struct" href="../gtk/struct.TreePath.html" title="struct gtk::TreePath">TreePath</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.TreePath.html" title="struct gtk::TreePath">TreePath</a>&gt;</code></span></h4>
-<div class='docblock'><p>Converts <code>child_path</code> to a path relative to <code>self</code>. That is, <code>child_path</code>
-points to a path in the child model. The rerturned path will point to the
-same row in the filtered model. If <code>child_path</code> isn’t a valid path on the
-child model or points to a row which is not visible in <code>self</code>, then <code>None</code>
-is returned.</p>
-
-<h2 id='child_path' class='section-header'><a href='#child_path'><code>child_path</code></a></h2>
-<p>A <code>TreePath</code> to convert.</p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
-<p>A newly allocated <code>TreePath</code>, or <code>None</code>.</p>
-</div><h4 id='method.convert_iter_to_child_iter' class="method"><span id='convert_iter_to_child_iter.v' class='invisible'><code>fn <a href='#method.convert_iter_to_child_iter' class='fnname'>convert_iter_to_child_iter</a>(&amp;self, filter_iter: &amp;<a class="struct" href="../gtk/struct.TreeIter.html" title="struct gtk::TreeIter">TreeIter</a>) -&gt; <a class="struct" href="../gtk/struct.TreeIter.html" title="struct gtk::TreeIter">TreeIter</a></code></span></h4>
-<div class='docblock'><p>Sets <code>child_iter</code> to point to the row pointed to by <code>filter_iter</code>.</p>
-
-<h2 id='child_iter-1' class='section-header'><a href='#child_iter-1'><code>child_iter</code></a></h2>
-<p>An uninitialized <code>TreeIter</code>.</p>
-
-<h2 id='filter_iter-1' class='section-header'><a href='#filter_iter-1'><code>filter_iter</code></a></h2>
-<p>A valid <code>TreeIter</code> pointing to a row on <code>self</code>.</p>
-</div><h4 id='method.convert_path_to_child_path' class="method"><span id='convert_path_to_child_path.v' class='invisible'><code>fn <a href='#method.convert_path_to_child_path' class='fnname'>convert_path_to_child_path</a>(&amp;self, filter_path: &amp;<a class="struct" href="../gtk/struct.TreePath.html" title="struct gtk::TreePath">TreePath</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.TreePath.html" title="struct gtk::TreePath">TreePath</a>&gt;</code></span></h4>
-<div class='docblock'><p>Converts <code>filter_path</code> to a path on the child model of <code>self</code>. That is,
-<code>filter_path</code> points to a location in <code>self</code>. The returned path will
-point to the same location in the model not being filtered. If <code>filter_path</code>
-does not point to a location in the child model, <code>None</code> is returned.</p>
-
-<h2 id='filter_path' class='section-header'><a href='#filter_path'><code>filter_path</code></a></h2>
-<p>A <code>TreePath</code> to convert.</p>
-
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
-<p>A newly allocated <code>TreePath</code>, or <code>None</code>.</p>
-</div><h4 id='method.get_model' class="method"><span id='get_model.v' class='invisible'><code>fn <a href='#method.get_model' class='fnname'>get_model</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt;</code></span></h4>
-<div class='docblock'><p>Returns a pointer to the child model of <code>self</code>.</p>
-
-<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
-<p>A pointer to a <code>TreeModel</code>.</p>
-</div><h4 id='method.refilter' class="method"><span id='refilter.v' class='invisible'><code>fn <a href='#method.refilter' class='fnname'>refilter</a>(&amp;self)</code></span></h4>
-<div class='docblock'><p>Emits ::row_changed for each row in the child model, which causes
-the filter to re-evaluate whether a row is visible or not.</p>
-</div><h4 id='method.set_visible_column' class="method"><span id='set_visible_column.v' class='invisible'><code>fn <a href='#method.set_visible_column' class='fnname'>set_visible_column</a>(&amp;self, column: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>)</code></span></h4>
-<div class='docblock'><p>Sets <code>column</code> of the child_model to be the column where <code>self</code> should
-look for visibility information. <code>columns</code> should be a column of type
-<code>G_TYPE_BOOLEAN</code>, where <code>true</code> means that a row is visible, and <code>false</code>
-if not.</p>
-
-<p>Note that <code>TreeModelFilter::set_visible_func</code> or
-<code>TreeModelFilter::set_visible_column</code> can only be called
-once for a given filter model.</p>
-
-<h2 id='column' class='section-header'><a href='#column'><code>column</code></a></h2>
-<p>A <code>gint</code> which is the column containing the visible information</p>
-</div><h4 id='method.get_property_child_model' class="method"><span id='get_property_child_model.v' class='invisible'><code>fn <a href='#method.get_property_child_model' class='fnname'>get_property_child_model</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt;</code></span></h4>
-</div><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/tree_model_filter.rs.html#14-75' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt;&gt;(child_model: &amp;T,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../gtk/struct.TreePath.html" title="struct gtk::TreePath">TreePath</a>&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span></h4>
-<h4 id='method.set_visible_func' class="method"><span id='set_visible_func.v' class='invisible'><code>fn <a href='#method.set_visible_func' class='fnname'>set_visible_func</a>&lt;F&gt;(&amp;self, func: F) <span class="where fmt-newline">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html" title="trait core::ops::Fn">Fn</a>(&amp;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>, &amp;<a class="struct" href="../gtk/struct.TreeIter.html" title="struct gtk::TreeIter">TreeIter</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> + 'static</span></code></span></h4>
-<div class='docblock'><p>Sets the visible function used when filtering the <code>self</code> to be <code>func</code>.
-The function should return <code>true</code> if the given row should be visible and
-<code>false</code> otherwise.</p>
-
-<p>If the condition calculated by the function changes over time (e.g.
-because it depends on some global parameters), you must call
-<code>TreeModelFilter::refilter</code> to keep the visibility information
-of the model up-to-date.</p>
-
-<p>Note that <code>func</code> is called whenever a row is inserted, when it may still
-be empty. The visible function should therefore take special care of empty
-rows, like in the example below.</p>
-
-<pre><code class="language-C">static gboolean
-visible_func (GtkTreeModel *model,
-              GtkTreeIter  *iter,
-              gpointer      data)
-{
-  // Visible if row is non-empty and first column is “HI”
-  gchar *str;
-  gboolean visible = FALSE;
-
-  gtk_tree_model_get (model, iter, 0, &amp;str, -1);
-  if (str &amp;&amp; strcmp (str, &quot;HI&quot;) == 0)
-    visible = TRUE;
-  g_free (str);
-
-  return visible;
-}
-</code></pre>
-
-<p>Note that <code>TreeModelFilter::set_visible_func</code> or
-<code>TreeModelFilter::set_visible_column</code> can only be called
-once for a given filter model.</p>
-
-<h2 id='func' class='section-header'><a href='#func'><code>func</code></a></h2>
-<p>A <code>GtkTreeModelFilterVisibleFunc</code>, the visible function</p>
-
-<h2 id='data' class='section-header'><a href='#data'><code>data</code></a></h2>
-<p>User data to pass to the visible function, or <code>None</code></p>
-
-<h2 id='destroy' class='section-header'><a href='#destroy'><code>destroy</code></a></h2>
-<p>Destroy notifier of <code>data</code>, or <code>None</code></p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span><span class='out-of-band'></span></h3>
+<pre class='rust struct'>pub struct TreeModelFilter(_, _);</pre>
+                    <h2 id='methods' class='section-header'>
+                      <a href='#methods'>Methods</a>
+                    </h2>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/tree_model_filter.rs.html#14-23' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;child_model: &amp;T, <br>&nbsp;&nbsp;&nbsp;&nbsp;root: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../gtk/struct.TreePath.html" title="struct gtk::TreePath">TreePath</a>&gt;<br>) -&gt; <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span></h4>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
@@ -247,9 +69,9 @@ once for a given filter model.</p>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
-<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
-<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
@@ -318,7 +140,6 @@ once for a given filter model.</p>
         window.rootPath = "../";
         window.currentCrate = "gtk";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

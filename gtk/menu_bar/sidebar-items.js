@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["MenuBar","The `MenuBar` is a subclass of `MenuShell` which contains one or more ``GtkMenuItems``. The result is a standard menu bar which can hold many menu items."]]});

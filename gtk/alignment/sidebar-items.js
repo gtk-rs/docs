@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Alignment","`[Deprecated since 3.14]` The `Alignment` widget controls the alignment and size of its child widget. It has four settings: xscale, yscale, xalign, and yalign."]]});

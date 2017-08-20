@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["EventWindowState","Generated when the state of a toplevel window changes."]]});

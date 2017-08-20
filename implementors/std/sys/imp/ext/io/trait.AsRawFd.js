@@ -1,11 +1,5 @@
 (function() {var implementors = {};
-implementors["cairo"] = [];
-implementors["gdk"] = [];
-implementors["gdk_pixbuf"] = [];
-implementors["gio"] = [];
-implementors["glib"] = [];
 implementors["gtk"] = [];
-implementors["libc"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

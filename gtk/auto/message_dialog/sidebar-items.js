@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["MessageDialog","`MessageDialog` presents a dialog with some message text. It’s simply a convenience widget; you could construct the equivalent of `MessageDialog` from `Dialog` without too much effort, but `MessageDialog` saves typing."]]});

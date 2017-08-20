@@ -1,1 +1,0 @@
-initSidebarItems({"constant":[["Button1Mask",""],["Button2Mask",""],["Button3Mask",""],["Button4Mask",""],["Button5Mask",""],["ControlMask",""],["HyperMask",""],["LockMask",""],["MetaMask",""],["Mod1Mask",""],["Mod2Mask",""],["Mod3Mask",""],["Mod4Mask",""],["Mod5Mask",""],["ModifierMask",""],["ReleaseMask",""],["ShiftMask",""],["SuperMask",""]]});

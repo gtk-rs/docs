@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["AccelGroup","A `AccelGroup` represents a group of keyboard accelerators, typically attached to a toplevel `Window` (with `Window::add_accel_group`). Usually you won’t need to create a `AccelGroup` directly; instead, when using `UIManager`, GTK+ automatically sets up the accelerators for your menus in the ui manager’s `AccelGroup`."]]});

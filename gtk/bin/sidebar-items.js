@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Bin","The `Bin` widget is a container with just one child. It is not very useful itself, but it is useful for deriving subclasses, since it provides common code needed for handling a single child widget."]],"trait":[["BinExt","Trait containing all `Bin` methods."]]});

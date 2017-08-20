@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["EventMotion","Generated when the pointer moves."]]});

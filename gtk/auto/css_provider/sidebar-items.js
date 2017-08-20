@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["CssProvider","`CssProvider` is an object implementing the `StyleProvider` interface. It is able to parse CSS-like input in order to style widgets."]]});

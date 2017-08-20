@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Builder","A `Builder` is an auxiliary object that reads textual descriptions of a user interface and instantiates the described objects. To create a `Builder` from a user interface description, call `Builder::new_from_file`, `Builder::new_from_resource` or `Builder::new_from_string`."]]});

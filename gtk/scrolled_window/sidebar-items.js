@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["ScrolledWindow","`ScrolledWindow` is a `Bin` subclass: it’s a container the accepts a single child widget. `ScrolledWindow` adds scrollbars to the child widget and optionally draws a beveled frame around the child widget."]],"trait":[["ScrolledWindowExt","Trait containing all `ScrolledWindow` methods."]]});

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["CellRendererPixbuf","A `CellRendererPixbuf` can be used to render an image in a cell. It allows to render either a given `gdk_pixbuf::Pixbuf` (set via the `CellRendererPixbuf:pixbuf` property) or a named icon (set via the `CellRendererPixbuf:icon-name` property)."]]});

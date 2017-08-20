@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'TreeModel', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct TreeModel</p><div class="block items"><ul><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'TreeModel', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -49,200 +49,11 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct TreeModel(_, _);</pre><div class='docblock'><p>The <code>TreeModel</code> interface defines a generic tree interface for
-use by the <code>TreeView</code> widget. It is an abstract interface, and
-is designed to be usable with any appropriate data structure. The
-programmer just has to implement this interface on their own data
-type for it to be viewable by a <code>TreeView</code> widget.</p>
-
-<p>The model is represented as a hierarchical tree of strongly-typed,
-columned data. In other words, the model can be seen as a tree where
-every node has different values depending on which column is being
-queried. The type of data found in a column is determined by using
-the GType system (ie. <code>G_TYPE_INT</code>, <code>GTK_TYPE_BUTTON</code>, <code>G_TYPE_POINTER</code>,
-etc). The types are homogeneous per column across all nodes. It is
-important to note that this interface only provides a way of examining
-a model and observing changes. The implementation of each individual
-model decides how and if changes are made.</p>
-
-<p>In order to make life simpler for programmers who do not need to
-write their own specialized model, two generic models are provided
-— the <code>TreeStore</code> and the <code>ListStore</code>. To use these, the
-developer simply pushes data into these models as necessary. These
-models provide the data structure as well as all appropriate tree
-interfaces. As a result, implementing drag and drop, sorting, and
-storing data is trivial. For the vast majority of trees and lists,
-these two models are sufficient.</p>
-
-<p>Models are accessed on a node/column level of granularity. One can
-query for the value of a model at a certain node and a certain
-column on that node. There are two structures used to reference a
-particular node in a model. They are the <code>TreePath</code>-struct and
-the <code>TreeIter</code>-struct (“iter” is short for iterator). Most of the
-interface consists of operations on a <code>TreeIter</code>-struct.</p>
-
-<p>A path is essentially a potential node. It is a location on a model
-that may or may not actually correspond to a node on a specific
-model. The <code>TreePath</code>-struct can be converted into either an
-array of unsigned integers or a string. The string form is a list
-of numbers separated by a colon. Each number refers to the offset
-at that level. Thus, the path <code>0</code> refers to the root
-node and the path <code>2:4</code> refers to the fifth child of
-the third node.</p>
-
-<p>By contrast, a <code>TreeIter</code>-struct is a reference to a specific node on
-a specific model. It is a generic struct with an integer and three
-generic pointers. These are filled in by the model in a model-specific
-way. One can convert a path to an iterator by calling
-<code>TreeModel::get_iter</code>. These iterators are the primary way
-of accessing a model and are similar to the iterators used by
-<code>TextBuffer</code>. They are generally statically allocated on the
-stack and only used for a short time. The model interface defines
-a set of operations using them for navigating the model.</p>
-
-<p>It is expected that models fill in the iterator with private data.
-For example, the <code>ListStore</code> model, which is internally a simple
-linked list, stores a list node in one of the pointers. The
-<code>TreeModelSort</code> stores an array and an offset in two of the
-pointers. Additionally, there is an integer field. This field is
-generally filled with a unique stamp per model. This stamp is for
-catching errors resulting from using invalid iterators with a model.</p>
-
-<p>The lifecycle of an iterator can be a little confusing at first.
-Iterators are expected to always be valid for as long as the model
-is unchanged (and doesn’t emit a signal). The model is considered
-to own all outstanding iterators and nothing needs to be done to
-free them from the user’s point of view. Additionally, some models
-guarantee that an iterator is valid for as long as the node it refers
-to is valid (most notably the <code>TreeStore</code> and <code>ListStore</code>).
-Although generally uninteresting, as one always has to allow for
-the case where iterators do not persist beyond a signal, some very
-important performance enhancements were made in the sort model.
-As a result, the <code>TreeModelFlags::ItersPersist</code> flag was added to
-indicate this behavior.</p>
-
-<p>To help show some common operation of a model, some examples are
-provided. The first example shows three ways of getting the iter at
-the location <code>3:2:5</code>. While the first method shown is
-easier, the second is much more common, as you often get paths from
-callbacks.</p>
-
-<h2 id='acquiring-a-treeiter-struct' class='section-header'><a href='#acquiring-a-treeiter-struct'>Acquiring a <code>TreeIter</code>-struct</a></h2>
-<pre><code class="language-C">// Three ways of getting the iter pointing to the location
-GtkTreePath *path;
-GtkTreeIter iter;
-GtkTreeIter parent_iter;
-
-// get the iterator from a string
-gtk_tree_model_get_iter_from_string (model,
-                                     &amp;iter,
-                                     &quot;3:2:5&quot;);
-
-// get the iterator from a path
-path = gtk_tree_path_new_from_string (&quot;3:2:5&quot;);
-gtk_tree_model_get_iter (model, &amp;iter, path);
-gtk_tree_path_free (path);
-
-// walk the tree to find the iterator
-gtk_tree_model_iter_nth_child (model, &amp;iter,
-                               NULL, 3);
-parent_iter = iter;
-gtk_tree_model_iter_nth_child (model, &amp;iter,
-                               &amp;parent_iter, 2);
-parent_iter = iter;
-gtk_tree_model_iter_nth_child (model, &amp;iter,
-                               &amp;parent_iter, 5);
-</code></pre>
-
-<p>This second example shows a quick way of iterating through a list
-and getting a string and an integer from each row. The
-<code>populate_model</code> function used below is not
-shown, as it is specific to the <code>ListStore</code>. For information on
-how to write such a function, see the <code>ListStore</code> documentation.</p>
-
-<h2 id='reading-data-from-a-treemodel' class='section-header'><a href='#reading-data-from-a-treemodel'>Reading data from a <code>TreeModel</code></a></h2>
-<pre><code class="language-C">enum
-{
-  STRING_COLUMN,
-  INT_COLUMN,
-  N_COLUMNS
-};
-
-...
-
-GtkTreeModel *list_store;
-GtkTreeIter iter;
-gboolean valid;
-gint row_count = 0;
-
-// make a new list_store
-list_store = gtk_list_store_new (N_COLUMNS,
-                                 G_TYPE_STRING,
-                                 G_TYPE_INT);
-
-// Fill the list store with data
-populate_model (list_store);
-
-// Get the first iter in the list, check it is valid and walk
-// through the list, reading each row.
-
-valid = gtk_tree_model_get_iter_first (list_store,
-                                       &amp;iter);
-while (valid)
- {
-   gchar *str_data;
-   gint   int_data;
-
-   // Make sure you terminate calls to gtk_tree_model_get() with a “-1” value
-   gtk_tree_model_get (list_store, &amp;iter,
-                       STRING_COLUMN, &amp;str_data,
-                       INT_COLUMN, &amp;int_data,
-                       -1);
-
-   // Do something with the data
-   g_print (&quot;Row %d: (%s,%d)\n&quot;,
-            row_count, str_data, int_data);
-   g_free (str_data);
-
-   valid = gtk_tree_model_iter_next (list_store,
-                                     &amp;iter);
-   row_count++;
- }
-</code></pre>
-
-<p>The <code>TreeModel</code> interface contains two methods for reference
-counting: <code>TreeModel::ref_node</code> and <code>TreeModel::unref_node</code>.
-These two methods are optional to implement. The reference counting
-is meant as a way for views to let models know when nodes are being
-displayed. <code>TreeView</code> will take a reference on a node when it is
-visible, which means the node is either in the toplevel or expanded.
-Being displayed does not mean that the node is currently directly
-visible to the user in the viewport. Based on this reference counting
-scheme a caching model, for example, can decide whether or not to cache
-a node based on the reference count. A file-system based model would
-not want to keep the entire file hierarchy in memory, but just the
-folders that are currently expanded in every current view.</p>
-
-<p>When working with reference counting, the following rules must be taken
-into account:</p>
-
-<ul>
-<li><p>Never take a reference on a node without owning a reference on its parent.
-This means that all parent nodes of a referenced node must be referenced
-as well.</p></li>
-<li><p>Outstanding references on a deleted node are not released. This is not
-possible because the node has already been deleted by the time the
-row-deleted signal is received.</p></li>
-<li><p>Models are not obligated to emit a signal on rows of which none of its
-siblings are referenced. To phrase this differently, signals are only
-required for levels in which nodes are referenced. For the root level
-however, signals must be emitted at all times (however the root level
-is always referenced when any view is attached).</p></li>
-</ul>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
-<p><a href="trait.TreeModelExt.html"><code>TreeModelExt</code></a></p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a></code></span><span class='out-of-band'></span></h3>
+<pre class='rust struct'>pub struct TreeModel(_, _);</pre>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
@@ -252,9 +63,9 @@ is always referenced when any view is attached).</p></li>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
-<div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
-<div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a></code></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
@@ -322,7 +133,6 @@ is always referenced when any view is attached).</p></li>
         window.rootPath = "../";
         window.currentCrate = "gtk";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["StackSidebar","A `StackSidebar` enables you to quickly and easily provide a consistent \"sidebar\" object for your user interface."]]});

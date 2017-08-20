@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["PixbufLoader","The `PixbufLoader` struct contains only private fields."]]});

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Arrow","`[Deprecated since 3.14]` `Arrow` should be used to draw simple arrows that need to point in one of the four cardinal directions (up, down, left, or right). The style of the arrow can be one of shadow in, shadow out, etched in, or etched out. Note that these directions and style types may be amended in versions of GTK+ to come."]]});

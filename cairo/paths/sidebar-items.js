@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["PathSegment",""]],"struct":[["Path","Paths are the most basic drawing tools and are primarily used to implicitly generate simple masks."],["PathSegments",""]]});

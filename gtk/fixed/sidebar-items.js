@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Fixed","The `Fixed` widget is a container which can place child widgets at fixed positions and with fixed sizes, given in pixels. `Fixed` performs no automatic layout management."]]});
