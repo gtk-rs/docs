@@ -49,44 +49,175 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct IconTheme(_, _);</pre>
-                    <h2 id='methods' class='section-header'>
-                      <a href='#methods'>Methods</a>
-                    </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#34-62' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span></h4>
-<h4 id='method.add_builtin_icon' class="method"><span id='add_builtin_icon.v' class='invisible'><code>fn <a href='#method.add_builtin_icon' class='fnname'>add_builtin_icon</a>(icon_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, pixbuf: &amp;<a class="struct" href="../gdk_pixbuf/pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::pixbuf::Pixbuf">Pixbuf</a>)</code></span></h4>
-<h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>fn <a href='#method.get_default' class='fnname'>get_default</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a>&gt;</code></span></h4>
-<h4 id='method.get_for_screen' class="method"><span id='get_for_screen.v' class='invisible'><code>fn <a href='#method.get_for_screen' class='fnname'>get_for_screen</a>(screen: &amp;<a class="struct" href="../gdk/auto/screen/struct.Screen.html" title="struct gdk::auto::screen::Screen">Screen</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a>&gt;</code></span></h4>
+<pre class='rust struct'>pub struct IconTheme(_, _);</pre><div class='docblock'><p><code>IconTheme</code> provides a facility for looking up icons by name
+and size. The main reason for using a name rather than simply
+providing a filename is to allow different icons to be used
+depending on what “icon theme” is selected
+by the user. The operation of icon themes on Linux and Unix
+follows the <a href="http://www.freedesktop.org/Standards/icon-theme-spec">Icon Theme Specification</a>
+There is a fallback icon theme, named <code>hicolor</code>, where applications
+should install their icons, but additional icon themes can be installed
+as operating system vendors and users choose.</p>
+
+<p>Named icons are similar to the deprecated [Stock Items][gtkstock],
+and the distinction between the two may be a bit confusing.
+A few things to keep in mind:</p>
+
+<ul>
+<li><p>Stock images usually are used in conjunction with
+[Stock Items][gtkstock], such as <code>GTK_STOCK_OK</code> or
+<code>GTK_STOCK_OPEN</code>. Named icons are easier to set up and therefore
+are more useful for new icons that an application wants to
+add, such as application icons or window icons.</p></li>
+<li><p>Stock images can only be loaded at the symbolic sizes defined
+by the <code>IconSize</code> enumeration, or by custom sizes defined
+by <code>IconSize::register</code>, while named icons are more flexible
+and any pixel size can be specified.</p></li>
+<li><p>Because stock images are closely tied to stock items, and thus
+to actions in the user interface, stock images may come in
+multiple variants for different widget states or writing
+directions.</p></li>
+</ul>
+
+<p>A good rule of thumb is that if there is a stock image for what
+you want to use, use it, otherwise use a named icon. It turns
+out that internally stock images are generally defined in
+terms of one or more named icons. (An example of the
+more than one case is icons that depend on writing direction;
+<code>GTK_STOCK_GO_FORWARD</code> uses the two themed icons
+“gtk-stock-go-forward-ltr” and “gtk-stock-go-forward-rtl”.)</p>
+
+<p>In many cases, named themes are used indirectly, via <code>Image</code>
+or stock items, rather than directly, but looking up icons
+directly is also simple. The <code>IconTheme</code> object acts
+as a database of all the icons in the current theme. You
+can create new <code>IconTheme</code> objects, but it’s much more
+efficient to use the standard icon theme for the <code>gdk::Screen</code>
+so that the icon information is shared with other people
+looking up icons.</p>
+
+<pre><code class="language-C">GError *error = NULL;
+GtkIconTheme *icon_theme;
+GdkPixbuf *pixbuf;
+
+icon_theme = gtk_icon_theme_get_default ();
+pixbuf = gtk_icon_theme_load_icon (icon_theme,
+                                   &quot;my-icon-name&quot;, // icon name
+                                   48, // icon size
+                                   0,  // flags
+                                   &amp;error);
+if (!pixbuf)
+  {
+    g_warning (&quot;Couldn’t load icon: %s&quot;, error-&gt;message);
+    g_error_free (error);
+  }
+else
+  {
+    // Use the pixbuf
+    g_object_unref (pixbuf);
+  }
+</code></pre>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.IconThemeExt.html"><code>IconThemeExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
 </div>
-            <h2 id='implementations' class='section-header'>
-              <a href='#implementations'>Trait Implementations</a>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#107-195' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#117-122' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new icon theme object. Icon theme objects are used
+to lookup up an icon by name in a particular icon theme.
+Usually, you’ll want to use <code>IconTheme::get_default</code>
+or <code>IconTheme::get_for_screen</code> rather than creating
+a new icon theme object for scratch.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>the newly created <code>IconTheme</code> object.</p>
+</div><h4 id='method.add_builtin_icon' class="method"><span id='add_builtin_icon.v' class='invisible'><code>fn <a href='#method.add_builtin_icon' class='fnname'>add_builtin_icon</a>(icon_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, pixbuf: &amp;<a class="struct" href="../gdk_pixbuf/pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::pixbuf::Pixbuf">Pixbuf</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#149-154' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Registers a built-in icon for icon theme lookups. The idea
+of built-in icons is to allow an application or library
+that uses themed icons to function requiring files to
+be present in the file system. For instance, the default
+images for all of GTK+’s stock icons are registered
+as built-icons.</p>
+
+<p>In general, if you use <code>IconTheme::add_builtin_icon</code>
+you should also install the icon in the icon theme, so
+that the icon is generally available.</p>
+
+<p>This function will generally be used with pixbufs loaded
+via <code>gdk_pixbuf::Pixbuf::new_from_inline</code>.</p>
+
+<h1 id='deprecated-since-314' class='section-header'><a href='#deprecated-since-314'>Deprecated since 3.14</a></h1>
+<p>Use <code>IconThemeExt::add_resource_path</code>
+ to add application-specific icons to the icon theme.</p>
+
+<h2 id='icon_name' class='section-header'><a href='#icon_name'><code>icon_name</code></a></h2>
+<p>the name of the icon to register</p>
+
+<h2 id='size' class='section-header'><a href='#size'><code>size</code></a></h2>
+<p>the size in pixels at which to register the icon (different
+ images can be registered for the same icon name at different sizes.)</p>
+
+<h2 id='pixbuf' class='section-header'><a href='#pixbuf'><code>pixbuf</code></a></h2>
+<p><code>gdk_pixbuf::Pixbuf</code> that contains the image to use for <code>icon_name</code></p>
+</div><h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>fn <a href='#method.get_default' class='fnname'>get_default</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#165-170' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Gets the icon theme for the default screen. See
+<code>IconTheme::get_for_screen</code>.</p>
+
+<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<p>A unique <code>IconTheme</code> associated with
+ the default screen. This icon theme is associated with
+ the screen and can be used as long as the screen
+ is open. Do not ref or unref it.</p>
+</div><h4 id='method.get_for_screen' class="method"><span id='get_for_screen.v' class='invisible'><code>fn <a href='#method.get_for_screen' class='fnname'>get_for_screen</a>(screen: &amp;<a class="struct" href="../gdk/auto/screen/struct.Screen.html" title="struct gdk::auto::screen::Screen">Screen</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#189-194' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Gets the icon theme object associated with <code>screen</code>; if this
+function has not previously been called for the given
+screen, a new icon theme object will be created and
+associated with the screen. Icon theme objects are
+fairly expensive to create, so using this function
+is usually a better choice than calling than <code>IconTheme::new</code>
+and setting the screen yourself; by using this function
+a single icon theme object will be shared between users.</p>
+
+<h2 id='screen' class='section-header'><a href='#screen'><code>screen</code></a></h2>
+<p>a <code>gdk::Screen</code></p>
+
+<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
+<p>A unique <code>IconTheme</code> associated with
+ the given screen. This icon theme is associated with
+ the screen and can be used as long as the screen
+ is open. Do not ref or unref it.</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
-        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'></span></h3>
+        <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
+</div></div><h3 id='impl-Hash' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Hash' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>__H)</code></span></h4>
 <div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/hash/mod.rs.html#202-208' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-StaticType' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-StaticType' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+</div></div><h3 id='impl-PartialEq&lt;T&gt;' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-PartialEq&lt;T&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
-</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#121' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#64-68' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span></h4>
+</div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Object&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-IsA&lt;Object&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#197-201' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#198-200' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>

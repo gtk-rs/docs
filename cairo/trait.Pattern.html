@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/cairo/patterns.rs.html#50-129' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/cairo/patterns.rs.html#50-154' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Pattern {
     fn <a href='#method.ensure_status' class='fnname'>ensure_status</a>(&amp;self) { ... }
 <div class='item-spacer'></div>    fn <a href='#method.status' class='fnname'>status</a>(&amp;self) -&gt; <a class="enum" href="../cairo/enum.Status.html" title="enum cairo::Status">Status</a> { ... }
@@ -60,8 +60,8 @@
 <div class='item-spacer'></div>    fn <a href='#method.set_matrix' class='fnname'>set_matrix</a>(&amp;self, matrix: <a class="struct" href="../cairo/struct.Matrix.html" title="struct cairo::Matrix">Matrix</a>) { ... }
 <div class='item-spacer'></div>    fn <a href='#method.get_matrix' class='fnname'>get_matrix</a>(&amp;self) -&gt; <a class="struct" href="../cairo/struct.Matrix.html" title="struct cairo::Matrix">Matrix</a> { ... }
 }</pre>
-            <h2 id='provided-methods' class='section-header'>
-              <a href='#provided-methods'>Provided Methods</a>
+            <h2 id='provided-methods' class='small-section-header'>
+              Provided Methods<a href='#provided-methods' class='anchor'></a>
             </h2>
             <div class='methods'>
         <h3 id='method.ensure_status' class='method'><span id='ensure_status.v' class='invisible'><code>fn <a href='#method.ensure_status' class='fnname'>ensure_status</a>(&amp;self)</code></span></h3><h3 id='method.status' class='method'><span id='status.v' class='invisible'><code>fn <a href='#method.status' class='fnname'>status</a>(&amp;self) -&gt; <a class="enum" href="../cairo/enum.Status.html" title="enum cairo::Status">Status</a></code></span></h3><div class='docblock'><p>Checks whether an error has previously occurred for this pattern.</p>
@@ -85,9 +85,31 @@ creates implicitly. For example:</p>
 <span class="ident">Context</span>::<span class="ident">set_source_surface</span>(<span class="ident">image</span>, <span class="ident">x</span>, <span class="ident">y</span>);
 <span class="ident">p</span>.<span class="ident">set_filter</span>(<span class="ident">Filter</span>::<span class="ident">nearest</span>);</pre>
 </div><h3 id='method.get_filter' class='method'><span id='get_filter.v' class='invisible'><code>fn <a href='#method.get_filter' class='fnname'>get_filter</a>(&amp;self) -&gt; <a class="enum" href="../cairo/enum.Filter.html" title="enum cairo::Filter">Filter</a></code></span></h3><div class='docblock'><p>Gets the current filter for a pattern. See Filter enum for details on each filter.</p>
-</div><h3 id='method.set_matrix' class='method'><span id='set_matrix.v' class='invisible'><code>fn <a href='#method.set_matrix' class='fnname'>set_matrix</a>(&amp;self, matrix: <a class="struct" href="../cairo/struct.Matrix.html" title="struct cairo::Matrix">Matrix</a>)</code></span></h3><h3 id='method.get_matrix' class='method'><span id='get_matrix.v' class='invisible'><code>fn <a href='#method.get_matrix' class='fnname'>get_matrix</a>(&amp;self) -&gt; <a class="struct" href="../cairo/struct.Matrix.html" title="struct cairo::Matrix">Matrix</a></code></span></h3></div>
-        <h2 id='implementors' class='section-header'>
-          <a href='#implementors'>Implementors</a>
+</div><h3 id='method.set_matrix' class='method'><span id='set_matrix.v' class='invisible'><code>fn <a href='#method.set_matrix' class='fnname'>set_matrix</a>(&amp;self, matrix: <a class="struct" href="../cairo/struct.Matrix.html" title="struct cairo::Matrix">Matrix</a>)</code></span></h3><div class='docblock'><p>Sets the pattern&#39;s transformation matrix, which is a transformation
+from user space to pattern space.</p>
+
+<p>When a pattern is first created it always has the identity matrix for
+its transformation matrix, which means that pattern space is initially
+identical to user space.</p>
+
+<p>Note that the direction of this transformation matrix is from user
+space to pattern space.  This means that if you imagine the flow from
+a pattern to user space (and on to device space), then coordinates
+inthat flow will be transformed by the inverse of the pattern matrix.</p>
+
+<p>For example, if you want to make a pattern appear twice as large as it
+does by default, you should use this code:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">cairo</span>::{<span class="ident">Matrix</span>, <span class="ident">MatrixTrait</span>};
+
+<span class="kw">let</span> <span class="ident">matrix</span> <span class="op">=</span> <span class="ident">Matrix</span>::<span class="ident">identity</span>().<span class="ident">scale</span> (<span class="number">0.5</span>, <span class="number">0.5</span>);
+<span class="ident">my_pattern</span>.<span class="ident">set_matrix</span> (<span class="ident">matrix</span>);</pre>
+</div><h3 id='method.get_matrix' class='method'><span id='get_matrix.v' class='invisible'><code>fn <a href='#method.get_matrix' class='fnname'>get_matrix</a>(&amp;self) -&gt; <a class="struct" href="../cairo/struct.Matrix.html" title="struct cairo::Matrix">Matrix</a></code></span></h3><div class='docblock'><p>Gets the current transformation matrix for a pattern.  See the
+documentation for <a href="#tymethod.set_matrix"><code>set_matrix()</code></a> for the details on this matrix.</p>
+</div></div>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
         </h2>
         <ul class='item-list' id='implementors-list'>
     <li><code>impl Pattern for <a class="struct" href="../cairo/struct.SolidPattern.html" title="struct cairo::SolidPattern">SolidPattern</a></code></li>

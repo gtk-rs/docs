@@ -218,7 +218,7 @@ All parts of the dialog are optional.</p>
                            <td class='docblock-short'>
                                 <p>A <code>AccelGroup</code> represents a group of keyboard accelerators,
 typically attached to a toplevel <code>Window</code> (with
-<code>Window::add_accel_group</code>). Usually you won’t need to create a
+<code>GtkWindowExt::add_accel_group</code>). Usually you won’t need to create a
 <code>AccelGroup</code> directly; instead, when using <code>UIManager</code>, GTK+
 automatically sets up the accelerators for your menus in the ui
 manager’s <code>AccelGroup</code>.</p>
@@ -247,9 +247,8 @@ actions on a <code>ApplicationWindow</code> or <code>Application</code>.</p>
                            <td class='docblock-short'>
                                 <p>The <code>Adjustment</code> object represents a value which has an associated lower
 and upper bound, together with step and page increments, and a page size.
-It is used within several GTK+ widgets, including
-<code>SpinButton</code>, <code>Viewport</code>, and <code>Range</code> (which is a base class for
-<code>HScrollbar</code>, <code>VScrollbar</code>, <code>HScale</code>, and <code>VScale</code>).</p>
+It is used within several GTK+ widgets, including <code>SpinButton</code>, <code>Viewport</code>,
+and <code>Range</code> (which is a base class for <code>Scrollbar</code> and <code>Scale</code>).</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -264,7 +263,8 @@ It has four settings: xscale, yscale, xalign, and yalign.</p>
                            <td><a class="struct" href="struct.Allocation.html"
                                   title='struct gtk::Allocation'>Allocation</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Defines the position and size of a rectangle. It is identical to
+<code>cairo::RectangleInt</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -317,8 +317,8 @@ a one-size-fits-all application model.</p>
                                 <p><code>ApplicationWindow</code> is a <code>Window</code> subclass that offers some
 extra functionality for better integration with <code>Application</code>
 features. Notably, it can handle both the application menu as well
-as the menubar. See <code>Application::set_app_menu</code> and
-<code>Application::set_menubar</code>.</p>
+as the menubar. See <code>GtkApplicationExt::set_app_menu</code> and
+<code>GtkApplicationExt::set_menubar</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -349,7 +349,9 @@ a frame around the child. The frame will be
                            <td><a class="struct" href="struct.Assistant.html"
                                   title='struct gtk::Assistant'>Assistant</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>A <code>Assistant</code> is a widget used to represent a generally complex
+operation splitted in several steps, guiding the user through its
+pages and controlling the page flow to collect the necessary data.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -665,8 +667,7 @@ with a <code>Image</code> widget.</p>
                                   title='struct gtk::CssProvider'>CssProvider</a></td>
                            <td class='docblock-short'>
                                 <p><code>CssProvider</code> is an object implementing the <code>StyleProvider</code> interface.
-It is able to parse <a href="http://www.w3.org/TR/CSS2">CSS-like</a>
-input in order to style widgets.</p>
+It is able to parse [CSS-like][css-overview] input in order to style widgets.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -800,7 +801,12 @@ interface.</p>
                            <td><a class="struct" href="struct.FileChooserButton.html"
                                   title='struct gtk::FileChooserButton'>FileChooserButton</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>The <code>FileChooserButton</code> is a widget that lets the user select a
+file. It implements the <code>FileChooser</code> interface. Visually, it is a
+file name with a button to bring up a <code>FileChooserDialog</code>.
+The user can then use that dialog to change the file associated with
+that button. This widget does not support setting the
+<code>FileChooser:select-multiple</code> property to <code>true</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -831,9 +837,9 @@ widget.</p>
                            <td class='docblock-short'>
                                 <p>A <code>FileFilter</code> can be used to restrict the files being shown in a
 <code>FileChooser</code>. Files can be filtered based on their name (with
-<code>FileFilter::add_pattern</code>), on their mime type (with
-<code>FileFilter::add_mime_type</code>), or by a custom filter function
-(with <code>FileFilter::add_custom</code>).</p>
+<code>FileFilterExt::add_pattern</code>), on their mime type (with
+<code>FileFilterExt::add_mime_type</code>), or by a custom filter function
+(with <code>FileFilterExt::add_custom</code>).</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -883,7 +889,8 @@ It is suitable widget for selecting a font in a preference dialog.</p>
                                 <p><code>FontChooser</code> is an interface that can be implemented by widgets
 displaying the list of fonts. In GTK+, the main objects
 that implement this interface are <code>FontChooserWidget</code>,
-<code>FontChooserDialog</code> and <code>FontButton</code>.</p>
+<code>FontChooserDialog</code> and <code>FontButton</code>. The <code>FontChooser</code> interface
+has been introducted in GTK+ 3.2.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -908,11 +915,10 @@ dialog box for selecting fonts.</p>
                            <td><a class="struct" href="struct.Frame.html"
                                   title='struct gtk::Frame'>Frame</a></td>
                            <td class='docblock-short'>
-                                <p>The frame widget is a Bin that surrounds its child
-with a decorative frame and an optional label.
-If present, the label is drawn in a gap in the
-top side of the frame. The position of the
-label can be controlled with <code>FrameExt::set_label_align</code>.</p>
+                                <p>The frame widget is a bin that surrounds its child with a decorative
+frame and an optional label. If present, the label is drawn in a gap
+in the top side of the frame. The position of the label can be
+controlled with <code>FrameExt::set_label_align</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -938,8 +944,8 @@ the special <code>None</code> <code>gdk::EventSequence</code> value for these).<
                            <td class='docblock-short'>
                                 <p><code>GestureDrag</code> is a <code>Gesture</code> implementation that recognizes drag
 operations. The drag operation itself can be tracked throught the
-<code>GestureDrag:drag-begin</code>, <code>GestureDrag:drag-update</code> and
-<code>GestureDrag:drag-end</code> signals, or the relevant coordinates be
+<code>GestureDrag::drag-begin</code>, <code>GestureDrag::drag-update</code> and
+<code>GestureDrag::drag-end</code> signals, or the relevant coordinates be
 extracted through <code>GestureDragExt::get_offset</code> and
 <code>GestureDragExt::get_start_point</code>.</p>
                            </td>
@@ -972,7 +978,7 @@ and the click counter is reset.</p>
 pan gestures, those are drags that are locked to happen along one
 axis. The axis that a <code>GesturePan</code> handles is defined at
 construct time, and can be changed through
-<code>GesturePan::set_orientation</code>.</p>
+<code>GesturePanExt::set_orientation</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1037,14 +1043,16 @@ the width of the box, even if the children at either side take up
 different amounts of space. The height of the titlebar will be
 set to provide sufficient space for the subtitle, even if none is
 currently set. If a subtitle is not needed, the space reservation
-can be turned off with <code>HeaderBar::set_has_subtitle</code>.</p>
+can be turned off with <code>HeaderBarExt::set_has_subtitle</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="struct" href="struct.IMContext.html"
                                   title='struct gtk::IMContext'>IMContext</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>IMContext</code> defines the interface for GTK+ input methods. An input method
+is used by GTK+ text input widgets like <code>Entry</code> to map from key events to
+Unicode character strings.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1058,14 +1066,25 @@ can be turned off with <code>HeaderBar::set_has_subtitle</code>.</p>
                            <td><a class="struct" href="struct.IconFactory.html"
                                   title='struct gtk::IconFactory'>IconFactory</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>[Deprecated since 3.10]</code> An icon factory manages a collection of <code>IconSet</code>; a <code>IconSet</code> manages a
+set of variants of a particular icon (i.e. a <code>IconSet</code> contains variants for
+different sizes and widget states). Icons in an icon factory are named by a
+stock ID, which is a simple string identifying the icon. Each <code>Style</code> has a
+list of <code>IconFactory</code> derived from the current theme; those icon factories
+are consulted first when searching for an icon. If the theme doesn’t set a
+particular icon, GTK+ looks for the icon in a list of default icon factories,
+maintained by <code>IconFactoryExt::add_default</code> and
+<code>IconFactoryExt::remove_default</code>. Applications with icons should add a default
+icon factory with their icons, which will allow themes to override the icons
+for the application.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="struct" href="struct.IconInfo.html"
                                   title='struct gtk::IconInfo'>IconInfo</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Contains information found when looking up an icon in
+an icon theme.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1093,7 +1112,15 @@ can be turned off with <code>HeaderBar::set_has_subtitle</code>.</p>
                            <td><a class="struct" href="struct.IconTheme.html"
                                   title='struct gtk::IconTheme'>IconTheme</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>IconTheme</code> provides a facility for looking up icons by name
+and size. The main reason for using a name rather than simply
+providing a filename is to allow different icons to be used
+depending on what “icon theme” is selected
+by the user. The operation of icon themes on Linux and Unix
+follows the <a href="http://www.freedesktop.org/Standards/icon-theme-spec">Icon Theme Specification</a>
+There is a fallback icon theme, named <code>hicolor</code>, where applications
+should install their icons, but additional icon themes can be installed
+as operating system vendors and users choose.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1103,7 +1130,7 @@ can be turned off with <code>HeaderBar::set_has_subtitle</code>.</p>
                                 <p><code>IconView</code> provides an alternative view on a <code>TreeModel</code>.
 It displays the model as a grid of icons with labels. Like
 <code>TreeView</code>, it allows to select one or multiple items
-(depending on the selection mode, see <code>IconView::set_selection_mode</code>).
+(depending on the selection mode, see <code>IconViewExt::set_selection_mode</code>).
 In addition to selection with the arrow keys, <code>IconView</code> supports
 rubberband selection, which is controlled by dragging the pointer.</p>
                            </td>
@@ -1171,12 +1198,10 @@ implies, most labels are used to label another widget such as a
                            <td><a class="struct" href="struct.Layout.html"
                                   title='struct gtk::Layout'>Layout</a></td>
                            <td class='docblock-short'>
-                                <p><code>Layout</code> is similar to <code>DrawingArea</code> in that it’s a “blank slate”
-and doesn’t do anything but paint a blank background by default. It&#39;s
-different in that it supports scrolling natively (you can add it to a
-<code>ScrolledWindow</code>), and it can contain child widgets, since it’s a
-<code>Container</code>. However if you’re just going to draw, a <code>DrawingArea</code>
-is a better choice since it has lower overhead.</p>
+                                <p><code>Layout</code> is similar to <code>DrawingArea</code> in that it’s a “blank slate” and
+doesn’t do anything except paint a blank background by default. It’s
+different in that it supports scrolling natively due to implementing
+<code>Scrollable</code>, and can contain child widgets since it’s a <code>Container</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1302,7 +1327,12 @@ is used to derive subclasses which have alignment and padding attributes.</p>
                            <td><a class="struct" href="struct.ModelButton.html"
                                   title='struct gtk::ModelButton'>ModelButton</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>ModelButton</code> is a button class that can use a <code>gio::Action</code> as its model.
+In contrast to <code>ToggleButton</code> or <code>RadioButton</code>, which can also
+be backed by a <code>gio::Action</code> via the <code>Actionable:action-name</code> property,
+<code>ModelButton</code> will adapt its appearance according to the kind of
+action it is backed by, and appear either as a plain, check or
+radio button.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1337,14 +1367,14 @@ to “flip”.</p>
                                   title='struct gtk::Overlay'>Overlay</a></td>
                            <td class='docblock-short'>
                                 <p><code>Overlay</code> is a container which contains a single main child, on top
-of which it can place “overlay” widgets. The
-position of each overlay widget is determined by its <code>Widget:halign</code>
-and <code>Widget:valign</code> properties. E.g. a widget with both alignments
-set to <code>Align::Start</code> will be placed at the top left corner of the
-main widget, whereas an overlay with halign set to <code>Align::Center</code>
-and valign set to <code>Align::End</code> will be placed a the bottom edge of
-the main widget, horizontally centered. The position can be adjusted
-by setting the margin properties of the child to non-zero values.</p>
+of which it can place “overlay” widgets. The position of each overlay
+widget is determined by its <code>Widget:halign</code> and <code>Widget:valign</code>
+properties. E.g. a widget with both alignments set to <code>Align::Start</code>
+will be placed at the top left corner of the <code>Overlay</code> container,
+whereas an overlay with halign set to <code>Align::Center</code> and valign set
+to <code>Align::End</code> will be placed a the bottom edge of the <code>Overlay</code>,
+horizontally centered. The position can be adjusted by setting the margin
+properties of the child to non-zero values.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1414,7 +1444,7 @@ behavior can be changed through <code>PopoverExt::set_pointing_to</code>.</p>
                                   title='struct gtk::PopoverMenu'>PopoverMenu</a></td>
                            <td class='docblock-short'>
                                 <p><code>PopoverMenu</code> is a subclass of <code>Popover</code> that treats its
-childen like menus and allows switching between them. It is
+children like menus and allows switching between them. It is
 meant to be used primarily together with <code>ModelButton</code>, but
 any widget can be used, such as <code>SpinButton</code> or <code>Scale</code>.
 In this respect, <code>PopoverMenu</code> is more flexible than popovers
@@ -1425,7 +1455,11 @@ that are created from a <code>gio::MenuModel</code> with <code>Popover::new_from
                            <td><a class="struct" href="struct.PrintContext.html"
                                   title='struct gtk::PrintContext'>PrintContext</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>A <code>PrintContext</code> encapsulates context information that is required when
+drawing pages for printing, such as the cairo context and important
+parameters like page size and resolution. It also lets you easily
+create <code>pango::Layout</code> and <code>pango::Context</code> objects that match the font metrics
+of the cairo surface.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1444,9 +1478,9 @@ that the user doesn’t have to re-set all his settings.</p>
                                   title='struct gtk::ProgressBar'>ProgressBar</a></td>
                            <td class='docblock-short'>
                                 <p>The <code>ProgressBar</code> is typically used to display the progress of a long
-running operation. It provides a visual clue that processing
-is underway. The <code>ProgressBar</code> can be used in two different
-modes: percentage mode and activity mode.</p>
+running operation. It provides a visual clue that processing is underway.
+The <code>ProgressBar</code> can be used in two different modes: percentage mode
+and activity mode.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1463,7 +1497,8 @@ interface component in their own right.</p>
                            <td><a class="struct" href="struct.RadioMenuItem.html"
                                   title='struct gtk::RadioMenuItem'>RadioMenuItem</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>A radio menu item is a check menu item that belongs to a group. At each
+instant exactly one of the radio menu items from a group is selected.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1509,7 +1544,7 @@ applications will only need to use the latter; you can use
                            <td><a class="struct" href="struct.RecentData.html"
                                   title='struct gtk::RecentData'>RecentData</a></td>
                            <td class='docblock-short'>
-                                <p>Meta-data to be passed to <code>RecentManager::add_full</code> when
+                                <p>Meta-data to be passed to <code>RecentManagerExt::add_full</code> when
 registering a recently used resource.</p>
                            </td>
                        </tr>
@@ -1519,10 +1554,10 @@ registering a recently used resource.</p>
                            <td class='docblock-short'>
                                 <p>A <code>RecentFilter</code> can be used to restrict the files being shown
 in a <code>RecentChooser</code>. Files can be filtered based on their name
-(with <code>RecentFilter::add_pattern</code>), on their mime type (with
-<code>FileFilter::add_mime_type</code>), on the application that has
-registered them (with <code>RecentFilter::add_application</code>), or by
-a custom filter function (with <code>RecentFilter::add_custom</code>).</p>
+(with <code>RecentFilterExt::add_pattern</code>), on their mime type (with
+<code>FileFilterExt::add_mime_type</code>), on the application that has
+registered them (with <code>RecentFilterExt::add_application</code>), or by
+a custom filter function (with <code>RecentFilterExt::add_custom</code>).</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1558,7 +1593,8 @@ registered it.</p>
                            <td><a class="struct" href="struct.Rectangle.html"
                                   title='struct gtk::Rectangle'>Rectangle</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Defines the position and size of a rectangle. It is identical to
+<code>cairo::RectangleInt</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1627,10 +1663,9 @@ depending on the value of the <code>Orientable:orientation</code> property.</p>
                            <td><a class="struct" href="struct.ScrolledWindow.html"
                                   title='struct gtk::ScrolledWindow'>ScrolledWindow</a></td>
                            <td class='docblock-short'>
-                                <p><code>ScrolledWindow</code> is a <code>Bin</code> subclass: it’s a container
-the accepts a single child widget. <code>ScrolledWindow</code> adds scrollbars
-to the child widget and optionally draws a beveled frame around the
-child widget.</p>
+                                <p><code>ScrolledWindow</code> is a container that accepts a single child widget, makes
+that child scrollable using either internally added scrollbars or externally
+associated adjustments, and optionally draws a frame around the child.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1698,7 +1733,10 @@ applications.</p>
                            <td><a class="struct" href="struct.ShortcutsWindow.html"
                                   title='struct gtk::ShortcutsWindow'>ShortcutsWindow</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>A <code>ShortcutsWindow</code> shows brief information about the keyboard shortcuts
+and gestures of an application. The shortcuts can be grouped, and you can
+have multiple sections in this window, corresponding to the major modes of
+your application.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1808,7 +1846,9 @@ a widget defined by <code>WidgetPath</code>.</p>
                            <td><a class="struct" href="struct.StyleProperties.html"
                                   title='struct gtk::StyleProperties'>StyleProperties</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>[Deprecated since 3.16]</code> <code>StyleProperties</code> provides the storage for style information
+that is used by <code>StyleContext</code> and other <code>StyleProvider</code>
+implementations.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1816,7 +1856,7 @@ a widget defined by <code>WidgetPath</code>.</p>
                                   title='struct gtk::StyleProvider'>StyleProvider</a></td>
                            <td class='docblock-short'>
                                 <p><code>StyleProvider</code> is an interface used to provide style information to a <code>StyleContext</code>.
-See <code>StyleContext::add_provider</code> and <code>StyleContext::add_provider_for_screen</code>.</p>
+See <code>StyleContextExt::add_provider</code> and <code>StyleContext::add_provider_for_screen</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1832,14 +1872,23 @@ handle.</p>
                            <td><a class="struct" href="struct.SymbolicColor.html"
                                   title='struct gtk::SymbolicColor'>SymbolicColor</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>[Deprecated since 3.8]</code> <code>SymbolicColor</code> is a boxed type that represents a symbolic color.
+It is the result of parsing a
+[color expression][gtkcssprovider-symbolic-colors].
+To obtain the color represented by a <code>SymbolicColor</code>, it has to
+be resolved with <code>SymbolicColor::resolve</code>, which replaces all
+symbolic color references by the colors they refer to (in a given
+context) and evaluates mix, shade and other expressions, resulting
+in a <code>gdk::RGBA</code> value.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="struct" href="struct.TargetEntry.html"
                                   title='struct gtk::TargetEntry'>TargetEntry</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>A <code>TargetEntry</code> represents a single type of
+data than can be supplied for by a widget for a selection
+or for supplied or received during drag-and-drop.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1853,7 +1902,9 @@ handle.</p>
                            <td><a class="struct" href="struct.TargetList.html"
                                   title='struct gtk::TargetList'>TargetList</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>A <code>TargetList</code>-struct is a reference counted list
+of <code>TargetPair</code> and should be treated as
+opaque.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -2019,8 +2070,8 @@ information when embedding <code>ToolItem</code> widgets.</p>
                            <td><a class="struct" href="struct.Tooltip.html"
                                   title='struct gtk::Tooltip'>Tooltip</a></td>
                            <td class='docblock-short'>
-                                <p>Basic tooltips can be realized simply by using <code>Widget::set_tooltip_text</code>
-or <code>Widget::set_tooltip_markup</code> without any explicit tooltip object.</p>
+                                <p>Basic tooltips can be realized simply by using <code>WidgetExt::set_tooltip_text</code>
+or <code>WidgetExt::set_tooltip_markup</code> without any explicit tooltip object.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -2094,7 +2145,7 @@ to sort the model.</p>
                                   title='struct gtk::TreeStore'>TreeStore</a></td>
                            <td class='docblock-short'>
                                 <p>The <code>TreeStore</code> object is a list model for use with a <code>TreeView</code>
-widget. It implements the <code>TreeModel</code> interface, and consequentialy,
+widget. It implements the <code>TreeModel</code> interface, and consequentially,
 can use all of the methods available there. It also implements the
 <code>TreeSortable</code> interface so it can be sorted by the view. Finally,
 it also implements the tree
@@ -2243,7 +2294,7 @@ contains.</p>
                            <td class='docblock-short'>
                                 <p>Prebuilt sets of buttons for the dialog. If
 none of these choices are appropriate, simply use <code>ButtonsType::None</code>
-then call <code>Dialog::add_buttons</code>.</p>
+then call <code>DialogExt::add_buttons</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -2397,8 +2448,8 @@ let the user choose another filename.</p>
                                 <p>Describes the image data representation used by a <code>Image</code>. If you
 want to get the image from the widget, you can only get the
 currently-stored representation. e.g. if the
-<code>Image::get_storage_type</code> returns <code>ImageType::Pixbuf</code>, then you can
-call <code>Image::get_pixbuf</code> but not <code>Image::get_stock</code>. For empty
+<code>ImageExt::get_storage_type</code> returns <code>ImageType::Pixbuf</code>, then you can
+call <code>ImageExt::get_pixbuf</code> but not <code>Image::get_stock</code>. For empty
 images, you can request any storage type (call any of the &quot;get&quot;
 functions), but they will all return <code>None</code> values.</p>
                            </td>
@@ -2501,7 +2552,7 @@ and menuitems contained in menubars.</p>
                            <td><a class="enum" href="enum.PageOrientation.html"
                                   title='enum gtk::PageOrientation'>PageOrientation</a></td>
                            <td class='docblock-short'>
-                                <p>See also <code>PrintSettings::set_orientation</code>.</p>
+                                <p>See also <code>PrintSettingsExt::set_orientation</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -2530,7 +2581,8 @@ visibility mode for the scrollbars.</p>
                            <td><a class="enum" href="enum.PopoverConstraint.html"
                                   title='enum gtk::PopoverConstraint'>PopoverConstraint</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Describes constraints to positioning of popovers. More values
+may be added to this enumeration in the future.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -2546,7 +2598,7 @@ tabs of a <code>Notebook</code>, the handle of a <code>HandleBox</code> or the l
                            <td><a class="enum" href="enum.PrintDuplex.html"
                                   title='enum gtk::PrintDuplex'>PrintDuplex</a></td>
                            <td class='docblock-short'>
-                                <p>See also <code>PrintSettings::set_duplex</code>.</p>
+                                <p>See also <code>PrintSettingsExt::set_duplex</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -2568,7 +2620,7 @@ using the GTK+ printing support.</p>
                            <td><a class="enum" href="enum.PrintQuality.html"
                                   title='enum gtk::PrintQuality'>PrintQuality</a></td>
                            <td class='docblock-short'>
-                                <p>See also <code>PrintSettings::set_quality</code>.</p>
+                                <p>See also <code>PrintSettingsExt::set_quality</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -2712,7 +2764,7 @@ width-for-height geometry management.</p>
                            <td class='docblock-short'>
                                 <p>The spin button update policy determines whether the spin button displays
 values even if they are outside the bounds of its adjustment.
-See <code>SpinButton::set_update_policy</code>.</p>
+See <code>SpinButtonExt::set_update_policy</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -2720,7 +2772,7 @@ See <code>SpinButton::set_update_policy</code>.</p>
                                   title='enum gtk::SpinType'>SpinType</a></td>
                            <td class='docblock-short'>
                                 <p>The values of the <code>SpinType</code> enumeration are used to specify the
-change to make in <code>SpinButton::spin</code>.</p>
+change to make in <code>SpinButtonExt::spin</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -2808,7 +2860,7 @@ can make columns appear choppy.</p>
                            <td><a class="enum" href="enum.Unit.html"
                                   title='enum gtk::Unit'>Unit</a></td>
                            <td class='docblock-short'>
-                                <p>See also <code>PrintSettings::set_paper_width</code>.</p>
+                                <p>See also <code>PrintSettingsExt::set_paper_width</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -2834,7 +2886,7 @@ It won’t necessarily work well with all window managers or on all windowing sy
                                 <p>A <code>Window</code> can be one of these types. Most things you’d consider a
 “window” should have type <code>WindowType::Toplevel</code>; windows with this type
 are managed by the window manager and have a frame by default (call
-<code>WindowExt::set_decorated</code> to toggle the frame). Windows with type
+<code>GtkWindowExt::set_decorated</code> to toggle the frame). Windows with type
 <code>WindowType::Popup</code> are ignored by the window manager; window manager
 keybindings won’t work on them, the window manager won’t decorate the
 window with a frame, many GTK+ features that rely on the window
@@ -2843,7 +2895,7 @@ maximization/minimization). <code>WindowType::Popup</code> is used to implement
 widgets such as <code>Menu</code> or tooltips that you normally don’t think of
 as windows per se. Nearly all windows should be <code>WindowType::Toplevel</code>.
 In particular, do not use <code>WindowType::Popup</code> just to turn off
-the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
+the window borders; use <code>GtkWindowExt::set_decorated</code> for that.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3601,21 +3653,21 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.AboutDialogExt.html"
                                   title='trait gtk::AboutDialogExt'>AboutDialogExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>AboutDialog</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.AccelGroupExt.html"
                                   title='trait gtk::AccelGroupExt'>AccelGroupExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>AccelGroup</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ActionBarExt.html"
                                   title='trait gtk::ActionBarExt'>ActionBarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ActionBar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3629,56 +3681,56 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.AdjustmentExt.html"
                                   title='trait gtk::AdjustmentExt'>AdjustmentExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Adjustment</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.AlignmentExt.html"
                                   title='trait gtk::AlignmentExt'>AlignmentExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>[Deprecated since 3.14]</code> Trait containing all <code>Alignment</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.AppChooserDialogExt.html"
                                   title='trait gtk::AppChooserDialogExt'>AppChooserDialogExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>AppChooserDialog</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.AppChooserWidgetExt.html"
                                   title='trait gtk::AppChooserWidgetExt'>AppChooserWidgetExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>AppChooserWidget</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ApplicationWindowExt.html"
                                   title='trait gtk::ApplicationWindowExt'>ApplicationWindowExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ApplicationWindow</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ArrowExt.html"
                                   title='trait gtk::ArrowExt'>ArrowExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>[Deprecated since 3.14]</code> Trait containing all <code>Arrow</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.AspectFrameExt.html"
                                   title='trait gtk::AspectFrameExt'>AspectFrameExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>AspectFrame</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.AssistantExt.html"
                                   title='trait gtk::AssistantExt'>AssistantExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Assistant</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3699,14 +3751,14 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.BuilderExt.html"
                                   title='trait gtk::BuilderExt'>BuilderExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Builder</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ButtonBoxExt.html"
                                   title='trait gtk::ButtonBoxExt'>ButtonBoxExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ButtonBox</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3720,7 +3772,7 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.CalendarExt.html"
                                   title='trait gtk::CalendarExt'>CalendarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Calendar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3734,14 +3786,14 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.CellAreaBoxExt.html"
                                   title='trait gtk::CellAreaBoxExt'>CellAreaBoxExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CellAreaBox</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.CellAreaContextExt.html"
                                   title='trait gtk::CellAreaContextExt'>CellAreaContextExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CellAreaContext</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3769,14 +3821,14 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.CellRendererAccelExt.html"
                                   title='trait gtk::CellRendererAccelExt'>CellRendererAccelExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CellRendererAccel</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.CellRendererComboExt.html"
                                   title='trait gtk::CellRendererComboExt'>CellRendererComboExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CellRendererCombo</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3790,28 +3842,28 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.CellRendererPixbufExt.html"
                                   title='trait gtk::CellRendererPixbufExt'>CellRendererPixbufExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CellRendererPixbuf</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.CellRendererProgressExt.html"
                                   title='trait gtk::CellRendererProgressExt'>CellRendererProgressExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CellRendererProgress</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.CellRendererSpinExt.html"
                                   title='trait gtk::CellRendererSpinExt'>CellRendererSpinExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CellRendererSpin</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.CellRendererSpinnerExt.html"
                                   title='trait gtk::CellRendererSpinnerExt'>CellRendererSpinnerExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CellRendererSpinner</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3825,35 +3877,35 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.CellRendererToggleExt.html"
                                   title='trait gtk::CellRendererToggleExt'>CellRendererToggleExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CellRendererToggle</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.CheckMenuItemExt.html"
                                   title='trait gtk::CheckMenuItemExt'>CheckMenuItemExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CheckMenuItem</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ClipboardExt.html"
                                   title='trait gtk::ClipboardExt'>ClipboardExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Clipboard</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ColorButtonExt.html"
                                   title='trait gtk::ColorButtonExt'>ColorButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ColorButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ColorChooserDialogExt.html"
                                   title='trait gtk::ColorChooserDialogExt'>ColorChooserDialogExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ColorChooserDialog</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3867,7 +3919,7 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.ColorChooserWidgetExt.html"
                                   title='trait gtk::ColorChooserWidgetExt'>ColorChooserWidgetExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ColorChooserWidget</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3881,7 +3933,7 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.ComboBoxTextExt.html"
                                   title='trait gtk::ComboBoxTextExt'>ComboBoxTextExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ComboBoxText</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3895,7 +3947,7 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.CssProviderExt.html"
                                   title='trait gtk::CssProviderExt'>CssProviderExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>CssProvider</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3923,7 +3975,7 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.EntryCompletionExt.html"
                                   title='trait gtk::EntryCompletionExt'>EntryCompletionExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>EntryCompletion</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3937,7 +3989,7 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.EventBoxExt.html"
                                   title='trait gtk::EventBoxExt'>EventBoxExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>EventBox</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3951,14 +4003,14 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.ExpanderExt.html"
                                   title='trait gtk::ExpanderExt'>ExpanderExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Expander</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.FileChooserButtonExt.html"
                                   title='trait gtk::FileChooserButtonExt'>FileChooserButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>FileChooserButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -3972,42 +4024,42 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.FileChooserWidgetExt.html"
                                   title='trait gtk::FileChooserWidgetExt'>FileChooserWidgetExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>FileChooserWidget</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.FileFilterExt.html"
                                   title='trait gtk::FileFilterExt'>FileFilterExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>FileFilter</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.FixedExt.html"
                                   title='trait gtk::FixedExt'>FixedExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Fixed</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.FlowBoxChildExt.html"
                                   title='trait gtk::FlowBoxChildExt'>FlowBoxChildExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>FlowBoxChild</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.FlowBoxExt.html"
                                   title='trait gtk::FlowBoxExt'>FlowBoxExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>FlowBox</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.FontButtonExt.html"
                                   title='trait gtk::FontButtonExt'>FontButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>FontButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4028,7 +4080,7 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.GLAreaExt.html"
                                   title='trait gtk::GLAreaExt'>GLAreaExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>GLArea</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4049,28 +4101,28 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.GestureLongPressExt.html"
                                   title='trait gtk::GestureLongPressExt'>GestureLongPressExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>GestureLongPress</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.GestureMultiPressExt.html"
                                   title='trait gtk::GestureMultiPressExt'>GestureMultiPressExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>GestureMultiPress</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.GesturePanExt.html"
                                   title='trait gtk::GesturePanExt'>GesturePanExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>GesturePan</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.GestureRotateExt.html"
                                   title='trait gtk::GestureRotateExt'>GestureRotateExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>GestureRotate</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4084,98 +4136,98 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.GestureSwipeExt.html"
                                   title='trait gtk::GestureSwipeExt'>GestureSwipeExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>GestureSwipe</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.GestureZoomExt.html"
                                   title='trait gtk::GestureZoomExt'>GestureZoomExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>GestureZoom</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.GridExt.html"
                                   title='trait gtk::GridExt'>GridExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Grid</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.GtkApplicationExt.html"
                                   title='trait gtk::GtkApplicationExt'>GtkApplicationExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Application</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.HeaderBarExt.html"
                                   title='trait gtk::HeaderBarExt'>HeaderBarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>HeaderBar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.IMContextExt.html"
                                   title='trait gtk::IMContextExt'>IMContextExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>IMContext</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.IMMulticontextExt.html"
                                   title='trait gtk::IMMulticontextExt'>IMMulticontextExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>IMMulticontext</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.IconFactoryExt.html"
                                   title='trait gtk::IconFactoryExt'>IconFactoryExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>[Deprecated since 3.10]</code> Trait containing all <code>IconFactory</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.IconInfoExt.html"
                                   title='trait gtk::IconInfoExt'>IconInfoExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>IconInfo</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.IconThemeExt.html"
                                   title='trait gtk::IconThemeExt'>IconThemeExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>IconTheme</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.IconViewExt.html"
                                   title='trait gtk::IconViewExt'>IconViewExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>IconView</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ImageExt.html"
                                   title='trait gtk::ImageExt'>ImageExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Image</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ImageMenuItemExt.html"
                                   title='trait gtk::ImageMenuItemExt'>ImageMenuItemExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>[Deprecated since 3.10]</code> Trait containing all <code>ImageMenuItem</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.InfoBarExt.html"
                                   title='trait gtk::InfoBarExt'>InfoBarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>InfoBar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4189,70 +4241,70 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.LabelExt.html"
                                   title='trait gtk::LabelExt'>LabelExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Label</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.LayoutExt.html"
                                   title='trait gtk::LayoutExt'>LayoutExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Layout</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.LevelBarExt.html"
                                   title='trait gtk::LevelBarExt'>LevelBarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>LevelBar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.LinkButtonExt.html"
                                   title='trait gtk::LinkButtonExt'>LinkButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>LinkButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ListBoxExt.html"
                                   title='trait gtk::ListBoxExt'>ListBoxExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ListBox</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ListBoxRowExt.html"
                                   title='trait gtk::ListBoxRowExt'>ListBoxRowExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ListBoxRow</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ListStoreExt.html"
                                   title='trait gtk::ListStoreExt'>ListStoreExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ListStore</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.MenuBarExt.html"
                                   title='trait gtk::MenuBarExt'>MenuBarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>MenuBar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.MenuButtonExt.html"
                                   title='trait gtk::MenuButtonExt'>MenuButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>MenuButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.MenuExt.html"
                                   title='trait gtk::MenuExt'>MenuExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Menu</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4273,14 +4325,14 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.MenuToolButtonExt.html"
                                   title='trait gtk::MenuToolButtonExt'>MenuToolButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>MenuToolButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.MessageDialogExt.html"
                                   title='trait gtk::MessageDialogExt'>MessageDialogExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>MessageDialog</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4294,14 +4346,14 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.ModelButtonExt.html"
                                   title='trait gtk::ModelButtonExt'>ModelButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ModelButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.NotebookExt.html"
                                   title='trait gtk::NotebookExt'>NotebookExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Notebook</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4315,28 +4367,28 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.OverlayExt.html"
                                   title='trait gtk::OverlayExt'>OverlayExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Overlay</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.PageSetupExt.html"
                                   title='trait gtk::PageSetupExt'>PageSetupExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>PageSetup</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.PanedExt.html"
                                   title='trait gtk::PanedExt'>PanedExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Paned</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.PlacesSidebarExt.html"
                                   title='trait gtk::PlacesSidebarExt'>PlacesSidebarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>PlacesSidebar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4350,42 +4402,42 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.PopoverMenuExt.html"
                                   title='trait gtk::PopoverMenuExt'>PopoverMenuExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>PopoverMenu</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.PrintContextExt.html"
                                   title='trait gtk::PrintContextExt'>PrintContextExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>PrintContext</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.PrintSettingsExt.html"
                                   title='trait gtk::PrintSettingsExt'>PrintSettingsExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>PrintSettings</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ProgressBarExt.html"
                                   title='trait gtk::ProgressBarExt'>ProgressBarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ProgressBar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.RadioButtonExt.html"
                                   title='trait gtk::RadioButtonExt'>RadioButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>RadioButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.RadioMenuItemExt.html"
                                   title='trait gtk::RadioMenuItemExt'>RadioMenuItemExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>RadioMenuItem</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4406,21 +4458,21 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.RecentFilterExt.html"
                                   title='trait gtk::RecentFilterExt'>RecentFilterExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>RecentFilter</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.RecentManagerExt.html"
                                   title='trait gtk::RecentManagerExt'>RecentManagerExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>RecentManager</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.RevealerExt.html"
                                   title='trait gtk::RevealerExt'>RevealerExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Revealer</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4434,7 +4486,7 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.ScaleExt.html"
                                   title='trait gtk::ScaleExt'>ScaleExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Scale</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4455,49 +4507,49 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.SearchBarExt.html"
                                   title='trait gtk::SearchBarExt'>SearchBarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>SearchBar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.SearchEntryExt.html"
                                   title='trait gtk::SearchEntryExt'>SearchEntryExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>SearchEntry</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.SeparatorToolItemExt.html"
                                   title='trait gtk::SeparatorToolItemExt'>SeparatorToolItemExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>SeparatorToolItem</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.SettingsExt.html"
                                   title='trait gtk::SettingsExt'>SettingsExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Settings</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ShortcutsWindowExt.html"
                                   title='trait gtk::ShortcutsWindowExt'>ShortcutsWindowExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ShortcutsWindow</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.SizeGroupExt.html"
                                   title='trait gtk::SizeGroupExt'>SizeGroupExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>SizeGroup</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.SpinButtonExt.html"
                                   title='trait gtk::SpinButtonExt'>SpinButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>SpinButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4511,28 +4563,28 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.SpinnerExt.html"
                                   title='trait gtk::SpinnerExt'>SpinnerExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Spinner</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.StackExt.html"
                                   title='trait gtk::StackExt'>StackExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Stack</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.StackSidebarExt.html"
                                   title='trait gtk::StackSidebarExt'>StackSidebarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>StackSidebar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.StackSwitcherExt.html"
                                   title='trait gtk::StackSwitcherExt'>StackSwitcherExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>StackSwitcher</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4546,28 +4598,28 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.StatusIconExt.html"
                                   title='trait gtk::StatusIconExt'>StatusIconExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>[Deprecated since 3.14]</code> Trait containing all <code>StatusIcon</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.StatusbarExt.html"
                                   title='trait gtk::StatusbarExt'>StatusbarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Statusbar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.StyleContextExt.html"
                                   title='trait gtk::StyleContextExt'>StyleContextExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>StyleContext</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.StylePropertiesExt.html"
                                   title='trait gtk::StylePropertiesExt'>StylePropertiesExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p><code>[Deprecated since 3.16]</code> Trait containing all <code>StyleProperties</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4581,49 +4633,49 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.SwitchExt.html"
                                   title='trait gtk::SwitchExt'>SwitchExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Switch</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.TextBufferExt.html"
                                   title='trait gtk::TextBufferExt'>TextBufferExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TextBuffer</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.TextChildAnchorExt.html"
                                   title='trait gtk::TextChildAnchorExt'>TextChildAnchorExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TextChildAnchor</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.TextMarkExt.html"
                                   title='trait gtk::TextMarkExt'>TextMarkExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TextMark</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.TextTagExt.html"
                                   title='trait gtk::TextTagExt'>TextTagExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TextTag</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.TextTagTableExt.html"
                                   title='trait gtk::TextTagTableExt'>TextTagTableExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TextTagTable</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.TextViewExt.html"
                                   title='trait gtk::TextViewExt'>TextViewExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TextView</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4644,7 +4696,7 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.ToggleToolButtonExt.html"
                                   title='trait gtk::ToggleToolButtonExt'>ToggleToolButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ToggleToolButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4665,14 +4717,14 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.ToolItemGroupExt.html"
                                   title='trait gtk::ToolItemGroupExt'>ToolItemGroupExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ToolItemGroup</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ToolPaletteExt.html"
                                   title='trait gtk::ToolPaletteExt'>ToolPaletteExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>ToolPalette</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4686,14 +4738,14 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.ToolbarExt.html"
                                   title='trait gtk::ToolbarExt'>ToolbarExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Toolbar</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.TooltipExt.html"
                                   title='trait gtk::TooltipExt'>TooltipExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Tooltip</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4707,14 +4759,14 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.TreeModelFilterExt.html"
                                   title='trait gtk::TreeModelFilterExt'>TreeModelFilterExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TreeModelFilter</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.TreeSelectionExt.html"
                                   title='trait gtk::TreeSelectionExt'>TreeSelectionExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TreeSelection</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4728,35 +4780,35 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.TreeStoreExt.html"
                                   title='trait gtk::TreeStoreExt'>TreeStoreExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TreeStore</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.TreeViewColumnExt.html"
                                   title='trait gtk::TreeViewColumnExt'>TreeViewColumnExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TreeViewColumn</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.TreeViewExt.html"
                                   title='trait gtk::TreeViewExt'>TreeViewExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>TreeView</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.ViewportExt.html"
                                   title='trait gtk::ViewportExt'>ViewportExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>Viewport</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.VolumeButtonExt.html"
                                   title='trait gtk::VolumeButtonExt'>VolumeButtonExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>VolumeButton</code> methods.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -4770,14 +4822,14 @@ the window borders; use <code>WindowExt::set_decorated</code> for that.</p>
                            <td><a class="trait" href="trait.WindowExt.html"
                                   title='trait gtk::WindowExt'>WindowExt</a></td>
                            <td class='docblock-short'>
-                                <p>Trait containing all <code>Window</code> methods.</p>
+                                
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="trait" href="trait.WindowGroupExt.html"
                                   title='trait gtk::WindowGroupExt'>WindowGroupExt</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Trait containing all <code>WindowGroup</code> methods.</p>
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
