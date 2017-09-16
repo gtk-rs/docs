@@ -49,43 +49,200 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct File(_, _);</pre>
-                    <h2 id='methods' class='section-header'>
-                      <a href='#methods'>Methods</a>
-                    </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#28-63' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new_for_commandline_arg' class="method"><span id='new_for_commandline_arg.v' class='invisible'><code>fn <a href='#method.new_for_commandline_arg' class='fnname'>new_for_commandline_arg</a>(arg: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span></h4>
-<h4 id='method.new_for_commandline_arg_and_cwd' class="method"><span id='new_for_commandline_arg_and_cwd.v' class='invisible'><code>fn <a href='#method.new_for_commandline_arg_and_cwd' class='fnname'>new_for_commandline_arg_and_cwd</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(arg: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, cwd: P) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span></h4>
-<h4 id='method.new_for_path' class="method"><span id='new_for_path.v' class='invisible'><code>fn <a href='#method.new_for_path' class='fnname'>new_for_path</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(path: P) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span></h4>
-<h4 id='method.new_for_uri' class="method"><span id='new_for_uri.v' class='invisible'><code>fn <a href='#method.new_for_uri' class='fnname'>new_for_uri</a>(uri: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span></h4>
-<h4 id='method.parse_name' class="method"><span id='parse_name.v' class='invisible'><code>fn <a href='#method.parse_name' class='fnname'>parse_name</a>(parse_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a>&gt;</code></span></h4>
+<pre class='rust struct'>pub struct File(_, _);</pre><div class='docblock'><p><code>File</code> is a high level abstraction for manipulating files on a
+virtual file system. <code>GFiles</code> are lightweight, immutable objects
+that do no I/O upon creation. It is necessary to understand that
+<code>File</code> objects do not represent files, merely an identifier for a
+file. All file content I/O is implemented as streaming operations
+(see <code>InputStream</code> and <code>OutputStream</code>).</p>
+
+<p>To construct a <code>File</code>, you can use:
+- <code>File::new_for_path</code> if you have a path.
+- <code>File::new_for_uri</code> if you have a URI.
+- <code>File::new_for_commandline_arg</code> for a command line argument.
+- <code>File::new_tmp</code> to create a temporary file from a template.
+- <code>File::parse_name</code> from a UTF-8 string gotten from <code>File::get_parse_name</code>.</p>
+
+<p>One way to think of a <code>File</code> is as an abstraction of a pathname. For
+normal files the system pathname is what is stored internally, but as
+<code>GFiles</code> are extensible it could also be something else that corresponds
+to a pathname in a userspace implementation of a filesystem.</p>
+
+<p><code>GFiles</code> make up hierarchies of directories and files that correspond to
+the files on a filesystem. You can move through the file system with
+<code>File</code> using <code>File::get_parent</code> to get an identifier for the parent
+directory, <code>File::get_child</code> to get a child within a directory,
+<code>File::resolve_relative_path</code> to resolve a relative path between two
+<code>GFiles</code>. There can be multiple hierarchies, so you may not end up at
+the same root if you repeatedly call <code>File::get_parent</code> on two different
+files.</p>
+
+<p>All <code>GFiles</code> have a basename (get with <code>File::get_basename</code>). These names
+are byte strings that are used to identify the file on the filesystem
+(relative to its parent directory) and there is no guarantees that they
+have any particular charset encoding or even make any sense at all. If
+you want to use filenames in a user interface you should use the display
+name that you can get by requesting the
+<code>G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME</code> attribute with <code>File::query_info</code>.
+This is guaranteed to be in UTF-8 and can be used in a user interface.
+But always store the real basename or the <code>File</code> to use to actually
+access the file, because there is no way to go from a display name to
+the actual name.</p>
+
+<p>Using <code>File</code> as an identifier has the same weaknesses as using a path
+in that there may be multiple aliases for the same file. For instance,
+hard or soft links may cause two different <code>GFiles</code> to refer to the same
+file. Other possible causes for aliases are: case insensitive filesystems,
+short and long names on FAT/NTFS, or bind mounts in Linux. If you want to
+check if two <code>GFiles</code> point to the same file you can query for the
+<code>G_FILE_ATTRIBUTE_ID_FILE</code> attribute. Note that <code>File</code> does some trivial
+canonicalization of pathnames passed in, so that trivial differences in
+the path string used at creation (duplicated slashes, slash at end of
+path, &quot;.&quot; or &quot;..&quot; path segments, etc) does not create different <code>GFiles</code>.</p>
+
+<p>Many <code>File</code> operations have both synchronous and asynchronous versions
+to suit your application. Asynchronous versions of synchronous functions
+simply have <code>_async</code> appended to their function names. The asynchronous
+I/O functions call a <code>GAsyncReadyCallback</code> which is then used to finalize
+the operation, producing a GAsyncResult which is then passed to the
+function&#39;s matching <code>_finish</code> operation.</p>
+
+<p>It is highly recommended to use asynchronous calls when running within a
+shared main loop, such as in the main thread of an application. This avoids
+I/O operations blocking other sources on the main loop from being dispatched.
+Synchronous I/O operations should be performed from worker threads. See the
+[introduction to asynchronous programming section][async-programming] for
+more.</p>
+
+<p>Some <code>File</code> operations almost always take a noticeable amount of time, and
+so do not have synchronous analogs. Notable cases include:
+- <code>File::mount_mountable</code> to mount a mountable file.
+- <code>File::unmount_mountable_with_operation</code> to unmount a mountable file.
+- <code>File::eject_mountable_with_operation</code> to eject a mountable file.</p>
+
+<h2 id='entity-tags--gfile-etag' class='section-header'><a href='#entity-tags--gfile-etag'>Entity Tags # {<code>gfile</code>-etag}</a></h2>
+<p>One notable feature of <code>GFiles</code> are entity tags, or &quot;etags&quot; for
+short. Entity tags are somewhat like a more abstract version of the
+traditional mtime, and can be used to quickly determine if the file
+has been modified from the version on the file system. See the
+HTTP 1.1
+<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">specification</a>
+for HTTP Etag headers, which are a very similar concept.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.FileExt.html"><code>FileExt</code></a></p>
 </div>
-            <h2 id='implementations' class='section-header'>
-              <a href='#implementations'>Trait Implementations</a>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#112-222' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new_for_commandline_arg' class="method"><span id='new_for_commandline_arg.v' class='invisible'><code>fn <a href='#method.new_for_commandline_arg' class='fnname'>new_for_commandline_arg</a>(arg: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#134-138' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a <code>File</code> with the given argument from the command line.
+The value of <code>arg</code> can be either a URI, an absolute path or a
+relative path resolved relative to the current working directory.
+This operation never fails, but the returned object might not
+support any I/O operation if <code>arg</code> points to a malformed path.</p>
+
+<p>Note that on Windows, this function expects its argument to be in
+UTF-8 -- not the system code page. This means that you
+should not use this function with string from argv as it is passed
+to <code>main</code>. <code>g_win32_get_command_line</code> will return a UTF-8 version of
+the commandline. <code>Application</code> also uses UTF-8 but
+<code>ApplicationCommandLine::create_file_for_arg</code> may be more useful
+for you there. It is also always possible to use this function with
+<code>glib::OptionContext</code> arguments of type <code>glib::OptionArg::Filename</code>.</p>
+
+<h2 id='arg' class='section-header'><a href='#arg'><code>arg</code></a></h2>
+<p>a command line string</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>File</code>.
+ Free the returned object with <code>gobject::ObjectExt::unref</code>.</p>
+</div><h4 id='method.new_for_commandline_arg_and_cwd' class="method"><span id='new_for_commandline_arg_and_cwd.v' class='invisible'><code>fn <a href='#method.new_for_commandline_arg_and_cwd' class='fnname'>new_for_commandline_arg_and_cwd</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(arg: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, cwd: P) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#163-167' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a <code>File</code> with the given argument from the command line.</p>
+
+<p>This function is similar to <code>File::new_for_commandline_arg</code> except
+that it allows for passing the current working directory as an
+argument instead of using the current working directory of the
+process.</p>
+
+<p>This is useful if the commandline argument was given in a context
+other than the invocation of the current process.</p>
+
+<p>See also <code>ApplicationCommandLine::create_file_for_arg</code>.</p>
+
+<p>Feature: <code>v2_36</code></p>
+
+<h2 id='arg-2' class='section-header'><a href='#arg-2'><code>arg</code></a></h2>
+<p>a command line string</p>
+
+<h2 id='cwd' class='section-header'><a href='#cwd'><code>cwd</code></a></h2>
+<p>the current working directory of the commandline</p>
+
+<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<p>a new <code>File</code></p>
+</div><h4 id='method.new_for_path' class="method"><span id='new_for_path.v' class='invisible'><code>fn <a href='#method.new_for_path' class='fnname'>new_for_path</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(path: P) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#180-184' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Constructs a <code>File</code> for a given path. This operation never
+fails, but the returned object might not support any I/O
+operation if <code>path</code> is malformed.</p>
+
+<h2 id='path' class='section-header'><a href='#path'><code>path</code></a></h2>
+<p>a string containing a relative or absolute path.
+ The string must be encoded in the glib filename encoding.</p>
+
+<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
+<p>a new <code>File</code> for the given <code>path</code>.
+ Free the returned object with <code>gobject::ObjectExt::unref</code>.</p>
+</div><h4 id='method.new_for_uri' class="method"><span id='new_for_uri.v' class='invisible'><code>fn <a href='#method.new_for_uri' class='fnname'>new_for_uri</a>(uri: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#197-201' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Constructs a <code>File</code> for a given URI. This operation never
+fails, but the returned object might not support any I/O
+operation if <code>uri</code> is malformed or if the uri type is
+not supported.</p>
+
+<h2 id='uri' class='section-header'><a href='#uri'><code>uri</code></a></h2>
+<p>a UTF-8 string containing a URI</p>
+
+<h1 id='returns-6' class='section-header'><a href='#returns-6'>Returns</a></h1>
+<p>a new <code>File</code> for the given <code>uri</code>.
+ Free the returned object with <code>gobject::ObjectExt::unref</code>.</p>
+</div><h4 id='method.parse_name' class="method"><span id='parse_name.v' class='invisible'><code>fn <a href='#method.parse_name' class='fnname'>parse_name</a>(parse_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#217-221' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Constructs a <code>File</code> with the given <code>parse_name</code> (i.e. something
+given by <code>File::get_parse_name</code>). This operation never fails,
+but the returned object might not support any I/O operation if
+the <code>parse_name</code> cannot be parsed.</p>
+
+<h2 id='parse_name' class='section-header'><a href='#parse_name'><code>parse_name</code></a></h2>
+<p>a file name or path to be parsed</p>
+
+<h1 id='returns-8' class='section-header'><a href='#returns-8'>Returns</a></h1>
+<p>a new <code>File</code>.</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
-        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'></span></h3>
+        <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
+</div></div><h3 id='impl-Hash' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-Hash' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>__H)</code></span></h4>
 <div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/hash/mod.rs.html#202-208' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/types/trait.StaticType.html" title="trait glib::types::StaticType">StaticType</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-StaticType' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/types/trait.StaticType.html" title="trait glib::types::StaticType">StaticType</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-StaticType' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../glib/types/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../glib/types/enum.Type.html" title="enum glib::types::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+</div></div><h3 id='impl-PartialEq&lt;T&gt;' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-PartialEq&lt;T&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
-</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#121' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt; for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Object&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt; for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-IsA&lt;Object&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 

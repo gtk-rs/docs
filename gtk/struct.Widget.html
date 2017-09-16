@@ -92,11 +92,11 @@ minimum height contextual to that width using
 <code>WidgetExt::get_preferred_height_for_width</code>, which will also be a highly
 recursive operation. The minimum height for the minimum width is normally
 used to set the minimum size constraint on the toplevel
-(unless <code>Window::set_geometry_hints</code> is explicitly used instead).</p>
+(unless <code>GtkWindowExt::set_geometry_hints</code> is explicitly used instead).</p>
 
 <p>After the toplevel window has initially requested its size in both
 dimensions it can go on to allocate itself a reasonable size (or a size
-previously specified with <code>Window::set_default_size</code>). During the
+previously specified with <code>GtkWindowExt::set_default_size</code>). During the
 recursive allocation process it’s important to note that request cycles
 will be recursively executed while container widgets allocate their children.
 Each container widget, once allocated a size, will go on to first share the
@@ -207,7 +207,7 @@ container, you must use the wrapper APIs.
 Otherwise, you would not properly consider widget margins,
 <code>SizeGroup</code>, and so forth.</p>
 
-<p>Since 3.10 Gtk+ also supports baseline vertical alignment of widgets. This
+<p>Since 3.10 GTK+ also supports baseline vertical alignment of widgets. This
 means that widgets are positioned such that the typographical baseline of
 widgets in the same row are aligned. This happens if a widget supports baselines,
 has a vertical alignment of <code>Align::Baseline</code>, and is inside a container
@@ -321,35 +321,35 @@ foo_widget_class_init (FooWidgetClass *klass)
 <h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
 <p><a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
 </div>
-                    <h2 id='methods' class='section-header'>
-                      <a href='#methods'>Methods</a>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/widget.rs.html#339-400' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.get_default_direction' class="method"><span id='get_default_direction.v' class='invisible'><code>fn <a href='#method.get_default_direction' class='fnname'>get_default_direction</a>() -&gt; <a class="enum" href="../gtk/enum.TextDirection.html" title="enum gtk::TextDirection">TextDirection</a></code></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/widget.rs.html#339-400' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.get_default_direction' class="method"><span id='get_default_direction.v' class='invisible'><code>fn <a href='#method.get_default_direction' class='fnname'>get_default_direction</a>() -&gt; <a class="enum" href="../gtk/enum.TextDirection.html" title="enum gtk::TextDirection">TextDirection</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/widget.rs.html#350-355' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Obtains the current default reading direction. See
 <code>Widget::set_default_direction</code>.</p>
 
 <h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
 <p>the current default direction.</p>
-</div><h4 id='method.pop_composite_child' class="method"><span id='pop_composite_child.v' class='invisible'><code>fn <a href='#method.pop_composite_child' class='fnname'>pop_composite_child</a>()</code></span></h4>
+</div><h4 id='method.pop_composite_child' class="method"><span id='pop_composite_child.v' class='invisible'><code>fn <a href='#method.pop_composite_child' class='fnname'>pop_composite_child</a>()</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/widget.rs.html#362-367' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Cancels the effect of a previous call to <code>Widget::push_composite_child</code>.</p>
 
 <h1 id='deprecated-since-310' class='section-header'><a href='#deprecated-since-310'>Deprecated since 3.10</a></h1>
 <p>Use <code>WidgetClass::set_template</code>, or don’t use this API at all.</p>
-</div><h4 id='method.push_composite_child' class="method"><span id='push_composite_child.v' class='invisible'><code>fn <a href='#method.push_composite_child' class='fnname'>push_composite_child</a>()</code></span></h4>
+</div><h4 id='method.push_composite_child' class="method"><span id='push_composite_child.v' class='invisible'><code>fn <a href='#method.push_composite_child' class='fnname'>push_composite_child</a>()</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/widget.rs.html#382-387' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Makes all newly-created widgets as composite children until
 the corresponding <code>Widget::pop_composite_child</code> call.</p>
 
 <p>A composite child is a child that’s an implementation detail of the
 container it’s inside and should not be visible to people using the
-container. Composite children aren’t treated differently by GTK (but
+container. Composite children aren’t treated differently by GTK+ (but
 see <code>ContainerExt::foreach</code> vs. <code>ContainerExt::forall</code>), but e.g. GUI
 builders might want to treat them in a different way.</p>
 
-<h1 id='deprecated-since-310-1' class='section-header'><a href='#deprecated-since-310-1'>Deprecated since 3.10</a></h1>
+<h1 id='deprecated-since-310-2' class='section-header'><a href='#deprecated-since-310-2'>Deprecated since 3.10</a></h1>
 <p>This API never really worked well and was mostly unused, now
 we have a more complete mechanism for composite children, see <code>WidgetClass::set_template</code>.</p>
-</div><h4 id='method.set_default_direction' class="method"><span id='set_default_direction.v' class='invisible'><code>fn <a href='#method.set_default_direction' class='fnname'>set_default_direction</a>(dir: <a class="enum" href="../gtk/enum.TextDirection.html" title="enum gtk::TextDirection">TextDirection</a>)</code></span></h4>
+</div><h4 id='method.set_default_direction' class="method"><span id='set_default_direction.v' class='invisible'><code>fn <a href='#method.set_default_direction' class='fnname'>set_default_direction</a>(dir: <a class="enum" href="../gtk/enum.TextDirection.html" title="enum gtk::TextDirection">TextDirection</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/widget.rs.html#394-399' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Sets the default reading direction for widgets where the
 direction has not been explicitly set by <code>WidgetExt::set_direction</code>.</p>
 
@@ -357,32 +357,32 @@ direction has not been explicitly set by <code>WidgetExt::set_direction</code>.<
 <p>the new default direction. This cannot be
  <code>TextDirection::None</code>.</p>
 </div></div>
-            <h2 id='implementations' class='section-header'>
-              <a href='#implementations'>Trait Implementations</a>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
-        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span><span class='out-of-band'></span></h3>
+        <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
+</div></div><h3 id='impl-Hash' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code><a href='#impl-Hash' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>__H)</code></span></h4>
 <div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/hash/mod.rs.html#202-208' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-StaticType' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code><a href='#impl-StaticType' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+</div></div><h3 id='impl-PartialEq&lt;T&gt;' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code><a href='#impl-PartialEq&lt;T&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
-</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#121' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Object&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a></code><a href='#impl-IsA&lt;Object&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 

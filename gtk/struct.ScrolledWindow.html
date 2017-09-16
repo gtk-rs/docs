@@ -49,37 +49,36 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct ScrolledWindow(_, _);</pre><div class='docblock'><p><code>ScrolledWindow</code> is a <code>Bin</code> subclass: it’s a container
-the accepts a single child widget. <code>ScrolledWindow</code> adds scrollbars
-to the child widget and optionally draws a beveled frame around the
-child widget.</p>
+<pre class='rust struct'>pub struct ScrolledWindow(_, _);</pre><div class='docblock'><p><code>ScrolledWindow</code> is a container that accepts a single child widget, makes
+that child scrollable using either internally added scrollbars or externally
+associated adjustments, and optionally draws a frame around the child.</p>
 
-<p>The scrolled window can work in two ways. Some widgets have native
-scrolling support; these widgets implement the <code>Scrollable</code> interface.
-Widgets with native scroll support include <code>TreeView</code>, <code>TextView</code>,
-and <code>Layout</code>.</p>
+<p>Widgets with native scrolling support, i.e. those whose classes implement the
+<code>Scrollable</code> interface, are added directly. For other types of widget, the
+class <code>Viewport</code> acts as an adaptor, giving scrollability to other widgets.
+<code>ScrolledWindow</code>’s implementation of <code>ContainerExt::add</code> intelligently
+accounts for whether or not the added child is a <code>Scrollable</code>. If it isn’t,
+<code>ScrolledWindow</code> wraps the child in a <code>Viewport</code> and adds that for you.
+Therefore, you can just add any child widget and not worry about the details.</p>
 
-<p>For widgets that lack native scrolling support, the <code>Viewport</code>
-widget acts as an adaptor class, implementing scrollability for child
-widgets that lack their own scrolling capabilities. Use <code>Viewport</code>
-to scroll child widgets such as <code>Grid</code>, <code>Box</code>, and so on.</p>
+<p>If <code>ContainerExt::add</code> has added a <code>Viewport</code> for you, you can remove
+both your added child widget from the <code>Viewport</code>, and the <code>Viewport</code>
+from the <code>ScrolledWindow</code>, with either of these calls:</p>
 
-<p>If a widget has native scrolling abilities, it can be added to the
-<code>ScrolledWindow</code> with <code>ContainerExt::add</code>. If a widget does not, you
-must first add the widget to a <code>Viewport</code>, then add the <code>Viewport</code>
-to the scrolled window. <code>ContainerExt::add</code> will do this for you for
-widgets that don’t implement <code>Scrollable</code> natively, so you can
-ignore the presence of the viewport.</p>
+<pre><code class="language-C">gtk_container_remove (GTK_CONTAINER (scrolled_window),
+                      child_widget);
+// or
+gtk_container_remove (GTK_CONTAINER (scrolled_window),
+                      gtk_bin_get_child (GTK_BIN (scrolled_window)));
+</code></pre>
 
-<p>The position of the scrollbars is controlled by the scroll adjustments.
-See <code>Adjustment</code> for the fields in an adjustment — for
-<code>Scrollbar</code>, used by <code>ScrolledWindow</code>, the “value” field
-represents the position of the scrollbar, which must be between the
-“lower” field and “upper - page_size.” The “page_size” field
-represents the size of the visible scrollable area. The
-“step_increment” and “page_increment” fields are used when the user
-asks to step down (using the small stepper arrows) or page down (using
-for example the PageDown key).</p>
+<p>Unless <code>ScrolledWindow:policy</code> is GTK_POLICY_NEVER or GTK_POLICY_EXTERNAL,
+<code>ScrolledWindow</code> adds internal <code>Scrollbar</code> widgets around its child. The
+scroll position of the child, and if applicable the scrollbars, is controlled
+by the <code>ScrolledWindow:hadjustment</code> and <code>ScrolledWindow:vadjustment</code>
+that are associated with the <code>ScrolledWindow</code>. See the docs on <code>Scrollbar</code>
+for the details, but note that the “step_increment” and “page_increment”
+fields are only effective if the policy causes scrollbars to be present.</p>
 
 <p>If a <code>ScrolledWindow</code> doesn’t behave quite as you would like, or
 doesn’t have exactly the right layout, it’s very possible to set up
@@ -101,14 +100,29 @@ scrollbars are desired although no mouse is present, this behaviour
 can be turned off with the <code>ScrolledWindow:overlay-scrolling</code>
 property.</p>
 
+<h1 id='css-nodes' class='section-header'><a href='#css-nodes'>CSS nodes</a></h1>
+<p><code>ScrolledWindow</code> has a main CSS node with name scrolledwindow.</p>
+
+<p>It uses subnodes with names overshoot and undershoot to
+draw the overflow and underflow indications. These nodes get
+the .left, .right, .top or .bottom style class added depending
+on where the indication is drawn.</p>
+
+<p><code>ScrolledWindow</code> also sets the positional style classes (.left,
+.right, .top, .bottom) and style classes related to overlay
+scrolling (.overlay-indicator, .dragging, .hovering) on its scrollbars.</p>
+
+<p>If both scrollbars are visible, the area where they meet is drawn
+with a subnode named junction.</p>
+
 <h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
 <p><a href="trait.ScrolledWindowExt.html"><code>ScrolledWindowExt</code></a>, <a href="trait.BinExt.html"><code>BinExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
 </div>
-                    <h2 id='methods' class='section-header'>
-                      <a href='#methods'>Methods</a>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrolled_window.rs.html#93-118' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;'a, 'b, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'b <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;hadjustment: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;vadjustment: Q<br>) -&gt; <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrolled_window.rs.html#109-134' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;'a, 'b, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'b <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;hadjustment: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;vadjustment: Q<br>) -&gt; <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrolled_window.rs.html#124-133' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new scrolled window.</p>
 
 <p>The two arguments are the scrolled window’s adjustments; these will be
@@ -125,35 +139,35 @@ will cause the scrolled window to create them for you.</p>
 <h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
 <p>a new scrolled window</p>
 </div></div>
-            <h2 id='implementations' class='section-header'>
-              <a href='#implementations'>Trait Implementations</a>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
-        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'></span></h3>
+        <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
+</div></div><h3 id='impl-Hash' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-Hash' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>__H)</code></span></h4>
 <div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/hash/mod.rs.html#202-208' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-StaticType' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-StaticType' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+</div></div><h3 id='impl-PartialEq&lt;T&gt;' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-PartialEq&lt;T&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
-</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#121' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Bin.html" title="struct gtk::Bin">Bin</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Container.html" title="struct gtk::Container">Container</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Bin&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Bin.html" title="struct gtk::Bin">Bin</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-IsA&lt;Bin&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Container&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Container.html" title="struct gtk::Container">Container</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-IsA&lt;Container&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Widget&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-IsA&lt;Widget&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Object&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-IsA&lt;Object&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 

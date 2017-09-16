@@ -52,25 +52,49 @@
 <pre class='rust struct'>pub struct Scrollbar(_, _);</pre><div class='docblock'><p>The <code>Scrollbar</code> widget is a horizontal or vertical scrollbar,
 depending on the value of the <code>Orientable:orientation</code> property.</p>
 
-<p>The position of the thumb in a scrollbar is controlled by the scroll
-adjustments. See <code>Adjustment</code> for the fields in an adjustment - for
-<code>Scrollbar</code>, the <code>Adjustment:value</code> field represents the position
-of the scrollbar, which must be between the <code>Adjustment:lower</code> field
-and <code>Adjustment:upper</code> - <code>Adjustment:page-size</code>. The
-<code>Adjustment:page-size</code> field represents the size of the visible
-scrollable area. The <code>Adjustment:step-increment</code> and
-<code>Adjustment:page-increment</code> fields are properties when the user asks to
-step down (using the small stepper arrows) or page down (using for
-example the <code>Page Down</code> key).</p>
+<p>Its position and movement are controlled by the adjustment that is passed to
+or created by <code>Scrollbar::new</code>. See <code>Adjustment</code> for more details. The
+<code>Adjustment:value</code> field sets the position of the thumb and must be between
+<code>Adjustment:lower</code> and <code>Adjustment:upper</code> - <code>Adjustment:page-size</code>. The
+<code>Adjustment:page-size</code> represents the size of the visible scrollable area.
+The fields <code>Adjustment:step-increment</code> and <code>Adjustment:page-increment</code>
+fields are added to or subtracted from the <code>Adjustment:value</code> when the user
+asks to move by a step (using e.g. the cursor arrow keys or, if present, the
+stepper buttons) or by a page (using e.g. the Page Down/Up keys).</p>
+
+<h1 id='css-nodes' class='section-header'><a href='#css-nodes'>CSS nodes</a></h1>
+<pre><code class="language-plain">scrollbar[.fine-tune]
+╰── contents
+    ├── [button.up]
+    ├── [button.down]
+    ├── trough
+    │   ╰── slider
+    ├── [button.up]
+    ╰── [button.down]
+</code></pre>
+
+<p><code>Scrollbar</code> has a main CSS node with name scrollbar and a subnode for its
+contents, with subnodes named trough and slider.</p>
+
+<p>The main node gets the style class .fine-tune added when the scrollbar is
+in &#39;fine-tuning&#39; mode.</p>
+
+<p>If steppers are enabled, they are represented by up to four additional
+subnodes with name button. These get the style classes .up and .down to
+indicate in which direction they are moving.</p>
+
+<p>Other style classes that may be added to scrollbars inside <code>ScrolledWindow</code>
+include the positional classes (.left, .right, .top, .bottom) and style
+classes related to overlay scrolling (.overlay-indicator, .dragging, .hovering).</p>
 
 <h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
 <p><a href="trait.RangeExt.html"><code>RangeExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a>, <a href="trait.OrientableExt.html"><code>OrientableExt</code></a></p>
 </div>
-                    <h2 id='methods' class='section-header'>
-                      <a href='#methods'>Methods</a>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrollbar.rs.html#42-60' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;orientation: <a class="enum" href="../gtk/enum.Orientation.html" title="enum gtk::Orientation">Orientation</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;adjustment: P<br>) -&gt; <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrollbar.rs.html#69-87' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;orientation: <a class="enum" href="../gtk/enum.Orientation.html" title="enum gtk::Orientation">Orientation</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;adjustment: P<br>) -&gt; <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrollbar.rs.html#79-86' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new scrollbar with the given orientation.</p>
 
 <h2 id='orientation' class='section-header'><a href='#orientation'><code>orientation</code></a></h2>
@@ -82,35 +106,35 @@ example the <code>Page Down</code> key).</p>
 <h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
 <p>the new <code>Scrollbar</code>.</p>
 </div></div>
-            <h2 id='implementations' class='section-header'>
-              <a href='#implementations'>Trait Implementations</a>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
-        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'></span></h3>
+        <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
+</div></div><h3 id='impl-Hash' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl-Hash' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>__H)</code></span></h4>
 <div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/hash/mod.rs.html#202-208' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-StaticType' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.StaticType.html" title="trait gtk::StaticType">StaticType</a> for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl-StaticType' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gtk/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gtk/enum.Type.html" title="enum gtk::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+</div></div><h3 id='impl-PartialEq&lt;T&gt;' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl-PartialEq&lt;T&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
-</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#121' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Range.html" title="struct gtk::Range">Range</a>&gt; for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Orientable.html" title="struct gtk::Orientable">Orientable</a>&gt; for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Range&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Range.html" title="struct gtk::Range">Range</a>&gt; for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl-IsA&lt;Range&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Widget&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl-IsA&lt;Widget&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Orientable&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Orientable.html" title="struct gtk::Orientable">Orientable</a>&gt; for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl-IsA&lt;Orientable&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Object&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.Scrollbar.html" title="struct gtk::Scrollbar">Scrollbar</a></code><a href='#impl-IsA&lt;Object&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 

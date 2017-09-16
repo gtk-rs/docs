@@ -811,7 +811,7 @@
     <span class="doccomment">/// layout containers such as `Box` or `Grid`, this function will</span>
     <span class="doccomment">/// pick default packing parameters that may not be correct. So</span>
     <span class="doccomment">/// consider functions such as `BoxExt::pack_start` and</span>
-    <span class="doccomment">/// `Grid::attach` as an alternative to `ContainerExt::add` in</span>
+    <span class="doccomment">/// `GridExt::attach` as an alternative to `ContainerExt::add` in</span>
     <span class="doccomment">/// those cases. A widget may be added to only one container at a time;</span>
     <span class="doccomment">/// you can’t place the same widget inside two different containers.</span>
     <span class="doccomment">///</span>
@@ -886,12 +886,12 @@
 
     <span class="doccomment">/// Returns the current focus child widget inside `self`. This is not the</span>
     <span class="doccomment">/// currently focused widget. That can be obtained by calling</span>
-    <span class="doccomment">/// `Window::get_focus`.</span>
+    <span class="doccomment">/// `GtkWindowExt::get_focus`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Returns</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The child widget which will receive the</span>
-    <span class="doccomment">///  focus inside `self` when the `conatiner` is focussed,</span>
+    <span class="doccomment">///  focus inside `self` when the `self` is focused,</span>
     <span class="doccomment">///  or `None` if none is set.</span>
     <span class="kw">fn</span> <span class="ident">get_focus_child</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Widget</span><span class="op">&gt;</span>;
 
@@ -909,8 +909,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Returns</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// the vertical focus adjustment, or `None` if</span>
-    <span class="doccomment">///  none has been set.</span>
+    <span class="doccomment">/// the vertical focus adjustment, or</span>
+    <span class="doccomment">///  `None` if none has been set.</span>
     <span class="kw">fn</span> <span class="ident">get_focus_vadjustment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Adjustment</span><span class="op">&gt;</span>;
 
     <span class="comment">//fn get_path_for_child&lt;P: IsA&lt;Widget&gt;&gt;(&amp;self, child: &amp;P) -&gt; /*Ignored*/Option&lt;WidgetPath&gt;;</span>
@@ -939,7 +939,7 @@
     <span class="doccomment">/// `ContainerExt::propagate_draw` takes care of translating the origin of `cr`,</span>
     <span class="doccomment">/// and deciding whether the draw needs to be sent to the child. It is a</span>
     <span class="doccomment">/// convenient and optimized way of getting the same effect as calling</span>
-    <span class="doccomment">/// `Widget::draw` on the child directly.</span>
+    <span class="doccomment">/// `WidgetExt::draw` on the child directly.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// In most cases, a container can simply either inherit the</span>
     <span class="doccomment">/// `Widget::draw` implementation from `Container`, or do some drawing</span>
@@ -956,10 +956,10 @@
     <span class="doccomment">/// Note that `self` will own a reference to `widget`, and that this</span>
     <span class="doccomment">/// may be the last reference held; so removing a widget from its</span>
     <span class="doccomment">/// container can destroy that widget. If you want to use `widget`</span>
-    <span class="doccomment">/// again, you need to add a reference to it while it’s not inside</span>
-    <span class="doccomment">/// a container, using `gobject::Object::ref`. If you don’t want to use `widget`</span>
+    <span class="doccomment">/// again, you need to add a reference to it before removing it from</span>
+    <span class="doccomment">/// a container, using `gobject::ObjectExt::ref`. If you don’t want to use `widget`</span>
     <span class="doccomment">/// again it’s usually more efficient to simply destroy it directly</span>
-    <span class="doccomment">/// using `Widget::destroy` since this will remove it from the</span>
+    <span class="doccomment">/// using `WidgetExt::destroy` since this will remove it from the</span>
     <span class="doccomment">/// container and help break any circular reference count cycles.</span>
     <span class="doccomment">/// ## `widget`</span>
     <span class="doccomment">/// a current child of `self`</span>
@@ -1003,7 +1003,7 @@
     <span class="doccomment">/// default behaviour by overriding the class closure of this signal.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is function is mostly meant to be used by widgets. Applications can use</span>
-    <span class="doccomment">/// `Widget::grab_focus` to manually set the focus to a specific widget.</span>
+    <span class="doccomment">/// `WidgetExt::grab_focus` to manually set the focus to a specific widget.</span>
     <span class="doccomment">/// ## `child`</span>
     <span class="doccomment">/// a `Widget`, or `None`</span>
     <span class="kw">fn</span> <span class="ident">set_focus_child</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Widget</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>, <span class="ident">Q</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">P</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">child</span>: <span class="ident">Q</span>);
@@ -1011,7 +1011,7 @@
     <span class="doccomment">/// Hooks up an adjustment to focus handling in a container, so when a child</span>
     <span class="doccomment">/// of the container is focused, the adjustment is scrolled to show that</span>
     <span class="doccomment">/// widget. This function sets the horizontal alignment.</span>
-    <span class="doccomment">/// See `ScrolledWindow::get_hadjustment` for a typical way of obtaining</span>
+    <span class="doccomment">/// See `ScrolledWindowExt::get_hadjustment` for a typical way of obtaining</span>
     <span class="doccomment">/// the adjustment and `ContainerExt::set_focus_vadjustment` for setting</span>
     <span class="doccomment">/// the vertical adjustment.</span>
     <span class="doccomment">///</span>
@@ -1025,7 +1025,7 @@
     <span class="doccomment">/// Hooks up an adjustment to focus handling in a container, so when a</span>
     <span class="doccomment">/// child of the container is focused, the adjustment is scrolled to</span>
     <span class="doccomment">/// show that widget. This function sets the vertical alignment. See</span>
-    <span class="doccomment">/// `ScrolledWindow::get_vadjustment` for a typical way of obtaining</span>
+    <span class="doccomment">/// `ScrolledWindowExt::get_vadjustment` for a typical way of obtaining</span>
     <span class="doccomment">/// the adjustment and `ContainerExt::set_focus_hadjustment` for setting</span>
     <span class="doccomment">/// the horizontal adjustment.</span>
     <span class="doccomment">///</span>
@@ -1043,7 +1043,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Deprecated since 3.14</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Call `Widget::queue_draw` in your size_allocate handler.</span>
+    <span class="doccomment">/// Call `WidgetExt::queue_draw` in your size_allocate handler.</span>
     <span class="doccomment">/// ## `needs_redraws`</span>
     <span class="doccomment">/// the new value for the container’s `reallocate_redraws` flag</span>
     <span class="kw">fn</span> <span class="ident">set_reallocate_redraws</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">needs_redraws</span>: <span class="ident">bool</span>);

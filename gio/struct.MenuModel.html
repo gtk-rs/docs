@@ -49,33 +49,146 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct MenuModel(_, _);</pre>
-            <h2 id='implementations' class='section-header'>
-              <a href='#implementations'>Trait Implementations</a>
+<pre class='rust struct'>pub struct MenuModel(_, _);</pre><div class='docblock'><p><code>MenuModel</code> represents the contents of a menu -- an ordered list of
+menu items. The items are associated with actions, which can be
+activated through them. Items can be grouped in sections, and may
+have submenus associated with them. Both items and sections usually
+have some representation data, such as labels or icons. The type of
+the associated action (ie whether it is stateful, and what kind of
+state it has) can influence the representation of the item.</p>
+
+<p>The conceptual model of menus in <code>MenuModel</code> is hierarchical:
+sections and submenus are again represented by <code>GMenuModels</code>.
+Menus themselves do not define their own roles. Rather, the role
+of a particular <code>MenuModel</code> is defined by the item that references
+it (or, in the case of the &#39;root&#39; menu, is defined by the context
+in which it is used).</p>
+
+<p>As an example, consider the visible portions of this menu:</p>
+
+<h2 id='an-example-menu--menu-example' class='section-header'><a href='#an-example-menu--menu-example'>An example menu # {<code>menu</code>-example}</a></h2>
+<p><img src="menu-example.png" alt=""></p>
+
+<p>There are 8 &quot;menus&quot; visible in the screenshot: one menubar, two
+submenus and 5 sections:</p>
+
+<ul>
+<li>the toplevel menubar (containing 4 items)</li>
+<li>the View submenu (containing 3 sections)</li>
+<li>the first section of the View submenu (containing 2 items)</li>
+<li>the second section of the View submenu (containing 1 item)</li>
+<li>the final section of the View submenu (containing 1 item)</li>
+<li>the Highlight Mode submenu (containing 2 sections)</li>
+<li>the Sources section (containing 2 items)</li>
+<li>the Markup section (containing 2 items)</li>
+</ul>
+
+<p>The [example][menu-model] illustrates the conceptual connection between
+these 8 menus. Each large block in the figure represents a menu and the
+smaller blocks within the large block represent items in that menu. Some
+items contain references to other menus.</p>
+
+<h2 id='a-menu-example--menu-model' class='section-header'><a href='#a-menu-example--menu-model'>A menu example # {<code>menu</code>-model}</a></h2>
+<p><img src="menu-model.png" alt=""></p>
+
+<p>Notice that the separators visible in the [example][menu-example]
+appear nowhere in the [menu model][menu-model]. This is because
+separators are not explicitly represented in the menu model. Instead,
+a separator is inserted between any two non-empty sections of a menu.
+Section items can have labels just like any other item. In that case,
+a display system may show a section header instead of a separator.</p>
+
+<p>The motivation for this abstract model of application controls is
+that modern user interfaces tend to make these controls available
+outside the application. Examples include global menus, jumplists,
+dash boards, etc. To support such uses, it is necessary to &#39;export&#39;
+information about actions and their representation in menus, which
+is exactly what the [GActionGroup exporter][gio-GActionGroup-exporter]
+and the [GMenuModel exporter][gio-GMenuModel-exporter] do for
+<code>ActionGroup</code> and <code>MenuModel</code>. The client-side counterparts to
+make use of the exported information are <code>DBusActionGroup</code> and
+<code>DBusMenuModel</code>.</p>
+
+<p>The API of <code>MenuModel</code> is very generic, with iterators for the
+attributes and links of an item, see <code>MenuModelExt::iterate_item_attributes</code>
+and <code>MenuModelExt::iterate_item_links</code>. The &#39;standard&#39; attributes and
+link types have predefined names: <code>G_MENU_ATTRIBUTE_LABEL</code>,
+<code>G_MENU_ATTRIBUTE_ACTION</code>, <code>G_MENU_ATTRIBUTE_TARGET</code>, <code>G_MENU_LINK_SECTION</code>
+and <code>G_MENU_LINK_SUBMENU</code>.</p>
+
+<p>Items in a <code>MenuModel</code> represent active controls if they refer to
+an action that can get activated when the user interacts with the
+menu item. The reference to the action is encoded by the string id
+in the <code>G_MENU_ATTRIBUTE_ACTION</code> attribute. An action id uniquely
+identifies an action in an action group. Which action group(s) provide
+actions depends on the context in which the menu model is used.
+E.g. when the model is exported as the application menu of a
+<code>GtkApplication</code>, actions can be application-wide or window-specific
+(and thus come from two different action groups). By convention, the
+application-wide actions have names that start with &quot;app.&quot;, while the
+names of window-specific actions start with &quot;win.&quot;.</p>
+
+<p>While a wide variety of stateful actions is possible, the following
+is the minimum that is expected to be supported by all users of exported
+menu information:
+- an action with no parameter type and no state
+- an action with no parameter type and boolean state
+- an action with string parameter type and string state</p>
+
+<h2 id='stateless' class='section-header'><a href='#stateless'>Stateless</a></h2>
+<p>A stateless action typically corresponds to an ordinary menu item.</p>
+
+<p>Selecting such a menu item will activate the action (with no parameter).</p>
+
+<h2 id='boolean-state' class='section-header'><a href='#boolean-state'>Boolean State</a></h2>
+<p>An action with a boolean state will most typically be used with a &quot;toggle&quot;
+or &quot;switch&quot; menu item. The state can be set directly, but activating the
+action (with no parameter) results in the state being toggled.</p>
+
+<p>Selecting a toggle menu item will activate the action. The menu item should
+be rendered as &quot;checked&quot; when the state is true.</p>
+
+<h2 id='string-parameter-and-state' class='section-header'><a href='#string-parameter-and-state'>String Parameter and State</a></h2>
+<p>Actions with string parameters and state will most typically be used to
+represent an enumerated choice over the items available for a group of
+radio menu items. Activating the action with a string parameter is
+equivalent to setting that parameter as the state.</p>
+
+<p>Radio menu items, in addition to being associated with the action, will
+have a target value. Selecting that menu item will result in activation
+of the action with the target value as the parameter. The menu item should
+be rendered as &quot;selected&quot; when the state of the action is equal to the
+target value of the menu item.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.MenuModelExt.html"><code>MenuModelExt</code></a>, <a href="trait.ObjectExt.html"><code>ObjectExt</code></a></p>
+</div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
-        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code></span><span class='out-of-band'></span></h3>
+        <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: &amp;mut __H)</code></span></h4>
+</div></div><h3 id='impl-Hash' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-Hash' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>__H)</code></span></h4>
 <div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
-</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: &amp;mut H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></span></h4>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/hash/mod.rs.html#202-208' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/types/trait.StaticType.html" title="trait glib::types::StaticType">StaticType</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-StaticType' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/types/trait.StaticType.html" title="trait glib::types::StaticType">StaticType</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-StaticType' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../glib/types/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../glib/types/enum.Type.html" title="enum glib::types::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: &amp;T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+</div></div><h3 id='impl-PartialEq&lt;T&gt;' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-PartialEq&lt;T&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
-</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#121' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt; for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA&lt;Object&gt;' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt; for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-IsA&lt;Object&gt;' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 

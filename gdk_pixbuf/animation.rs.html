@@ -325,76 +325,6 @@
 <span id="280">280</span>
 <span id="281">281</span>
 <span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
-<span id="346">346</span>
-<span id="347">347</span>
-<span id="348">348</span>
-<span id="349">349</span>
-<span id="350">350</span>
-<span id="351">351</span>
-<span id="352">352</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -413,6 +343,10 @@
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="doccomment">/// An opaque struct representing an iterator which points to a</span>
     <span class="doccomment">/// certain position in an animation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Implements</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`PixbufAnimationIterExt`](trait.PixbufAnimationIterExt.html)</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PixbufAnimationIter</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GdkPixbufAnimationIter</span><span class="op">&gt;</span>);
 
     <span class="kw">match</span> <span class="kw">fn</span> {
@@ -421,31 +355,6 @@
 }
 
 <span class="kw">impl</span> <span class="ident">PixbufAnimationIter</span> {
-    <span class="doccomment">/// Possibly advances an animation to a new frame. Chooses the frame based</span>
-    <span class="doccomment">/// on the start time passed to `PixbufAnimationExt::get_iter`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `current_time` would normally come from `g_get_current_time`, and</span>
-    <span class="doccomment">/// must be greater than or equal to the time passed to</span>
-    <span class="doccomment">/// `PixbufAnimationExt::get_iter`, and must increase or remain</span>
-    <span class="doccomment">/// unchanged each time `PixbufAnimationIter::get_pixbuf` is</span>
-    <span class="doccomment">/// called. That is, you can&#39;t go backward in time; animations only</span>
-    <span class="doccomment">/// play forward.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// As a shortcut, pass `None` for the current time and `g_get_current_time`</span>
-    <span class="doccomment">/// will be invoked on your behalf. So you only need to explicitly pass</span>
-    <span class="doccomment">/// `current_time` if you&#39;re doing something odd like playing the animation</span>
-    <span class="doccomment">/// at double speed.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If this function returns `false`, there&#39;s no need to update the animation</span>
-    <span class="doccomment">/// display, assuming the display had been rendered prior to advancing;</span>
-    <span class="doccomment">/// if `true`, you need to call `PixbufAnimationIter::get_pixbuf`</span>
-    <span class="doccomment">/// and update the display with the new pixbuf.</span>
-    <span class="doccomment">/// ## `current_time`</span>
-    <span class="doccomment">/// current time</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if the image may need updating</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">start_time</span>: <span class="kw-2">&amp;</span><span class="ident">TimeVal</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_animation_iter_advance</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
@@ -453,50 +362,14 @@
         }
     }
 
-    <span class="doccomment">/// Gets the current pixbuf which should be displayed; the pixbuf might not</span>
-    <span class="doccomment">/// be the same size as the animation itself</span>
-    <span class="doccomment">/// (`PixbufAnimationExt::get_width`, `PixbufAnimationExt::get_height`).</span>
-    <span class="doccomment">/// This pixbuf should be displayed for</span>
-    <span class="doccomment">/// `PixbufAnimationIter::get_delay_time` milliseconds. The caller</span>
-    <span class="doccomment">/// of this function does not own a reference to the returned pixbuf;</span>
-    <span class="doccomment">/// the returned pixbuf will become invalid when the iterator advances</span>
-    <span class="doccomment">/// to the next frame, which may happen anytime you call</span>
-    <span class="doccomment">/// `PixbufAnimationIter::advance`. Copy the pixbuf to keep it</span>
-    <span class="doccomment">/// (don&#39;t just add a reference), as it may get recycled as you advance</span>
-    <span class="doccomment">/// the iterator.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the pixbuf to be displayed</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_pixbuf</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Pixbuf</span> {
         <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_animation_iter_get_pixbuf</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class="doccomment">/// Gets the number of milliseconds the current pixbuf should be displayed,</span>
-    <span class="doccomment">/// or -1 if the current pixbuf should be displayed forever. `g_timeout_add`</span>
-    <span class="doccomment">/// conveniently takes a timeout in milliseconds, so you can use a timeout</span>
-    <span class="doccomment">/// to schedule the next update.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Note that some formats, like GIF, might clamp the timeout values in the</span>
-    <span class="doccomment">/// image file to avoid updates that are just too quick. The minimum timeout</span>
-    <span class="doccomment">/// for GIF images is currently 20 milliseconds.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// delay time in milliseconds (thousandths of a second)</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_delay_time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_animation_iter_get_delay_time</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
-    <span class="doccomment">/// Used to determine how to respond to the area_updated signal on</span>
-    <span class="doccomment">/// `PixbufLoader` when loading an animation. area_updated is emitted</span>
-    <span class="doccomment">/// for an area of the frame currently streaming in to the loader. So if</span>
-    <span class="doccomment">/// you&#39;re on the currently loading frame, you need to redraw the screen for</span>
-    <span class="doccomment">/// the updated area.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if the frame we&#39;re on is partially loaded, or the last frame</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_currently_loading_frame</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">from_glib</span>(
@@ -600,16 +473,16 @@
     <span class="doccomment">/// Height of the bounding box of the animation.</span>
     <span class="kw">fn</span> <span class="ident">get_height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span>;
     <span class="doccomment">/// Get an iterator for displaying an animation. The iterator provides</span>
-    <span class="doccomment">/// the frames that should be displayed at a given time.</span>
-    <span class="doccomment">/// It should be freed after use with `gobject::Object::unref`.</span>
+    <span class="doccomment">/// the frames that should be displayed at a given time. It should be</span>
+    <span class="doccomment">/// freed after use with `gobject::Object::unref`.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// `start_time` would normally come from `g_get_current_time`, and</span>
-    <span class="doccomment">/// marks the beginning of animation playback. After creating an</span>
-    <span class="doccomment">/// iterator, you should immediately display the pixbuf returned by</span>
-    <span class="doccomment">/// `PixbufAnimationIter::get_pixbuf`. Then, you should install a</span>
-    <span class="doccomment">/// timeout (with `g_timeout_add`) or by some other mechanism ensure</span>
+    <span class="doccomment">/// `start_time` would normally come from `g_get_current_time`, and marks</span>
+    <span class="doccomment">/// the beginning of animation playback. After creating an iterator, you</span>
+    <span class="doccomment">/// should immediately display the pixbuf returned by</span>
+    <span class="doccomment">/// `PixbufAnimationIterExt::get_pixbuf`. Then, you should install</span>
+    <span class="doccomment">/// a timeout (with `g_timeout_add`) or by some other mechanism ensure</span>
     <span class="doccomment">/// that you&#39;ll update the image after</span>
-    <span class="doccomment">/// `PixbufAnimationIter::get_delay_time` milliseconds. Each time</span>
+    <span class="doccomment">/// `PixbufAnimationIterExt::get_delay_time` milliseconds. Each time</span>
     <span class="doccomment">/// the image is updated, you should reinstall the timeout with the new,</span>
     <span class="doccomment">/// possibly-changed delay time.</span>
     <span class="doccomment">///</span>
@@ -617,13 +490,13 @@
     <span class="doccomment">/// `g_get_current_time` will be used automatically.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// To update the image (i.e. possibly change the result of</span>
-    <span class="doccomment">/// `PixbufAnimationIter::get_pixbuf` to a new frame of the animation),</span>
-    <span class="doccomment">/// call `PixbufAnimationIter::advance`.</span>
+    <span class="doccomment">/// `PixbufAnimationIterExt::get_pixbuf` to a new frame of the animation),</span>
+    <span class="doccomment">/// call `PixbufAnimationIterExt::advance`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If you&#39;re using `PixbufLoader`, in addition to updating the image</span>
     <span class="doccomment">/// after the delay time, you should also update it whenever you</span>
     <span class="doccomment">/// receive the area_updated signal and</span>
-    <span class="doccomment">/// `PixbufAnimationIter::on_currently_loading_frame` returns</span>
+    <span class="doccomment">/// `PixbufAnimationIterExt::on_currently_loading_frame` returns</span>
     <span class="doccomment">/// `true`. In this case, the frame currently being fed into the loader</span>
     <span class="doccomment">/// has received new data, so needs to be refreshed. The delay time for</span>
     <span class="doccomment">/// a frame may also be modified after an area_updated signal, for</span>
@@ -639,9 +512,9 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// an iterator to move over the animation</span>
     <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">start_time</span>: <span class="kw-2">&amp;</span><span class="ident">TimeVal</span>) <span class="op">-&gt;</span> <span class="ident">PixbufAnimationIter</span>;
-    <span class="doccomment">/// If you load a file with `PixbufAnimation::new_from_file` and it turns</span>
-    <span class="doccomment">/// out to be a plain, unanimated image, then this function will return</span>
-    <span class="doccomment">/// `true`. Use `PixbufAnimationExt::get_static_image` to retrieve</span>
+    <span class="doccomment">/// If you load a file with `PixbufAnimation::new_from_file` and it</span>
+    <span class="doccomment">/// turns out to be a plain, unanimated image, then this function will</span>
+    <span class="doccomment">/// return `true`. Use `PixbufAnimationExt::get_static_image` to retrieve</span>
     <span class="doccomment">/// the image.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Returns</span>
@@ -697,7 +570,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Implements</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`PixbufAnimationExt`](trait.PixbufAnimationExt.html)</span>
+    <span class="doccomment">/// [`PixbufSimpleAnimExt`](trait.PixbufSimpleAnimExt.html), [`PixbufAnimationExt`](trait.PixbufAnimationExt.html)</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PixbufSimpleAnim</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GdkPixbufSimpleAnim</span><span class="op">&gt;</span>): <span class="ident">PixbufAnimation</span>;
 
     <span class="kw">match</span> <span class="kw">fn</span> {
@@ -721,29 +594,16 @@
         <span class="kw">unsafe</span> { <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_simple_anim_new</span>(<span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">rate</span>)) }
     }
 
-    <span class="doccomment">/// Adds a new frame to `self`. The `pixbuf` must</span>
-    <span class="doccomment">/// have the dimensions specified when the animation</span>
-    <span class="doccomment">/// was constructed.</span>
-    <span class="doccomment">/// ## `pixbuf`</span>
-    <span class="doccomment">/// the pixbuf to add</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_frame</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pixbuf</span>: <span class="kw-2">&amp;</span><span class="ident">Pixbuf</span>) {
         <span class="kw">unsafe</span> {
             <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_simple_anim_add_frame</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">pixbuf</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)
         }
     }
 
-    <span class="doccomment">/// Sets whether `self` should loop indefinitely when it reaches the end.</span>
-    <span class="doccomment">/// ## `loop_`</span>
-    <span class="doccomment">/// whether to loop the animation</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_loop</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">loop_</span>: <span class="ident">bool</span>) {
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_simple_anim_set_loop</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">loop_</span>.<span class="ident">to_glib</span>()) }
     }
 
-    <span class="doccomment">/// Gets whether `self` should loop indefinitely when it reaches the end.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if the animation loops forever, `false` otherwise</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_loop</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> { <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gdk_pixbuf_simple_anim_get_loop</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }

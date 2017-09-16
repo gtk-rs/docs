@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/gdk/geometry.rs.html#12-24' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/gdk/geometry.rs.html#68-80' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'><div class="docblock attributes">#[repr(C)]
 </div>pub struct Geometry {
     pub min_width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>,
@@ -62,8 +62,62 @@
     pub min_aspect: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>,
     pub max_aspect: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>,
     pub win_gravity: <a class="enum" href="../gdk/enum.Gravity.html" title="enum gdk::Gravity">Gravity</a>,
-}</pre><h2 id='fields' class='fields section-header'>
-                       <a href='#fields'>Fields</a></h2><span id='structfield.min_width' class="structfield">
+}</pre><div class='docblock'><p>The <code>Geometry</code> struct gives the window manager information about
+a window’s geometry constraints. Normally you would set these on
+the GTK+ level using <code>gtk_window_set_geometry_hints</code>. <code>GtkWindow</code>
+then sets the hints on the <code>Window</code> it creates.</p>
+
+<p><code>WindowExt::set_geometry_hints</code> expects the hints to be fully valid already
+and simply passes them to the window manager; in contrast,
+<code>gtk_window_set_geometry_hints</code> performs some interpretation. For example,
+<code>GtkWindow</code> will apply the hints to the geometry widget instead of the
+toplevel window, if you set a geometry widget. Also, the
+<code>min_width</code>/<code>min_height</code>/<code>max_width</code>/<code>max_height</code> fields may be set to -1, and
+<code>GtkWindow</code> will substitute the size request of the window or geometry widget.
+If the minimum size hint is not provided, <code>GtkWindow</code> will use its requisition
+as the minimum size. If the minimum size is provided and a geometry widget is
+set, <code>GtkWindow</code> will take the minimum size as the minimum size of the
+geometry widget rather than the entire window. The base size is treated
+similarly.</p>
+
+<p>The canonical use-case for <code>gtk_window_set_geometry_hints</code> is to get a
+terminal widget to resize properly. Here, the terminal text area should be
+the geometry widget; <code>GtkWindow</code> will then automatically set the base size to
+the size of other widgets in the terminal window, such as the menubar and
+scrollbar. Then, the <code>width_inc</code> and <code>height_inc</code> fields should be set to the
+size of one character in the terminal. Finally, the base size should be set
+to the size of one character. The net effect is that the minimum size of the
+terminal will have a 1x1 character terminal area, and only terminal sizes on
+the “character grid” will be allowed.</p>
+
+<p>Here’s an example of how the terminal example would be implemented, assuming
+a terminal area widget called “terminal” and a toplevel window “toplevel”:</p>
+
+<pre><code class="language-C">    GdkGeometry hints;
+
+    hints.base_width = terminal-&gt;char_width;
+        hints.base_height = terminal-&gt;char_height;
+        hints.min_width = terminal-&gt;char_width;
+        hints.min_height = terminal-&gt;char_height;
+        hints.width_inc = terminal-&gt;char_width;
+        hints.height_inc = terminal-&gt;char_height;
+
+ gtk_window_set_geometry_hints (GTK_WINDOW (toplevel),
+                                GTK_WIDGET (terminal),
+                                &amp;hints,
+                                GDK_HINT_RESIZE_INC |
+                                GDK_HINT_MIN_SIZE |
+                                GDK_HINT_BASE_SIZE);
+</code></pre>
+
+<p>The other useful fields are the <code>min_aspect</code> and <code>max_aspect</code> fields; these
+contain a width/height ratio as a floating point number. If a geometry widget
+is set, the aspect applies to the geometry widget rather than the entire
+window. The most common use of these hints is probably to set <code>min_aspect</code> and
+<code>max_aspect</code> to the same value, thus forcing the window to keep a constant
+aspect ratio.</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id='structfield.min_width' class="structfield">
                            <span id='min_width.v' class='invisible'>
                            <code>min_width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code>
                            </span></span><span id='structfield.min_height' class="structfield">
@@ -97,22 +151,22 @@
                            <span id='win_gravity.v' class='invisible'>
                            <code>win_gravity: <a class="enum" href="../gdk/enum.Gravity.html" title="enum gdk::Gravity">Gravity</a></code>
                            </span></span>
-            <h2 id='implementations' class='section-header'>
-              <a href='#implementations'>Trait Implementations</a>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
-        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#10' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a></code></span></h4>
+        <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#66' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#66' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> for <a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#10' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#10' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
+</div></div><h3 id='impl-Copy' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> for <a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a></code><a href='#impl-Copy' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#66' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#66' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#66' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> for <a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#10' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+</div></div><h3 id='impl-PartialEq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> for <a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a></code><a href='#impl-PartialEq' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#66' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#66' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
-</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class="struct" href="../gdk/struct.Geometry.html" title="struct gdk::Geometry">Geometry</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/geometry.rs.html#66' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
