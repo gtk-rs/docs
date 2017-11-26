@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["UnsafeFrom",""],["Wrapper","A wrapper struct."]]});
+initSidebarItems({"trait":[["UnsafeFrom",""],["Wrapper","Represents a pair of structures (instance, class) as exposed by descendants of GObject"]],"type":[["Void",""]]});
