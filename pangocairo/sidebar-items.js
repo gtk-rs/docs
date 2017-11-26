@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["functions",""]],"struct":[["Error","A generic error capable of representing various error domains (types)."],["Font",""],["FontMap",""]],"trait":[["FontExt",""],["FontMapExt",""],["FontMapExtManual",""]]});
