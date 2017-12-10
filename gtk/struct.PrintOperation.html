@@ -49,13 +49,79 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span></span></h1>
-<pre class='rust struct'>pub struct PrintOperation(_, _);</pre>
+<pre class='rust struct'>pub struct PrintOperation(_, _);</pre><div class='docblock'><p><code>PrintOperation</code> is the high-level, portable printing API.
+It looks a bit different than other GTK+ dialogs such as the
+<code>FileChooser</code>, since some platforms don’t expose enough
+infrastructure to implement a good print dialog. On such
+platforms, <code>PrintOperation</code> uses the native print dialog.
+On platforms which do not provide a native print dialog, GTK+
+uses its own, see <code>GtkPrintUnixDialog</code>.</p>
+
+<p>The typical way to use the high-level printing API is to create
+a <code>PrintOperation</code> object with <code>PrintOperation::new</code> when
+the user selects to print. Then you set some properties on it,
+e.g. the page size, any <code>PrintSettings</code> from previous print
+operations, the number of pages, the current page, etc.</p>
+
+<p>Then you start the print operation by calling <code>PrintOperationExt::run</code>.
+It will then show a dialog, let the user select a printer and
+options. When the user finished the dialog various signals will
+be emitted on the <code>PrintOperation</code>, the main one being
+<code>PrintOperation::draw-page</code>, which you are supposed to catch
+and render the page on the provided <code>PrintContext</code> using Cairo.</p>
+
+<h1 id='the-high-level-printing-api' class='section-header'><a href='#the-high-level-printing-api'>The high-level printing API</a></h1>
+<pre><code class="language-C">static GtkPrintSettings *settings = NULL;
+
+static void
+do_print (void)
+{
+  GtkPrintOperation *print;
+  GtkPrintOperationResult res;
+
+  print = gtk_print_operation_new ();
+
+  if (settings != NULL)
+    gtk_print_operation_set_print_settings (print, settings);
+
+  g_signal_connect (print, &quot;begin_print&quot;, G_CALLBACK (begin_print), NULL);
+  g_signal_connect (print, &quot;draw_page&quot;, G_CALLBACK (draw_page), NULL);
+
+  res = gtk_print_operation_run (print, GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG,
+                                 GTK_WINDOW (main_window), NULL);
+
+  if (res == GTK_PRINT_OPERATION_RESULT_APPLY)
+    {
+      if (settings != NULL)
+        g_object_unref (settings);
+      settings = g_object_ref (gtk_print_operation_get_print_settings (print));
+    }
+
+  g_object_unref (print);
+}
+</code></pre>
+
+<p>By default <code>PrintOperation</code> uses an external application to do
+print preview. To implement a custom print preview, an application
+must connect to the preview signal. The functions
+<code>PrintOperationPreview::render_page</code>,
+<code>PrintOperationPreview::end_preview</code> and
+<code>PrintOperationPreview::is_selected</code>
+are useful when implementing a print preview.</p>
+
+<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p><a href="trait.PrintOperationExt.html"><code>PrintOperationExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a>, <a href="trait.PrintOperationPreviewExt.html"><code>PrintOperationPreviewExt</code></a></p>
+</div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.PrintOperation.html" title="struct gtk::PrintOperation">PrintOperation</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/print_operation.rs.html#40-47' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.PrintOperation.html" title="struct gtk::PrintOperation">PrintOperation</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/print_operation.rs.html#41-46' title='goto source code'>[src]</a></span></h4>
-</div>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.PrintOperation.html" title="struct gtk::PrintOperation">PrintOperation</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/print_operation.rs.html#106-118' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.PrintOperation.html" title="struct gtk::PrintOperation">PrintOperation</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/print_operation.rs.html#112-117' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new <code>PrintOperation</code>.</p>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p>a new <code>PrintOperation</code></p>
+</div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
@@ -83,8 +149,8 @@
 </div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.PrintOperation.html" title="struct gtk::PrintOperation">PrintOperation</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CPrintOperationPreview%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.PrintOperationPreview.html" title="struct gtk::PrintOperationPreview">PrintOperationPreview</a>&gt; for <a class="struct" href="../gtk/struct.PrintOperation.html" title="struct gtk::PrintOperation">PrintOperation</a></code><a href='#impl-IsA%3CPrintOperationPreview%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.PrintOperation.html" title="struct gtk::PrintOperation">PrintOperation</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.PrintOperation.html" title="struct gtk::PrintOperation">PrintOperation</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/print_operation.rs.html#49-53' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/print_operation.rs.html#50-52' title='goto source code'>[src]</a></span></h4>
+<div class='impl-items'></div><h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.PrintOperation.html" title="struct gtk::PrintOperation">PrintOperation</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/print_operation.rs.html#120-124' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/print_operation.rs.html#121-123' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
