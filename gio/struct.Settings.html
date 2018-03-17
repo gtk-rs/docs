@@ -10,8 +10,11 @@
     <title>gio::Settings - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct Settings</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.new_with_path">new_with_path</a><a href="#method.list_relocatable_schemas">list_relocatable_schemas</a><a href="#method.list_schemas">list_schemas</a><a href="#method.sync">sync</a><a href="#method.unbind">unbind</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gio</a></p><script>window.sidebarCurrent = {name: 'Settings', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Settings</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.new_with_path">new_with_path</a><a href="#method.list_relocatable_schemas">list_relocatable_schemas</a><a href="#method.list_schemas">list_schemas</a><a href="#method.sync">sync</a><a href="#method.unbind">unbind</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gio</a></p><script>window.sidebarCurrent = {name: 'Settings', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,7 +62,6 @@
                </span></span></h1>
 <pre class='rust struct'>pub struct Settings(_, _);</pre><div class='docblock'><p>The <code>Settings</code> class provides a convenient API for storing and retrieving
 application settings.</p>
-
 <p>Reads and writes can be considered to be non-blocking. Reading
 settings with <code>Settings</code> is typically extremely fast: on
 approximately the same order of magnitude (but slower than) a
@@ -60,7 +70,7 @@ of time to return to your application, but can be extremely expensive
 for other threads and other processes. Many settings backends
 (including dconf) have lazy initialisation which means in the common
 case of the user using their computer without modifying any settings
-a lot of work can be avoided. For dconf, the D-Bus service doesn&#39;t
+a lot of work can be avoided. For dconf, the D-Bus service doesn't
 even need to be started in this case. For this reason, you should
 only ever modify <code>Settings</code> keys in response to explicit user action.
 Particular care should be paid to ensure that modifications are not
@@ -68,33 +78,28 @@ made during startup -- for example, when setting the initial value
 of preferences widgets. The built-in <code>SettingsExt::bind</code> functionality
 is careful not to write settings in response to notify signals as a
 result of modifications that it makes to widgets.</p>
-
 <p>When creating a GSettings instance, you have to specify a schema
 that describes the keys in your settings and their types and default
 values, as well as some other information.</p>
-
 <p>Normally, a schema has as fixed path that determines where the settings
 are stored in the conceptual global tree of settings. However, schemas
-can also be &#39;[relocatable][gsettings-relocatable]&#39;, i.e. not equipped with
+can also be '[relocatable][gsettings-relocatable]', i.e. not equipped with
 a fixed path. This is
-useful e.g. when the schema describes an &#39;account&#39;, and you want to be
+useful e.g. when the schema describes an 'account', and you want to be
 able to store a arbitrary number of accounts.</p>
-
-<p>Paths must start with and end with a forward slash character (&#39;/&#39;)
+<p>Paths must start with and end with a forward slash character ('/')
 and must not contain two sequential slash characters. Paths should
 be chosen based on a domain name associated with the program or
 library to which the settings belong. Examples of paths are
 &quot;/org/gtk/settings/file-chooser/&quot; and &quot;/ca/desrt/dconf-editor/&quot;.
 Paths should not start with &quot;/apps/&quot;, &quot;/desktop/&quot; or &quot;/system/&quot; as
 they often did in GConf.</p>
-
 <p>Unlike other configuration systems (like GConf), GSettings does not
 restrict keys to basic types like strings and numbers. GSettings stores
 values as <code>glib::Variant</code>, and allows any <code>glib::VariantType</code> for keys. Key names
-are restricted to lowercase characters, numbers and &#39;-&#39;. Furthermore,
+are restricted to lowercase characters, numbers and '-'. Furthermore,
 the names must begin with a lowercase character, must not end
-with a &#39;-&#39;, and must not contain consecutive dashes.</p>
-
+with a '-', and must not contain consecutive dashes.</p>
 <p>Similar to GConf, the default values in GSettings schemas can be
 localized, but the localized values are stored in gettext catalogs
 and looked up with the domain that is specified in the
@@ -102,7 +107,6 @@ and looked up with the domain that is specified in the
 elements and the category that is specified in the <code>l10n</code> attribute of
 the <code>&lt;default&gt;</code> element. The string which is translated includes all text in
 the <code>&lt;default&gt;</code> element, including any surrounding quotation marks.</p>
-
 <p>The <code>l10n</code> attribute must be set to <code>messages</code> or <code>time</code>, and sets the
 <a href="https://www.gnu.org/software/gettext/manual/html_node/Aspects.html%60index%60-locale-categories-1">locale category for
 translation</a>.
@@ -113,29 +117,22 @@ add these comments to aid translators understand the meaning and
 implications of the default value. An optional translation <code>context</code>
 attribute can be set on the <code>&lt;default&gt;</code> element to disambiguate multiple
 defaults which use the same string.</p>
-
 <p>For example:</p>
-
 <pre><code class="language-text"> &lt;!-- Translators: A list of words which are not allowed to be typed, in
       GVariant serialization syntax.
       See: https://developer.gnome.org/glib/stable/gvariant-text.html --&gt;
- &lt;default l10n=&#39;messages&#39; context=&#39;Banned words&#39;&gt;[&#39;bad&#39;, &#39;words&#39;]&lt;/default&gt;
+ &lt;default l10n='messages' context='Banned words'&gt;['bad', 'words']&lt;/default&gt;
 </code></pre>
-
 <p>Translations of default values must remain syntactically valid serialized
 <code>GVariants</code> (e.g. retaining any surrounding quotation marks) or runtime
 errors will occur.</p>
-
 <p>GSettings uses schemas in a compact binary form that is created
 by the [glib-compile-schemas][glib-compile-schemas]
 utility. The input is a schema description in an XML format.</p>
-
 <p>A DTD for the gschema XML format can be found here:
 <a href="https://git.gnome.org/browse/glib/tree/gio/gschema.dtd">gschema.dtd</a></p>
-
 <p>The [glib-compile-schemas][glib-compile-schemas] tool expects schema
 files to have the extension <code>.gschema.xml</code>.</p>
-
 <p>At runtime, schemas are identified by their id (as specified in the
 id attribute of the <code>&lt;schema&gt;</code> element). The convention for schema
 ids is to use a dotted name, similar in style to a D-Bus bus name,
@@ -144,7 +141,6 @@ for a specific service that owns a D-Bus bus name, the D-Bus bus name
 and schema id should match. For schemas which deal with settings not
 associated with one named application, the id should not use
 StudlyCaps, e.g. &quot;org.gnome.font-rendering&quot;.</p>
-
 <p>In addition to <code>glib::Variant</code> types, keys can have types that have
 enumerated types. These can be described by a <code>&lt;choice&gt;</code>,
 <code>&lt;enum&gt;</code> or <code>&lt;flags&gt;</code> element, as seen in the
@@ -152,9 +148,7 @@ enumerated types. These can be described by a <code>&lt;choice&gt;</code>,
 is string, but you can use <code>SettingsExt::get_enum</code>, <code>SettingsExt::set_enum</code>,
 <code>SettingsExt::get_flags</code>, <code>SettingsExt::set_flags</code> access the numeric values
 corresponding to the string value of enum and flags keys.</p>
-
 <p>An example for default value:</p>
-
 <pre><code class="language-text">&lt;schemalist&gt;
   &lt;schema id=&quot;org.gtk.Test&quot; path=&quot;/org/gtk/Test/&quot; gettext-domain=&quot;test&quot;&gt;
 
@@ -173,9 +167,7 @@ corresponding to the string value of enum and flags keys.</p>
   &lt;/schema&gt;
 &lt;/schemalist&gt;
 </code></pre>
-
 <p>An example for ranges, choices and enumerated types:</p>
-
 <pre><code class="language-text">&lt;schemalist&gt;
 
   &lt;enum id=&quot;org.gtk.Test.myenum&quot;&gt;
@@ -198,62 +190,56 @@ corresponding to the string value of enum and flags keys.</p>
 
     &lt;key name=&quot;key-with-choices&quot; type=&quot;s&quot;&gt;
       &lt;choices&gt;
-        &lt;choice value=&#39;Elisabeth&#39;/&gt;
-        &lt;choice value=&#39;Annabeth&#39;/&gt;
-        &lt;choice value=&#39;Joe&#39;/&gt;
+        &lt;choice value='Elisabeth'/&gt;
+        &lt;choice value='Annabeth'/&gt;
+        &lt;choice value='Joe'/&gt;
       &lt;/choices&gt;
       &lt;aliases&gt;
-        &lt;alias value=&#39;Anna&#39; target=&#39;Annabeth&#39;/&gt;
-        &lt;alias value=&#39;Beth&#39; target=&#39;Elisabeth&#39;/&gt;
+        &lt;alias value='Anna' target='Annabeth'/&gt;
+        &lt;alias value='Beth' target='Elisabeth'/&gt;
       &lt;/aliases&gt;
-      &lt;default&gt;&#39;Joe&#39;&lt;/default&gt;
+      &lt;default&gt;'Joe'&lt;/default&gt;
     &lt;/key&gt;
 
-    &lt;key name=&#39;enumerated-key&#39; enum=&#39;org.gtk.Test.myenum&#39;&gt;
-      &lt;default&gt;&#39;first&#39;&lt;/default&gt;
+    &lt;key name='enumerated-key' enum='org.gtk.Test.myenum'&gt;
+      &lt;default&gt;'first'&lt;/default&gt;
     &lt;/key&gt;
 
-    &lt;key name=&#39;flags-key&#39; flags=&#39;org.gtk.Test.myflags&#39;&gt;
+    &lt;key name='flags-key' flags='org.gtk.Test.myflags'&gt;
       &lt;default&gt;[&quot;flag1&quot;,&quot;flag2&quot;]&lt;/default&gt;
     &lt;/key&gt;
   &lt;/schema&gt;
 &lt;/schemalist&gt;
 </code></pre>
-
-<h2 id='vendor-overrides' class='section-header'><a href='#vendor-overrides'>Vendor overrides</a></h2>
+<h2 id="vendor-overrides" class="section-header"><a href="#vendor-overrides">Vendor overrides</a></h2>
 <p>Default values are defined in the schemas that get installed by
 an application. Sometimes, it is necessary for a vendor or distributor
 to adjust these defaults. Since patching the XML source for the schema
 is inconvenient and error-prone,
 [glib-compile-schemas][glib-compile-schemas] reads so-called vendor
-override&#39; files. These are keyfiles in the same directory as the XML
+override' files. These are keyfiles in the same directory as the XML
 schema sources which can override default values. The schema id serves
 as the group name in the key file, and the values are expected in
 serialized GVariant form, as in the following example:</p>
-
 <pre><code class="language-text">    [org.gtk.Example]
-    key1=&#39;string&#39;
+    key1='string'
     key2=1.5
 </code></pre>
-
 <p>glib-compile-schemas expects schema files to have the extension
 <code>.gschema.override</code>.</p>
-
-<h2 id='binding' class='section-header'><a href='#binding'>Binding</a></h2>
+<h2 id="binding" class="section-header"><a href="#binding">Binding</a></h2>
 <p>A very convenient feature of GSettings lets you bind <code>gobject::Object</code> properties
 directly to settings, using <code>SettingsExt::bind</code>. Once a GObject property
 has been bound to a setting, changes on either side are automatically
 propagated to the other side. GSettings handles details like mapping
 between GObject and GVariant types, and preventing infinite cycles.</p>
-
 <p>This makes it very easy to hook up a preferences dialog to the
 underlying settings. To make this even more convenient, GSettings
 looks for a boolean property with the name &quot;sensitivity&quot; and
 automatically binds it to the writability of the bound setting.
-If this &#39;magic&#39; gets in the way, it can be suppressed with the
+If this 'magic' gets in the way, it can be suppressed with the
 <code>SettingsBindFlags::NoSensitivity</code> flag.</p>
-
-<h2 id='relocatable-schemas--gsettings-relocatable' class='section-header'><a href='#relocatable-schemas--gsettings-relocatable'>Relocatable schemas # {<code>gsettings</code>-relocatable}</a></h2>
+<h2 id="relocatable-schemas--gsettings-relocatable" class="section-header"><a href="#relocatable-schemas--gsettings-relocatable">Relocatable schemas # {<code>gsettings</code>-relocatable}</a></h2>
 <p>A relocatable schema is one with no <code>path</code> attribute specified on its
 <code>&lt;schema&gt;</code> element. By using <code>Settings::new_with_path</code>, a <code>Settings</code> object
 can be instantiated for a relocatable schema, assigning a path to the
@@ -262,145 +248,117 @@ constructed dynamically from a constant prefix plus some form of instance
 identifier; but they must still be valid GSettings paths. Paths could also
 be constant and used with a globally installed schema originating from a
 dependency library.</p>
-
 <p>For example, a relocatable schema could be used to store geometry information
 for different windows in an application. If the schema ID was
 <code>org.foo.MyApp.Window</code>, it could be instantiated for paths
 <code>/org/foo/MyApp/main/</code>, <code>/org/foo/MyApp/document-1/</code>,
 <code>/org/foo/MyApp/document-2/</code>, etc. If any of the paths are well-known
 they can be specified as <code>&lt;child&gt;</code> elements in the parent schema, e.g.:</p>
-
 <pre><code class="language-text">&lt;schema id=&quot;org.foo.MyApp&quot; path=&quot;/org/foo/MyApp/&quot;&gt;
   &lt;child name=&quot;main&quot; schema=&quot;org.foo.MyApp.Window&quot;/&gt;
 &lt;/schema&gt;
 </code></pre>
-
-<h2 id='build-system-integration--gsettings-build-system' class='section-header'><a href='#build-system-integration--gsettings-build-system'>Build system integration # {<code>gsettings</code>-build-system}</a></h2>
+<h2 id="build-system-integration--gsettings-build-system" class="section-header"><a href="#build-system-integration--gsettings-build-system">Build system integration # {<code>gsettings</code>-build-system}</a></h2>
 <p>GSettings comes with autotools integration to simplify compiling and
 installing schemas. To add GSettings support to an application, add the
 following to your <code>configure.ac</code>:</p>
-
 <pre><code class="language-text">GLIB_GSETTINGS
 </code></pre>
-
 <p>In the appropriate <code>Makefile.am</code>, use the following snippet to compile and
 install the named schema:</p>
-
 <pre><code class="language-text">gsettings_SCHEMAS = org.foo.MyApp.gschema.xml
 EXTRA_DIST = $(gsettings_SCHEMAS)
 
 @GSETTINGS_RULES@
 </code></pre>
-
 <p>No changes are needed to the build system to mark a schema XML file for
 translation. Assuming it sets the <code>gettext-domain</code> attribute, a schema may
 be marked for translation by adding it to <code>POTFILES.in</code>, assuming gettext
 0.19 is in use (the preferred method for translation):</p>
-
 <pre><code class="language-text">data/org.foo.MyApp.gschema.xml
 </code></pre>
-
 <p>Alternatively, if intltool 0.50.1 is in use:</p>
-
 <pre><code class="language-text">[type: gettext/gsettings]data/org.foo.MyApp.gschema.xml
 </code></pre>
-
 <p>GSettings will use gettext to look up translations for the <code>&lt;summary&gt;</code> and
 <code>&lt;description&gt;</code> elements, and also any <code>&lt;default&gt;</code> elements which have a <code>l10n</code>
 attribute set. Translations must not be included in the <code>.gschema.xml</code> file
 by the build system, for example by using intltool XML rules with a
 <code>.gschema.xml.in</code> template.</p>
-
 <p>If an enumerated type defined in a C header file is to be used in a GSettings
 schema, it can either be defined manually using an <code>&lt;enum&gt;</code> element in the
 schema XML, or it can be extracted automatically from the C header. This
 approach is preferred, as it ensures the two representations are always
 synchronised. To do so, add the following to the relevant <code>Makefile.am</code>:</p>
-
 <pre><code class="language-text">gsettings_ENUM_NAMESPACE = org.foo.MyApp
 gsettings_ENUM_FILES = my-app-enums.h my-app-misc.h
 </code></pre>
-
 <p><code>gsettings_ENUM_NAMESPACE</code> specifies the schema namespace for the enum files,
 which are specified in <code>gsettings_ENUM_FILES</code>. This will generate a
 <code>org.foo.MyApp.enums.xml</code> file containing the extracted enums, which will be
 automatically included in the schema compilation, install and uninstall
 rules. It should not be committed to version control or included in
 <code>EXTRA_DIST</code>.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.SettingsExt.html"><code>SettingsExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#327-428' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(schema_id: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#341-345' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#330-433' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(schema_id: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#344-348' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new <code>Settings</code> object with the schema specified by
 <code>schema_id</code>.</p>
-
 <p>Signals on the newly created <code>Settings</code> object will be dispatched
 via the thread-default <code>glib::MainContext</code> in effect at the time of the
 call to <code>Settings::new</code>. The new <code>Settings</code> will hold a reference
 on the context. See <code>glib::MainContext::push_thread_default</code>.</p>
-
-<h2 id='schema_id' class='section-header'><a href='#schema_id'><code>schema_id</code></a></h2>
+<h2 id="schema_id" class="section-header"><a href="#schema_id"><code>schema_id</code></a></h2>
 <p>the id of the schema</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>a new <code>Settings</code> object</p>
-</div><h4 id='method.new_with_path' class="method"><span id='new_with_path.v' class='invisible'><code>pub fn <a href='#method.new_with_path' class='fnname'>new_with_path</a>(schema_id: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#380-384' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.new_with_path' class="method"><span id='new_with_path.v' class='invisible'><code>pub fn <a href='#method.new_with_path' class='fnname'>new_with_path</a>(schema_id: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#383-387' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new <code>Settings</code> object with the relocatable schema specified
 by <code>schema_id</code> and a given path.</p>
-
 <p>You only need to do this if you want to directly create a settings
-object with a schema that doesn&#39;t have a specified path of its own.
-That&#39;s quite rare.</p>
-
+object with a schema that doesn't have a specified path of its own.
+That's quite rare.</p>
 <p>It is a programmer error to call this function for a schema that
 has an explicitly specified path.</p>
-
 <p>It is a programmer error if <code>path</code> is not a valid path. A valid path
-begins and ends with &#39;/&#39; and does not contain two consecutive &#39;/&#39;
+begins and ends with '/' and does not contain two consecutive '/'
 characters.</p>
-
-<h2 id='schema_id-1' class='section-header'><a href='#schema_id-1'><code>schema_id</code></a></h2>
+<h2 id="schema_id-1" class="section-header"><a href="#schema_id-1"><code>schema_id</code></a></h2>
 <p>the id of the schema</p>
-
-<h2 id='path' class='section-header'><a href='#path'><code>path</code></a></h2>
+<h2 id="path" class="section-header"><a href="#path"><code>path</code></a></h2>
 <p>the path to use</p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<h1 id="returns-1" class="section-header"><a href="#returns-1">Returns</a></h1>
 <p>a new <code>Settings</code> object</p>
-</div><h4 id='method.list_relocatable_schemas' class="method"><span id='list_relocatable_schemas.v' class='invisible'><code>pub fn <a href='#method.list_relocatable_schemas' class='fnname'>list_relocatable_schemas</a>() -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#386-390' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.list_schemas' class="method"><span id='list_schemas.v' class='invisible'><code>pub fn <a href='#method.list_schemas' class='fnname'>list_schemas</a>() -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#392-396' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.sync' class="method"><span id='sync.v' class='invisible'><code>pub fn <a href='#method.sync' class='fnname'>sync</a>()</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#408-412' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.list_relocatable_schemas' class="method"><div class="important-traits"><div class='tooltip'>ⓘ<span class='tooltiptext'>Important traits for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</span></div><div class="content hidden"><h3 class="important">Important traits for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</h3><code class="content"><span class="where fmt-newline">impl <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a> for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</span></code></div></div><span id='list_relocatable_schemas.v' class='invisible'><code>pub fn <a href='#method.list_relocatable_schemas' class='fnname'>list_relocatable_schemas</a>() -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#390-394' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.list_schemas' class="method"><div class="important-traits"><div class='tooltip'>ⓘ<span class='tooltiptext'>Important traits for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</span></div><div class="content hidden"><h3 class="important">Important traits for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</h3><code class="content"><span class="where fmt-newline">impl <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a> for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</span></code></div></div><span id='list_schemas.v' class='invisible'><code>pub fn <a href='#method.list_schemas' class='fnname'>list_schemas</a>() -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#397-401' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.sync' class="method"><span id='sync.v' class='invisible'><code>pub fn <a href='#method.sync' class='fnname'>sync</a>()</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#413-417' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Ensures that all pending operations are complete for the default backend.</p>
-
 <p>Writes made to a <code>Settings</code> are handled asynchronously. For this
 reason, it is very unlikely that the changes have it to disk by the
 time <code>SettingsExt::set</code> returns.</p>
-
 <p>This call will block until all of the writes have made it to the
 backend. Since the mainloop is not running, no change notifications
 will be dispatched during this call (but some may be queued by the
 time the call is done).</p>
-</div><h4 id='method.unbind' class="method"><span id='unbind.v' class='invisible'><code>pub fn <a href='#method.unbind' class='fnname'>unbind</a>&lt;P:&nbsp;<a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt;&gt;(object: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>P, property: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#423-427' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.unbind' class="method"><span id='unbind.v' class='invisible'><code>pub fn <a href='#method.unbind' class='fnname'>unbind</a>&lt;P:&nbsp;<a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt;&gt;(object: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>P, property: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/settings.rs.html#428-432' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Removes an existing binding for <code>property</code> on <code>object</code>.</p>
-
 <p>Note that bindings are automatically removed when the
 object is finalized, so it is rarely necessary to call this
 function.</p>
-
-<h2 id='object' class='section-header'><a href='#object'><code>object</code></a></h2>
+<h2 id="object" class="section-header"><a href="#object"><code>object</code></a></h2>
 <p>the object</p>
-
-<h2 id='property' class='section-header'><a href='#property'><code>property</code></a></h2>
+<h2 id="property" class="section-header"><a href="#property"><code>property</code></a></h2>
 <p>the property whose binding is removed</p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -424,7 +382,14 @@ function.</p>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt; for <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gio/struct.Settings.html" title="struct gio::Settings">Settings</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -437,20 +402,22 @@ function.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

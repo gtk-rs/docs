@@ -10,8 +10,11 @@
     <title>gtk::CellArea - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct CellArea</p><div class="block items"><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CBuildable%3E">IsA&lt;Buildable&gt;</a><a href="#impl-IsA%3CCellLayout%3E">IsA&lt;CellLayout&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a><a href="#impl-IsA%3CCellArea%3E">IsA&lt;CellArea&gt;</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'CellArea', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct CellArea</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CBuildable%3E">IsA&lt;Buildable&gt;</a><a href="#impl-IsA%3CCellLayout%3E">IsA&lt;CellLayout&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a><a href="#impl-IsA%3CCellArea%3E">IsA&lt;CellArea&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'CellArea', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -53,21 +64,17 @@
 (also referred to as &quot;layouting widgets&quot;) to interface with an
 arbitrary number of <code>GtkCellRenderers</code> and interact with the user
 for a given <code>TreeModel</code> row.</p>
-
 <p>The cell area handles events, focus navigation, drawing and
 size requests and allocations for a given row of data.</p>
-
 <p>Usually users dont have to interact with the <code>CellArea</code> directly
 unless they are implementing a cell-layouting widget themselves.</p>
-
-<h1 id='requesting-area-sizes' class='section-header'><a href='#requesting-area-sizes'>Requesting area sizes</a></h1>
+<h1 id="requesting-area-sizes" class="section-header"><a href="#requesting-area-sizes">Requesting area sizes</a></h1>
 <p>As outlined in
 [<code>Widget</code>’s geometry management section][geometry-management],
 GTK+ uses a height-for-width
 geometry management system to compute the sizes of widgets and user
 interfaces. <code>CellArea</code> uses the same semantics to calculate the
 size of an area for an arbitrary number of <code>TreeModel</code> rows.</p>
-
 <p>When requesting the size of a cell area one needs to calculate
 the size for a handful of rows, and this will be done differently by
 different layouting widgets. For instance a <code>TreeViewColumn</code>
@@ -75,7 +82,6 @@ always lines up the areas from top to bottom while a <code>IconView</code>
 on the other hand might enforce that all areas received the same
 width and wrap the areas around, requesting height for more cell
 areas when allocated less width.</p>
-
 <p>It’s also important for areas to maintain some cell
 alignments with areas rendered for adjacent rows (cells can
 appear “columnized” inside an area even when the size of
@@ -84,7 +90,6 @@ uses a <code>CellAreaContext</code> object to store the alignments
 and sizes along the way (as well as the overall largest minimum
 and natural size for all the rows which have been calculated
 with the said context).</p>
-
 <p>The <code>CellAreaContext</code> is an opaque object specific to the
 <code>CellArea</code> which created it (see <code>CellAreaExt::create_context</code>).
 The owning cell-layouting widget can create as many contexts as
@@ -93,10 +98,8 @@ same size in at least one orientation (horizontally or vertically),
 However, it’s important that the same <code>CellAreaContext</code> which
 was used to request the sizes for a given <code>TreeModel</code> row be
 used when rendering or processing events for that row.</p>
-
 <p>In order to request the width of all the rows at the root level
 of a <code>TreeModel</code> one would do the following:</p>
-
 <pre><code class="language-C">GtkTreeIter iter;
 gint        minimum_width;
 gint        natural_width;
@@ -111,14 +114,12 @@ while (valid)
   }
 gtk_cell_area_context_get_preferred_width (context, &amp;minimum_width, &amp;natural_width);
 </code></pre>
-
 <p>Note that in this example it’s not important to observe the
 returned minimum and natural width of the area for each row
 unless the cell-layouting object is actually interested in the
 widths of individual rows. The overall width is however stored
 in the accompanying <code>CellAreaContext</code> object and can be consulted
 at any time.</p>
-
 <p>This can be useful since <code>CellLayout</code> widgets usually have to
 support requesting and rendering rows in treemodels with an
 exceedingly large amount of rows. The <code>CellLayout</code> widget in
@@ -127,10 +128,8 @@ idle or timeout source (see <code>g_timeout_add</code>) and when the widget
 is requested its actual width in <code>WidgetClass.get_preferred_width</code>()
 it can simply consult the width accumulated so far in the
 <code>CellAreaContext</code> object.</p>
-
 <p>A simple example where rows are rendered from top to bottom and
 take up the full width of the layouting widget would look like:</p>
-
 <pre><code class="language-C">static void
 foo_get_preferred_width (GtkWidget       *widget,
                          gint            *minimum_size,
@@ -144,23 +143,19 @@ foo_get_preferred_width (GtkWidget       *widget,
   gtk_cell_area_context_get_preferred_width (priv-&gt;context, minimum_size, natural_size);
 }
 </code></pre>
-
 <p>In the above example the Foo widget has to make sure that some
 row sizes have been calculated (the amount of rows that Foo judged
 was appropriate to request space for in a single timeout iteration)
 before simply returning the amount of space required by the area via
 the <code>CellAreaContext</code>.</p>
-
 <p>Requesting the height for width (or width for height) of an area is
 a similar task except in this case the <code>CellAreaContext</code> does not
 store the data (actually, it does not know how much space the layouting
 widget plans to allocate it for every row. It’s up to the layouting
 widget to render each row of data with the appropriate height and
 width which was requested by the <code>CellArea</code>).</p>
-
 <p>In order to request the height for width of all the rows at the
 root level of a <code>TreeModel</code> one would do the following:</p>
-
 <pre><code class="language-C">GtkTreeIter iter;
 gint        minimum_height;
 gint        natural_height;
@@ -183,13 +178,11 @@ while (valid)
     valid = gtk_tree_model_iter_next (model, &amp;iter);
   }
 </code></pre>
-
 <p>Note that in the above example we would need to cache the heights
 returned for each row so that we would know what sizes to render the
 areas for each row. However we would only want to really cache the
 heights if the request is intended for the layouting widgets real
 allocation.</p>
-
 <p>In some cases the layouting widget is requested the height for an
 arbitrary for_width, this is a special case for layouting widgets
 who need to request size for tens of thousands of rows. For this
@@ -204,15 +197,12 @@ inconsequential since after the layouting receives an allocation
 from a scrolled window it simply continues to drive the scrollbar
 values while more and more height is required for the row heights
 that are calculated in the background.</p>
-
-<h1 id='rendering-areas' class='section-header'><a href='#rendering-areas'>Rendering Areas</a></h1>
+<h1 id="rendering-areas" class="section-header"><a href="#rendering-areas">Rendering Areas</a></h1>
 <p>Once area sizes have been aquired at least for the rows in the
 visible area of the layouting widget they can be rendered at
 <code>WidgetClass.draw</code>() time.</p>
-
 <p>A crude example of how to render all the rows at the root level
 runs as follows:</p>
-
 <pre><code class="language-C">GtkAllocation allocation;
 GdkRectangle  cell_area = { 0, };
 GtkTreeIter   iter;
@@ -236,15 +226,13 @@ while (valid)
     valid = gtk_tree_model_iter_next (model, &amp;iter);
   }
 </code></pre>
-
 <p>Note that the cached height in this example really depends on how
 the layouting widget works. The layouting widget might decide to
 give every row its minimum or natural height or, if the model content
 is expected to fit inside the layouting widget without scrolling, it
 would make sense to calculate the allocation for each row at
 <code>Widget::size-allocate</code> time using <code>gtk_distribute_natural_allocation</code>.</p>
-
-<h1 id='handling-events-and-driving-keyboard-focus' class='section-header'><a href='#handling-events-and-driving-keyboard-focus'>Handling Events and Driving Keyboard Focus</a></h1>
+<h1 id="handling-events-and-driving-keyboard-focus" class="section-header"><a href="#handling-events-and-driving-keyboard-focus">Handling Events and Driving Keyboard Focus</a></h1>
 <p>Passing events to the area is as simple as handling events on any
 normal widget and then passing them to the <code>CellAreaExt::event</code>
 API as they come in. Usually <code>CellArea</code> is only interested in
@@ -255,13 +243,11 @@ trigger the <code>CellArea::focus-changed</code> signal to fire; as well as
 clicked and needs to start editing. You can call
 <code>CellAreaExt::stop_editing</code> at any time to cancel any cell editing
 that is currently in progress.</p>
-
 <p>The <code>CellArea</code> drives keyboard focus from cell to cell in a way
 similar to <code>Widget</code>. For layouting widgets that support giving
 focus to cells it’s important to remember to pass <code>CellRendererState::Focused</code>
 to the area functions for the row that has focus and to tell the
 area to paint the focus at render time.</p>
-
 <p>Layouting widgets that accept focus on cells should implement the
 <code>WidgetClass.focus</code>() virtual method. The layouting widget is always
 responsible for knowing where <code>TreeModel</code> rows are rendered inside
@@ -269,10 +255,8 @@ the widget, so at <code>WidgetClass.focus</code>() time the layouting widget
 should use the <code>CellArea</code> methods to navigate focus inside the area
 and then observe the <code>DirectionType</code> to pass the focus to adjacent
 rows and areas.</p>
-
 <p>A basic example of how the <code>WidgetClass.focus</code>() virtual method
 should be implemented:</p>
-
 <pre><code class="language-C">static gboolean
 foo_focus (GtkWidget       *widget,
            GtkDirectionType direction)
@@ -329,11 +313,9 @@ foo_focus (GtkWidget       *widget,
     return have_focus;
 }
 </code></pre>
-
 <p>Note that the layouting widget is responsible for matching the
 <code>DirectionType</code> values to the way it lays out its cells.</p>
-
-<h1 id='cell-properties' class='section-header'><a href='#cell-properties'>Cell Properties</a></h1>
+<h1 id="cell-properties" class="section-header"><a href="#cell-properties">Cell Properties</a></h1>
 <p>The <code>CellArea</code> introduces cell properties for <code>GtkCellRenderers</code>
 in very much the same way that <code>Container</code> introduces
 [child properties][child-properties]
@@ -343,23 +325,21 @@ the relationship cell areas have with their cells. For instance in a
 the area is allocated more than its full natural request, or a cell
 might be configured to “align” with adjacent rows which were requested
 and rendered with the same <code>CellAreaContext</code>.</p>
-
 <p>Use <code>CellAreaClass::install_cell_property</code> to install cell
 properties for a cell area class and <code>CellAreaClass::find_cell_property</code>
 or <code>CellAreaClass::list_cell_properties</code> to get information about
 existing cell properties.</p>
-
 <p>To set the value of a cell property, use <code>CellArea::cell_set_property</code>,
 <code>CellAreaExt::cell_set</code> or <code>CellAreaExt::cell_set_valist</code>. To obtain
 the value of a cell property, use <code>CellArea::cell_get_property</code>,
 <code>CellAreaExt::cell_get</code> or <code>CellAreaExt::cell_get_valist</code>.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.CellAreaExt.html"><code>CellAreaExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a>, <a href="trait.BuildableExt.html"><code>BuildableExt</code></a>, <a href="trait.CellLayoutExt.html"><code>CellLayoutExt</code></a></p>
 </div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.CellArea.html" title="struct gtk::CellArea">CellArea</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.CellArea.html" title="struct gtk::CellArea">CellArea</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -386,7 +366,14 @@ the value of a cell property, use <code>CellArea::cell_get_property</code>,
 <div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.CellArea.html" title="struct gtk::CellArea">CellArea</a></code><a href='#impl-IsA%3CCellLayout%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.CellArea.html" title="struct gtk::CellArea">CellArea</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CCellArea%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellArea.html" title="struct gtk::CellArea">CellArea</a>&gt; for <a class="struct" href="../gtk/struct.CellAreaBox.html" title="struct gtk::CellAreaBox">CellAreaBox</a></code><a href='#impl-IsA%3CCellArea%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gtk/struct.CellArea.html" title="struct gtk::CellArea">CellArea</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gtk/struct.CellArea.html" title="struct gtk::CellArea">CellArea</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -399,20 +386,22 @@ the value of a cell property, use <code>CellArea::cell_get_property</code>,
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

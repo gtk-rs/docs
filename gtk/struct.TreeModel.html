@@ -10,8 +10,11 @@
     <title>gtk::TreeModel - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct TreeModel</p><div class="block items"><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-IsA%3CTreeModel%3E">IsA&lt;TreeModel&gt;</a><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'TreeModel', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct TreeModel</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-IsA%3CTreeModel%3E">IsA&lt;TreeModel&gt;</a><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'TreeModel', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -54,7 +65,6 @@ use by the <code>TreeView</code> widget. It is an abstract interface, and
 is designed to be usable with any appropriate data structure. The
 programmer just has to implement this interface on their own data
 type for it to be viewable by a <code>TreeView</code> widget.</p>
-
 <p>The model is represented as a hierarchical tree of strongly-typed,
 columned data. In other words, the model can be seen as a tree where
 every node has different values depending on which column is being
@@ -64,7 +74,6 @@ etc). The types are homogeneous per column across all nodes. It is
 important to note that this interface only provides a way of examining
 a model and observing changes. The implementation of each individual
 model decides how and if changes are made.</p>
-
 <p>In order to make life simpler for programmers who do not need to
 write their own specialized model, two generic models are provided
 — the <code>TreeStore</code> and the <code>ListStore</code>. To use these, the
@@ -73,14 +82,12 @@ models provide the data structure as well as all appropriate tree
 interfaces. As a result, implementing drag and drop, sorting, and
 storing data is trivial. For the vast majority of trees and lists,
 these two models are sufficient.</p>
-
 <p>Models are accessed on a node/column level of granularity. One can
 query for the value of a model at a certain node and a certain
 column on that node. There are two structures used to reference a
 particular node in a model. They are the <code>TreePath</code>-struct and
 the <code>TreeIter</code>-struct (“iter” is short for iterator). Most of the
 interface consists of operations on a <code>TreeIter</code>-struct.</p>
-
 <p>A path is essentially a potential node. It is a location on a model
 that may or may not actually correspond to a node on a specific
 model. The <code>TreePath</code>-struct can be converted into either an
@@ -89,7 +96,6 @@ of numbers separated by a colon. Each number refers to the offset
 at that level. Thus, the path <code>0</code> refers to the root
 node and the path <code>2:4</code> refers to the fifth child of
 the third node.</p>
-
 <p>By contrast, a <code>TreeIter</code>-struct is a reference to a specific node on
 a specific model. It is a generic struct with an integer and three
 generic pointers. These are filled in by the model in a model-specific
@@ -99,7 +105,6 @@ of accessing a model and are similar to the iterators used by
 <code>TextBuffer</code>. They are generally statically allocated on the
 stack and only used for a short time. The model interface defines
 a set of operations using them for navigating the model.</p>
-
 <p>It is expected that models fill in the iterator with private data.
 For example, the <code>ListStore</code> model, which is internally a simple
 linked list, stores a list node in one of the pointers. The
@@ -107,7 +112,6 @@ linked list, stores a list node in one of the pointers. The
 pointers. Additionally, there is an integer field. This field is
 generally filled with a unique stamp per model. This stamp is for
 catching errors resulting from using invalid iterators with a model.</p>
-
 <p>The lifecycle of an iterator can be a little confusing at first.
 Iterators are expected to always be valid for as long as the model
 is unchanged (and doesn’t emit a signal). The model is considered
@@ -120,14 +124,12 @@ the case where iterators do not persist beyond a signal, some very
 important performance enhancements were made in the sort model.
 As a result, the <code>TreeModelFlags::ItersPersist</code> flag was added to
 indicate this behavior.</p>
-
 <p>To help show some common operation of a model, some examples are
 provided. The first example shows three ways of getting the iter at
 the location <code>3:2:5</code>. While the first method shown is
 easier, the second is much more common, as you often get paths from
 callbacks.</p>
-
-<h2 id='acquiring-a-treeiter-struct' class='section-header'><a href='#acquiring-a-treeiter-struct'>Acquiring a <code>TreeIter</code>-struct</a></h2>
+<h2 id="acquiring-a-treeiter-struct" class="section-header"><a href="#acquiring-a-treeiter-struct">Acquiring a <code>TreeIter</code>-struct</a></h2>
 <pre><code class="language-C">// Three ways of getting the iter pointing to the location
 GtkTreePath *path;
 GtkTreeIter iter;
@@ -153,14 +155,12 @@ parent_iter = iter;
 gtk_tree_model_iter_nth_child (model, &amp;iter,
                                &amp;parent_iter, 5);
 </code></pre>
-
 <p>This second example shows a quick way of iterating through a list
 and getting a string and an integer from each row. The
 <code>populate_model</code> function used below is not
 shown, as it is specific to the <code>ListStore</code>. For information on
 how to write such a function, see the <code>ListStore</code> documentation.</p>
-
-<h2 id='reading-data-from-a-treemodel' class='section-header'><a href='#reading-data-from-a-treemodel'>Reading data from a <code>TreeModel</code></a></h2>
+<h2 id="reading-data-from-a-treemodel" class="section-header"><a href="#reading-data-from-a-treemodel">Reading data from a <code>TreeModel</code></a></h2>
 <pre><code class="language-C">enum
 {
   STRING_COLUMN,
@@ -209,7 +209,6 @@ while (valid)
    row_count++;
  }
 </code></pre>
-
 <p>The <code>TreeModel</code> interface contains two methods for reference
 counting: <code>TreeModel::ref_node</code> and <code>TreeModel::unref_node</code>.
 These two methods are optional to implement. The reference counting
@@ -222,30 +221,34 @@ scheme a caching model, for example, can decide whether or not to cache
 a node based on the reference count. A file-system based model would
 not want to keep the entire file hierarchy in memory, but just the
 folders that are currently expanded in every current view.</p>
-
 <p>When working with reference counting, the following rules must be taken
 into account:</p>
-
 <ul>
-<li><p>Never take a reference on a node without owning a reference on its parent.
+<li>
+<p>Never take a reference on a node without owning a reference on its parent.
 This means that all parent nodes of a referenced node must be referenced
-as well.</p></li>
-<li><p>Outstanding references on a deleted node are not released. This is not
+as well.</p>
+</li>
+<li>
+<p>Outstanding references on a deleted node are not released. This is not
 possible because the node has already been deleted by the time the
-row-deleted signal is received.</p></li>
-<li><p>Models are not obligated to emit a signal on rows of which none of its
+row-deleted signal is received.</p>
+</li>
+<li>
+<p>Models are not obligated to emit a signal on rows of which none of its
 siblings are referenced. To phrase this differently, signals are only
 required for levels in which nodes are referenced. For the root level
 however, signals must be emitted at all times (however the root level
-is always referenced when any view is attached).</p></li>
+is always referenced when any view is attached).</p>
+</li>
 </ul>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.TreeModelExt.html"><code>TreeModelExt</code></a></p>
 </div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-IsA%3CTreeModel%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt; for <a class="struct" href="../gtk/struct.ListStore.html" title="struct gtk::ListStore">ListStore</a></code><a href='#impl-IsA%3CTreeModel%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a></code></span></h4>
@@ -273,7 +276,14 @@ is always referenced when any view is attached).</p></li>
 <div class='impl-items'></div><h3 id='impl-IsA%3CTreeModel%3E-1' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt; for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code><a href='#impl-IsA%3CTreeModel%3E-1' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CTreeModel%3E-2' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt; for <a class="struct" href="../gtk/struct.TreeSortable.html" title="struct gtk::TreeSortable">TreeSortable</a></code><a href='#impl-IsA%3CTreeModel%3E-2' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CTreeModel%3E-3' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt; for <a class="struct" href="../gtk/struct.TreeStore.html" title="struct gtk::TreeStore">TreeStore</a></code><a href='#impl-IsA%3CTreeModel%3E-3' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -286,20 +296,22 @@ is always referenced when any view is attached).</p></li>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

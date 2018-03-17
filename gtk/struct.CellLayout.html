@@ -10,8 +10,11 @@
     <title>gtk::CellLayout - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct CellLayout</p><div class="block items"><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-IsA%3CCellLayout%3E">IsA&lt;CellLayout&gt;</a><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'CellLayout', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct CellLayout</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-IsA%3CCellLayout%3E">IsA&lt;CellLayout&gt;</a><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'CellLayout', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -52,7 +63,6 @@
 <pre class='rust struct'>pub struct CellLayout(_, _);</pre><div class='docblock'><p><code>CellLayout</code> is an interface to be implemented by all objects which
 want to provide a <code>TreeViewColumn</code> like API for packing cells,
 setting attributes and data funcs.</p>
-
 <p>One of the notable features provided by implementations of
 <code>CellLayout</code> are attributes. Attributes let you set the properties
 in flexible ways. They can just be set to constant values like regular
@@ -62,8 +72,7 @@ of the attribute can change from cell to cell as they are rendered by
 the cell renderer. Finally, it is possible to specify a function with
 <code>CellLayout::set_cell_data_func</code> that is called to determine the
 value of the attribute for each cell that is rendered.</p>
-
-<h1 id='gtkcelllayouts-as-buildable' class='section-header'><a href='#gtkcelllayouts-as-buildable'><code>GtkCellLayouts</code> as <code>Buildable</code></a></h1>
+<h1 id="gtkcelllayouts-as-buildable" class="section-header"><a href="#gtkcelllayouts-as-buildable"><code>GtkCellLayouts</code> as <code>Buildable</code></a></h1>
 <p>Implementations of <code>CellLayout</code> which also implement the <code>Buildable</code>
 interface (<code>CellView</code>, <code>IconView</code>, <code>ComboBox</code>,
 <code>EntryCompletion</code>, <code>TreeViewColumn</code>) accept <code>CellRenderer</code> objects
@@ -72,12 +81,9 @@ element for their children, which can contain multiple <code>&lt;attribute&gt;</
 elements. Each <code>&lt;attribute&gt;</code> element has a name attribute which specifies
 a property of the cell renderer; the content of the element is the
 attribute value.</p>
-
 <p>This is an example of a UI definition fragment specifying attributes:</p>
-
 <pre><code class="language-C">combo = g_object_new (GTK_TYPE_COMBO_BOX, &quot;cell-area&quot;, my_cell_area, NULL);
 </code></pre>
-
 <p>to use a custom cell area with a combo box. But construct properties
 are only initialized after instance <code>init</code>
 functions have run, which means that using functions which rely on
@@ -85,7 +91,6 @@ the existence of the cell area in your subclass’ <code>init</code> function wi
 cause the default cell area to be instantiated. In this case, a provided
 construct property value will be ignored (with a warning, to alert
 you to the problem).</p>
-
 <pre><code class="language-C">static void
 my_combo_box_init (MyComboBox *b)
 {
@@ -105,21 +110,21 @@ my_combo_box_new (GtkCellArea *area)
   return g_object_new (MY_TYPE_COMBO_BOX, &quot;cell-area&quot;, area, NULL);
 }
 </code></pre>
-
 <p>If supporting alternative cell areas with your derived widget is
 not important, then this does not have to concern you. If you want
 to support alternative cell areas, you can do so by moving the
 problematic calls out of <code>init</code> and into a <code>constructor</code>
 for your class.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.CellLayoutExt.html"><code>CellLayoutExt</code></a></p>
 </div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
-        <h3 id='impl-IsA%3CCellLayout%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.CellArea.html" title="struct gtk::CellArea">CellArea</a></code><a href='#impl-IsA%3CCellLayout%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-1' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.CellAreaBox.html" title="struct gtk::CellAreaBox">CellAreaBox</a></code><a href='#impl-IsA%3CCellLayout%3E-1' class='anchor'></a></span><span class='out-of-band'></span></h3>
+            <div id='implementations-list'>
+        <h3 id='impl-IsA%3CCellLayout%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.AppChooserButton.html" title="struct gtk::AppChooserButton">AppChooserButton</a></code><a href='#impl-IsA%3CCellLayout%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-1' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.CellArea.html" title="struct gtk::CellArea">CellArea</a></code><a href='#impl-IsA%3CCellLayout%3E-1' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-2' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.CellAreaBox.html" title="struct gtk::CellAreaBox">CellAreaBox</a></code><a href='#impl-IsA%3CCellLayout%3E-2' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -143,12 +148,20 @@ for your class.</p>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-2' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.ComboBox.html" title="struct gtk::ComboBox">ComboBox</a></code><a href='#impl-IsA%3CCellLayout%3E-2' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-3' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.ComboBoxText.html" title="struct gtk::ComboBoxText">ComboBoxText</a></code><a href='#impl-IsA%3CCellLayout%3E-3' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-4' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.EntryCompletion.html" title="struct gtk::EntryCompletion">EntryCompletion</a></code><a href='#impl-IsA%3CCellLayout%3E-4' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-5' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.IconView.html" title="struct gtk::IconView">IconView</a></code><a href='#impl-IsA%3CCellLayout%3E-5' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-6' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.TreeViewColumn.html" title="struct gtk::TreeViewColumn">TreeViewColumn</a></code><a href='#impl-IsA%3CCellLayout%3E-6' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-3' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.CellView.html" title="struct gtk::CellView">CellView</a></code><a href='#impl-IsA%3CCellLayout%3E-3' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-4' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.ComboBox.html" title="struct gtk::ComboBox">ComboBox</a></code><a href='#impl-IsA%3CCellLayout%3E-4' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-5' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.ComboBoxText.html" title="struct gtk::ComboBoxText">ComboBoxText</a></code><a href='#impl-IsA%3CCellLayout%3E-5' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-6' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.EntryCompletion.html" title="struct gtk::EntryCompletion">EntryCompletion</a></code><a href='#impl-IsA%3CCellLayout%3E-6' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-7' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.IconView.html" title="struct gtk::IconView">IconView</a></code><a href='#impl-IsA%3CCellLayout%3E-7' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-IsA%3CCellLayout%3E-8' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a>&gt; for <a class="struct" href="../gtk/struct.TreeViewColumn.html" title="struct gtk::TreeViewColumn">TreeViewColumn</a></code><a href='#impl-IsA%3CCellLayout%3E-8' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gtk/struct.CellLayout.html" title="struct gtk::CellLayout">CellLayout</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -161,20 +174,22 @@ for your class.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

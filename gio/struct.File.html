@@ -10,8 +10,11 @@
     <title>gio::File - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct File</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new_for_commandline_arg">new_for_commandline_arg</a><a href="#method.new_for_commandline_arg_and_cwd">new_for_commandline_arg_and_cwd</a><a href="#method.new_for_path">new_for_path</a><a href="#method.new_for_uri">new_for_uri</a><a href="#method.parse_name">parse_name</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gio</a></p><script>window.sidebarCurrent = {name: 'File', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct File</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new_for_commandline_arg">new_for_commandline_arg</a><a href="#method.new_for_commandline_arg_and_cwd">new_for_commandline_arg_and_cwd</a><a href="#method.new_for_path">new_for_path</a><a href="#method.new_for_uri">new_for_uri</a><a href="#method.new_tmp">new_tmp</a><a href="#method.parse_name">parse_name</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gio</a></p><script>window.sidebarCurrent = {name: 'File', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -55,19 +66,18 @@ that do no I/O upon creation. It is necessary to understand that
 <code>File</code> objects do not represent files, merely an identifier for a
 file. All file content I/O is implemented as streaming operations
 (see <code>InputStream</code> and <code>OutputStream</code>).</p>
-
-<p>To construct a <code>File</code>, you can use:
-- <code>File::new_for_path</code> if you have a path.
-- <code>File::new_for_uri</code> if you have a URI.
-- <code>File::new_for_commandline_arg</code> for a command line argument.
-- <code>File::new_tmp</code> to create a temporary file from a template.
-- <code>File::parse_name</code> from a UTF-8 string gotten from <code>File::get_parse_name</code>.</p>
-
+<p>To construct a <code>File</code>, you can use:</p>
+<ul>
+<li><code>File::new_for_path</code> if you have a path.</li>
+<li><code>File::new_for_uri</code> if you have a URI.</li>
+<li><code>File::new_for_commandline_arg</code> for a command line argument.</li>
+<li><code>File::new_tmp</code> to create a temporary file from a template.</li>
+<li><code>File::parse_name</code> from a UTF-8 string gotten from <code>File::get_parse_name</code>.</li>
+</ul>
 <p>One way to think of a <code>File</code> is as an abstraction of a pathname. For
 normal files the system pathname is what is stored internally, but as
 <code>GFiles</code> are extensible it could also be something else that corresponds
 to a pathname in a userspace implementation of a filesystem.</p>
-
 <p><code>GFiles</code> make up hierarchies of directories and files that correspond to
 the files on a filesystem. You can move through the file system with
 <code>File</code> using <code>File::get_parent</code> to get an identifier for the parent
@@ -76,7 +86,6 @@ directory, <code>File::get_child</code> to get a child within a directory,
 <code>GFiles</code>. There can be multiple hierarchies, so you may not end up at
 the same root if you repeatedly call <code>File::get_parent</code> on two different
 files.</p>
-
 <p>All <code>GFiles</code> have a basename (get with <code>File::get_basename</code>). These names
 are byte strings that are used to identify the file on the filesystem
 (relative to its parent directory) and there is no guarantees that they
@@ -88,7 +97,6 @@ This is guaranteed to be in UTF-8 and can be used in a user interface.
 But always store the real basename or the <code>File</code> to use to actually
 access the file, because there is no way to go from a display name to
 the actual name.</p>
-
 <p>Using <code>File</code> as an identifier has the same weaknesses as using a path
 in that there may be multiple aliases for the same file. For instance,
 hard or soft links may cause two different <code>GFiles</code> to refer to the same
@@ -99,28 +107,26 @@ check if two <code>GFiles</code> point to the same file you can query for the
 canonicalization of pathnames passed in, so that trivial differences in
 the path string used at creation (duplicated slashes, slash at end of
 path, &quot;.&quot; or &quot;..&quot; path segments, etc) does not create different <code>GFiles</code>.</p>
-
 <p>Many <code>File</code> operations have both synchronous and asynchronous versions
 to suit your application. Asynchronous versions of synchronous functions
 simply have <code>_async</code> appended to their function names. The asynchronous
 I/O functions call a <code>GAsyncReadyCallback</code> which is then used to finalize
 the operation, producing a GAsyncResult which is then passed to the
-function&#39;s matching <code>_finish</code> operation.</p>
-
+function's matching <code>_finish</code> operation.</p>
 <p>It is highly recommended to use asynchronous calls when running within a
 shared main loop, such as in the main thread of an application. This avoids
 I/O operations blocking other sources on the main loop from being dispatched.
 Synchronous I/O operations should be performed from worker threads. See the
 [introduction to asynchronous programming section][async-programming] for
 more.</p>
-
 <p>Some <code>File</code> operations almost always take a noticeable amount of time, and
-so do not have synchronous analogs. Notable cases include:
-- <code>File::mount_mountable</code> to mount a mountable file.
-- <code>File::unmount_mountable_with_operation</code> to unmount a mountable file.
-- <code>File::eject_mountable_with_operation</code> to eject a mountable file.</p>
-
-<h2 id='entity-tags--gfile-etag' class='section-header'><a href='#entity-tags--gfile-etag'>Entity Tags # {<code>gfile</code>-etag}</a></h2>
+so do not have synchronous analogs. Notable cases include:</p>
+<ul>
+<li><code>File::mount_mountable</code> to mount a mountable file.</li>
+<li><code>File::unmount_mountable_with_operation</code> to unmount a mountable file.</li>
+<li><code>File::eject_mountable_with_operation</code> to eject a mountable file.</li>
+</ul>
+<h2 id="entity-tags--gfile-etag" class="section-header"><a href="#entity-tags--gfile-etag">Entity Tags # {<code>gfile</code>-etag}</a></h2>
 <p>One notable feature of <code>GFiles</code> are entity tags, or &quot;etags&quot; for
 short. Entity tags are somewhat like a more abstract version of the
 traditional mtime, and can be used to quickly determine if the file
@@ -128,21 +134,19 @@ has been modified from the version on the file system. See the
 HTTP 1.1
 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">specification</a>
 for HTTP Etag headers, which are a very similar concept.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.FileExt.html"><code>FileExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#115-225' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new_for_commandline_arg' class="method"><span id='new_for_commandline_arg.v' class='invisible'><code>pub fn <a href='#method.new_for_commandline_arg' class='fnname'>new_for_commandline_arg</a>(arg: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#137-141' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#117-252' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new_for_commandline_arg' class="method"><span id='new_for_commandline_arg.v' class='invisible'><code>pub fn <a href='#method.new_for_commandline_arg' class='fnname'>new_for_commandline_arg</a>(arg: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#139-143' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a <code>File</code> with the given argument from the command line.
 The value of <code>arg</code> can be either a URI, an absolute path or a
 relative path resolved relative to the current working directory.
 This operation never fails, but the returned object might not
 support any I/O operation if <code>arg</code> points to a malformed path.</p>
-
 <p>Note that on Windows, this function expects its argument to be in
 UTF-8 -- not the system code page. This means that you
 should not use this function with string from argv as it is passed
@@ -151,75 +155,78 @@ the commandline. <code>Application</code> also uses UTF-8 but
 <code>ApplicationCommandLine::create_file_for_arg</code> may be more useful
 for you there. It is also always possible to use this function with
 <code>glib::OptionContext</code> arguments of type <code>glib::OptionArg::Filename</code>.</p>
-
-<h2 id='arg' class='section-header'><a href='#arg'><code>arg</code></a></h2>
+<h2 id="arg" class="section-header"><a href="#arg"><code>arg</code></a></h2>
 <p>a command line string</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>a new <code>File</code>.
- Free the returned object with <code>gobject::ObjectExt::unref</code>.</p>
-</div><h4 id='method.new_for_commandline_arg_and_cwd' class="method"><span id='new_for_commandline_arg_and_cwd.v' class='invisible'><code>pub fn <a href='#method.new_for_commandline_arg_and_cwd' class='fnname'>new_for_commandline_arg_and_cwd</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;arg: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;cwd: P<br>) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#166-170' title='goto source code'>[src]</a></span></h4>
+Free the returned object with <code>gobject::ObjectExt::unref</code>.</p>
+</div><h4 id='method.new_for_commandline_arg_and_cwd' class="method"><span id='new_for_commandline_arg_and_cwd.v' class='invisible'><code>pub fn <a href='#method.new_for_commandline_arg_and_cwd' class='fnname'>new_for_commandline_arg_and_cwd</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;arg: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;cwd: P<br>) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#168-172' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a <code>File</code> with the given argument from the command line.</p>
-
 <p>This function is similar to <code>File::new_for_commandline_arg</code> except
 that it allows for passing the current working directory as an
 argument instead of using the current working directory of the
 process.</p>
-
 <p>This is useful if the commandline argument was given in a context
 other than the invocation of the current process.</p>
-
 <p>See also <code>ApplicationCommandLine::create_file_for_arg</code>.</p>
-
 <p>Feature: <code>v2_36</code></p>
-
-<h2 id='arg-1' class='section-header'><a href='#arg-1'><code>arg</code></a></h2>
+<h2 id="arg-1" class="section-header"><a href="#arg-1"><code>arg</code></a></h2>
 <p>a command line string</p>
-
-<h2 id='cwd' class='section-header'><a href='#cwd'><code>cwd</code></a></h2>
+<h2 id="cwd" class="section-header"><a href="#cwd"><code>cwd</code></a></h2>
 <p>the current working directory of the commandline</p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<h1 id="returns-1" class="section-header"><a href="#returns-1">Returns</a></h1>
 <p>a new <code>File</code></p>
-</div><h4 id='method.new_for_path' class="method"><span id='new_for_path.v' class='invisible'><code>pub fn <a href='#method.new_for_path' class='fnname'>new_for_path</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(path: P) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#183-187' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.new_for_path' class="method"><span id='new_for_path.v' class='invisible'><code>pub fn <a href='#method.new_for_path' class='fnname'>new_for_path</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(path: P) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#185-189' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Constructs a <code>File</code> for a given path. This operation never
 fails, but the returned object might not support any I/O
 operation if <code>path</code> is malformed.</p>
-
-<h2 id='path' class='section-header'><a href='#path'><code>path</code></a></h2>
+<h2 id="path" class="section-header"><a href="#path"><code>path</code></a></h2>
 <p>a string containing a relative or absolute path.
- The string must be encoded in the glib filename encoding.</p>
-
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+The string must be encoded in the glib filename encoding.</p>
+<h1 id="returns-2" class="section-header"><a href="#returns-2">Returns</a></h1>
 <p>a new <code>File</code> for the given <code>path</code>.
- Free the returned object with <code>gobject::ObjectExt::unref</code>.</p>
-</div><h4 id='method.new_for_uri' class="method"><span id='new_for_uri.v' class='invisible'><code>pub fn <a href='#method.new_for_uri' class='fnname'>new_for_uri</a>(uri: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#200-204' title='goto source code'>[src]</a></span></h4>
+Free the returned object with <code>gobject::ObjectExt::unref</code>.</p>
+</div><h4 id='method.new_for_uri' class="method"><span id='new_for_uri.v' class='invisible'><code>pub fn <a href='#method.new_for_uri' class='fnname'>new_for_uri</a>(uri: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#202-206' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Constructs a <code>File</code> for a given URI. This operation never
 fails, but the returned object might not support any I/O
 operation if <code>uri</code> is malformed or if the uri type is
 not supported.</p>
-
-<h2 id='uri' class='section-header'><a href='#uri'><code>uri</code></a></h2>
+<h2 id="uri" class="section-header"><a href="#uri"><code>uri</code></a></h2>
 <p>a UTF-8 string containing a URI</p>
-
-<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
+<h1 id="returns-3" class="section-header"><a href="#returns-3">Returns</a></h1>
 <p>a new <code>File</code> for the given <code>uri</code>.
- Free the returned object with <code>gobject::ObjectExt::unref</code>.</p>
-</div><h4 id='method.parse_name' class="method"><span id='parse_name.v' class='invisible'><code>pub fn <a href='#method.parse_name' class='fnname'>parse_name</a>(parse_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#220-224' title='goto source code'>[src]</a></span></h4>
+Free the returned object with <code>gobject::ObjectExt::unref</code>.</p>
+</div><h4 id='method.new_tmp' class="method"><span id='new_tmp.v' class='invisible'><code>pub fn <a href='#method.new_tmp' class='fnname'>new_tmp</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(tmpl: P) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a>, <a class="struct" href="../gio/struct.FileIOStream.html" title="struct gio::FileIOStream">FileIOStream</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>, <a class="struct" href="../gio/struct.Error.html" title="struct gio::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#228-235' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Opens a file in the preferred directory for temporary files (as
+returned by <code>g_get_tmp_dir</code>) and returns a <code>File</code> and
+<code>FileIOStream</code> pointing to it.</p>
+<p><code>tmpl</code> should be a string in the GLib file name encoding
+containing a sequence of six 'X' characters, and containing no
+directory components. If it is <code>None</code>, a default template is used.</p>
+<p>Unlike the other <code>File</code> constructors, this will return <code>None</code> if
+a temporary file could not be created.</p>
+<h2 id="tmpl" class="section-header"><a href="#tmpl"><code>tmpl</code></a></h2>
+<p>Template for the file
+name, as in <code>g_file_open_tmp</code>, or <code>None</code> for a default template</p>
+<h2 id="iostream" class="section-header"><a href="#iostream"><code>iostream</code></a></h2>
+<p>on return, a <code>FileIOStream</code> for the created file</p>
+<h1 id="returns-4" class="section-header"><a href="#returns-4">Returns</a></h1>
+<p>a new <code>File</code>.
+Free the returned object with <code>gobject::ObjectExt::unref</code>.</p>
+</div><h4 id='method.parse_name' class="method"><span id='parse_name.v' class='invisible'><code>pub fn <a href='#method.parse_name' class='fnname'>parse_name</a>(parse_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/file.rs.html#247-251' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Constructs a <code>File</code> with the given <code>parse_name</code> (i.e. something
 given by <code>File::get_parse_name</code>). This operation never fails,
 but the returned object might not support any I/O operation if
 the <code>parse_name</code> cannot be parsed.</p>
-
-<h2 id='parse_name' class='section-header'><a href='#parse_name'><code>parse_name</code></a></h2>
+<h2 id="parse_name" class="section-header"><a href="#parse_name"><code>parse_name</code></a></h2>
 <p>a file name or path to be parsed</p>
-
-<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
+<h1 id="returns-5" class="section-header"><a href="#returns-5">Returns</a></h1>
 <p>a new <code>File</code>.</p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -243,7 +250,14 @@ the <code>parse_name</code> cannot be parsed.</p>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt; for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gio/struct.File.html" title="struct gio::File">File</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -256,20 +270,22 @@ the <code>parse_name</code> cannot be parsed.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

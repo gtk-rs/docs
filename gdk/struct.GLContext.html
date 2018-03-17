@@ -10,8 +10,11 @@
     <title>gdk::GLContext - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct GLContext</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.clear_current">clear_current</a><a href="#method.get_current">get_current</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gdk</a></p><script>window.sidebarCurrent = {name: 'GLContext', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct GLContext</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.clear_current">clear_current</a><a href="#method.get_current">get_current</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gdk</a></p><script>window.sidebarCurrent = {name: 'GLContext', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,29 +62,23 @@
                </span></span></h1>
 <pre class='rust struct'>pub struct GLContext(_, _);</pre><div class='docblock'><p><code>GLContext</code> is an object representing the platform-specific
 OpenGL drawing context.</p>
-
 <p><code>GdkGLContexts</code> are created for a <code>Window</code> using
 <code>WindowExt::create_gl_context</code>, and the context will match
 the <code>Visual</code> of the window.</p>
-
 <p>A <code>GLContext</code> is not tied to any particular normal framebuffer.
 For instance, it cannot draw to the <code>Window</code> back buffer. The GDK
 repaint system is in full control of the painting to that. Instead,
 you can create render buffers or textures and use <code>gdk_cairo_draw_from_gl</code>
 in the draw function of your widget to draw them. Then GDK will handle
 the integration of your rendering with that of other widgets.</p>
-
 <p>Support for <code>GLContext</code> is platform-specific, context creation
 can fail, returning <code>None</code> context.</p>
-
 <p>A <code>GLContext</code> has to be made &quot;current&quot; in order to start using
 it, otherwise any OpenGL call will be ignored.</p>
-
-<h2 id='creating-a-new-opengl-context' class='section-header'><a href='#creating-a-new-opengl-context'>Creating a new OpenGL context</a></h2>
+<h2 id="creating-a-new-opengl-context" class="section-header"><a href="#creating-a-new-opengl-context">Creating a new OpenGL context</a></h2>
 <p>In order to create a new <code>GLContext</code> instance you need a
 <code>Window</code>, which you typically get during the realize call
 of a widget.</p>
-
 <p>A <code>GLContext</code> is not realized until either <code>GLContextExt::make_current</code>,
 or until it is realized using <code>GLContextExt::realize</code>. It is possible to
 specify details of the GL context like the OpenGL version to be used, or
@@ -81,50 +86,41 @@ whether the GL context should have extra state validation enabled after
 calling <code>WindowExt::create_gl_context</code> by calling <code>GLContextExt::realize</code>.
 If the realization fails you have the option to change the settings of the
 <code>GLContext</code> and try again.</p>
-
-<h2 id='using-a-glcontext' class='section-header'><a href='#using-a-glcontext'>Using a <code>GLContext</code></a></h2>
+<h2 id="using-a-glcontext" class="section-header"><a href="#using-a-glcontext">Using a <code>GLContext</code></a></h2>
 <p>You will need to make the <code>GLContext</code> the current context
 before issuing OpenGL calls; the system sends OpenGL commands to
 whichever context is current. It is possible to have multiple
 contexts, so you always need to ensure that the one which you
 want to draw with is the current one before issuing commands:</p>
-
 <pre><code class="language-C">  gdk_gl_context_make_current (context);
 </code></pre>
-
 <p>You can now perform your drawing using OpenGL commands.</p>
-
 <p>You can check which <code>GLContext</code> is the current one by using
 <code>GLContext::get_current</code>; you can also unset any <code>GLContext</code>
 that is currently set by calling <code>GLContext::clear_current</code>.</p>
-
 <p>Feature: <code>v3_16</code></p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.GLContextExt.html"><code>GLContextExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/auto/g_l_context.rs.html#95-126' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clear_current' class="method"><span id='clear_current.v' class='invisible'><code>pub fn <a href='#method.clear_current' class='fnname'>clear_current</a>()</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/auto/g_l_context.rs.html#104-109' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/auto/g_l_context.rs.html#96-127' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clear_current' class="method"><span id='clear_current.v' class='invisible'><code>pub fn <a href='#method.clear_current' class='fnname'>clear_current</a>()</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/auto/g_l_context.rs.html#105-110' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Clears the current <code>GLContext</code>.</p>
-
 <p>Any OpenGL call after this function returns will be ignored
 until <code>GLContextExt::make_current</code> is called.</p>
-
 <p>Feature: <code>v3_16</code></p>
-</div><h4 id='method.get_current' class="method"><span id='get_current.v' class='invisible'><code>pub fn <a href='#method.get_current' class='fnname'>get_current</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/auto/g_l_context.rs.html#120-125' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.get_current' class="method"><span id='get_current.v' class='invisible'><code>pub fn <a href='#method.get_current' class='fnname'>get_current</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk/auto/g_l_context.rs.html#121-126' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Retrieves the current <code>GLContext</code>.</p>
-
 <p>Feature: <code>v3_16</code></p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>the current <code>GLContext</code>, or <code>None</code></p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -148,7 +144,14 @@ until <code>GLContextExt::make_current</code> is called.</p>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../glib/object/struct.Object.html" title="struct glib::object::Object">Object</a>&gt; for <a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gdk/struct.GLContext.html" title="struct gdk::GLContext">GLContext</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -161,20 +164,22 @@ until <code>GLContextExt::make_current</code> is called.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

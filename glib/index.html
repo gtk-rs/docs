@@ -10,8 +10,11 @@
     <title>glib - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Crate glib</p><div class="block items"><ul><li><a href="#reexports">Reexports</a></li><li><a href="#modules">Modules</a></li><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'glib', ty: 'mod', relpath: '../'};</script>
+        <p class='location'>Crate glib</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'glib', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -48,60 +59,52 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/glib/lib.rs.html#5-208' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'>
-<h1 id='glib-gobject-and-gio-bindings-for-rust' class='section-header'><a href='#glib-gobject-and-gio-bindings-for-rust'><strong>glib</strong>, <strong>gobject</strong> and <strong>gio</strong> bindings for Rust</a></h1>
+               </span><a class='srclink' href='../src/glib/lib.rs.html#5-180' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><h1 id="glib-gobject-and-gio-bindings-for-rust" class="section-header"><a href="#glib-gobject-and-gio-bindings-for-rust"><strong>glib</strong>, <strong>gobject</strong> and <strong>gio</strong> bindings for Rust</a></h1>
 <p>This library contains</p>
-
 <ul>
-<li><p>bindings to some essential GLib, GObject, GIO types and APIs,</p></li>
-<li><p>common building blocks used in both handmade and machine generated
-bindings to GTK+ and other GLib-based libraries.</p></li>
+<li>
+<p>bindings to some essential GLib, GObject, GIO types and APIs,</p>
+</li>
+<li>
+<p>common building blocks used in both handmade and machine generated
+bindings to GTK+ and other GLib-based libraries.</p>
+</li>
 </ul>
-
 <p>It is the foundation for higher level libraries with uniform Rusty (safe and
 strongly typed) APIs. It avoids exposing GLib-specific data types where
 possible and is not meant to provide comprehensive GLib bindings, which
 would often amount to duplicating the Rust Standard Library or other utility
 crates.</p>
-
 <p>The library is a work in progress: expect missing functionality and breaking
 changes.</p>
-
-<h1 id='dynamic-typing' class='section-header'><a href='#dynamic-typing'>Dynamic typing</a></h1>
+<h1 id="dynamic-typing" class="section-header"><a href="#dynamic-typing">Dynamic typing</a></h1>
 <p>Most types in the GLib family have type identifiers
 (<a href="types/enum.Type.html"><code>Type</code></a>). Their corresponding Rust types implement
 the <a href="types/trait.StaticType.html"><code>StaticType</code></a> trait.</p>
-
 <p>Dynamically typed <a href="value/index.html"><code>Value</code></a> can carry values of any <code>T: StaticType</code>.</p>
-
 <p><a href="variant/index.html"><code>Variant</code></a> can carry values of <code>T: StaticVariantType</code>.</p>
-
-<h1 id='errors' class='section-header'><a href='#errors'>Errors</a></h1>
+<h1 id="errors" class="section-header"><a href="#errors">Errors</a></h1>
 <p>Errors are represented by <a href="error/struct.Error.html"><code>Error</code></a>, which can
 carry values from various <a href="error/trait.ErrorDomain.html#implementors">error
 domains</a> (such as
 <a href="enum.FileError.html"><code>FileError</code></a>).</p>
-
-<h1 id='objects' class='section-header'><a href='#objects'>Objects</a></h1>
+<h1 id="objects" class="section-header"><a href="#objects">Objects</a></h1>
 <p>Each class and interface has a corresponding smart pointer struct
 representing an instance of that type (e.g. <code>Object</code> for <code>GObject</code>,
 <code>gtk::Widget</code> for <code>GtkWidget</code>). They are reference counted and feature
-interior mutability similarly to Rust&#39;s <code>Rc&lt;RefCell&lt;T&gt;&gt;</code> idiom.
+interior mutability similarly to Rust's <code>Rc&lt;RefCell&lt;T&gt;&gt;</code> idiom.
 Consequently, cloning objects is cheap and their methods never require
 mutable borrows. Two smart pointers are equal iff they point to the same
 object.</p>
-
 <p>The root of the object hierarchy is <a href="object/struct.Object.html"><code>Object</code></a>.
 Inheritance and subtyping is denoted with the <a href="object/trait.IsA.html"><code>IsA</code></a>
 marker trait. The <a href="object/trait.Cast.html"><code>Cast</code></a> trait enables upcasting
 and downcasting.</p>
-
 <p>Interfaces and non-leaf classes also have corresponding traits (e.g.
 <code>ObjectExt</code> and <code>gtk::WidgetExt</code>), which are blanketly implemented for all
 their subtypes.</p>
-
-<h1 id='under-the-hood' class='section-header'><a href='#under-the-hood'>Under the hood</a></h1>
+<h1 id="under-the-hood" class="section-header"><a href="#under-the-hood">Under the hood</a></h1>
 <p>GLib-based libraries largely operate on pointers to various boxed or
 reference counted structures so the bindings have to implement corresponding
 smart pointers (wrappers), which encapsulate resource management and safety
@@ -109,18 +112,25 @@ checks. Such wrappers are defined via the
 <a href="macro.glib_wrapper!.html"><code>glib_wrapper!</code></a> macro, which uses abstractions
 defined in the <a href="wrapper/index.html"><code>wrapper</code></a>, <a href="boxed/index.html"><code>boxed</code></a>,
 <a href="shared/index.html"><code>shared</code></a> and <a href="object/index.html"><code>object</code></a> modules.</p>
-
 <p>The <a href="translate/index.html"><code>translate</code></a> module defines and partly implements
 conversions between high level Rust types (including the aforementioned
 wrappers) and their FFI counterparts.</p>
-</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub use closure::<a class="struct" href="../glib/closure/struct.Closure.html" title="struct glib::closure::Closure">Closure</a>;</code></td></tr><tr><td><code>pub use error::<a class="struct" href="../glib/error/struct.Error.html" title="struct glib::error::Error">Error</a>;</code></td></tr><tr><td><code>pub use error::<a class="struct" href="../glib/error/struct.BoolError.html" title="struct glib::error::BoolError">BoolError</a>;</code></td></tr><tr><td><code>pub use object::<a class="trait" href="../glib/object/trait.Cast.html" title="trait glib::object::Cast">Cast</a>;</code></td></tr><tr><td><code>pub use object::<a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>;</code></td></tr><tr><td><code>pub use object::<a class="struct" href="../glib/object/struct.Object.html" title="struct glib::object::Object">Object</a>;</code></td></tr><tr><td><code>pub use object::<a class="trait" href="../glib/object/trait.ObjectExt.html" title="trait glib::object::ObjectExt">ObjectExt</a>;</code></td></tr><tr><td><code>pub use object::<a class="struct" href="../glib/object/struct.WeakRef.html" title="struct glib::object::WeakRef">WeakRef</a>;</code></td></tr><tr><td><code>pub use signal::<a class="struct" href="../glib/signal/struct.SignalHandlerId.html" title="struct glib::signal::SignalHandlerId">SignalHandlerId</a>;</code></td></tr><tr><td><code>pub use signal::<a class="fn" href="../glib/signal/fn.signal_handler_block.html" title="fn glib::signal::signal_handler_block">signal_handler_block</a>;</code></td></tr><tr><td><code>pub use signal::<a class="fn" href="../glib/signal/fn.signal_handler_unblock.html" title="fn glib::signal::signal_handler_unblock">signal_handler_unblock</a>;</code></td></tr><tr><td><code>pub use signal::<a class="fn" href="../glib/signal/fn.signal_stop_emission.html" title="fn glib::signal::signal_stop_emission">signal_stop_emission</a>;</code></td></tr><tr><td><code>pub use signal::<a class="fn" href="../glib/signal/fn.signal_stop_emission_by_name.html" title="fn glib::signal::signal_stop_emission_by_name">signal_stop_emission_by_name</a>;</code></td></tr><tr><td><code>pub use types::<a class="trait" href="../glib/types/trait.StaticType.html" title="trait glib::types::StaticType">StaticType</a>;</code></td></tr><tr><td><code>pub use types::<a class="enum" href="../glib/types/enum.Type.html" title="enum glib::types::Type">Type</a>;</code></td></tr><tr><td><code>pub use value::<a class="trait" href="../glib/value/trait.ToValue.html" title="trait glib::value::ToValue">ToValue</a>;</code></td></tr><tr><td><code>pub use value::<a class="trait" href="../glib/value/trait.ToSendValue.html" title="trait glib::value::ToSendValue">ToSendValue</a>;</code></td></tr><tr><td><code>pub use value::<a class="struct" href="../glib/value/struct.TypedValue.html" title="struct glib::value::TypedValue">TypedValue</a>;</code></td></tr><tr><td><code>pub use value::<a class="struct" href="../glib/value/struct.SendValue.html" title="struct glib::value::SendValue">SendValue</a>;</code></td></tr><tr><td><code>pub use value::<a class="struct" href="../glib/value/struct.Value.html" title="struct glib::value::Value">Value</a>;</code></td></tr><tr><td><code>pub use value::<a class="struct" href="../glib/value/struct.AnyValue.html" title="struct glib::value::AnyValue">AnyValue</a>;</code></td></tr><tr><td><code>pub use value::<a class="struct" href="../glib/value/struct.AnySendValue.html" title="struct glib::value::AnySendValue">AnySendValue</a>;</code></td></tr><tr><td><code>pub use variant::<a class="trait" href="../glib/variant/trait.StaticVariantType.html" title="trait glib::variant::StaticVariantType">StaticVariantType</a>;</code></td></tr><tr><td><code>pub use variant::<a class="trait" href="../glib/variant/trait.ToVariant.html" title="trait glib::variant::ToVariant">ToVariant</a>;</code></td></tr><tr><td><code>pub use variant::<a class="struct" href="../glib/variant/struct.Variant.html" title="struct glib::variant::Variant">Variant</a>;</code></td></tr><tr><td><code>pub use <a class="mod" href="../glib/source/index.html" title="mod glib::source">source</a>::*;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
+<table><tr><td><code>pub use closure::<a class="struct" href="../glib/closure/struct.Closure.html" title="struct glib::closure::Closure">Closure</a>;</code></td></tr><tr><td><code>pub use error::<a class="struct" href="../glib/error/struct.Error.html" title="struct glib::error::Error">Error</a>;</code></td></tr><tr><td><code>pub use error::<a class="struct" href="../glib/error/struct.BoolError.html" title="struct glib::error::BoolError">BoolError</a>;</code></td></tr><tr><td><code>pub use object::<a class="trait" href="../glib/object/trait.Cast.html" title="trait glib::object::Cast">Cast</a>;</code></td></tr><tr><td><code>pub use object::<a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>;</code></td></tr><tr><td><code>pub use object::<a class="struct" href="../glib/object/struct.Object.html" title="struct glib::object::Object">Object</a>;</code></td></tr><tr><td><code>pub use object::<a class="trait" href="../glib/object/trait.ObjectExt.html" title="trait glib::object::ObjectExt">ObjectExt</a>;</code></td></tr><tr><td><code>pub use object::<a class="struct" href="../glib/object/struct.WeakRef.html" title="struct glib::object::WeakRef">WeakRef</a>;</code></td></tr><tr><td><code>pub use signal::<a class="struct" href="../glib/signal/struct.SignalHandlerId.html" title="struct glib::signal::SignalHandlerId">SignalHandlerId</a>;</code></td></tr><tr><td><code>pub use signal::<a class="fn" href="../glib/signal/fn.signal_handler_block.html" title="fn glib::signal::signal_handler_block">signal_handler_block</a>;</code></td></tr><tr><td><code>pub use signal::<a class="fn" href="../glib/signal/fn.signal_handler_unblock.html" title="fn glib::signal::signal_handler_unblock">signal_handler_unblock</a>;</code></td></tr><tr><td><code>pub use signal::<a class="fn" href="../glib/signal/fn.signal_stop_emission.html" title="fn glib::signal::signal_stop_emission">signal_stop_emission</a>;</code></td></tr><tr><td><code>pub use signal::<a class="fn" href="../glib/signal/fn.signal_stop_emission_by_name.html" title="fn glib::signal::signal_stop_emission_by_name">signal_stop_emission_by_name</a>;</code></td></tr><tr><td><code>pub use types::<a class="trait" href="../glib/types/trait.StaticType.html" title="trait glib::types::StaticType">StaticType</a>;</code></td></tr><tr><td><code>pub use types::<a class="enum" href="../glib/types/enum.Type.html" title="enum glib::types::Type">Type</a>;</code></td></tr><tr><td><code>pub use value::<a class="trait" href="../glib/value/trait.ToValue.html" title="trait glib::value::ToValue">ToValue</a>;</code></td></tr><tr><td><code>pub use value::<a class="trait" href="../glib/value/trait.ToSendValue.html" title="trait glib::value::ToSendValue">ToSendValue</a>;</code></td></tr><tr><td><code>pub use value::<a class="struct" href="../glib/value/struct.TypedValue.html" title="struct glib::value::TypedValue">TypedValue</a>;</code></td></tr><tr><td><code>pub use value::<a class="struct" href="../glib/value/struct.SendValue.html" title="struct glib::value::SendValue">SendValue</a>;</code></td></tr><tr><td><code>pub use value::<a class="struct" href="../glib/value/struct.Value.html" title="struct glib::value::Value">Value</a>;</code></td></tr><tr><td><code>pub use value::<a class="struct" href="../glib/value/struct.AnyValue.html" title="struct glib::value::AnyValue">AnyValue</a>;</code></td></tr><tr><td><code>pub use value::<a class="struct" href="../glib/value/struct.AnySendValue.html" title="struct glib::value::AnySendValue">AnySendValue</a>;</code></td></tr><tr><td><code>pub use variant::<a class="trait" href="../glib/variant/trait.StaticVariantType.html" title="trait glib::variant::StaticVariantType">StaticVariantType</a>;</code></td></tr><tr><td><code>pub use variant::<a class="trait" href="../glib/variant/trait.ToVariant.html" title="trait glib::variant::ToVariant">ToVariant</a>;</code></td></tr><tr><td><code>pub use variant::<a class="struct" href="../glib/variant/struct.Variant.html" title="struct glib::variant::Variant">Variant</a>;</code></td></tr><tr><td><code>pub use <a class="mod" href="../glib/char/index.html" title="mod glib::char">char</a>::*;</code></td></tr><tr><td><code>pub use <a class="mod" href="../glib/source/index.html" title="mod glib::source">source</a>::*;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class="mod" href="boxed/index.html"
                                   title='mod glib::boxed'>boxed</a></td>
                            <td class='docblock-short'>
                                 <p><code>IMPL</code> Boxed wrapper implementation.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="char/index.html"
+                                  title='mod glib::char'>char</a></td>
+                           <td class='docblock-short'>
+                                
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -135,6 +145,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='mod glib::error'>error</a></td>
                            <td class='docblock-short'>
                                 <p><code>Error</code> binding and helper trait.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -149,6 +160,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='mod glib::object'>object</a></td>
                            <td class='docblock-short'>
                                 <p><code>IMPL</code> Object wrapper implementation and <code>Object</code> binding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -156,6 +168,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='mod glib::prelude'>prelude</a></td>
                            <td class='docblock-short'>
                                 <p>Traits and essential types intended for blanket imports.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -163,6 +176,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='mod glib::shared'>shared</a></td>
                            <td class='docblock-short'>
                                 <p><code>IMPL</code> Shared (reference counted) wrapper implementation.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -170,6 +184,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='mod glib::signal'>signal</a></td>
                            <td class='docblock-short'>
                                 <p><code>IMPL</code> Low level signal support.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -184,6 +199,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='mod glib::translate'>translate</a></td>
                            <td class='docblock-short'>
                                 <p>Translation between GLib/GLib-based FFI types and their Rust counterparts.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -191,6 +207,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='mod glib::types'>types</a></td>
                            <td class='docblock-short'>
                                 <p>Runtime type information.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -198,6 +215,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='mod glib::value'>value</a></td>
                            <td class='docblock-short'>
                                 <p><code>Value</code> binding and helper traits.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -205,6 +223,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='mod glib::variant'>variant</a></td>
                            <td class='docblock-short'>
                                 <p><code>Variant</code> binding and helper traits.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -212,6 +231,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='mod glib::wrapper'>wrapper</a></td>
                            <td class='docblock-short'>
                                 <p><code>IMPL</code> The <code>glib_wrapper!</code> macro and miscellaneous wrapper traits.</p>
+
                            </td>
                        </tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
@@ -220,6 +240,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='macro glib::glib_boxed_wrapper'>glib_boxed_wrapper</a></td>
                            <td class='docblock-short'>
                                 <p>Wrapper implementations for Boxed types. See <code>glib_wrapper!</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -227,6 +248,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='macro glib::glib_object_wrapper'>glib_object_wrapper</a></td>
                            <td class='docblock-short'>
                                 <p>Wrapper implementations for Object types. See <code>glib_wrapper!</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -234,6 +256,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='macro glib::glib_shared_wrapper'>glib_shared_wrapper</a></td>
                            <td class='docblock-short'>
                                 <p>Wrapper implementations for shared types. See <code>glib_wrapper!</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -241,6 +264,7 @@ wrappers) and their FFI counterparts.</p>
                                   title='macro glib::glib_wrapper'>glib_wrapper</a></td>
                            <td class='docblock-short'>
                                 <p>Defines a wrapper type and implements the appropriate traits.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -249,6 +273,28 @@ wrappers) and their FFI counterparts.</p>
                                   title='struct glib::Bytes'>Bytes</a></td>
                            <td class='docblock-short'>
                                 <p>A shared immutable byte slice (the equivalent of <code>Rc&lt;[u8]&gt;</code>).</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CSET_A_2_Z.html"
+                                  title='struct glib::CSET_A_2_Z'>CSET_A_2_Z</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CSET_DIGITS.html"
+                                  title='struct glib::CSET_DIGITS'>CSET_DIGITS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.CSET_a_2_z.html"
+                                  title='struct glib::CSET_a_2_z'>CSET_a_2_z</a></td>
+                           <td class='docblock-short'>
+                                
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -278,6 +324,7 @@ wrappers) and their FFI counterparts.</p>
                            <td class='docblock-short'>
                                 <p>Representation of an <code>enum</code> for dynamically, at runtime, querying the values of the enum and
 using them.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -285,6 +332,14 @@ using them.</p>
                                   title='struct glib::EnumValue'>EnumValue</a></td>
                            <td class='docblock-short'>
                                 <p>Representation of a single enum value of an <code>EnumClass</code>.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.FileTest.html"
+                                  title='struct glib::FileTest'>FileTest</a></td>
+                           <td class='docblock-short'>
+                                
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -292,6 +347,7 @@ using them.</p>
                                   title='struct glib::FlagsBuilder'>FlagsBuilder</a></td>
                            <td class='docblock-short'>
                                 <p>Builder for conveniently setting/unsetting flags and returning a <code>Value</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -300,6 +356,7 @@ using them.</p>
                            <td class='docblock-short'>
                                 <p>Representation of a <code>flags</code> for dynamically, at runtime, querying the values of the enum and
 using them</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -307,11 +364,26 @@ using them</p>
                                   title='struct glib::FlagsValue'>FlagsValue</a></td>
                            <td class='docblock-short'>
                                 <p>Representation of a single flags value of a <code>FlagsClass</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="struct" href="struct.FormatSizeFlags.html"
                                   title='struct glib::FormatSizeFlags'>FormatSizeFlags</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.IOCondition.html"
+                                  title='struct glib::IOCondition'>IOCondition</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.KEY_FILE_DESKTOP_ACTION_GROUP_PREFIX.html"
+                                  title='struct glib::KEY_FILE_DESKTOP_ACTION_GROUP_PREFIX'>KEY_FILE_DESKTOP_ACTION_GROUP_PREFIX</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
@@ -541,6 +613,20 @@ using them</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="struct" href="struct.OPTION_REMAINING.html"
+                                  title='struct glib::OPTION_REMAINING'>OPTION_REMAINING</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.STR_DELIMITERS.html"
+                                  title='struct glib::STR_DELIMITERS'>STR_DELIMITERS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="struct" href="struct.Source.html"
                                   title='struct glib::Source'>Source</a></td>
                            <td class='docblock-short'>
@@ -562,10 +648,25 @@ using them</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="struct" href="struct.URI_RESERVED_CHARS_GENERIC_DELIMITERS.html"
+                                  title='struct glib::URI_RESERVED_CHARS_GENERIC_DELIMITERS'>URI_RESERVED_CHARS_GENERIC_DELIMITERS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.URI_RESERVED_CHARS_SUBCOMPONENT_DELIMITERS.html"
+                                  title='struct glib::URI_RESERVED_CHARS_SUBCOMPONENT_DELIMITERS'>URI_RESERVED_CHARS_SUBCOMPONENT_DELIMITERS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="struct" href="struct.VariantTy.html"
                                   title='struct glib::VariantTy'>VariantTy</a></td>
                            <td class='docblock-short'>
                                 <p>Describes <code>Variant</code> types.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -573,6 +674,7 @@ using them</p>
                                   title='struct glib::VariantType'>VariantType</a></td>
                            <td class='docblock-short'>
                                 <p>Describes <code>Variant</code> types.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -607,6 +709,13 @@ using them</p>
                        <tr class=' module-item'>
                            <td><a class="enum" href="enum.KeyFileError.html"
                                   title='enum glib::KeyFileError'>KeyFileError</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.SeekType.html"
+                                  title='enum glib::SeekType'>SeekType</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
@@ -679,7 +788,7 @@ using them</p>
                            <td><a class="fn" href="fn.basename.html"
                                   title='fn glib::basename'>basename</a></td>
                            <td class='docblock-short'>
-                                
+                               [<div class='stab deprecated'>Deprecated</div>] 
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -872,6 +981,13 @@ using them</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="fn" href="fn.file_test.html"
+                                  title='fn glib::file_test'>file_test</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="fn" href="fn.filename_display_basename.html"
                                   title='fn glib::filename_display_basename'>filename_display_basename</a></td>
                            <td class='docblock-short'>
@@ -917,7 +1033,7 @@ using them</p>
                            <td><a class="fn" href="fn.format_size_for_display.html"
                                   title='fn glib::format_size_for_display'>format_size_for_display</a></td>
                            <td class='docblock-short'>
-                                
+                               [<div class='stab deprecated'>Deprecated</div>] 
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1023,6 +1139,7 @@ using them</p>
                                   title='fn glib::get_program_name'>get_program_name</a></td>
                            <td class='docblock-short'>
                                 <p>Same as <a href="fn.get_prgname.html"><code>get_prgname()</code></a>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1201,6 +1318,13 @@ using them</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="fn" href="fn.markup_escape_text.html"
+                                  title='fn glib::markup_escape_text'>markup_escape_text</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="fn" href="fn.mem_is_system_malloc.html"
                                   title='fn glib::mem_is_system_malloc'>mem_is_system_malloc</a></td>
                            <td class='docblock-short'>
@@ -1373,6 +1497,7 @@ using them</p>
                                   title='fn glib::set_program_name'>set_program_name</a></td>
                            <td class='docblock-short'>
                                 <p>Same as <a href="fn.set_prgname.html"><code>set_prgname()</code></a>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1703,20 +1828,22 @@ using them</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,11 @@
     <title>gdk_pixbuf::Pixbuf - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct Pixbuf</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.new_from_vec">new_from_vec</a><a href="#method.new_from_file">new_from_file</a><a href="#method.new_from_file_at_size">new_from_file_at_size</a><a href="#method.new_from_file_at_scale">new_from_file_at_scale</a><a href="#method.new_from_xpm_data">new_from_xpm_data</a><a href="#method.get_file_info">get_file_info</a><a href="#method.new_from_resource">new_from_resource</a><a href="#method.new_from_resource_at_scale">new_from_resource_at_scale</a><a href="#method.new_subpixbuf">new_subpixbuf</a><a href="#method.get_colorspace">get_colorspace</a><a href="#method.get_n_channels">get_n_channels</a><a href="#method.get_has_alpha">get_has_alpha</a><a href="#method.get_bits_per_sample">get_bits_per_sample</a><a href="#method.get_pixels">get_pixels</a><a href="#method.get_width">get_width</a><a href="#method.get_height">get_height</a><a href="#method.get_rowstride">get_rowstride</a><a href="#method.get_byte_length">get_byte_length</a><a href="#method.get_option">get_option</a><a href="#method.scale_simple">scale_simple</a><a href="#method.scale">scale</a><a href="#method.composite">composite</a><a href="#method.flip">flip</a><a href="#method.put_pixel">put_pixel</a><a href="#method.copy">copy</a><a href="#method.copy_options">copy_options</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gdk_pixbuf</a></p><script>window.sidebarCurrent = {name: 'Pixbuf', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Pixbuf</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.new_from_bytes">new_from_bytes</a><a href="#method.new_from_inline">new_from_inline</a><a href="#method.new_from_resource">new_from_resource</a><a href="#method.new_from_resource_at_scale">new_from_resource_at_scale</a><a href="#method.new_from_stream">new_from_stream</a><a href="#method.new_from_stream_at_scale">new_from_stream_at_scale</a><a href="#method.new_from_xpm_data">new_from_xpm_data</a><a href="#method.calculate_rowstride">calculate_rowstride</a><a href="#method.get_formats">get_formats</a><a href="#method.new_from_vec">new_from_vec</a><a href="#method.new_from_file">new_from_file</a><a href="#method.new_from_file_at_size">new_from_file_at_size</a><a href="#method.new_from_file_at_scale">new_from_file_at_scale</a><a href="#method.new_from_stream_async">new_from_stream_async</a><a href="#method.new_from_stream_at_scale_async">new_from_stream_at_scale_async</a><a href="#method.get_pixels">get_pixels</a><a href="#method.put_pixel">put_pixel</a><a href="#method.get_file_info">get_file_info</a><a href="#method.get_file_info_async">get_file_info_async</a><a href="#method.save_to_bufferv">save_to_bufferv</a><a href="#method.save_to_streamv">save_to_streamv</a><a href="#method.savev">savev</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gdk_pixbuf</a></p><script>window.sidebarCurrent = {name: 'Pixbuf', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,208 +62,328 @@
                </span></span></h1>
 <pre class='rust struct'>pub struct Pixbuf(_, _);</pre><div class='docblock'><p>This is the main structure in the gdk-pixbuf library. It is
 used to represent images. It contains information about the
-image&#39;s pixel data, its color space, bits per sample, width and
+image's pixel data, its color space, bits per sample, width and
 height, and the rowstride (the number of bytes between the start of
 one row and the start of the next).</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.PixbufExt.html"><code>PixbufExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#40-421' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub unsafe fn <a href='#method.new' class='fnname'>new</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;colorspace: <a class="type" href="../gdk_pixbuf/type.Colorspace.html" title="type gdk_pixbuf::Colorspace">Colorspace</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;has_alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;bits_per_sample: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#59-63' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#46-341' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;colorspace: <a class="enum" href="../gdk_pixbuf/enum.Colorspace.html" title="enum gdk_pixbuf::Colorspace">Colorspace</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;has_alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;bits_per_sample: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>) -&gt; <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#65-69' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new <code>Pixbuf</code> structure and allocates a buffer for it. The
 buffer has an optimal rowstride. Note that the buffer is not cleared;
 you will have to fill it completely yourself.</p>
-
-<h2 id='colorspace' class='section-header'><a href='#colorspace'><code>colorspace</code></a></h2>
+<h2 id="colorspace" class="section-header"><a href="#colorspace"><code>colorspace</code></a></h2>
 <p>Color space for image</p>
-
-<h2 id='has_alpha' class='section-header'><a href='#has_alpha'><code>has_alpha</code></a></h2>
+<h2 id="has_alpha" class="section-header"><a href="#has_alpha"><code>has_alpha</code></a></h2>
 <p>Whether the image should have transparency information</p>
-
-<h2 id='bits_per_sample' class='section-header'><a href='#bits_per_sample'><code>bits_per_sample</code></a></h2>
+<h2 id="bits_per_sample" class="section-header"><a href="#bits_per_sample"><code>bits_per_sample</code></a></h2>
 <p>Number of bits per color sample</p>
-
-<h2 id='width' class='section-header'><a href='#width'><code>width</code></a></h2>
+<h2 id="width" class="section-header"><a href="#width"><code>width</code></a></h2>
 <p>Width of image in pixels, must be &gt; 0</p>
-
-<h2 id='height' class='section-header'><a href='#height'><code>height</code></a></h2>
+<h2 id="height" class="section-header"><a href="#height"><code>height</code></a></h2>
 <p>Height of image in pixels, must be &gt; 0</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>A newly-created <code>Pixbuf</code> with a reference count of 1, or
 <code>None</code> if not enough memory could be allocated for the image buffer.</p>
-</div><h4 id='method.new_from_vec' class="method"><span id='new_from_vec.v' class='invisible'><code>pub fn <a href='#method.new_from_vec' class='fnname'>new_from_vec</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;vec: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;colorspace: <a class="type" href="../gdk_pixbuf/type.Colorspace.html" title="type gdk_pixbuf::Colorspace">Colorspace</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;has_alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;bits_per_sample: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;row_stride: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>) -&gt; <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#65-82' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.new_from_file' class="method"><span id='new_from_file.v' class='invisible'><code>pub fn <a href='#method.new_from_file' class='fnname'>new_from_file</a>(filename: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../glib/error/struct.Error.html" title="struct glib::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#96-111' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.new_from_bytes' class="method"><span id='new_from_bytes.v' class='invisible'><code>pub fn <a href='#method.new_from_bytes' class='fnname'>new_from_bytes</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;data: &amp;<a class="struct" href="../glib/bytes/struct.Bytes.html" title="struct glib::bytes::Bytes">Bytes</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;colorspace: <a class="enum" href="../gdk_pixbuf/enum.Colorspace.html" title="enum gdk_pixbuf::Colorspace">Colorspace</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;has_alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;bits_per_sample: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;rowstride: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>) -&gt; <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#96-100' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new <code>Pixbuf</code> out of in-memory readonly image data.
+Currently only RGB images with 8 bits per sample are supported.
+This is the <code>glib::Bytes</code> variant of <code>Pixbuf::new_from_data</code>.</p>
+<p>Feature: <code>v2_32</code></p>
+<h2 id="data" class="section-header"><a href="#data"><code>data</code></a></h2>
+<p>Image data in 8-bit/sample packed format inside a <code>glib::Bytes</code></p>
+<h2 id="colorspace-1" class="section-header"><a href="#colorspace-1"><code>colorspace</code></a></h2>
+<p>Colorspace for the image data</p>
+<h2 id="has_alpha-1" class="section-header"><a href="#has_alpha-1"><code>has_alpha</code></a></h2>
+<p>Whether the data has an opacity channel</p>
+<h2 id="bits_per_sample-1" class="section-header"><a href="#bits_per_sample-1"><code>bits_per_sample</code></a></h2>
+<p>Number of bits per sample</p>
+<h2 id="width-1" class="section-header"><a href="#width-1"><code>width</code></a></h2>
+<p>Width of the image in pixels, must be &gt; 0</p>
+<h2 id="height-1" class="section-header"><a href="#height-1"><code>height</code></a></h2>
+<p>Height of the image in pixels, must be &gt; 0</p>
+<h2 id="rowstride" class="section-header"><a href="#rowstride"><code>rowstride</code></a></h2>
+<p>Distance in bytes between row starts</p>
+<h1 id="returns-1" class="section-header"><a href="#returns-1">Returns</a></h1>
+<p>A newly-created <code>Pixbuf</code> structure with a reference count of 1.</p>
+</div><h4 id='method.new_from_inline' class="method"><span id='new_from_inline.v' class='invisible'><code>pub fn <a href='#method.new_from_inline' class='fnname'>new_from_inline</a>(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, copy_pixels: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#157-164' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Create a <code>Pixbuf</code> from a flat representation that is suitable for
+storing as inline data in a program. This is useful if you want to
+ship a program with images, but don't want to depend on any
+external files.</p>
+<p>gdk-pixbuf ships with a program called [gdk-pixbuf-csource][gdk-pixbuf-csource],
+which allows for conversion of <code>GdkPixbufs</code> into such a inline representation.
+In almost all cases, you should pass the <code>--raw</code> option to
+<code>gdk-pixbuf-csource</code>. A sample invocation would be:</p>
+<pre><code class="language-text"> gdk-pixbuf-csource --raw --name=myimage_inline myimage.png
+</code></pre>
+<p>For the typical case where the inline pixbuf is read-only static data,
+you don't need to copy the pixel data unless you intend to write to
+it, so you can pass <code>false</code> for <code>copy_pixels</code>. (If you pass <code>--rle</code> to
+<code>gdk-pixbuf-csource</code>, a copy will be made even if <code>copy_pixels</code> is <code>false</code>,
+so using this option is generally a bad idea.)</p>
+<p>If you create a pixbuf from const inline data compiled into your
+program, it's probably safe to ignore errors and disable length checks,
+since things will always succeed:</p>
+<pre><code class="language-text">pixbuf = gdk_pixbuf_new_from_inline (-1, myimage_inline, FALSE, NULL);
+</code></pre>
+<p>For non-const inline data, you could get out of memory. For untrusted
+inline data located at runtime, you could have corrupt inline data in
+addition.</p>
+<h1 id="deprecated-since-232" class="section-header"><a href="#deprecated-since-232">Deprecated since 2.32</a></h1>
+<p>Use <code>gio::Resource</code> instead.</p>
+<h2 id="data_length" class="section-header"><a href="#data_length"><code>data_length</code></a></h2>
+<p>Length in bytes of the <code>data</code> argument or -1 to
+disable length checks</p>
+<h2 id="data-1" class="section-header"><a href="#data-1"><code>data</code></a></h2>
+<p>Byte data containing a
+serialized <code>Pixdata</code> structure</p>
+<h2 id="copy_pixels" class="section-header"><a href="#copy_pixels"><code>copy_pixels</code></a></h2>
+<p>Whether to copy the pixel data, or use direct pointers
+<code>data</code> for the resulting pixbuf</p>
+<h1 id="returns-2" class="section-header"><a href="#returns-2">Returns</a></h1>
+<p>A newly-created <code>Pixbuf</code> structure with a reference,
+count of 1, or <code>None</code> if an error occurred.</p>
+</div><h4 id='method.new_from_resource' class="method"><span id='new_from_resource.v' class='invisible'><code>pub fn <a href='#method.new_from_resource' class='fnname'>new_from_resource</a>(resource_path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#179-185' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new pixbuf by loading an image from an resource.</p>
+<p>The file format is detected automatically. If <code>None</code> is returned, then
+<code>error</code> will be set.</p>
+<h2 id="resource_path" class="section-header"><a href="#resource_path"><code>resource_path</code></a></h2>
+<p>the path of the resource file</p>
+<h1 id="returns-3" class="section-header"><a href="#returns-3">Returns</a></h1>
+<p>A newly-created pixbuf, or <code>None</code> if any of several error
+conditions occurred: the file could not be opened, the image format is
+not supported, there was not enough memory to allocate the image buffer,
+the stream contained invalid data, or the operation was cancelled.</p>
+</div><h4 id='method.new_from_resource_at_scale' class="method"><span id='new_from_resource_at_scale.v' class='invisible'><code>pub fn <a href='#method.new_from_resource_at_scale' class='fnname'>new_from_resource_at_scale</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;resource_path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;preserve_aspect_ratio: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#215-221' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new pixbuf by loading an image from an resource.</p>
+<p>The file format is detected automatically. If <code>None</code> is returned, then
+<code>error</code> will be set.</p>
+<p>The image will be scaled to fit in the requested size, optionally
+preserving the image's aspect ratio. When preserving the aspect ratio,
+a <code>width</code> of -1 will cause the image to be scaled to the exact given
+height, and a <code>height</code> of -1 will cause the image to be scaled to the
+exact given width. When not preserving aspect ratio, a <code>width</code> or
+<code>height</code> of -1 means to not scale the image at all in that dimension.</p>
+<p>The stream is not closed.</p>
+<h2 id="resource_path-1" class="section-header"><a href="#resource_path-1"><code>resource_path</code></a></h2>
+<p>the path of the resource file</p>
+<h2 id="width-2" class="section-header"><a href="#width-2"><code>width</code></a></h2>
+<p>The width the image should have or -1 to not constrain the width</p>
+<h2 id="height-2" class="section-header"><a href="#height-2"><code>height</code></a></h2>
+<p>The height the image should have or -1 to not constrain the height</p>
+<h2 id="preserve_aspect_ratio" class="section-header"><a href="#preserve_aspect_ratio"><code>preserve_aspect_ratio</code></a></h2>
+<p><code>true</code> to preserve the image's aspect ratio</p>
+<h1 id="returns-4" class="section-header"><a href="#returns-4">Returns</a></h1>
+<p>A newly-created pixbuf, or <code>None</code> if any of several error
+conditions occurred: the file could not be opened, the image format is
+not supported, there was not enough memory to allocate the image buffer,
+the stream contained invalid data, or the operation was cancelled.</p>
+</div><h4 id='method.new_from_stream' class="method"><span id='new_from_stream.v' class='invisible'><code>pub fn <a href='#method.new_from_stream' class='fnname'>new_from_stream</a>&lt;'a, P:&nbsp;<a class="trait" href="../gdk_pixbuf/trait.IsA.html" title="trait gdk_pixbuf::IsA">IsA</a>&lt;<a class="struct" href="../gio/auto/input_stream/struct.InputStream.html" title="struct gio::auto::input_stream::InputStream">InputStream</a>&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gio/auto/cancellable/struct.Cancellable.html" title="struct gio::auto::cancellable::Cancellable">Cancellable</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;stream: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>P, <br>&nbsp;&nbsp;&nbsp;&nbsp;cancellable: Q<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#243-251' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new pixbuf by loading an image from an input stream.</p>
+<p>The file format is detected automatically. If <code>None</code> is returned, then
+<code>error</code> will be set. The <code>cancellable</code> can be used to abort the operation
+from another thread. If the operation was cancelled, the error
+<code>gio::IOErrorEnum::Cancelled</code> will be returned. Other possible errors are in
+the <code>GDK_PIXBUF_ERROR</code> and <code>G_IO_ERROR</code> domains.</p>
+<p>The stream is not closed.</p>
+<h2 id="stream" class="section-header"><a href="#stream"><code>stream</code></a></h2>
+<p>a <code>gio::InputStream</code> to load the pixbuf from</p>
+<h2 id="cancellable" class="section-header"><a href="#cancellable"><code>cancellable</code></a></h2>
+<p>optional <code>gio::Cancellable</code> object, <code>None</code> to ignore</p>
+<h1 id="returns-5" class="section-header"><a href="#returns-5">Returns</a></h1>
+<p>A newly-created pixbuf, or <code>None</code> if any of several error
+conditions occurred: the file could not be opened, the image format is
+not supported, there was not enough memory to allocate the image buffer,
+the stream contained invalid data, or the operation was cancelled.</p>
+</div><h4 id='method.new_from_stream_at_scale' class="method"><span id='new_from_stream_at_scale.v' class='invisible'><code>pub fn <a href='#method.new_from_stream_at_scale' class='fnname'>new_from_stream_at_scale</a>&lt;'a, P:&nbsp;<a class="trait" href="../gdk_pixbuf/trait.IsA.html" title="trait gdk_pixbuf::IsA">IsA</a>&lt;<a class="struct" href="../gio/auto/input_stream/struct.InputStream.html" title="struct gio::auto::input_stream::InputStream">InputStream</a>&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gio/auto/cancellable/struct.Cancellable.html" title="struct gio::auto::cancellable::Cancellable">Cancellable</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;stream: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>P, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;preserve_aspect_ratio: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;cancellable: Q<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#291-299' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new pixbuf by loading an image from an input stream.</p>
+<p>The file format is detected automatically. If <code>None</code> is returned, then
+<code>error</code> will be set. The <code>cancellable</code> can be used to abort the operation
+from another thread. If the operation was cancelled, the error
+<code>gio::IOErrorEnum::Cancelled</code> will be returned. Other possible errors are in
+the <code>GDK_PIXBUF_ERROR</code> and <code>G_IO_ERROR</code> domains.</p>
+<p>The image will be scaled to fit in the requested size, optionally
+preserving the image's aspect ratio.</p>
+<p>When preserving the aspect ratio, a <code>width</code> of -1 will cause the image to be
+scaled to the exact given height, and a <code>height</code> of -1 will cause the image
+to be scaled to the exact given width. If both <code>width</code> and <code>height</code> are
+given, this function will behave as if the smaller of the two values
+is passed as -1.</p>
+<p>When not preserving aspect ratio, a <code>width</code> or <code>height</code> of -1 means to not
+scale the image at all in that dimension.</p>
+<p>The stream is not closed.</p>
+<h2 id="stream-1" class="section-header"><a href="#stream-1"><code>stream</code></a></h2>
+<p>a <code>gio::InputStream</code> to load the pixbuf from</p>
+<h2 id="width-3" class="section-header"><a href="#width-3"><code>width</code></a></h2>
+<p>The width the image should have or -1 to not constrain the width</p>
+<h2 id="height-3" class="section-header"><a href="#height-3"><code>height</code></a></h2>
+<p>The height the image should have or -1 to not constrain the height</p>
+<h2 id="preserve_aspect_ratio-1" class="section-header"><a href="#preserve_aspect_ratio-1"><code>preserve_aspect_ratio</code></a></h2>
+<p><code>true</code> to preserve the image's aspect ratio</p>
+<h2 id="cancellable-1" class="section-header"><a href="#cancellable-1"><code>cancellable</code></a></h2>
+<p>optional <code>gio::Cancellable</code> object, <code>None</code> to ignore</p>
+<h1 id="returns-6" class="section-header"><a href="#returns-6">Returns</a></h1>
+<p>A newly-created pixbuf, or <code>None</code> if any of several error
+conditions occurred: the file could not be opened, the image format is
+not supported, there was not enough memory to allocate the image buffer,
+the stream contained invalid data, or the operation was cancelled.</p>
+</div><h4 id='method.new_from_xpm_data' class="method"><span id='new_from_xpm_data.v' class='invisible'><code>pub fn <a href='#method.new_from_xpm_data' class='fnname'>new_from_xpm_data</a>(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a>&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#309-313' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new pixbuf by parsing XPM data in memory. This data is commonly
+the result of including an XPM file into a program's C source.</p>
+<h2 id="data-2" class="section-header"><a href="#data-2"><code>data</code></a></h2>
+<p>Pointer to inline XPM data.</p>
+<h1 id="returns-7" class="section-header"><a href="#returns-7">Returns</a></h1>
+<p>A newly-created pixbuf with a reference count of 1.</p>
+</div><h4 id='method.calculate_rowstride' class="method"><span id='calculate_rowstride.v' class='invisible'><code>pub fn <a href='#method.calculate_rowstride' class='fnname'>calculate_rowstride</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;colorspace: <a class="enum" href="../gdk_pixbuf/enum.Colorspace.html" title="enum gdk_pixbuf::Colorspace">Colorspace</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;has_alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;bits_per_sample: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#316-320' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.get_formats' class="method"><div class="important-traits"><div class='tooltip'>ⓘ<span class='tooltiptext'>Important traits for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</span></div><div class="content hidden"><h3 class="important">Important traits for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</h3><code class="content"><span class="where fmt-newline">impl <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a> for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</span></code></div></div><span id='get_formats.v' class='invisible'><code>pub fn <a href='#method.get_formats' class='fnname'>get_formats</a>() -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.PixbufFormat.html" title="struct gdk_pixbuf::PixbufFormat">PixbufFormat</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/auto/pixbuf.rs.html#336-340' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Obtains the available information about the image formats supported
+by <code>Pixbuf</code>.</p>
+<h1 id="returns-8" class="section-header"><a href="#returns-8">Returns</a></h1>
+<p>A list of
+<code>GdkPixbufFormats</code> describing the supported image formats. The list should
+be freed when it is no longer needed, but the structures themselves are
+owned by <code>Pixbuf</code> and should not be freed.</p>
+</div></div><h3 id='impl-1' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#26-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new_from_vec' class="method"><span id='new_from_vec.v' class='invisible'><code>pub fn <a href='#method.new_from_vec' class='fnname'>new_from_vec</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;vec: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;colorspace: <a class="enum" href="../gdk_pixbuf/enum.Colorspace.html" title="enum gdk_pixbuf::Colorspace">Colorspace</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;has_alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;bits_per_sample: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;row_stride: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>) -&gt; <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#27-44' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.new_from_file' class="method"><span id='new_from_file.v' class='invisible'><code>pub fn <a href='#method.new_from_file' class='fnname'>new_from_file</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(filename: T) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#58-73' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new pixbuf by loading an image from a file. The file format is
 detected automatically. If <code>None</code> is returned, then <code>error</code> will be set.
 Possible errors are in the <code>GDK_PIXBUF_ERROR</code> and <code>G_FILE_ERROR</code> domains.</p>
-
-<h2 id='filename' class='section-header'><a href='#filename'><code>filename</code></a></h2>
+<h2 id="filename" class="section-header"><a href="#filename"><code>filename</code></a></h2>
 <p>Name of file to load, in the GLib file name encoding</p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<h1 id="returns-9" class="section-header"><a href="#returns-9">Returns</a></h1>
 <p>A newly-created pixbuf with a reference count of 1, or <code>None</code> if
 any of several error conditions occurred: the file could not be opened,
-there was no loader for the file&#39;s format, there was not enough memory to
+there was no loader for the file's format, there was not enough memory to
 allocate the image buffer, or the image file contained invalid data.</p>
-</div><h4 id='method.new_from_file_at_size' class="method"><span id='new_from_file_at_size.v' class='invisible'><code>pub fn <a href='#method.new_from_file_at_size' class='fnname'>new_from_file_at_size</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;filename: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../glib/error/struct.Error.html" title="struct glib::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#137-154' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.new_from_file_at_size' class="method"><span id='new_from_file_at_size.v' class='invisible'><code>pub fn <a href='#method.new_from_file_at_size' class='fnname'>new_from_file_at_size</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;filename: T, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#99-116' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new pixbuf by loading an image from a file.
 The file format is detected automatically. If <code>None</code> is returned, then
 <code>error</code> will be set. Possible errors are in the <code>GDK_PIXBUF_ERROR</code> and
 <code>G_FILE_ERROR</code> domains.</p>
-
 <p>The image will be scaled to fit in the requested size, preserving
-the image&#39;s aspect ratio. Note that the returned pixbuf may be smaller
+the image's aspect ratio. Note that the returned pixbuf may be smaller
 than <code>width</code> x <code>height</code>, if the aspect ratio requires it. To load
 and image at the requested size, regardless of aspect ratio, use
 <code>Pixbuf::new_from_file_at_scale</code>.</p>
-
-<h2 id='filename-1' class='section-header'><a href='#filename-1'><code>filename</code></a></h2>
+<h2 id="filename-1" class="section-header"><a href="#filename-1"><code>filename</code></a></h2>
 <p>Name of file to load, in the GLib file name encoding</p>
-
-<h2 id='width-1' class='section-header'><a href='#width-1'><code>width</code></a></h2>
+<h2 id="width-4" class="section-header"><a href="#width-4"><code>width</code></a></h2>
 <p>The width the image should have or -1 to not constrain the width</p>
-
-<h2 id='height-1' class='section-header'><a href='#height-1'><code>height</code></a></h2>
+<h2 id="height-4" class="section-header"><a href="#height-4"><code>height</code></a></h2>
 <p>The height the image should have or -1 to not constrain the height</p>
-
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<h1 id="returns-10" class="section-header"><a href="#returns-10">Returns</a></h1>
 <p>A newly-created pixbuf with a reference count of 1, or
 <code>None</code> if any of several error conditions occurred: the file could not
-be opened, there was no loader for the file&#39;s format, there was not
+be opened, there was no loader for the file's format, there was not
 enough memory to allocate the image buffer, or the image file contained
 invalid data.</p>
-</div><h4 id='method.new_from_file_at_scale' class="method"><span id='new_from_file_at_scale.v' class='invisible'><code>pub fn <a href='#method.new_from_file_at_scale' class='fnname'>new_from_file_at_scale</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;filename: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;preserve_aspect_ratio: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../glib/error/struct.Error.html" title="struct glib::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#183-200' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.new_from_file_at_scale' class="method"><span id='new_from_file_at_scale.v' class='invisible'><code>pub fn <a href='#method.new_from_file_at_scale' class='fnname'>new_from_file_at_scale</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;filename: T, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;preserve_aspect_ratio: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#145-162' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new pixbuf by loading an image from a file. The file format is
 detected automatically. If <code>None</code> is returned, then <code>error</code> will be set.
 Possible errors are in the <code>GDK_PIXBUF_ERROR</code> and <code>G_FILE_ERROR</code> domains.
 The image will be scaled to fit in the requested size, optionally preserving
-the image&#39;s aspect ratio.</p>
-
+the image's aspect ratio.</p>
 <p>When preserving the aspect ratio, a <code>width</code> of -1 will cause the image
 to be scaled to the exact given height, and a <code>height</code> of -1 will cause
 the image to be scaled to the exact given width. When not preserving
 aspect ratio, a <code>width</code> or <code>height</code> of -1 means to not scale the image
 at all in that dimension. Negative values for <code>width</code> and <code>height</code> are
 allowed since 2.8.</p>
-
-<h2 id='filename-2' class='section-header'><a href='#filename-2'><code>filename</code></a></h2>
+<h2 id="filename-2" class="section-header"><a href="#filename-2"><code>filename</code></a></h2>
 <p>Name of file to load, in the GLib file name encoding</p>
-
-<h2 id='width-2' class='section-header'><a href='#width-2'><code>width</code></a></h2>
+<h2 id="width-5" class="section-header"><a href="#width-5"><code>width</code></a></h2>
 <p>The width the image should have or -1 to not constrain the width</p>
-
-<h2 id='height-2' class='section-header'><a href='#height-2'><code>height</code></a></h2>
+<h2 id="height-5" class="section-header"><a href="#height-5"><code>height</code></a></h2>
 <p>The height the image should have or -1 to not constrain the height</p>
-
-<h2 id='preserve_aspect_ratio' class='section-header'><a href='#preserve_aspect_ratio'><code>preserve_aspect_ratio</code></a></h2>
-<p><code>true</code> to preserve the image&#39;s aspect ratio</p>
-
-<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
+<h2 id="preserve_aspect_ratio-2" class="section-header"><a href="#preserve_aspect_ratio-2"><code>preserve_aspect_ratio</code></a></h2>
+<p><code>true</code> to preserve the image's aspect ratio</p>
+<h1 id="returns-11" class="section-header"><a href="#returns-11">Returns</a></h1>
 <p>A newly-created pixbuf with a reference count of 1, or <code>None</code>
 if any of several error conditions occurred: the file could not be opened,
-there was no loader for the file&#39;s format, there was not enough memory to
+there was no loader for the file's format, there was not enough memory to
 allocate the image buffer, or the image file contained invalid data.</p>
-</div><h4 id='method.new_from_xpm_data' class="method"><span id='new_from_xpm_data.v' class='invisible'><code>pub fn <a href='#method.new_from_xpm_data' class='fnname'>new_from_xpm_data</a>(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a>&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#210-214' title='goto source code'>[src]</a></span></h4>
-<div class='docblock'><p>Creates a new pixbuf by parsing XPM data in memory. This data is commonly
-the result of including an XPM file into a program&#39;s C source.</p>
-
-<h2 id='data' class='section-header'><a href='#data'><code>data</code></a></h2>
-<p>Pointer to inline XPM data.</p>
-
-<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
-<p>A newly-created pixbuf with a reference count of 1.</p>
-</div><h4 id='method.get_file_info' class="method"><span id='get_file_info.v' class='invisible'><code>pub fn <a href='#method.get_file_info' class='fnname'>get_file_info</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;filename: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: &amp;mut <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: &amp;mut <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.PixbufFormat.html" title="struct gdk_pixbuf::PixbufFormat">PixbufFormat</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#232-237' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.new_from_stream_async' class="method"><span id='new_from_stream_async.v' class='invisible'><code>pub fn <a href='#method.new_from_stream_async' class='fnname'>new_from_stream_async</a>&lt;'a, P:&nbsp;<a class="trait" href="../gdk_pixbuf/trait.IsA.html" title="trait gdk_pixbuf::IsA">IsA</a>&lt;<a class="struct" href="../gio/auto/input_stream/struct.InputStream.html" title="struct gio::auto::input_stream::InputStream">InputStream</a>&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gio/auto/cancellable/struct.Cancellable.html" title="struct gio::auto::cancellable::Cancellable">Cancellable</a>&gt;&gt;, R:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>(<a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;) + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;stream: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>P, <br>&nbsp;&nbsp;&nbsp;&nbsp;cancellable: Q, <br>&nbsp;&nbsp;&nbsp;&nbsp;callback: R<br>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#179-200' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new pixbuf by asynchronously loading an image from an input stream.</p>
+<p>For more details see <code>Pixbuf::new_from_stream</code>, which is the synchronous
+version of this function.</p>
+<p>When the operation is finished, <code>callback</code> will be called in the main thread.
+You can then call <code>Pixbuf::new_from_stream_finish</code> to get the result of the operation.</p>
+<h2 id="stream-2" class="section-header"><a href="#stream-2"><code>stream</code></a></h2>
+<p>a <code>gio::InputStream</code> from which to load the pixbuf</p>
+<h2 id="cancellable-2" class="section-header"><a href="#cancellable-2"><code>cancellable</code></a></h2>
+<p>optional <code>gio::Cancellable</code> object, <code>None</code> to ignore</p>
+<h2 id="callback" class="section-header"><a href="#callback"><code>callback</code></a></h2>
+<p>a <code>GAsyncReadyCallback</code> to call when the pixbuf is loaded</p>
+<h2 id="user_data" class="section-header"><a href="#user_data"><code>user_data</code></a></h2>
+<p>the data to pass to the callback function</p>
+</div><h4 id='method.new_from_stream_at_scale_async' class="method"><span id='new_from_stream_at_scale_async.v' class='invisible'><code>pub fn <a href='#method.new_from_stream_at_scale_async' class='fnname'>new_from_stream_at_scale_async</a>&lt;'a, P:&nbsp;<a class="trait" href="../gdk_pixbuf/trait.IsA.html" title="trait gdk_pixbuf::IsA">IsA</a>&lt;<a class="struct" href="../gio/auto/input_stream/struct.InputStream.html" title="struct gio::auto::input_stream::InputStream">InputStream</a>&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gio/auto/cancellable/struct.Cancellable.html" title="struct gio::auto::cancellable::Cancellable">Cancellable</a>&gt;&gt;, R:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>(<a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;) + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;stream: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>P, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;preserve_aspect_ratio: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;cancellable: Q, <br>&nbsp;&nbsp;&nbsp;&nbsp;callback: R<br>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#223-244' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new pixbuf by asynchronously loading an image from an input stream.</p>
+<p>For more details see <code>Pixbuf::new_from_stream_at_scale</code>, which is the synchronous
+version of this function.</p>
+<p>When the operation is finished, <code>callback</code> will be called in the main thread.
+You can then call <code>Pixbuf::new_from_stream_finish</code> to get the result of the operation.</p>
+<h2 id="stream-3" class="section-header"><a href="#stream-3"><code>stream</code></a></h2>
+<p>a <code>gio::InputStream</code> from which to load the pixbuf</p>
+<h2 id="width-6" class="section-header"><a href="#width-6"><code>width</code></a></h2>
+<p>the width the image should have or -1 to not constrain the width</p>
+<h2 id="height-6" class="section-header"><a href="#height-6"><code>height</code></a></h2>
+<p>the height the image should have or -1 to not constrain the height</p>
+<h2 id="preserve_aspect_ratio-3" class="section-header"><a href="#preserve_aspect_ratio-3"><code>preserve_aspect_ratio</code></a></h2>
+<p><code>true</code> to preserve the image's aspect ratio</p>
+<h2 id="cancellable-3" class="section-header"><a href="#cancellable-3"><code>cancellable</code></a></h2>
+<p>optional <code>gio::Cancellable</code> object, <code>None</code> to ignore</p>
+<h2 id="callback-1" class="section-header"><a href="#callback-1"><code>callback</code></a></h2>
+<p>a <code>GAsyncReadyCallback</code> to call when the pixbuf is loaded</p>
+<h2 id="user_data-1" class="section-header"><a href="#user_data-1"><code>user_data</code></a></h2>
+<p>the data to pass to the callback function</p>
+</div><h4 id='method.get_pixels' class="method"><div class="important-traits"><div class='tooltip'>ⓘ<span class='tooltiptext'>Important traits for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></span></div><div class="content hidden"><h3 class="important">Important traits for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></h3><code class="content"><span class="where fmt-newline">impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a> for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></span><span class="where fmt-newline">impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a> for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></span></code></div></div><span id='get_pixels.v' class='invisible'><code>pub unsafe fn <a href='#method.get_pixels' class='fnname'>get_pixels</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#246-250' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.put_pixel' class="method"><span id='put_pixel.v' class='invisible'><code>pub fn <a href='#method.put_pixel' class='fnname'>put_pixel</a>(&amp;self, x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, red: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, green: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, blue: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#252-267' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.get_file_info' class="method"><span id='get_file_info.v' class='invisible'><code>pub fn <a href='#method.get_file_info' class='fnname'>get_file_info</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;filename: T<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="../gdk_pixbuf/struct.PixbufFormat.html" title="struct gdk_pixbuf::PixbufFormat">PixbufFormat</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#285-296' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Parses an image file far enough to determine its format and size.</p>
-
-<h2 id='filename-3' class='section-header'><a href='#filename-3'><code>filename</code></a></h2>
+<h2 id="filename-3" class="section-header"><a href="#filename-3"><code>filename</code></a></h2>
 <p>The name of the file to identify.</p>
-
-<h2 id='width-3' class='section-header'><a href='#width-3'><code>width</code></a></h2>
+<h2 id="width-7" class="section-header"><a href="#width-7"><code>width</code></a></h2>
 <p>Return location for the width of the
- image, or <code>None</code></p>
-
-<h2 id='height-3' class='section-header'><a href='#height-3'><code>height</code></a></h2>
+image, or <code>None</code></p>
+<h2 id="height-7" class="section-header"><a href="#height-7"><code>height</code></a></h2>
 <p>Return location for the height of the
- image, or <code>None</code></p>
-
-<h1 id='returns-5' class='section-header'><a href='#returns-5'>Returns</a></h1>
+image, or <code>None</code></p>
+<h1 id="returns-12" class="section-header"><a href="#returns-12">Returns</a></h1>
 <p>A <code>PixbufFormat</code> describing
- the image format of the file or <code>None</code> if the image format wasn&#39;t
- recognized. The return value is owned by <code>Pixbuf</code> and should
- not be freed.</p>
-</div><h4 id='method.new_from_resource' class="method"><span id='new_from_resource.v' class='invisible'><code>pub fn <a href='#method.new_from_resource' class='fnname'>new_from_resource</a>(resource_path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../glib/error/struct.Error.html" title="struct glib::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#252-262' title='goto source code'>[src]</a></span></h4>
-<div class='docblock'><p>Creates a new pixbuf by loading an image from an resource.</p>
-
-<p>The file format is detected automatically. If <code>None</code> is returned, then
-<code>error</code> will be set.</p>
-
-<h2 id='resource_path' class='section-header'><a href='#resource_path'><code>resource_path</code></a></h2>
-<p>the path of the resource file</p>
-
-<h1 id='returns-6' class='section-header'><a href='#returns-6'>Returns</a></h1>
-<p>A newly-created pixbuf, or <code>None</code> if any of several error
-conditions occurred: the file could not be opened, the image format is
-not supported, there was not enough memory to allocate the image buffer,
-the stream contained invalid data, or the operation was cancelled.</p>
-</div><h4 id='method.new_from_resource_at_scale' class="method"><span id='new_from_resource_at_scale.v' class='invisible'><code>pub fn <a href='#method.new_from_resource_at_scale' class='fnname'>new_from_resource_at_scale</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;resource_path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;preserve_aspect_ratio: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="struct" href="../glib/error/struct.Error.html" title="struct glib::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#292-303' title='goto source code'>[src]</a></span></h4>
-<div class='docblock'><p>Creates a new pixbuf by loading an image from an resource.</p>
-
-<p>The file format is detected automatically. If <code>None</code> is returned, then
-<code>error</code> will be set.</p>
-
-<p>The image will be scaled to fit in the requested size, optionally
-preserving the image&#39;s aspect ratio. When preserving the aspect ratio,
-a <code>width</code> of -1 will cause the image to be scaled to the exact given
-height, and a <code>height</code> of -1 will cause the image to be scaled to the
-exact given width. When not preserving aspect ratio, a <code>width</code> or
-<code>height</code> of -1 means to not scale the image at all in that dimension.</p>
-
-<p>The stream is not closed.</p>
-
-<h2 id='resource_path-1' class='section-header'><a href='#resource_path-1'><code>resource_path</code></a></h2>
-<p>the path of the resource file</p>
-
-<h2 id='width-4' class='section-header'><a href='#width-4'><code>width</code></a></h2>
-<p>The width the image should have or -1 to not constrain the width</p>
-
-<h2 id='height-4' class='section-header'><a href='#height-4'><code>height</code></a></h2>
-<p>The height the image should have or -1 to not constrain the height</p>
-
-<h2 id='preserve_aspect_ratio-1' class='section-header'><a href='#preserve_aspect_ratio-1'><code>preserve_aspect_ratio</code></a></h2>
-<p><code>true</code> to preserve the image&#39;s aspect ratio</p>
-
-<h1 id='returns-7' class='section-header'><a href='#returns-7'>Returns</a></h1>
-<p>A newly-created pixbuf, or <code>None</code> if any of several error
-conditions occurred: the file could not be opened, the image format is
-not supported, there was not enough memory to allocate the image buffer,
-the stream contained invalid data, or the operation was cancelled.</p>
-</div><h4 id='method.new_subpixbuf' class="method"><span id='new_subpixbuf.v' class='invisible'><code>pub fn <a href='#method.new_subpixbuf' class='fnname'>new_subpixbuf</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;src_x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;src_y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>) -&gt; <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#305-310' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.get_colorspace' class="method"><span id='get_colorspace.v' class='invisible'><code>pub fn <a href='#method.get_colorspace' class='fnname'>get_colorspace</a>(&amp;self) -&gt; <a class="type" href="../gdk_pixbuf/type.Colorspace.html" title="type gdk_pixbuf::Colorspace">Colorspace</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#312-314' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.get_n_channels' class="method"><span id='get_n_channels.v' class='invisible'><code>pub fn <a href='#method.get_n_channels' class='fnname'>get_n_channels</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#316-318' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.get_has_alpha' class="method"><span id='get_has_alpha.v' class='invisible'><code>pub fn <a href='#method.get_has_alpha' class='fnname'>get_has_alpha</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#320-322' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.get_bits_per_sample' class="method"><span id='get_bits_per_sample.v' class='invisible'><code>pub fn <a href='#method.get_bits_per_sample' class='fnname'>get_bits_per_sample</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#324-326' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.get_pixels' class="method"><span id='get_pixels.v' class='invisible'><code>pub unsafe fn <a href='#method.get_pixels' class='fnname'>get_pixels</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#328-332' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.get_width' class="method"><span id='get_width.v' class='invisible'><code>pub fn <a href='#method.get_width' class='fnname'>get_width</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#334-336' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.get_height' class="method"><span id='get_height.v' class='invisible'><code>pub fn <a href='#method.get_height' class='fnname'>get_height</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#338-340' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.get_rowstride' class="method"><span id='get_rowstride.v' class='invisible'><code>pub fn <a href='#method.get_rowstride' class='fnname'>get_rowstride</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#342-344' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.get_byte_length' class="method"><span id='get_byte_length.v' class='invisible'><code>pub fn <a href='#method.get_byte_length' class='fnname'>get_byte_length</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#346-348' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.get_option' class="method"><span id='get_option.v' class='invisible'><code>pub fn <a href='#method.get_option' class='fnname'>get_option</a>(&amp;self, key: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#350-354' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.scale_simple' class="method"><span id='scale_simple.v' class='invisible'><code>pub fn <a href='#method.scale_simple' class='fnname'>scale_simple</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest_width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest_height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;interp_type: <a class="type" href="../gdk_pixbuf/type.InterpType.html" title="type gdk_pixbuf::InterpType">InterpType</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#356-362' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.scale' class="method"><span id='scale.v' class='invisible'><code>pub fn <a href='#method.scale' class='fnname'>scale</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest: &amp;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest_x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest_y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest_width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest_height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;offset_x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;offset_y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;scale_x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;scale_y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;interp_type: <a class="type" href="../gdk_pixbuf/type.InterpType.html" title="type gdk_pixbuf::InterpType">InterpType</a><br>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#364-372' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.composite' class="method"><span id='composite.v' class='invisible'><code>pub fn <a href='#method.composite' class='fnname'>composite</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest: &amp;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest_x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest_y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest_width: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;dest_height: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;offset_x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;offset_y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;scale_x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;scale_y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;interp_type: <a class="type" href="../gdk_pixbuf/type.InterpType.html" title="type gdk_pixbuf::InterpType">InterpType</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;overall_alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><br>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#374-382' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.flip' class="method"><span id='flip.v' class='invisible'><code>pub fn <a href='#method.flip' class='fnname'>flip</a>(&amp;self, horizontal: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#384-389' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.put_pixel' class="method"><span id='put_pixel.v' class='invisible'><code>pub fn <a href='#method.put_pixel' class='fnname'>put_pixel</a>(&amp;self, x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, red: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, green: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, blue: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#391-403' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.copy' class="method"><span id='copy.v' class='invisible'><code>pub fn <a href='#method.copy' class='fnname'>copy</a>(&amp;self) -&gt; <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#405-410' title='goto source code'>[src]</a></span></h4>
-<h4 id='method.copy_options' class="method"><span id='copy_options.v' class='invisible'><code>pub fn <a href='#method.copy_options' class='fnname'>copy_options</a>(&amp;self, dest_pixbuf: &amp;mut <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="../glib/error/struct.BoolError.html" title="struct glib::error::BoolError">BoolError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#413-420' title='goto source code'>[src]</a></span></h4>
+the image format of the file or <code>None</code> if the image format wasn't
+recognized. The return value is owned by <code>Pixbuf</code> and should
+not be freed.</p>
+</div><h4 id='method.get_file_info_async' class="method"><span id='get_file_info_async.v' class='invisible'><code>pub fn <a href='#method.get_file_info_async' class='fnname'>get_file_info_async</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gio/auto/cancellable/struct.Cancellable.html" title="struct gio::auto::cancellable::Cancellable">Cancellable</a>&gt;&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>(<a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="../gdk_pixbuf/struct.PixbufFormat.html" title="struct gdk_pixbuf::PixbufFormat">PixbufFormat</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;) + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static, T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;filename: T, <br>&nbsp;&nbsp;&nbsp;&nbsp;cancellable: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;callback: Q<br>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#319-344' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Asynchronously parses an image file far enough to determine its
+format and size.</p>
+<p>For more details see <code>Pixbuf::get_file_info</code>, which is the synchronous
+version of this function.</p>
+<p>When the operation is finished, <code>callback</code> will be called in the
+main thread. You can then call <code>Pixbuf::get_file_info_finish</code> to
+get the result of the operation.</p>
+<p>Feature: <code>v2_32</code></p>
+<h2 id="filename-4" class="section-header"><a href="#filename-4"><code>filename</code></a></h2>
+<p>The name of the file to identify</p>
+<h2 id="cancellable-4" class="section-header"><a href="#cancellable-4"><code>cancellable</code></a></h2>
+<p>optional <code>gio::Cancellable</code> object, <code>None</code> to ignore</p>
+<h2 id="callback-2" class="section-header"><a href="#callback-2"><code>callback</code></a></h2>
+<p>a <code>GAsyncReadyCallback</code> to call when the file info is available</p>
+<h2 id="user_data-2" class="section-header"><a href="#user_data-2"><code>user_data</code></a></h2>
+<p>the data to pass to the callback function</p>
+</div><h4 id='method.save_to_bufferv' class="method"><span id='save_to_bufferv.v' class='invisible'><code>pub fn <a href='#method.save_to_bufferv' class='fnname'>save_to_bufferv</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;type_: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;options: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a>&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#346-356' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.save_to_streamv' class="method"><span id='save_to_streamv.v' class='invisible'><code>pub fn <a href='#method.save_to_streamv' class='fnname'>save_to_streamv</a>&lt;'a, P:&nbsp;<a class="trait" href="../gdk_pixbuf/trait.IsA.html" title="trait gdk_pixbuf::IsA">IsA</a>&lt;<a class="struct" href="../gio/auto/output_stream/struct.OutputStream.html" title="struct gio::auto::output_stream::OutputStream">OutputStream</a>&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gio/auto/cancellable/struct.Cancellable.html" title="struct gio::auto::cancellable::Cancellable">Cancellable</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;stream: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>P, <br>&nbsp;&nbsp;&nbsp;&nbsp;type_: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;options: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a>&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;cancellable: Q<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#359-369' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.savev' class="method"><span id='savev.v' class='invisible'><code>pub fn <a href='#method.savev' class='fnname'>savev</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;filename: T, <br>&nbsp;&nbsp;&nbsp;&nbsp;type_: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;options: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a>&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="../gdk_pixbuf/struct.Error.html" title="struct gdk_pixbuf::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gdk_pixbuf/pixbuf.rs.html#371-379' title='goto source code'>[src]</a></span></h4>
 </div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -266,17 +397,24 @@ the stream contained invalid data, or the operation was cancelled.</p>
 <div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
 </div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/hash/mod.rs.html#202-208' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
-</div></div><h3 id='impl-StaticType' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/types/trait.StaticType.html" title="trait glib::types::StaticType">StaticType</a> for <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-StaticType' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../glib/types/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../glib/types/enum.Type.html" title="enum glib::types::Type">Type</a></code></span></h4>
+</div></div><h3 id='impl-StaticType' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gdk_pixbuf/trait.StaticType.html" title="trait gdk_pixbuf::StaticType">StaticType</a> for <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-StaticType' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../gdk_pixbuf/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../gdk_pixbuf/enum.Type.html" title="enum gdk_pixbuf::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
-</div></div><h3 id='impl-PartialEq%3CT%3E' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../glib/object/struct.Object.html" title="struct glib::object::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-PartialEq%3CT%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
+</div></div><h3 id='impl-PartialEq%3CT%3E' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../gdk_pixbuf/trait.IsA.html" title="trait gdk_pixbuf::IsA">IsA</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Object.html" title="struct gdk_pixbuf::Object">Object</a>&gt;&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a>&lt;T&gt; for <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-PartialEq%3CT%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
 </div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#121' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../glib/object/struct.Object.html" title="struct glib::object::Object">Object</a>&gt; for <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gdk_pixbuf/trait.IsA.html" title="trait gdk_pixbuf::IsA">IsA</a>&lt;<a class="struct" href="../gdk_pixbuf/struct.Object.html" title="struct gdk_pixbuf::Object">Object</a>&gt; for <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gdk_pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::Pixbuf">Pixbuf</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -289,20 +427,22 @@ the stream contained invalid data, or the operation was cancelled.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
