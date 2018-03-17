@@ -10,8 +10,11 @@
     <title>value.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -1217,6 +1228,23 @@
 <span id="1172">1172</span>
 <span id="1173">1173</span>
 <span id="1174">1174</span>
+<span id="1175">1175</span>
+<span id="1176">1176</span>
+<span id="1177">1177</span>
+<span id="1178">1178</span>
+<span id="1179">1179</span>
+<span id="1180">1180</span>
+<span id="1181">1181</span>
+<span id="1182">1182</span>
+<span id="1183">1183</span>
+<span id="1184">1184</span>
+<span id="1185">1185</span>
+<span id="1186">1186</span>
+<span id="1187">1187</span>
+<span id="1188">1188</span>
+<span id="1189">1189</span>
+<span id="1190">1190</span>
+<span id="1191">1191</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2013-2016, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -1331,6 +1359,16 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Value</span>(<span class="ident">gobject_ffi</span>::<span class="ident">GValue</span>, <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_void</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span> <span class="ident">Value</span> {
+    <span class="doccomment">/// Creates a new `Value` that is initialized with `type_`</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_type</span>(<span class="ident">type_</span>: <span class="ident">Type</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">unsafe</span> {
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">gobject_ffi</span>::<span class="ident">g_type_check_is_value_type</span>(<span class="ident">type_</span>.<span class="ident">to_glib</span>()), <span class="ident">glib_ffi</span>::<span class="ident">GTRUE</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">uninitialized</span>();
+            <span class="ident">gobject_ffi</span>::<span class="ident">g_value_init</span>(<span class="ident">value</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">type_</span>.<span class="ident">to_glib</span>());
+            <span class="ident">value</span>
+        }
+    }
+
     <span class="doccomment">/// Tries to downcast to a `TypedValue`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `Ok(TypedValue&lt;T&gt;)` if the value carries a type corresponding</span>
@@ -1369,10 +1407,11 @@
         }
     }
 
-    <span class="doccomment">/// Returns `true` if the type of the value corresponds to `T`.</span>
+    <span class="doccomment">/// Returns `true` if the type of the value corresponds to `T`</span>
+    <span class="doccomment">/// or is a sub-type of `T`.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">FromValueOptional</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">SetValue</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">type_</span>() <span class="op">==</span> <span class="ident">T</span>::<span class="ident">static_type</span>()
+        <span class="self">self</span>.<span class="ident">type_</span>().<span class="ident">is_a</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>::<span class="ident">static_type</span>())
     }
 
     <span class="doccomment">/// Returns the type of the value.</span>
@@ -1404,8 +1443,7 @@
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Value</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">gobject_ffi</span>::<span class="ident">g_value_init</span>(<span class="ident">ret</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="self">self</span>.<span class="number">0</span>.<span class="ident">g_type</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">from_type</span>(<span class="ident">from_glib</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">g_type</span>));
             <span class="ident">gobject_ffi</span>::<span class="ident">g_value_copy</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">ret</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>);
             <span class="ident">ret</span>
         }
@@ -1414,7 +1452,11 @@
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Value</span> {
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="kw">unsafe</span> { <span class="ident">gobject_ffi</span>::<span class="ident">g_value_unset</span>(<span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>) }
+        <span class="comment">// Before GLib 2.48, unsetting a zeroed GValue would give critical warnings</span>
+        <span class="comment">// https://bugzilla.gnome.org/show_bug.cgi?id=755766</span>
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">type_</span>() <span class="op">!=</span> <span class="ident">Type</span>::<span class="ident">Invalid</span> {
+            <span class="kw">unsafe</span> { <span class="ident">gobject_ffi</span>::<span class="ident">g_value_unset</span>(<span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>) }
+        }
     }
 }
 
@@ -1546,8 +1588,7 @@
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">wrap</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> {
         <span class="kw">impl</span> <span class="ident">FromGlibPtrNone</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">gobject_ffi</span>::<span class="ident">GValue</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
             <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_none</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">gobject_ffi</span>::<span class="ident">GValue</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">uninitialized</span>();
-                <span class="ident">gobject_ffi</span>::<span class="ident">g_value_init</span>(<span class="ident">ret</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, (<span class="kw-2">*</span><span class="ident">ptr</span>).<span class="ident">g_type</span>);
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">from_type</span>(<span class="ident">from_glib</span>((<span class="kw-2">*</span><span class="ident">ptr</span>).<span class="ident">g_type</span>));
                 <span class="ident">gobject_ffi</span>::<span class="ident">g_value_copy</span>(<span class="ident">ptr</span>, <span class="ident">ret</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>);
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">wrap</span>(<span class="ident">ret</span>)
             }
@@ -1657,7 +1698,11 @@
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="kw">unsafe</span> {
             <span class="kw">for</span> <span class="ident">value</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span> {
-                <span class="ident">gobject_ffi</span>::<span class="ident">g_value_unset</span>(<span class="ident">value</span>);
+                <span class="comment">// Before GLib 2.48, unsetting a zeroed GValue would give critical warnings</span>
+                <span class="comment">// https://bugzilla.gnome.org/show_bug.cgi?id=755766</span>
+                <span class="kw">if</span> <span class="ident">value</span>.<span class="ident">g_type</span> <span class="op">!=</span> <span class="ident">gobject_ffi</span>::<span class="ident">G_TYPE_INVALID</span> {
+                    <span class="ident">gobject_ffi</span>::<span class="ident">g_value_unset</span>(<span class="ident">value</span>);
+                }
             }
         }
     }
@@ -1790,8 +1835,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">SetValueOptional</span><span class="op">&gt;</span> <span class="ident">ToValue</span> <span class="kw">for</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">to_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Value</span> {
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">gobject_ffi</span>::<span class="ident">g_value_init</span>(<span class="ident">ret</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">T</span>::<span class="ident">static_type</span>().<span class="ident">to_glib</span>());
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">from_type</span>(<span class="ident">T</span>::<span class="ident">static_type</span>());
             <span class="ident">T</span>::<span class="ident">set_value_optional</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ret</span>, <span class="self">self</span>.<span class="ident">as_ref</span>());
             <span class="ident">ret</span>
         }
@@ -1806,8 +1850,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">SetValue</span><span class="op">&gt;</span> <span class="ident">ToValue</span> <span class="kw">for</span> <span class="ident">T</span> {
     <span class="kw">fn</span> <span class="ident">to_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Value</span> {
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">gobject_ffi</span>::<span class="ident">g_value_init</span>(<span class="ident">ret</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">T</span>::<span class="ident">static_type</span>().<span class="ident">to_glib</span>());
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">from_type</span>(<span class="ident">T</span>::<span class="ident">static_type</span>());
             <span class="ident">T</span>::<span class="ident">set_value</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ret</span>, <span class="self">self</span>);
             <span class="ident">ret</span>
         }
@@ -1990,12 +2033,14 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">FromValueOptional</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_value_optional</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Value</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">FromValue</span><span class="op">&gt;</span>::<span class="ident">from_value</span>(<span class="ident">value</span>))
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">FromValue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_value</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Value</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">gobject_ffi</span>::<span class="ident">g_value_get_boxed</span>(<span class="ident">value</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>;
-        <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
-            <span class="prelude-val">None</span>
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">FromGlibPtrContainer</span>::<span class="ident">from_glib_none</span>(<span class="ident">ptr</span>))
-        }
+        <span class="ident">FromGlibPtrContainer</span>::<span class="ident">from_glib_none</span>(<span class="ident">ptr</span>)
     }
 }
 
@@ -2406,20 +2451,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,11 @@
     <title>gtk::ApplicationWindow - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct ApplicationWindow</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CWindow%3E">IsA&lt;Window&gt;</a><a href="#impl-IsA%3CBin%3E">IsA&lt;Bin&gt;</a><a href="#impl-IsA%3CContainer%3E">IsA&lt;Container&gt;</a><a href="#impl-IsA%3CWidget%3E">IsA&lt;Widget&gt;</a><a href="#impl-IsA%3CBuildable%3E">IsA&lt;Buildable&gt;</a><a href="#impl-IsA%3CActionGroup%3E">IsA&lt;ActionGroup&gt;</a><a href="#impl-IsA%3CActionMap%3E">IsA&lt;ActionMap&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'ApplicationWindow', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct ApplicationWindow</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CWindow%3E">IsA&lt;Window&gt;</a><a href="#impl-IsA%3CBin%3E">IsA&lt;Bin&gt;</a><a href="#impl-IsA%3CContainer%3E">IsA&lt;Container&gt;</a><a href="#impl-IsA%3CWidget%3E">IsA&lt;Widget&gt;</a><a href="#impl-IsA%3CBuildable%3E">IsA&lt;Buildable&gt;</a><a href="#impl-IsA%3CActionGroup%3E">IsA&lt;ActionGroup&gt;</a><a href="#impl-IsA%3CActionMap%3E">IsA&lt;ActionMap&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'ApplicationWindow', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -54,7 +65,6 @@ extra functionality for better integration with <code>Application</code>
 features. Notably, it can handle both the application menu as well
 as the menubar. See <code>GtkApplicationExt::set_app_menu</code> and
 <code>GtkApplicationExt::set_menubar</code>.</p>
-
 <p>This class implements the <code>gio::ActionGroup</code> and <code>gio::ActionMap</code> interfaces,
 to let you add window-specific actions that will be exported by the
 associated <code>Application</code>, together with its application-wide
@@ -62,15 +72,12 @@ actions. Window-specific actions are prefixed with the “win.”
 prefix and application-wide actions are prefixed with the “app.”
 prefix. Actions must be addressed with the prefixed name when
 referring to them from a <code>gio::MenuModel</code>.</p>
-
 <p>Note that widgets that are placed inside a <code>ApplicationWindow</code>
 can also activate these actions, if they implement the
 <code>Actionable</code> interface.</p>
-
 <p>As with <code>Application</code>, the GDK lock will be acquired when
 processing actions arriving from other processes and should therefore
 be held when activating actions locally (if GDK threads are enabled).</p>
-
 <p>The settings <code>Settings:gtk-shell-shows-app-menu</code> and
 <code>Settings:gtk-shell-shows-menubar</code> tell GTK+ whether the
 desktop environment is showing the application menu and menubar
@@ -78,23 +85,21 @@ models outside the application as part of the desktop shell.
 For instance, on OS X, both menus will be displayed remotely;
 on Windows neither will be. gnome-shell (starting with version 3.4)
 will display the application menu, but not the menubar.</p>
-
 <p>If the desktop environment does not display the menubar, then
 <code>ApplicationWindow</code> will automatically show a <code>MenuBar</code> for it.
 This behaviour can be overridden with the <code>ApplicationWindow:show-menubar</code>
 property. If the desktop environment does not display the application
 menu, then it will automatically be included in the menubar or in the
 windows client-side decorations.</p>
-
-<h2 id='a-applicationwindow-with-a-menubar' class='section-header'><a href='#a-applicationwindow-with-a-menubar'>A <code>ApplicationWindow</code> with a menubar</a></h2>
+<h2 id="a-applicationwindow-with-a-menubar" class="section-header"><a href="#a-applicationwindow-with-a-menubar">A <code>ApplicationWindow</code> with a menubar</a></h2>
 <pre><code class="language-C">app = gtk_application_new ();
 
 builder = gtk_builder_new_from_string (
     &quot;&lt;interface&gt;&quot;
-    &quot;  &lt;menu id=&#39;menubar&#39;&gt;&quot;
-    &quot;    &lt;submenu label=&#39;_Edit&#39;&gt;&quot;
-    &quot;      &lt;item label=&#39;_Copy&#39; action=&#39;win.copy&#39;/&gt;&quot;
-    &quot;      &lt;item label=&#39;_Paste&#39; action=&#39;win.paste&#39;/&gt;&quot;
+    &quot;  &lt;menu id='menubar'&gt;&quot;
+    &quot;    &lt;submenu label='_Edit'&gt;&quot;
+    &quot;      &lt;item label='_Copy' action='win.copy'/&gt;&quot;
+    &quot;      &lt;item label='_Paste' action='win.paste'/&gt;&quot;
     &quot;    &lt;/submenu&gt;&quot;
     &quot;  &lt;/menu&gt;&quot;
     &quot;&lt;/interface&gt;&quot;,
@@ -109,10 +114,8 @@ g_object_unref (builder);
 
 window = gtk_application_window_new (app);
 </code></pre>
-
-<h2 id='handling-fallback-yourself' class='section-header'><a href='#handling-fallback-yourself'>Handling fallback yourself</a></h2>
+<h2 id="handling-fallback-yourself" class="section-header"><a href="#handling-fallback-yourself">Handling fallback yourself</a></h2>
 <p><a href="https://git.gnome.org/browse/gtk+/tree/examples/sunny.c">A simple example</a></p>
-
 <p>The XML format understood by <code>Builder</code> for <code>gio::MenuModel</code> consists
 of a toplevel <code>&lt;menu&gt;</code> element, which contains one or more <code>&lt;item&gt;</code>
 elements. Each <code>&lt;item&gt;</code> element contains <code>&lt;attribute&gt;</code> and <code>&lt;link&gt;</code>
@@ -120,55 +123,55 @@ elements with a mandatory name attribute. <code>&lt;link&gt;</code> elements hav
 same content model as <code>&lt;menu&gt;</code>. Instead of <code>&lt;link name=&quot;submenu&gt;</code> or
 <code>&lt;link name=&quot;section&quot;&gt;</code>, you can use <code>&lt;submenu&gt;</code> or <code>&lt;section&gt;</code>
 elements.</p>
-
 <p>Attribute values can be translated using gettext, like other <code>Builder</code>
 content. <code>&lt;attribute&gt;</code> elements can be marked for translation with a
 <code>translatable=&quot;yes&quot;</code> attribute. It is also possible to specify message
 context and translator comments, using the context and comments attributes.
 To make use of this, the <code>Builder</code> must have been given the gettext
 domain to use.</p>
-
-<p>The following attributes are used when constructing menu items:
-- &quot;label&quot;: a user-visible string to display
-- &quot;action&quot;: the prefixed name of the action to trigger
-- &quot;target&quot;: the parameter to use when activating the action
-- &quot;icon&quot; and &quot;verb-icon&quot;: names of icons that may be displayed
-- &quot;submenu-action&quot;: name of an action that may be used to determine
- if a submenu can be opened
-- &quot;hidden-when&quot;: a string used to determine when the item will be hidden.
- Possible values include &quot;action-disabled&quot;, &quot;action-missing&quot;, &quot;macos-menubar&quot;.</p>
-
-<p>The following attributes are used when constructing sections:
-- &quot;label&quot;: a user-visible string to use as section heading
-- &quot;display-hint&quot;: a string used to determine special formatting for the section.
- Possible values include &quot;horizontal-buttons&quot;.
-- &quot;text-direction&quot;: a string used to determine the <code>TextDirection</code> to use
- when &quot;display-hint&quot; is set to &quot;horizontal-buttons&quot;. Possible values
- include &quot;rtl&quot;, &quot;ltr&quot;, and &quot;none&quot;.</p>
-
-<p>The following attributes are used when constructing submenus:
-- &quot;label&quot;: a user-visible string to display
-- &quot;icon&quot;: icon name to display</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<p>The following attributes are used when constructing menu items:</p>
+<ul>
+<li>&quot;label&quot;: a user-visible string to display</li>
+<li>&quot;action&quot;: the prefixed name of the action to trigger</li>
+<li>&quot;target&quot;: the parameter to use when activating the action</li>
+<li>&quot;icon&quot; and &quot;verb-icon&quot;: names of icons that may be displayed</li>
+<li>&quot;submenu-action&quot;: name of an action that may be used to determine
+if a submenu can be opened</li>
+<li>&quot;hidden-when&quot;: a string used to determine when the item will be hidden.
+Possible values include &quot;action-disabled&quot;, &quot;action-missing&quot;, &quot;macos-menubar&quot;.</li>
+</ul>
+<p>The following attributes are used when constructing sections:</p>
+<ul>
+<li>&quot;label&quot;: a user-visible string to use as section heading</li>
+<li>&quot;display-hint&quot;: a string used to determine special formatting for the section.
+Possible values include &quot;horizontal-buttons&quot;.</li>
+<li>&quot;text-direction&quot;: a string used to determine the <code>TextDirection</code> to use
+when &quot;display-hint&quot; is set to &quot;horizontal-buttons&quot;. Possible values
+include &quot;rtl&quot;, &quot;ltr&quot;, and &quot;none&quot;.</li>
+</ul>
+<p>The following attributes are used when constructing submenus:</p>
+<ul>
+<li>&quot;label&quot;: a user-visible string to display</li>
+<li>&quot;icon&quot;: icon name to display</li>
+</ul>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.ApplicationWindowExt.html"><code>ApplicationWindowExt</code></a>, <a href="trait.GtkWindowExt.html"><code>GtkWindowExt</code></a>, <a href="trait.BinExt.html"><code>BinExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a>, <a href="trait.BuildableExt.html"><code>BuildableExt</code></a>, <a href="../gio/trait.ActionGroupExt.html"><code>gio::ActionGroupExt</code></a>, <a href="../gio/trait.ActionMapExt.html"><code>gio::ActionMapExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/application_window.rs.html#152-166' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(application: &amp;<a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a>) -&gt; <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/application_window.rs.html#160-165' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/application_window.rs.html#153-167' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(application: &amp;<a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a>) -&gt; <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/application_window.rs.html#161-166' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new <code>ApplicationWindow</code>.</p>
-
-<h2 id='application' class='section-header'><a href='#application'><code>application</code></a></h2>
+<h2 id="application" class="section-header"><a href="#application"><code>application</code></a></h2>
 <p>a <code>Application</code></p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>a newly created <code>ApplicationWindow</code></p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -199,7 +202,14 @@ domain to use.</p>
 <div class='impl-items'></div><h3 id='impl-IsA%3CActionGroup%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gio/auto/action_group/struct.ActionGroup.html" title="struct gio::auto::action_group::ActionGroup">ActionGroup</a>&gt; for <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code><a href='#impl-IsA%3CActionGroup%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CActionMap%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gio/auto/action_map/struct.ActionMap.html" title="struct gio::auto::action_map::ActionMap">ActionMap</a>&gt; for <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code><a href='#impl-IsA%3CActionMap%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gtk/struct.ApplicationWindow.html" title="struct gtk::ApplicationWindow">ApplicationWindow</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -212,20 +222,22 @@ domain to use.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

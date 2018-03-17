@@ -10,8 +10,11 @@
     <title>gtk::Scale - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct Scale</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.new_with_range">new_with_range</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CRange%3E">IsA&lt;Range&gt;</a><a href="#impl-IsA%3CWidget%3E">IsA&lt;Widget&gt;</a><a href="#impl-IsA%3CBuildable%3E">IsA&lt;Buildable&gt;</a><a href="#impl-IsA%3COrientable%3E">IsA&lt;Orientable&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Scale', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Scale</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.new_with_range">new_with_range</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CRange%3E">IsA&lt;Range&gt;</a><a href="#impl-IsA%3CWidget%3E">IsA&lt;Widget&gt;</a><a href="#impl-IsA%3CBuildable%3E">IsA&lt;Buildable&gt;</a><a href="#impl-IsA%3COrientable%3E">IsA&lt;Orientable&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Scale', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -55,21 +66,18 @@ its base class, <code>Range</code>, in addition to the methods for <code>Scale</
 To set the value of a scale, you would normally use <code>RangeExt::set_value</code>.
 To detect changes to the value, you would normally use the
 <code>Range::value-changed</code> signal.</p>
-
 <p>Note that using the same upper and lower bounds for the <code>Scale</code> (through
 the <code>Range</code> methods) will hide the slider itself. This is useful for
 applications that want to show an undeterminate value on the scale, without
 changing the layout of the application (such as movie or music players).</p>
-
-<h1 id='scale-as-buildable' class='section-header'><a href='#scale-as-buildable'><code>Scale</code> as <code>Buildable</code></a></h1>
+<h1 id="scale-as-buildable" class="section-header"><a href="#scale-as-buildable"><code>Scale</code> as <code>Buildable</code></a></h1>
 <p><code>Scale</code> supports a custom <code>&lt;marks&gt;</code> element, which can contain multiple
 <code>&lt;mark&gt;</code> elements. The “value” and “position” attributes have the same
 meaning as <code>ScaleExt::add_mark</code> parameters of the same name. If the
 element is not empty, its content is taken as the markup to show at
 the mark. It can be translated with the usual ”translatable” and
 “context” attributes.</p>
-
-<h1 id='css-nodes' class='section-header'><a href='#css-nodes'>CSS nodes</a></h1>
+<h1 id="css-nodes" class="section-header"><a href="#css-nodes">CSS nodes</a></h1>
 <pre><code class="language-plain">scale[.fine-tune][.marks-before][.marks-after]
 ├── marks.top
 │   ├── mark
@@ -89,84 +97,67 @@ the mark. It can be translated with the usual ”translatable” and
     ┊    ╰── [label]
     ╰── mark
 </code></pre>
-
 <p><code>Scale</code> has a main CSS node with name scale and a subnode for its contents,
 with subnodes named trough and slider.</p>
-
 <p>The main node gets the style class .fine-tune added when the scale is in
-&#39;fine-tuning&#39; mode.</p>
-
+'fine-tuning' mode.</p>
 <p>If the scale has an origin (see <code>ScaleExt::set_has_origin</code>), there is a
 subnode with name highlight below the trough node that is used for rendering
 the highlighted part of the trough.</p>
-
 <p>If the scale is showing a fill level (see <code>RangeExt::set_show_fill_level</code>),
 there is a subnode with name fill below the trough node that is used for
 rendering the filled in part of the trough.</p>
-
 <p>If marks are present, there is a marks subnode before or after the contents
 node, below which each mark gets a node with name mark. The marks nodes get
 either the .top or .bottom style class.</p>
-
 <p>The mark node has a subnode named indicator. If the mark has text, it also
 has a subnode named label. When the mark is either above or left of the
 scale, the label subnode is the first when present. Otherwise, the indicator
 subnode is the first.</p>
-
-<p>The main CSS node gets the &#39;marks-before&#39; and/or &#39;marks-after&#39; style classes
+<p>The main CSS node gets the 'marks-before' and/or 'marks-after' style classes
 added depending on what marks are present.</p>
-
 <p>If the scale is displaying the value (see <code>Scale:draw-value</code>), there is
 subnode with name value.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.ScaleExt.html"><code>ScaleExt</code></a>, <a href="trait.RangeExt.html"><code>RangeExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a>, <a href="trait.BuildableExt.html"><code>BuildableExt</code></a>, <a href="trait.OrientableExt.html"><code>OrientableExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scale.rs.html#112-159' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;orientation: <a class="enum" href="../gtk/enum.Orientation.html" title="enum gtk::Orientation">Orientation</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;adjustment: P<br>) -&gt; <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scale.rs.html#123-130' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scale.rs.html#113-160' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;orientation: <a class="enum" href="../gtk/enum.Orientation.html" title="enum gtk::Orientation">Orientation</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;adjustment: P<br>) -&gt; <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scale.rs.html#124-131' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new <code>Scale</code>.</p>
-
-<h2 id='orientation' class='section-header'><a href='#orientation'><code>orientation</code></a></h2>
+<h2 id="orientation" class="section-header"><a href="#orientation"><code>orientation</code></a></h2>
 <p>the scale’s orientation.</p>
-
-<h2 id='adjustment' class='section-header'><a href='#adjustment'><code>adjustment</code></a></h2>
+<h2 id="adjustment" class="section-header"><a href="#adjustment"><code>adjustment</code></a></h2>
 <p>the <code>Adjustment</code> which sets the range
- of the scale, or <code>None</code> to create a new adjustment.</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+of the scale, or <code>None</code> to create a new adjustment.</p>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>a new <code>Scale</code></p>
-</div><h4 id='method.new_with_range' class="method"><span id='new_with_range.v' class='invisible'><code>pub fn <a href='#method.new_with_range' class='fnname'>new_with_range</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;orientation: <a class="enum" href="../gtk/enum.Orientation.html" title="enum gtk::Orientation">Orientation</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;min: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;max: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;step: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a><br>) -&gt; <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scale.rs.html#153-158' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.new_with_range' class="method"><span id='new_with_range.v' class='invisible'><code>pub fn <a href='#method.new_with_range' class='fnname'>new_with_range</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;orientation: <a class="enum" href="../gtk/enum.Orientation.html" title="enum gtk::Orientation">Orientation</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;min: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;max: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;step: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a><br>) -&gt; <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scale.rs.html#154-159' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new scale widget with the given orientation that lets the
 user input a number between <code>min</code> and <code>max</code> (including <code>min</code> and <code>max</code>)
 with the increment <code>step</code>. <code>step</code> must be nonzero; it’s the distance
 the slider moves when using the arrow keys to adjust the scale
 value.</p>
-
 <p>Note that the way in which the precision is derived works best if <code>step</code>
 is a power of ten. If the resulting precision is not suitable for your
 needs, use <code>ScaleExt::set_digits</code> to correct it.</p>
-
-<h2 id='orientation-1' class='section-header'><a href='#orientation-1'><code>orientation</code></a></h2>
+<h2 id="orientation-1" class="section-header"><a href="#orientation-1"><code>orientation</code></a></h2>
 <p>the scale’s orientation.</p>
-
-<h2 id='min' class='section-header'><a href='#min'><code>min</code></a></h2>
+<h2 id="min" class="section-header"><a href="#min"><code>min</code></a></h2>
 <p>minimum value</p>
-
-<h2 id='max' class='section-header'><a href='#max'><code>max</code></a></h2>
+<h2 id="max" class="section-header"><a href="#max"><code>max</code></a></h2>
 <p>maximum value</p>
-
-<h2 id='step' class='section-header'><a href='#step'><code>step</code></a></h2>
+<h2 id="step" class="section-header"><a href="#step"><code>step</code></a></h2>
 <p>step increment (tick size) used with keyboard shortcuts</p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<h1 id="returns-1" class="section-header"><a href="#returns-1">Returns</a></h1>
 <p>a new <code>Scale</code></p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -194,7 +185,14 @@ needs, use <code>ScaleExt::set_digits</code> to correct it.</p>
 <div class='impl-items'></div><h3 id='impl-IsA%3CBuildable%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Buildable.html" title="struct gtk::Buildable">Buildable</a>&gt; for <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code><a href='#impl-IsA%3CBuildable%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3COrientable%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Orientable.html" title="struct gtk::Orientable">Orientable</a>&gt; for <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code><a href='#impl-IsA%3COrientable%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gtk/struct.Scale.html" title="struct gtk::Scale">Scale</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -207,20 +205,22 @@ needs, use <code>ScaleExt::set_digits</code> to correct it.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,11 @@
     <title>gio::Application - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct Application</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.get_default">get_default</a><a href="#method.id_is_valid">id_is_valid</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CActionGroup%3E">IsA&lt;ActionGroup&gt;</a><a href="#impl-IsA%3CActionMap%3E">IsA&lt;ActionMap&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gio</a></p><script>window.sidebarCurrent = {name: 'Application', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Application</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.get_default">get_default</a><a href="#method.id_is_valid">id_is_valid</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CActionGroup%3E">IsA&lt;ActionGroup&gt;</a><a href="#impl-IsA%3CActionMap%3E">IsA&lt;ActionMap&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gio</a></p><script>window.sidebarCurrent = {name: 'Application', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -54,14 +65,12 @@ low-level platform-specific services and is intended to act as the
 foundation for higher-level application classes such as
 <code>GtkApplication</code> or <code>MxApplication</code>. In general, you should not use
 this class outside of a higher level framework.</p>
-
 <p>GApplication provides convenient life cycle management by maintaining
 a &quot;use count&quot; for the primary application instance. The use count can
 be changed using <code>ApplicationExt::hold</code> and <code>ApplicationExt::release</code>. If
 it drops to zero, the application exits. Higher-level classes such as
 <code>GtkApplication</code> employ the use count to ensure that the application
 stays alive as long as it has any opened windows.</p>
-
 <p>Another feature that GApplication (optionally) provides is process
 uniqueness. Applications can make use of this functionality by
 providing a unique application ID. If given, only one application
@@ -73,7 +82,6 @@ running program. The already running instance of the program is
 called the &quot;primary instance&quot;; for non-unique applications this is
 the always the current instance. On Linux, the D-Bus session bus
 is used for communication.</p>
-
 <p>The use of <code>Application</code> differs from some other commonly-used
 uniqueness libraries (such as libunique) in important ways. The
 application is not expected to manually register itself and check
@@ -86,15 +94,13 @@ startup signal is emitted and the mainloop runs. If the application
 is not the primary instance then a signal is sent to the primary
 instance and <code>Application::run</code> promptly returns. See the code
 examples below.</p>
-
 <p>If used, the expected form of an application identifier is very close
 to that of of a
 <a href="http://dbus.freedesktop.org/doc/dbus-specification.html%60message%60-protocol-names-interface">D-Bus bus name</a>.
 Examples include: &quot;com.example.MyApp&quot;, &quot;org.example.internal-apps.Calculator&quot;.
 For details on valid application identifiers, see <code>Application::id_is_valid</code>.</p>
-
 <p>On Linux, the application identifier is claimed as a well-known bus name
-on the user&#39;s session bus. This means that the uniqueness of your
+on the user's session bus. This means that the uniqueness of your
 application is scoped to the current session. It also means that your
 application may provide additional services (through registration of other
 object paths) at that bus name. The registration of these object paths
@@ -105,7 +111,6 @@ any object paths that you wish to register are registered before <code>Applicati
 attempts to acquire the bus name of your application (which happens in
 <code>ApplicationExt::register</code>). Unfortunately, this means that you cannot use
 <code>ApplicationExt::get_is_remote</code> to decide if you want to register object paths.</p>
-
 <p>GApplication also implements the <code>ActionGroup</code> and <code>ActionMap</code>
 interfaces and lets you easily export actions by adding them with
 <code>ActionMap::add_action</code>. When invoking an action by calling
@@ -114,19 +119,23 @@ invoked in the primary instance. The actions are also exported on
 the session bus, and GIO provides the <code>DBusActionGroup</code> wrapper to
 conveniently access them remotely. GIO provides a <code>DBusMenuModel</code> wrapper
 for remote access to exported <code>GMenuModels</code>.</p>
-
 <p>There is a number of different entry points into a GApplication:</p>
-
 <ul>
-<li><p>via &#39;Activate&#39; (i.e. just starting the application)</p></li>
-<li><p>via &#39;Open&#39; (i.e. opening some files)</p></li>
-<li><p>by handling a command-line</p></li>
-<li><p>via activating an action</p></li>
+<li>
+<p>via 'Activate' (i.e. just starting the application)</p>
+</li>
+<li>
+<p>via 'Open' (i.e. opening some files)</p>
+</li>
+<li>
+<p>by handling a command-line</p>
+</li>
+<li>
+<p>via activating an action</p>
+</li>
 </ul>
-
 <p>The <code>Application::startup</code> signal lets you handle the application
 initialization for all of these in a single place.</p>
-
 <p>Regardless of which of these entry points is used to start the
 application, GApplication passes some &quot;platform data from the
 launching instance to the primary instance, in the form of a
@@ -137,7 +146,6 @@ in your <code>Application</code> subclass. When dealing with
 directly available via <code>ApplicationCommandLine::get_cwd</code>,
 <code>ApplicationCommandLine::get_environ</code> and
 <code>ApplicationCommandLine::get_platform_data</code>.</p>
-
 <p>As the name indicates, the platform data may vary depending on the
 operating system, but it always includes the current directory (key
 &quot;cwd&quot;), and optionally the environment (ie the set of environment
@@ -147,86 +155,79 @@ The environment is only added to the platform data if the
 can add their own platform data by overriding the <code>add_platform_data</code>
 virtual function. For instance, <code>GtkApplication</code> adds startup notification
 data in this way.</p>
-
 <p>To parse commandline arguments you may handle the
 <code>Application::command-line</code> signal or override the <code>local_command_line</code>
 vfunc, to parse them in either the primary instance or the local instance,
 respectively.</p>
-
 <p>For an example of opening files with a GApplication, see
 <a href="https://git.gnome.org/browse/glib/tree/gio/tests/gapplication-example-open.c">gapplication-example-open.c</a>.</p>
-
 <p>For an example of using actions with GApplication, see
 <a href="https://git.gnome.org/browse/glib/tree/gio/tests/gapplication-example-actions.c">gapplication-example-actions.c</a>.</p>
-
 <p>For an example of using extra D-Bus hooks with GApplication, see
 <a href="https://git.gnome.org/browse/glib/tree/gio/tests/gapplication-example-dbushooks.c">gapplication-example-dbushooks.c</a>.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.ApplicationExt.html"><code>ApplicationExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a>, <a href="trait.ActionGroupExt.html"><code>ActionGroupExt</code></a>, <a href="trait.ActionMapExt.html"><code>ActionMapExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/application.rs.html#152-225' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;application_id: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;flags: <a class="struct" href="../gio/struct.ApplicationFlags.html" title="struct gio::ApplicationFlags">ApplicationFlags</a><br>) -&gt; <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/application.rs.html#168-174' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/application.rs.html#154-227' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>&lt;'a, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;application_id: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;flags: <a class="struct" href="../gio/struct.ApplicationFlags.html" title="struct gio::ApplicationFlags">ApplicationFlags</a><br>) -&gt; <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/application.rs.html#170-176' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new <code>Application</code> instance.</p>
-
 <p>If non-<code>None</code>, the application id must be valid. See
 <code>Application::id_is_valid</code>.</p>
-
 <p>If no application ID is given then some features of <code>Application</code>
 (most notably application uniqueness) will be disabled.</p>
-
-<h2 id='application_id' class='section-header'><a href='#application_id'><code>application_id</code></a></h2>
+<h2 id="application_id" class="section-header"><a href="#application_id"><code>application_id</code></a></h2>
 <p>the application id</p>
-
-<h2 id='flags' class='section-header'><a href='#flags'><code>flags</code></a></h2>
+<h2 id="flags" class="section-header"><a href="#flags"><code>flags</code></a></h2>
 <p>the application flags</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>a new <code>Application</code> instance</p>
-</div><h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>pub fn <a href='#method.get_default' class='fnname'>get_default</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/application.rs.html#187-191' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>pub fn <a href='#method.get_default' class='fnname'>get_default</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/application.rs.html#189-193' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns the default <code>Application</code> instance for this process.</p>
-
 <p>Normally there is only one <code>Application</code> per process and it becomes
 the default when it is created. You can exercise more control over
 this by using <code>ApplicationExt::set_default</code>.</p>
-
 <p>If there is no default application then <code>None</code> is returned.</p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<h1 id="returns-1" class="section-header"><a href="#returns-1">Returns</a></h1>
 <p>the default application for this process, or <code>None</code></p>
-</div><h4 id='method.id_is_valid' class="method"><span id='id_is_valid.v' class='invisible'><code>pub fn <a href='#method.id_is_valid' class='fnname'>id_is_valid</a>(application_id: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/application.rs.html#220-224' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.id_is_valid' class="method"><span id='id_is_valid.v' class='invisible'><code>pub fn <a href='#method.id_is_valid' class='fnname'>id_is_valid</a>(application_id: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/application.rs.html#222-226' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Checks if <code>application_id</code> is a valid application identifier.</p>
-
 <p>A valid ID is required for calls to <code>Application::new</code> and
 <code>ApplicationExt::set_application_id</code>.</p>
-
 <p>For convenience, the restrictions on application identifiers are
 reproduced here:</p>
-
 <ul>
-<li><p>Application identifiers must contain only the ASCII characters
-&quot;[A-Z][a-z][0-9]_-.&quot; and must not begin with a digit.</p></li>
-<li><p>Application identifiers must contain at least one &#39;.&#39; (period)
-character (and thus at least three elements).</p></li>
-<li><p>Application identifiers must not begin or end with a &#39;.&#39; (period)
-character.</p></li>
-<li><p>Application identifiers must not contain consecutive &#39;.&#39; (period)
-characters.</p></li>
-<li><p>Application identifiers must not exceed 255 characters.</p>
-
-<h2 id='application_id-1' class='section-header'><a href='#application_id-1'><code>application_id</code></a></h2>
-<p>a potential application identifier</p></li>
+<li>
+<p>Application identifiers must contain only the ASCII characters
+&quot;[A-Z][a-z][0-9]_-.&quot; and must not begin with a digit.</p>
+</li>
+<li>
+<p>Application identifiers must contain at least one '.' (period)
+character (and thus at least three elements).</p>
+</li>
+<li>
+<p>Application identifiers must not begin or end with a '.' (period)
+character.</p>
+</li>
+<li>
+<p>Application identifiers must not contain consecutive '.' (period)
+characters.</p>
+</li>
+<li>
+<p>Application identifiers must not exceed 255 characters.</p>
+</li>
 </ul>
-
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<h2 id="application_id-1" class="section-header"><a href="#application_id-1"><code>application_id</code></a></h2>
+<p>a potential application identifier</p>
+<h1 id="returns-2" class="section-header"><a href="#returns-2">Returns</a></h1>
 <p><code>true</code> if <code>application_id</code> is valid</p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -252,7 +253,14 @@ characters.</p></li>
 <div class='impl-items'></div><h3 id='impl-IsA%3CActionGroup%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.ActionGroup.html" title="struct gio::ActionGroup">ActionGroup</a>&gt; for <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code><a href='#impl-IsA%3CActionGroup%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CActionMap%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.ActionMap.html" title="struct gio::ActionMap">ActionMap</a>&gt; for <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code><a href='#impl-IsA%3CActionMap%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt; for <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gio/struct.Application.html" title="struct gio::Application">Application</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -265,20 +273,22 @@ characters.</p></li>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,11 @@
     <title>gtk::ScrolledWindow - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct ScrolledWindow</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-IsA%3CScrolledWindow%3E">IsA&lt;ScrolledWindow&gt;</a><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CBin%3E">IsA&lt;Bin&gt;</a><a href="#impl-IsA%3CContainer%3E">IsA&lt;Container&gt;</a><a href="#impl-IsA%3CWidget%3E">IsA&lt;Widget&gt;</a><a href="#impl-IsA%3CBuildable%3E">IsA&lt;Buildable&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'ScrolledWindow', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct ScrolledWindow</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-IsA%3CScrolledWindow%3E">IsA&lt;ScrolledWindow&gt;</a><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CBin%3E">IsA&lt;Bin&gt;</a><a href="#impl-IsA%3CContainer%3E">IsA&lt;Container&gt;</a><a href="#impl-IsA%3CWidget%3E">IsA&lt;Widget&gt;</a><a href="#impl-IsA%3CBuildable%3E">IsA&lt;Buildable&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'ScrolledWindow', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -52,7 +63,6 @@
 <pre class='rust struct'>pub struct ScrolledWindow(_, _);</pre><div class='docblock'><p><code>ScrolledWindow</code> is a container that accepts a single child widget, makes
 that child scrollable using either internally added scrollbars or externally
 associated adjustments, and optionally draws a frame around the child.</p>
-
 <p>Widgets with native scrolling support, i.e. those whose classes implement the
 <code>Scrollable</code> interface, are added directly. For other types of widget, the
 class <code>Viewport</code> acts as an adaptor, giving scrollability to other widgets.
@@ -60,18 +70,15 @@ class <code>Viewport</code> acts as an adaptor, giving scrollability to other wi
 accounts for whether or not the added child is a <code>Scrollable</code>. If it isn’t,
 <code>ScrolledWindow</code> wraps the child in a <code>Viewport</code> and adds that for you.
 Therefore, you can just add any child widget and not worry about the details.</p>
-
 <p>If <code>ContainerExt::add</code> has added a <code>Viewport</code> for you, you can remove
 both your added child widget from the <code>Viewport</code>, and the <code>Viewport</code>
 from the <code>ScrolledWindow</code>, with either of these calls:</p>
-
 <pre><code class="language-C">gtk_container_remove (GTK_CONTAINER (scrolled_window),
                       child_widget);
 // or
 gtk_container_remove (GTK_CONTAINER (scrolled_window),
                       gtk_bin_get_child (GTK_BIN (scrolled_window)));
 </code></pre>
-
 <p>Unless <code>ScrolledWindow:policy</code> is GTK_POLICY_NEVER or GTK_POLICY_EXTERNAL,
 <code>ScrolledWindow</code> adds internal <code>Scrollbar</code> widgets around its child. The
 scroll position of the child, and if applicable the scrollbars, is controlled
@@ -79,69 +86,57 @@ by the <code>ScrolledWindow:hadjustment</code> and <code>ScrolledWindow:vadjustm
 that are associated with the <code>ScrolledWindow</code>. See the docs on <code>Scrollbar</code>
 for the details, but note that the “step_increment” and “page_increment”
 fields are only effective if the policy causes scrollbars to be present.</p>
-
 <p>If a <code>ScrolledWindow</code> doesn’t behave quite as you would like, or
 doesn’t have exactly the right layout, it’s very possible to set up
 your own scrolling with <code>Scrollbar</code> and for example a <code>Grid</code>.</p>
-
-<h1 id='touch-support' class='section-header'><a href='#touch-support'>Touch support</a></h1>
+<h1 id="touch-support" class="section-header"><a href="#touch-support">Touch support</a></h1>
 <p><code>ScrolledWindow</code> has built-in support for touch devices. When a
 touchscreen is used, swiping will move the scrolled window, and will
-expose &#39;kinetic&#39; behavior. This can be turned off with the
+expose 'kinetic' behavior. This can be turned off with the
 <code>ScrolledWindow:kinetic-scrolling</code> property if it is undesired.</p>
-
-<p><code>ScrolledWindow</code> also displays visual &#39;overshoot&#39; indication when
+<p><code>ScrolledWindow</code> also displays visual 'overshoot' indication when
 the content is pulled beyond the end, and this situation can be
 captured with the <code>ScrolledWindow::edge-overshot</code> signal.</p>
-
 <p>If no mouse device is present, the scrollbars will overlayed as
 narrow, auto-hiding indicators over the content. If traditional
 scrollbars are desired although no mouse is present, this behaviour
 can be turned off with the <code>ScrolledWindow:overlay-scrolling</code>
 property.</p>
-
-<h1 id='css-nodes' class='section-header'><a href='#css-nodes'>CSS nodes</a></h1>
+<h1 id="css-nodes" class="section-header"><a href="#css-nodes">CSS nodes</a></h1>
 <p><code>ScrolledWindow</code> has a main CSS node with name scrolledwindow.</p>
-
 <p>It uses subnodes with names overshoot and undershoot to
 draw the overflow and underflow indications. These nodes get
 the .left, .right, .top or .bottom style class added depending
 on where the indication is drawn.</p>
-
 <p><code>ScrolledWindow</code> also sets the positional style classes (.left,
 .right, .top, .bottom) and style classes related to overlay
 scrolling (.overlay-indicator, .dragging, .hovering) on its scrollbars.</p>
-
 <p>If both scrollbars are visible, the area where they meet is drawn
 with a subnode named junction.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.ScrolledWindowExt.html"><code>ScrolledWindowExt</code></a>, <a href="trait.BinExt.html"><code>BinExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a>, <a href="trait.BuildableExt.html"><code>BuildableExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrolled_window.rs.html#111-136' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>&lt;'a, 'b, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'b <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;hadjustment: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;vadjustment: Q<br>) -&gt; <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrolled_window.rs.html#126-135' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrolled_window.rs.html#113-138' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>&lt;'a, 'b, P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'a <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;, Q:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'b <a class="struct" href="../gtk/struct.Adjustment.html" title="struct gtk::Adjustment">Adjustment</a>&gt;&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;hadjustment: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;vadjustment: Q<br>) -&gt; <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/scrolled_window.rs.html#128-137' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new scrolled window.</p>
-
 <p>The two arguments are the scrolled window’s adjustments; these will be
 shared with the scrollbars and the child widget to keep the bars in sync
 with the child. Usually you want to pass <code>None</code> for the adjustments, which
 will cause the scrolled window to create them for you.</p>
-
-<h2 id='hadjustment' class='section-header'><a href='#hadjustment'><code>hadjustment</code></a></h2>
+<h2 id="hadjustment" class="section-header"><a href="#hadjustment"><code>hadjustment</code></a></h2>
 <p>horizontal adjustment</p>
-
-<h2 id='vadjustment' class='section-header'><a href='#vadjustment'><code>vadjustment</code></a></h2>
+<h2 id="vadjustment" class="section-header"><a href="#vadjustment"><code>vadjustment</code></a></h2>
 <p>vertical adjustment</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>a new scrolled window</p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-IsA%3CScrolledWindow%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a>&gt; for <a class="struct" href="../gtk/struct.PlacesSidebar.html" title="struct gtk::PlacesSidebar">PlacesSidebar</a></code><a href='#impl-IsA%3CScrolledWindow%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code></span></h4>
@@ -170,7 +165,14 @@ will cause the scrolled window to create them for you.</p>
 <div class='impl-items'></div><h3 id='impl-IsA%3CWidget%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-IsA%3CWidget%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CBuildable%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Buildable.html" title="struct gtk::Buildable">Buildable</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-IsA%3CBuildable%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gtk/struct.ScrolledWindow.html" title="struct gtk::ScrolledWindow">ScrolledWindow</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -183,20 +185,22 @@ will cause the scrolled window to create them for you.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

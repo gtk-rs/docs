@@ -10,8 +10,11 @@
     <title>gtk::Application - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct Application</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CApplication%3E">IsA&lt;Application&gt;</a><a href="#impl-IsA%3CActionGroup%3E">IsA&lt;ActionGroup&gt;</a><a href="#impl-IsA%3CActionMap%3E">IsA&lt;ActionMap&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Application', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Application</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CApplication%3E">IsA&lt;Application&gt;</a><a href="#impl-IsA%3CActionGroup%3E">IsA&lt;ActionGroup&gt;</a><a href="#impl-IsA%3CActionMap%3E">IsA&lt;ActionMap&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Application', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -52,16 +63,13 @@
 <pre class='rust struct'>pub struct Application(_, _);</pre><div class='docblock'><p><code>Application</code> is a class that handles many important aspects
 of a GTK+ application in a convenient fashion, without enforcing
 a one-size-fits-all application model.</p>
-
 <p>Currently, <code>Application</code> handles GTK+ initialization, application
 uniqueness, session management, provides some basic scriptability and
 desktop shell integration by exporting actions and menus and manages a
 list of toplevel windows whose life-cycle is automatically tied to the
 life-cycle of your application.</p>
-
 <p>While <code>Application</code> works fine with plain <code>GtkWindows</code>, it is recommended
 to use it together with <code>ApplicationWindow</code>.</p>
-
 <p>When GDK threads are enabled, <code>Application</code> will acquire the GDK
 lock when invoking actions that arrive from other processes. The GDK
 lock is not touched for local action invocations. In order to have
@@ -70,48 +78,40 @@ that the GDK lock be held while invoking actions locally with
 <code>gio::ActionGroup::activate_action</code>. The same applies to actions
 associated with <code>ApplicationWindow</code> and to the “activate” and
 “open” <code>gio::Application</code> methods.</p>
-
-<h2 id='automatic-resources--automatic-resources' class='section-header'><a href='#automatic-resources--automatic-resources'>Automatic resources ## {<code>automatic</code>-resources}</a></h2>
+<h2 id="automatic-resources--automatic-resources" class="section-header"><a href="#automatic-resources--automatic-resources">Automatic resources ## {<code>automatic</code>-resources}</a></h2>
 <p><code>Application</code> will automatically load menus from the <code>Builder</code>
-resource located at &quot;gtk/menus.ui&quot;, relative to the application&#39;s
+resource located at &quot;gtk/menus.ui&quot;, relative to the application's
 resource base path (see <code>gio::ApplicationExt::set_resource_base_path</code>). The
-menu with the ID &quot;app-menu&quot; is taken as the application&#39;s app menu
-and the menu with the ID &quot;menubar&quot; is taken as the application&#39;s
+menu with the ID &quot;app-menu&quot; is taken as the application's app menu
+and the menu with the ID &quot;menubar&quot; is taken as the application's
 menubar. Additional menus (most interesting submenus) can be named
 and accessed via <code>GtkApplicationExt::get_menu_by_id</code> which allows for
 dynamic population of a part of the menu structure.</p>
-
 <p>If the resources &quot;gtk/menus-appmenu.ui&quot; or &quot;gtk/menus-traditional.ui&quot; are
 present then these files will be used in preference, depending on the value
 of <code>GtkApplicationExt::prefers_app_menu</code>. If the resource &quot;gtk/menus-common.ui&quot;
 is present it will be loaded as well. This is useful for storing items that
 are referenced from both &quot;gtk/menus-appmenu.ui&quot; and
 &quot;gtk/menus-traditional.ui&quot;.</p>
-
 <p>It is also possible to provide the menus manually using
 <code>GtkApplicationExt::set_app_menu</code> and <code>GtkApplicationExt::set_menubar</code>.</p>
-
 <p><code>Application</code> will also automatically setup an icon search path for
 the default icon theme by appending &quot;icons&quot; to the resource base
 path. This allows your application to easily store its icons as
 resources. See <code>IconThemeExt::add_resource_path</code> for more
 information.</p>
-
 <p>If there is a resource located at &quot;gtk/help-overlay.ui&quot; which
 defines a <code>ShortcutsWindow</code> with ID &quot;help_overlay&quot; then <code>Application</code>
 associates an instance of this shortcuts window with each
 <code>ApplicationWindow</code> and sets up keyboard accelerators (Control-F1
 and Control-?) to open it. To create a menu item that displays the
 shortcuts window, associate the item with the action win.show-help-overlay.</p>
-
-<h2 id='a-simple-application--gtkapplication' class='section-header'><a href='#a-simple-application--gtkapplication'>A simple application ## {<code>gtkapplication</code>}</a></h2>
+<h2 id="a-simple-application--gtkapplication" class="section-header"><a href="#a-simple-application--gtkapplication">A simple application ## {<code>gtkapplication</code>}</a></h2>
 <p><a href="https://git.gnome.org/browse/gtk+/tree/examples/bp/bloatpad.c">A simple example</a></p>
-
 <p><code>Application</code> optionally registers with a session manager
 of the users session (if you set the <code>Application:register-session</code>
 property) and offers various functionality related to the session
 life-cycle.</p>
-
 <p>An application can block various ways to end the session with
 the <code>GtkApplicationExt::inhibit</code> function. Typical use cases for
 this kind of inhibiting are long-running, uninterruptible operations,
@@ -119,12 +119,10 @@ such as burning a CD or performing a disk backup. The session
 manager may not honor the inhibitor, but it can be expected to
 inform the user about the negative consequences of ending the
 session while inhibitors are present.</p>
-
-<h2 id='see-also--seealso' class='section-header'><a href='#see-also--seealso'>See Also ## {<code>seealso</code>}</a></h2>
+<h2 id="see-also--seealso" class="section-header"><a href="#see-also--seealso">See Also ## {<code>seealso</code>}</a></h2>
 <p><a href="https://wiki.gnome.org/HowDoI/%60Application%60">HowDoI: Using <code>Application</code></a>,
 <a href="https://developer.gnome.org/gtk3/stable/gtk-getting-started.html%60id%60-1.2.3.3">Getting Started with GTK+: Basics</a></p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.GtkApplicationExt.html"><code>GtkApplicationExt</code></a>, <a href="../gio/trait.ApplicationExt.html"><code>gio::ApplicationExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a>, <a href="../gio/trait.ActionGroupExt.html"><code>gio::ActionGroupExt</code></a>, <a href="../gio/trait.ActionMapExt.html"><code>gio::ActionMapExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
@@ -136,6 +134,7 @@ session while inhibitors are present.</p>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -162,7 +161,14 @@ session while inhibitors are present.</p>
 <div class='impl-items'></div><h3 id='impl-IsA%3CActionGroup%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gio/auto/action_group/struct.ActionGroup.html" title="struct gio::auto::action_group::ActionGroup">ActionGroup</a>&gt; for <a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a></code><a href='#impl-IsA%3CActionGroup%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CActionMap%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gio/auto/action_map/struct.ActionMap.html" title="struct gio::auto::action_map::ActionMap">ActionMap</a>&gt; for <a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a></code><a href='#impl-IsA%3CActionMap%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gtk/struct.Application.html" title="struct gtk::Application">Application</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -175,20 +181,22 @@ session while inhibitors are present.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

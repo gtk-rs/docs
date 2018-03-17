@@ -10,8 +10,11 @@
     <title>gio::Resource - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct Resource</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new_from_data">new_from_data</a><a href="#method.enumerate_children">enumerate_children</a><a href="#method.get_info">get_info</a><a href="#method.lookup_data">lookup_data</a><a href="#method.load">load</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-StaticType">StaticType</a></div></div><p class='location'><a href='index.html'>gio</a></p><script>window.sidebarCurrent = {name: 'Resource', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Resource</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new_from_data">new_from_data</a><a href="#method.enumerate_children">enumerate_children</a><a href="#method.get_info">get_info</a><a href="#method.lookup_data">lookup_data</a><a href="#method.open_stream">open_stream</a><a href="#method.load">load</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-StaticType">StaticType</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gio</a></p><script>window.sidebarCurrent = {name: 'Resource', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -54,7 +65,6 @@ really part of the application, rather than user data. For instance
 <code>GtkBuilder</code> .ui files, splashscreen images, GMenu markup XML, CSS files,
 icons, etc. These are often shipped as files in <code>$datadir/appname</code>, or
 manually included as literal strings in the code.</p>
-
 <p>The <code>Resource</code> API and the [glib-compile-resources][glib-compile-resources] program
 provide a convenient and efficient alternative to this which has some nice properties. You
 maintain the files as normal files, so its easy to edit them, but during the build the files
@@ -62,34 +72,27 @@ are combined into a binary bundle that is linked into the executable. This means
 the resource files are efficient (as they are already in memory, shared with other instances) and
 simple (no need to check for things like I/O errors or locate the files in the filesystem). It
 also makes it easier to create relocatable applications.</p>
-
 <p>Resource files can also be marked as compressed. Such files will be included in the resource bundle
 in a compressed form, but will be automatically uncompressed when the resource is used. This
 is very useful e.g. for larger text files that are parsed once (or rarely) and then thrown away.</p>
-
 <p>Resource files can also be marked to be preprocessed, by setting the value of the
 <code>preprocess</code> attribute to a comma-separated list of preprocessing options.
 The only options currently supported are:</p>
-
 <p><code>xml-stripblanks</code> which will use the xmllint command
 to strip ignorable whitespace from the XML file. For this to work,
 the <code>XMLLINT</code> environment variable must be set to the full path to
 the xmllint executable, or xmllint must be in the <code>PATH</code>; otherwise
 the preprocessing step is skipped.</p>
-
 <p><code>to-pixdata</code> which will use the gdk-pixbuf-pixdata command to convert
 images to the <code>GdkPixdata</code> format, which allows you to create pixbufs directly using the data inside
 the resource file, rather than an (uncompressed) copy if it. For this, the gdk-pixbuf-pixdata
 program must be in the PATH, or the <code>GDK_PIXBUF_PIXDATA</code> environment variable must be
 set to the full path to the gdk-pixbuf-pixdata executable; otherwise the resource compiler will
 abort.</p>
-
 <p>Resource bundles are created by the [glib-compile-resources][glib-compile-resources] program
 which takes an XML file that describes the bundle, and a set of files that the XML references. These
 are combined into a binary resource bundle.</p>
-
 <p>An example resource description:</p>
-
 <pre><code class="language-text">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;gresources&gt;
   &lt;gresource prefix=&quot;/org/gtk/Example&quot;&gt;
@@ -99,17 +102,13 @@ are combined into a binary resource bundle.</p>
   &lt;/gresource&gt;
 &lt;/gresources&gt;
 </code></pre>
-
 <p>This will create a resource bundle with the following files:</p>
-
 <pre><code class="language-text">/org/gtk/Example/data/splashscreen.png
 /org/gtk/Example/dialog.ui
 /org/gtk/Example/menumarkup.xml
 </code></pre>
-
 <p>Note that all resources in the process share the same namespace, so use Java-style
 path prefixes (like in the above example) to avoid conflicts.</p>
-
 <p>You can then use [glib-compile-resources][glib-compile-resources] to compile the XML to a
 binary bundle that you can load with <code>Resource::load</code>. However, its more common to use the --generate-source and
 --generate-header arguments to create a source file and header to link directly into your application.
@@ -119,47 +118,37 @@ to [glib-compile-resources][glib-compile-resources]. <code>get_resource()</code>
 the generated <code>Resource</code> object. The register and unregister functions
 register the resource so its files can be accessed using
 <code>g_resources_lookup_data</code>.</p>
-
 <p>Once a <code>Resource</code> has been created and registered all the data in it can be accessed globally in the process by
 using API calls like <code>g_resources_open_stream</code> to stream the data or <code>g_resources_lookup_data</code> to get a direct pointer
 to the data. You can also use URIs like &quot;resource:///org/gtk/Example/data/splashscreen.png&quot; with <code>File</code> to access
 the resource data.</p>
-
 <p>There are two forms of the generated source, the default version uses the compiler support for constructor
 and destructor functions (where available) to automatically create and register the <code>Resource</code> on startup
 or library load time. If you pass --manual-register two functions to register/unregister the resource is instead
 created. This requires an explicit initialization call in your application/library, but it works on all platforms,
 even on the minor ones where this is not available. (Constructor support is available for at least Win32, Mac OS and Linux.)</p>
-
 <p>Note that resource data can point directly into the data segment of e.g. a library, so if you are unloading libraries
 during runtime you need to be very careful with keeping around pointers to data from a resource, as this goes away
 when the library is unloaded. However, in practice this is not generally a problem, since most resource accesses
 is for your own resources, and resource data is often used once, during parsing, and then released.</p>
-
 <p>When debugging a program or testing a change to an installed version, it is often useful to be able to
 replace resources in the program or library, without recompiling, for debugging or quick hacking and testing
 purposes.</p>
-
 <p>Since GLib 2.50, it is possible to use the <code>G_RESOURCE_OVERLAYS</code> environment variable to selectively overlay
 resources with replacements from the filesystem. It is a colon-separated list of substitutions to perform
 during resource lookups.</p>
-
 <p>A substitution has the form</p>
-
 <pre><code class="language-text">   /org/gtk/libgtk=/home/desrt/gtk-overlay
 </code></pre>
-
 <p>The part before the <code>=</code> is the resource subpath for which the overlay applies. The part after is a
 filesystem path which contains files and subdirectories as you would like to be loaded as resources with the
 equivalent names.</p>
-
 <p>In the example above, if an application tried to load a resource with the resource path
 <code>/org/gtk/libgtk/ui/gtkdialog.ui</code> then GResource would check the filesystem path
 <code>/home/desrt/gtk-overlay/ui/gtkdialog.ui</code>. If a file was found there, it would be used instead. This is an
 overlay, not an outright replacement, which means that if a file is not found at that path, the built-in
 version will be used instead. Whiteouts are not currently supported.</p>
-
-<p>Substitutions must start with a slash, and must not contain a trailing slash before the &#39;=&#39;. The path after
+<p>Substitutions must start with a slash, and must not contain a trailing slash before the '='. The path after
 the slash should ideally be absolute, but this is not strictly required. It is possible to overlay the
 location of a single resource with an individual file.</p>
 </div>
@@ -171,97 +160,86 @@ location of a single resource with an individual file.</p>
 <div class='docblock'><p>Creates a GResource from a reference to the binary resource bundle.
 This will keep a reference to <code>data</code> while the resource lives, so
 the data should not be modified or freed.</p>
-
 <p>If you want to use this resource in the global resource namespace you need
 to register it with <code>g_resources_register</code>.</p>
-
-<h2 id='data' class='section-header'><a href='#data'><code>data</code></a></h2>
+<h2 id="data" class="section-header"><a href="#data"><code>data</code></a></h2>
 <p>A <code>glib::Bytes</code></p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>a new <code>Resource</code>, or <code>None</code> on error</p>
-</div></div><h3 id='impl-1' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gio/struct.Resource.html" title="struct gio::Resource">Resource</a></code><a href='#impl-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#142-248' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.enumerate_children' class="method"><span id='enumerate_children.v' class='invisible'><code>pub fn <a href='#method.enumerate_children' class='fnname'>enumerate_children</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;lookup_flags: <a class="struct" href="../gio/struct.ResourceLookupFlags.html" title="struct gio::ResourceLookupFlags">ResourceLookupFlags</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;, <a class="struct" href="../gio/struct.Error.html" title="struct gio::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#159-165' title='goto source code'>[src]</a></span></h4>
+</div></div><h3 id='impl-1' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gio/struct.Resource.html" title="struct gio::Resource">Resource</a></code><a href='#impl-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#144-267' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.enumerate_children' class="method"><span id='enumerate_children.v' class='invisible'><code>pub fn <a href='#method.enumerate_children' class='fnname'>enumerate_children</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;lookup_flags: <a class="struct" href="../gio/struct.ResourceLookupFlags.html" title="struct gio::ResourceLookupFlags">ResourceLookupFlags</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;, <a class="struct" href="../gio/struct.Error.html" title="struct gio::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#161-167' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns all the names of children at the specified <code>path</code> in the resource.
 The return result is a <code>None</code> terminated list of strings which should
 be released with <code>g_strfreev</code>.</p>
-
 <p>If <code>path</code> is invalid or does not exist in the <code>Resource</code>,
 <code>ResourceError::NotFound</code> will be returned.</p>
-
 <p><code>lookup_flags</code> controls the behaviour of the lookup.</p>
-
-<h2 id='path' class='section-header'><a href='#path'><code>path</code></a></h2>
+<h2 id="path" class="section-header"><a href="#path"><code>path</code></a></h2>
 <p>A pathname inside the resource</p>
-
-<h2 id='lookup_flags' class='section-header'><a href='#lookup_flags'><code>lookup_flags</code></a></h2>
+<h2 id="lookup_flags" class="section-header"><a href="#lookup_flags"><code>lookup_flags</code></a></h2>
 <p>A <code>ResourceLookupFlags</code></p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<h1 id="returns-1" class="section-header"><a href="#returns-1">Returns</a></h1>
 <p>an array of constant strings</p>
-</div><h4 id='method.get_info' class="method"><span id='get_info.v' class='invisible'><code>pub fn <a href='#method.get_info' class='fnname'>get_info</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;lookup_flags: <a class="struct" href="../gio/struct.ResourceLookupFlags.html" title="struct gio::ResourceLookupFlags">ResourceLookupFlags</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>, <a class="struct" href="../gio/struct.Error.html" title="struct gio::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#185-193' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.get_info' class="method"><span id='get_info.v' class='invisible'><code>pub fn <a href='#method.get_info' class='fnname'>get_info</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;lookup_flags: <a class="struct" href="../gio/struct.ResourceLookupFlags.html" title="struct gio::ResourceLookupFlags">ResourceLookupFlags</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>, <a class="struct" href="../gio/struct.Error.html" title="struct gio::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#187-195' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Looks for a file at the specified <code>path</code> in the resource and
 if found returns information about it.</p>
-
 <p><code>lookup_flags</code> controls the behaviour of the lookup.</p>
-
-<h2 id='path-1' class='section-header'><a href='#path-1'><code>path</code></a></h2>
+<h2 id="path-1" class="section-header"><a href="#path-1"><code>path</code></a></h2>
 <p>A pathname inside the resource</p>
-
-<h2 id='lookup_flags-1' class='section-header'><a href='#lookup_flags-1'><code>lookup_flags</code></a></h2>
+<h2 id="lookup_flags-1" class="section-header"><a href="#lookup_flags-1"><code>lookup_flags</code></a></h2>
 <p>A <code>ResourceLookupFlags</code></p>
-
-<h2 id='size' class='section-header'><a href='#size'><code>size</code></a></h2>
+<h2 id="size" class="section-header"><a href="#size"><code>size</code></a></h2>
 <p>a location to place the length of the contents of the file,
- or <code>None</code> if the length is not needed</p>
-
-<h2 id='flags' class='section-header'><a href='#flags'><code>flags</code></a></h2>
+or <code>None</code> if the length is not needed</p>
+<h2 id="flags" class="section-header"><a href="#flags"><code>flags</code></a></h2>
 <p>a location to place the flags about the file,
- or <code>None</code> if the length is not needed</p>
-
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+or <code>None</code> if the length is not needed</p>
+<h1 id="returns-2" class="section-header"><a href="#returns-2">Returns</a></h1>
 <p><code>true</code> if the file was found. <code>false</code> if there were errors</p>
-</div><h4 id='method.lookup_data' class="method"><span id='lookup_data.v' class='invisible'><code>pub fn <a href='#method.lookup_data' class='fnname'>lookup_data</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;lookup_flags: <a class="struct" href="../gio/struct.ResourceLookupFlags.html" title="struct gio::ResourceLookupFlags">ResourceLookupFlags</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../glib/bytes/struct.Bytes.html" title="struct glib::bytes::Bytes">Bytes</a>, <a class="struct" href="../gio/struct.Error.html" title="struct gio::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#218-224' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.lookup_data' class="method"><span id='lookup_data.v' class='invisible'><code>pub fn <a href='#method.lookup_data' class='fnname'>lookup_data</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;lookup_flags: <a class="struct" href="../gio/struct.ResourceLookupFlags.html" title="struct gio::ResourceLookupFlags">ResourceLookupFlags</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../glib/bytes/struct.Bytes.html" title="struct glib::bytes::Bytes">Bytes</a>, <a class="struct" href="../gio/struct.Error.html" title="struct gio::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#220-226' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Looks for a file at the specified <code>path</code> in the resource and
 returns a <code>glib::Bytes</code> that lets you directly access the data in
 memory.</p>
-
 <p>The data is always followed by a zero byte, so you
 can safely use the data as a C string. However, that byte
 is not included in the size of the GBytes.</p>
-
 <p>For uncompressed resource files this is a pointer directly into
 the resource bundle, which is typically in some readonly data section
 in the program binary. For compressed files we allocate memory on
 the heap and automatically uncompress the data.</p>
-
 <p><code>lookup_flags</code> controls the behaviour of the lookup.</p>
-
-<h2 id='path-2' class='section-header'><a href='#path-2'><code>path</code></a></h2>
+<h2 id="path-2" class="section-header"><a href="#path-2"><code>path</code></a></h2>
 <p>A pathname inside the resource</p>
-
-<h2 id='lookup_flags-2' class='section-header'><a href='#lookup_flags-2'><code>lookup_flags</code></a></h2>
+<h2 id="lookup_flags-2" class="section-header"><a href="#lookup_flags-2"><code>lookup_flags</code></a></h2>
 <p>A <code>ResourceLookupFlags</code></p>
-
-<h1 id='returns-3' class='section-header'><a href='#returns-3'>Returns</a></h1>
+<h1 id="returns-3" class="section-header"><a href="#returns-3">Returns</a></h1>
 <p><code>glib::Bytes</code> or <code>None</code> on error.
- Free the returned object with <code>glib::Bytes::unref</code></p>
-</div><h4 id='method.load' class="method"><span id='load.v' class='invisible'><code>pub fn <a href='#method.load' class='fnname'>load</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(filename: P) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gio/struct.Resource.html" title="struct gio::Resource">Resource</a>, <a class="struct" href="../gio/struct.Error.html" title="struct gio::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#241-247' title='goto source code'>[src]</a></span></h4>
+Free the returned object with <code>glib::Bytes::unref</code></p>
+</div><h4 id='method.open_stream' class="method"><span id='open_stream.v' class='invisible'><code>pub fn <a href='#method.open_stream' class='fnname'>open_stream</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;lookup_flags: <a class="struct" href="../gio/struct.ResourceLookupFlags.html" title="struct gio::ResourceLookupFlags">ResourceLookupFlags</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gio/struct.InputStream.html" title="struct gio::InputStream">InputStream</a>, <a class="struct" href="../gio/struct.Error.html" title="struct gio::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#241-247' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Looks for a file at the specified <code>path</code> in the resource and
+returns a <code>InputStream</code> that lets you read the data.</p>
+<p><code>lookup_flags</code> controls the behaviour of the lookup.</p>
+<h2 id="path-3" class="section-header"><a href="#path-3"><code>path</code></a></h2>
+<p>A pathname inside the resource</p>
+<h2 id="lookup_flags-3" class="section-header"><a href="#lookup_flags-3"><code>lookup_flags</code></a></h2>
+<p>A <code>ResourceLookupFlags</code></p>
+<h1 id="returns-4" class="section-header"><a href="#returns-4">Returns</a></h1>
+<p><code>InputStream</code> or <code>None</code> on error.
+Free the returned object with <code>gobject::ObjectExt::unref</code></p>
+</div><h4 id='method.load' class="method"><span id='load.v' class='invisible'><code>pub fn <a href='#method.load' class='fnname'>load</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(filename: P) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../gio/struct.Resource.html" title="struct gio::Resource">Resource</a>, <a class="struct" href="../gio/struct.Error.html" title="struct gio::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gio/auto/resource.rs.html#260-266' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Loads a binary resource bundle and creates a <code>Resource</code> representation of it, allowing
 you to query it for data.</p>
-
 <p>If you want to use this resource in the global resource namespace you need
 to register it with <code>g_resources_register</code>.</p>
-
-<h2 id='filename' class='section-header'><a href='#filename'><code>filename</code></a></h2>
+<h2 id="filename" class="section-header"><a href="#filename"><code>filename</code></a></h2>
 <p>the path of a filename to load, in the GLib filename encoding</p>
-
-<h1 id='returns-4' class='section-header'><a href='#returns-4'>Returns</a></h1>
+<h1 id="returns-5" class="section-header"><a href="#returns-5">Returns</a></h1>
 <p>a new <code>Resource</code>, or <code>None</code> on error</p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gio/struct.Resource.html" title="struct gio::Resource">Resource</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gio/struct.Resource.html" title="struct gio::Resource">Resource</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -270,7 +248,14 @@ to register it with <code>g_resources_register</code>.</p>
 </div></div><h3 id='impl-StaticType' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/types/trait.StaticType.html" title="trait glib::types::StaticType">StaticType</a> for <a class="struct" href="../gio/struct.Resource.html" title="struct gio::Resource">Resource</a></code><a href='#impl-StaticType' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.static_type' class="method"><span id='static_type.v' class='invisible'><code>fn <a href='../glib/types/trait.StaticType.html#tymethod.static_type' class='fnname'>static_type</a>() -&gt; <a class="enum" href="../glib/types/enum.Type.html" title="enum glib::types::Type">Type</a></code></span></h4>
 <div class='docblock'><p>Returns the type identifier of <code>Self</code>.</p>
-</div></div></section>
+</div></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gio/struct.Resource.html" title="struct gio::Resource">Resource</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gio/struct.Resource.html" title="struct gio::Resource">Resource</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -283,20 +268,22 @@ to register it with <code>g_resources_register</code>.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

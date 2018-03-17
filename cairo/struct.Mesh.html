@@ -10,8 +10,11 @@
     <title>cairo::Mesh - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct Mesh</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.wrap">wrap</a><a href="#method.reference">reference</a><a href="#method.new">new</a><a href="#method.begin_patch">begin_patch</a><a href="#method.end_patch">end_patch</a><a href="#method.move_to">move_to</a><a href="#method.line_to">line_to</a><a href="#method.curve_to">curve_to</a><a href="#method.set_control_point">set_control_point</a><a href="#method.get_control_point">get_control_point</a><a href="#method.set_corner_color_rgb">set_corner_color_rgb</a><a href="#method.set_corner_color_rgba">set_corner_color_rgba</a><a href="#method.get_corner_color_rgba">get_corner_color_rgba</a><a href="#method.get_patch_count">get_patch_count</a><a href="#method.get_path">get_path</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Pattern">Pattern</a><a href="#impl-Drop">Drop</a></div></div><p class='location'><a href='index.html'>cairo</a></p><script>window.sidebarCurrent = {name: 'Mesh', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Mesh</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.wrap">wrap</a><a href="#method.reference">reference</a><a href="#method.new">new</a><a href="#method.begin_patch">begin_patch</a><a href="#method.end_patch">end_patch</a><a href="#method.move_to">move_to</a><a href="#method.line_to">line_to</a><a href="#method.curve_to">curve_to</a><a href="#method.set_control_point">set_control_point</a><a href="#method.get_control_point">get_control_point</a><a href="#method.set_corner_color_rgb">set_corner_color_rgb</a><a href="#method.set_corner_color_rgba">set_corner_color_rgba</a><a href="#method.get_corner_color_rgba">get_corner_color_rgba</a><a href="#method.get_patch_count">get_patch_count</a><a href="#method.get_path">get_path</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Pattern">Pattern</a><a href="#impl-Drop">Drop</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>cairo</a></p><script>window.sidebarCurrent = {name: 'Mesh', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -59,75 +70,62 @@
 </div><h3 id='impl-1' class='impl'><span class='in-band'><code>impl <a class="struct" href="../cairo/struct.Mesh.html" title="struct cairo::Mesh">Mesh</a></code><a href='#impl-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#409-731' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../cairo/struct.Mesh.html" title="struct cairo::Mesh">Mesh</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#526-530' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Create a new mesh pattern.</p>
-
 <p>Mesh patterns are tensor-product patch meshes (type 7 shadings in PDF). Mesh
 patterns may also be used to create other types of shadings that are special
 cases of tensor-product patch meshes such as Coons patch meshes (type 6 shading
 in PDF) and Gouraud-shaded triangle meshes (type 4 and 5 shadings in PDF).</p>
-
 <p>Mesh patterns consist of one or more tensor-product patches, which should be
 defined before using the mesh pattern. Using a mesh pattern with a partially
 defined patch as source or mask will put the context in an error status with
 a status of Status::InvalidMeshConstruction.</p>
-
 <p>A tensor-product patch is defined by 4 Bézier curves (side 0, 1, 2, 3) and by
 4 additional control points (P0, P1, P2, P3) that provide further control over
 the patch and complete the definition of the tensor-product patch. The corner
 C0 is the first point of the patch.</p>
-
 <p>Degenerate sides are permitted so straight lines may be used. A zero length
 line on one side may be used to create 3 sided patches.</p>
 
 <pre class="rust rust-example-rendered">
-<span class="ident">C1</span>     <span class="ident">Side</span> <span class="number">1</span>       <span class="ident">C2</span>
+  <span class="ident">C1</span>     <span class="ident">Side</span> <span class="number">1</span>       <span class="ident">C2</span>
    <span class="op">+</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">+</span>
    <span class="op">|</span>               <span class="op">|</span>
    <span class="op">|</span>  <span class="ident">P1</span>       <span class="ident">P2</span>  <span class="op">|</span>
    <span class="op">|</span>               <span class="op">|</span></pre>
-
 <p>Side 0 |               | Side 2
-       |               |
-       |               |
-       |  P0       P3  |
-       |               |
-       +---------------+
-    C0     Side 3        C3</p>
-
+|               |
+|               |
+|  P0       P3  |
+|               |
++---------------+
+C0     Side 3        C3</p>
 <p>Each patch is constructed by first calling Mesh::begin_patch(),
 then Mesh::move_to() to specify the first point in the patch (C0).
 Then the sides are specified with calls to Mesh::curve_to() and
 cairo_mesh_pattern_line_to().</p>
-
 <p>The four additional control points (P0, P1, P2, P3) in a patch can
 be specified with Mesh::set_control_point().</p>
-
 <p>At each corner of the patch (C0, C1, C2, C3) a color may be specified with
 Mesh::set_corner_color_rgb() or Mesh::set_corner_color_rgba(). Any corner
 whose color is not explicitly specified defaults to transparent black.</p>
-
 <p>A Coons patch is a special case of the tensor-product patch where the control
 points are implicitly defined by the sides of the patch. The default value for
 any control point not specified is the implicit value for a Coons patch, i.e.
 if no control points are specified the patch is a Coons patch.</p>
-
 <p>A triangle is a special case of the tensor-product patch where the control points
 are implicitly defined by the sides of the patch, all the sides are lines and one
 of them has length 0, i.e. if the patch is specified using just 3 lines, it is a
 triangle. If the corners connected by the 0-length side have the same color, the
 patch is a Gouraud-shaded triangle.</p>
-
 <p>Patches may be oriented differently to the above diagram. For example the first
 point could be at the top left. The diagram only shows the relationship between
 the sides, corners and control points. Regardless of where the first point is
 located, when specifying colors, corner 0 will always be the first point, corner
 1 the point between side 0 and side 1 etc.</p>
-
 <p>Calling Mesh::end_patch() completes the current patch. If less than 4 sides have
 been defined, the first missing side is defined as a line from the current point
 to the first point of the patch (C0) and the other sides are degenerate lines from
 C0 to C0. The corners between the added sides will all be coincident with C0 of
 the patch and their color will be set to be the same as the color of C0.</p>
-
 <p>Additional patches may be added with additional calls to
 Mesh::begin_patch()/Mesh::end_patch().</p>
 
@@ -155,53 +153,41 @@ Mesh::begin_patch()/Mesh::end_patch().</p>
 <span class="ident">pattern</span>.<span class="ident">set_corner_color_rgb</span>(<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>);
 <span class="ident">pattern</span>.<span class="ident">set_corner_color_rgb</span>(<span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>);
 <span class="ident">pattern</span>.<span class="ident">end_patch</span>();</pre>
-
 <p>When two patches overlap, the last one that has been added is drawn over the first
 one.</p>
-
 <p>When a patch folds over itself, points are sorted depending on their parameter
 coordinates inside the patch. The v coordinate ranges from 0 to 1 when moving from
 side 3 to side 1; the u coordinate ranges from 0 to 1 when going from side 0 to side</p>
-
 <p>Points with higher v coordinate hide points with lower v coordinate. When two points
 have the same v coordinate, the one with higher u coordinate is above. This means
 that points nearer to side 1 are above points nearer to side 3; when this is not
 sufficient to decide which point is above (for example when both points belong to
 side 1 or side 3) points nearer to side 2 are above points nearer to side 0.</p>
-
 <p>For a complete definition of tensor-product patches, see the PDF specification (ISO32000),
 which describes the parametrization in detail.</p>
-
 <p>Note: The coordinates are always in pattern space. For a new pattern, pattern space is
 identical to user space, but the relationship between the spaces can be changed with
 Pattern::set_matrix().</p>
 </div><h4 id='method.begin_patch' class="method"><span id='begin_patch.v' class='invisible'><code>pub fn <a href='#method.begin_patch' class='fnname'>begin_patch</a>(&amp;self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#543-548' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Begin a patch in a mesh pattern.</p>
-
 <p>After calling this function, the patch shape should be defined with Mesh::move_to(),
 Mesh::line_to() and Mesh::curve_to().</p>
-
 <p>After defining the patch, Mesh::end_patch() must be called before using pattern as
 a source or mask.</p>
-
 <p>Note: If pattern is not a mesh pattern then pattern will be put into an error status
 with a status of Status::PatternTypeMismatch. If pattern already has a current patch,
 it will be put into an error status with a status of Status::InvalidMeshConstruction.</p>
 </div><h4 id='method.end_patch' class="method"><span id='end_patch.v' class='invisible'><code>pub fn <a href='#method.end_patch' class='fnname'>end_patch</a>(&amp;self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#559-564' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Indicates the end of the current patch in a mesh pattern.</p>
-
 <p>If the current patch has less than 4 sides, it is closed with a straight line from the
 current point to the first point of the patch as if Mesh::line_to() was used.</p>
-
 <p>Note: If pattern is not a mesh pattern then pattern will be put into an error status
 with a status of Status::PatternTypeMismatch. If pattern has no current patch or the
 current patch has no current point, pattern will be put into an error status with a
 status of Status::InvalidMeshConstruction.</p>
 </div><h4 id='method.move_to' class="method"><span id='move_to.v' class='invisible'><code>pub fn <a href='#method.move_to' class='fnname'>move_to</a>(&amp;self, x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#574-579' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Define the first point of the current patch in a mesh pattern.</p>
-
 <p>After this call the current point will be (x , y ).</p>
-
 <p>Note: If pattern is not a mesh pattern then pattern will be put into an error status with
 a status of Status::PatternTypeMismatch. If pattern has no current patch or the current
 patch already has at least one side, pattern will be put into an error status with a status
@@ -209,12 +195,9 @@ of Status::InvalidMeshConstruction.</p>
 </div><h4 id='method.line_to' class="method"><span id='line_to.v' class='invisible'><code>pub fn <a href='#method.line_to' class='fnname'>line_to</a>(&amp;self, x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#593-598' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Adds a line to the current patch from the current point to position (x , y ) in
 pattern-space coordinates.</p>
-
 <p>If there is no current point before the call to cairo_mesh_pattern_line_to() this function
 will behave as Mesh::move_to(pattern , x , y ).</p>
-
 <p>After this call the current point will be (x , y ).</p>
-
 <p>Note: If pattern is not a mesh pattern then pattern will be put into an error status with
 a status of Status::PatternTypeMismatch. If pattern has no current patch or the current
 patch already has 4 sides, pattern will be put into an error status with a status of
@@ -223,41 +206,31 @@ Status::InvalidMeshConstruction.</p>
 <div class='docblock'><p>Adds a cubic Bézier spline to the current patch from the current point to position
 (x3 , y3 ) in pattern-space coordinates, using (x1 , y1 ) and (x2 , y2 ) as the control
 points.</p>
-
 <p>If the current patch has no current point before the call to Mesh::curve_to(), this
 function will behave as if preceded by a call to Mesh::move_to(pattern , x1 , y1 ).</p>
-
 <p>After this call the current point will be (x3 , y3 ).</p>
-
 <p>Note: If pattern is not a mesh pattern then pattern will be put into an error status with
 a status of Status::PatternTypeMismatch. If pattern has no current patch or the current
 patch already has 4 sides, pattern will be put into an error status with a status of
 Status::InvalidMeshConstruction.</p>
 </div><h4 id='method.set_control_point' class="method"><span id='set_control_point.v' class='invisible'><code>pub fn <a href='#method.set_control_point' class='fnname'>set_control_point</a>(&amp;self, corner: <a class="enum" href="../cairo/enum.MeshCorner.html" title="enum cairo::MeshCorner">MeshCorner</a>, x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, y: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#629-634' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Set an internal control point of the current patch.</p>
-
 <p>Valid values for point_num are from 0 to 3 and identify the control points as explained in
 Mesh::new().</p>
-
 <p>Note: If pattern is not a mesh pattern then pattern will be put into an error status with a
 status of Status::PatternTypeMismatch. If point_num is not valid, pattern will be put into
 an error status with a status of Status::InvalidIndex. If pattern has no current patch,
 pattern will be put into an error status with a status of Status::InvalidMeshConstruction.</p>
 </div><h4 id='method.get_control_point' class="method"><span id='get_control_point.v' class='invisible'><code>pub fn <a href='#method.get_control_point' class='fnname'>get_control_point</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;patch_num: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;corner: <a class="enum" href="../cairo/enum.MeshCorner.html" title="enum cairo::MeshCorner">MeshCorner</a><br>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#642-651' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Gets the control point point_num of patch patch_num for a mesh pattern.</p>
-
 <p>patch_num can range from 0 to n-1 where n is the number returned by Mesh::get_patch_count().</p>
-
 <p>Valid values for point_num are from 0 to 3 and identify the control points as explained
 in Mesh::new().</p>
 </div><h4 id='method.set_corner_color_rgb' class="method"><span id='set_corner_color_rgb.v' class='invisible'><code>pub fn <a href='#method.set_corner_color_rgb' class='fnname'>set_corner_color_rgb</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;corner: <a class="enum" href="../cairo/enum.MeshCorner.html" title="enum cairo::MeshCorner">MeshCorner</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;red: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;green: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;blue: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a><br>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#665-670' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Sets the color of a corner of the current patch in a mesh pattern.</p>
-
 <p>The color is specified in the same way as in Context::set_source_rgb().</p>
-
 <p>Valid values for corner_num are from 0 to 3 and identify the corners as explained in
 Mesh::new().</p>
-
 <p>Note: If pattern is not a mesh pattern then pattern will be put into an error status
 with a status of Status::PatternTypeMismatch. If corner_num is not valid, pattern will
 be put into an error status with a status of Status::InvalidIndex. If pattern has no
@@ -265,36 +238,30 @@ current patch, pattern will be put into an error status with a status of
 Status::InvalidMeshConstruction.</p>
 </div><h4 id='method.set_corner_color_rgba' class="method"><span id='set_corner_color_rgba.v' class='invisible'><code>pub fn <a href='#method.set_corner_color_rgba' class='fnname'>set_corner_color_rgba</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;corner: <a class="enum" href="../cairo/enum.MeshCorner.html" title="enum cairo::MeshCorner">MeshCorner</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;red: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;green: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;blue: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;alpha: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a><br>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#683-688' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Sets the color of a corner of the current patch in a mesh pattern.</p>
-
 <p>The color is specified in the same way as in Context::set_source_rgba().</p>
-
 <p>Valid values for corner_num are from 0 to 3 and identify the corners as explained
 in Mesh::new().</p>
-
 <p>Note: If pattern is not a mesh pattern then pattern will be put into an error status with a
 status of Status::PatternTypeMismatch. If corner_num is not valid, pattern will be put into
 an error status with a status of Status::InvalidIndex. If pattern has no current patch,
 pattern will be put into an error status with a status of Status::InvalidMeshConstruction.</p>
 </div><h4 id='method.get_corner_color_rgba' class="method"><span id='get_corner_color_rgba.v' class='invisible'><code>pub fn <a href='#method.get_corner_color_rgba' class='fnname'>get_corner_color_rgba</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;patch_num: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;corner: <a class="enum" href="../cairo/enum.MeshCorner.html" title="enum cairo::MeshCorner">MeshCorner</a><br>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#696-707' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Gets the color information in corner corner_num of patch patch_num for a mesh pattern.</p>
-
 <p>patch_num can range from 0 to n-1 where n is the number returned by Mesh::get_patch_count().</p>
-
 <p>Valid values for corner_num are from 0 to 3 and identify the corners as explained in
 Mesh::new().</p>
 </div><h4 id='method.get_patch_count' class="method"><span id='get_patch_count.v' class='invisible'><code>pub fn <a href='#method.get_patch_count' class='fnname'>get_patch_count</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#713-719' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Gets the number of patches specified in the given mesh pattern.</p>
-
 <p>The number only includes patches which have been finished by calling Mesh::end_patch().
 For example it will be 0 during the definition of the first patch.</p>
 </div><h4 id='method.get_path' class="method"><span id='get_path.v' class='invisible'><code>pub fn <a href='#method.get_path' class='fnname'>get_path</a>(&amp;self, patch_num: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="../cairo/struct.Path.html" title="struct cairo::Path">Path</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#724-730' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Gets path defining the patch patch_num for a mesh pattern.</p>
-
 <p>patch_num can range from 0 to n-1 where n is the number returned by Mesh::get_patch_count().</p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Pattern' class='impl'><span class='in-band'><code>impl <a class="trait" href="../cairo/prelude/trait.Pattern.html" title="trait cairo::prelude::Pattern">Pattern</a> for <a class="struct" href="../cairo/struct.Mesh.html" title="struct cairo::Mesh">Mesh</a></code><a href='#impl-Pattern' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#180-184' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.get_ptr' class="method"><span id='get_ptr.v' class='invisible'><code>fn <a href='../cairo/prelude/trait.Pattern.html#tymethod.get_ptr' class='fnname'>get_ptr</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a><a class="struct" href="../cairo_sys/struct.cairo_pattern_t.html" title="struct cairo_sys::cairo_pattern_t">cairo_pattern_t</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#181-183' title='goto source code'>[src]</a></span></h4>
 <h4 id='method.ensure_status' class="method"><span id='ensure_status.v' class='invisible'><code>fn <a href='../cairo/prelude/trait.Pattern.html#method.ensure_status' class='fnname'>ensure_status</a>(&amp;self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#54-56' title='goto source code'>[src]</a></span></h4>
@@ -311,13 +278,20 @@ For example it will be 0 during the definition of the first patch.</p>
 </div><h4 id='method.get_filter' class="method"><span id='get_filter.v' class='invisible'><code>fn <a href='../cairo/prelude/trait.Pattern.html#method.get_filter' class='fnname'>get_filter</a>(&amp;self) -&gt; <a class="enum" href="../cairo/enum.Filter.html" title="enum cairo::Filter">Filter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#110-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Gets the current filter for a pattern. See Filter enum for details on each filter.</p>
 </div><h4 id='method.set_matrix' class="method"><span id='set_matrix.v' class='invisible'><code>fn <a href='../cairo/prelude/trait.Pattern.html#method.set_matrix' class='fnname'>set_matrix</a>(&amp;self, matrix: <a class="struct" href="../cairo/struct.Matrix.html" title="struct cairo::Matrix">Matrix</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#137-141' title='goto source code'>[src]</a></span></h4>
-<div class='docblock'><p>Sets the pattern&#39;s transformation matrix, which is a transformation from user space to pattern space. <a href="../cairo/prelude/trait.Pattern.html#method.set_matrix">Read more</a></p>
+<div class='docblock'><p>Sets the pattern's transformation matrix, which is a transformation from user space to pattern space. <a href="../cairo/prelude/trait.Pattern.html#method.set_matrix">Read more</a></p>
 </div><h4 id='method.get_matrix' class="method"><span id='get_matrix.v' class='invisible'><code>fn <a href='../cairo/prelude/trait.Pattern.html#method.get_matrix' class='fnname'>get_matrix</a>(&amp;self) -&gt; <a class="struct" href="../cairo/struct.Matrix.html" title="struct cairo::Matrix">Matrix</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#147-153' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Gets the current transformation matrix for a pattern.  See the documentation for [<code>set_matrix()</code>] for the details on this matrix. <a href="../cairo/prelude/trait.Pattern.html#method.get_matrix">Read more</a></p>
 </div></div><h3 id='impl-Drop' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html" title="trait core::ops::drop::Drop">Drop</a> for <a class="struct" href="../cairo/struct.Mesh.html" title="struct cairo::Mesh">Mesh</a></code><a href='#impl-Drop' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#186-192' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.drop' class="method"><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cairo/patterns.rs.html#187-191' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Executes the destructor for this type. <a href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop">Read more</a></p>
-</div></div></section>
+</div></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../cairo/struct.Mesh.html" title="struct cairo::Mesh">Mesh</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../cairo/struct.Mesh.html" title="struct cairo::Mesh">Mesh</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -330,20 +304,22 @@ For example it will be 0 during the definition of the first patch.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

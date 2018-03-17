@@ -10,8 +10,11 @@
     <title>gtk::Notebook - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct Notebook</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CContainer%3E">IsA&lt;Container&gt;</a><a href="#impl-IsA%3CWidget%3E">IsA&lt;Widget&gt;</a><a href="#impl-IsA%3CBuildable%3E">IsA&lt;Buildable&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a><a href="#impl-Default">Default</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Notebook', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Notebook</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CContainer%3E">IsA&lt;Container&gt;</a><a href="#impl-IsA%3CWidget%3E">IsA&lt;Widget&gt;</a><a href="#impl-IsA%3CBuildable%3E">IsA&lt;Buildable&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a><a href="#impl-Default">Default</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'Notebook', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,7 +62,6 @@
                </span></span></h1>
 <pre class='rust struct'>pub struct Notebook(_, _);</pre><div class='docblock'><p>The <code>Notebook</code> widget is a <code>Container</code> whose children are pages that
 can be switched between using tab labels along one edge.</p>
-
 <p>There are many configuration options for <code>Notebook</code>. Among other
 things, you can choose on which edge the tabs appear
 (see <code>NotebookExt::set_tab_pos</code>), whether, if there are too many
@@ -59,21 +69,17 @@ tabs to fit the notebook should be made bigger or scrolling
 arrows added (see <code>NotebookExt::set_scrollable</code>), and whether there
 will be a popup menu allowing the users to switch pages.
 (see <code>NotebookExt::popup_enable</code>, <code>NotebookExt::popup_disable</code>)</p>
-
-<h1 id='notebook-as-buildable' class='section-header'><a href='#notebook-as-buildable'><code>Notebook</code> as <code>Buildable</code></a></h1>
+<h1 id="notebook-as-buildable" class="section-header"><a href="#notebook-as-buildable"><code>Notebook</code> as <code>Buildable</code></a></h1>
 <p>The <code>Notebook</code> implementation of the <code>Buildable</code> interface
 supports placing children into tabs by specifying “tab” as the
 “type” attribute of a <code>&lt;child&gt;</code> element. Note that the content
 of the tab must be created before the tab can be filled.
 A tab child can be specified without specifying a <code>&lt;child&gt;</code>
 type attribute.</p>
-
 <p>To add a child widget in the notebooks action area, specify
 &quot;action-start&quot; or “action-end” as the “type” attribute of the
 <code>&lt;child&gt;</code> element.</p>
-
 <p>An example of a UI definition fragment with <code>Notebook</code>:</p>
-
 <pre><code class="language-plain">notebook
 ├── header.top
 │   ├── [&lt;action widget&gt;]
@@ -92,42 +98,35 @@ type attribute.</p>
     ┊
     ╰── &lt;child&gt;
 </code></pre>
-
 <p><code>Notebook</code> has a main CSS node with name notebook, a subnode
 with name header and below that a subnode with name tabs which
 contains one subnode per tab with name tab.</p>
-
 <p>If action widgets are present, their CSS nodes are placed next
 to the tabs node. If the notebook is scrollable, CSS nodes with
 name arrow are placed as first and last child of the tabs node.</p>
-
 <p>The main node gets the .frame style class when the notebook
 has a border (see <code>NotebookExt::set_show_border</code>).</p>
-
 <p>The header node gets one of the style class .top, .bottom,
 .left or .right, depending on where the tabs are placed. For
 reorderable pages, the tab node gets the .reorderable-page class.</p>
-
 <p>A tab node gets the .dnd style class while it is moved with drag-and-drop.</p>
-
 <p>The nodes are always arranged from left-to-right, regarldess of text direction.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.NotebookExt.html"><code>NotebookExt</code></a>, <a href="trait.ContainerExt.html"><code>ContainerExt</code></a>, <a href="trait.WidgetExt.html"><code>WidgetExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a>, <a href="trait.BuildableExt.html"><code>BuildableExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/notebook.rs.html#103-115' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/notebook.rs.html#109-114' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/notebook.rs.html#105-117' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/notebook.rs.html#111-116' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new <code>Notebook</code> widget with no pages.</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>the newly created <code>Notebook</code></p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -154,10 +153,17 @@ reorderable pages, the tab node gets the .reorderable-page class.</p>
 <div class='impl-items'></div><h3 id='impl-IsA%3CWidget%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt; for <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code><a href='#impl-IsA%3CWidget%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CBuildable%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Buildable.html" title="struct gtk::Buildable">Buildable</a>&gt; for <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code><a href='#impl-IsA%3CBuildable%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/notebook.rs.html#117-121' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/notebook.rs.html#118-120' title='goto source code'>[src]</a></span></h4>
+<div class='impl-items'></div><h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/notebook.rs.html#119-123' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/notebook.rs.html#120-122' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
-</div></div></section>
+</div></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gtk/struct.Notebook.html" title="struct gtk::Notebook">Notebook</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -170,20 +176,22 @@ reorderable pages, the tab node gets the .reorderable-page class.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

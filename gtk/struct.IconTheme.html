@@ -10,8 +10,11 @@
     <title>gtk::IconTheme - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct IconTheme</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.add_builtin_icon">add_builtin_icon</a><a href="#method.get_default">get_default</a><a href="#method.get_for_screen">get_for_screen</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a><a href="#impl-Default">Default</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'IconTheme', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct IconTheme</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.add_builtin_icon">add_builtin_icon</a><a href="#method.get_default">get_default</a><a href="#method.get_for_screen">get_for_screen</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a><a href="#impl-Default">Default</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'IconTheme', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -58,27 +69,30 @@ follows the <a href="http://www.freedesktop.org/Standards/icon-theme-spec">Icon 
 There is a fallback icon theme, named <code>hicolor</code>, where applications
 should install their icons, but additional icon themes can be installed
 as operating system vendors and users choose.</p>
-
 <p>Named icons are similar to the deprecated [Stock Items][gtkstock],
 and the distinction between the two may be a bit confusing.
 A few things to keep in mind:</p>
-
 <ul>
-<li><p>Stock images usually are used in conjunction with
+<li>
+<p>Stock images usually are used in conjunction with
 [Stock Items][gtkstock], such as <code>GTK_STOCK_OK</code> or
 <code>GTK_STOCK_OPEN</code>. Named icons are easier to set up and therefore
 are more useful for new icons that an application wants to
-add, such as application icons or window icons.</p></li>
-<li><p>Stock images can only be loaded at the symbolic sizes defined
+add, such as application icons or window icons.</p>
+</li>
+<li>
+<p>Stock images can only be loaded at the symbolic sizes defined
 by the <code>IconSize</code> enumeration, or by custom sizes defined
 by <code>IconSize::register</code>, while named icons are more flexible
-and any pixel size can be specified.</p></li>
-<li><p>Because stock images are closely tied to stock items, and thus
+and any pixel size can be specified.</p>
+</li>
+<li>
+<p>Because stock images are closely tied to stock items, and thus
 to actions in the user interface, stock images may come in
 multiple variants for different widget states or writing
-directions.</p></li>
+directions.</p>
+</li>
 </ul>
-
 <p>A good rule of thumb is that if there is a stock image for what
 you want to use, use it, otherwise use a named icon. It turns
 out that internally stock images are generally defined in
@@ -86,7 +100,6 @@ terms of one or more named icons. (An example of the
 more than one case is icons that depend on writing direction;
 <code>GTK_STOCK_GO_FORWARD</code> uses the two themed icons
 “gtk-stock-go-forward-ltr” and “gtk-stock-go-forward-rtl”.)</p>
-
 <p>In many cases, named themes are used indirectly, via <code>Image</code>
 or stock items, rather than directly, but looking up icons
 directly is also simple. The <code>IconTheme</code> object acts
@@ -95,7 +108,6 @@ can create new <code>IconTheme</code> objects, but it’s much more
 efficient to use the standard icon theme for the <code>gdk::Screen</code>
 so that the icon information is shared with other people
 looking up icons.</p>
-
 <pre><code class="language-C">GError *error = NULL;
 GtkIconTheme *icon_theme;
 GdkPixbuf *pixbuf;
@@ -117,61 +129,52 @@ else
     g_object_unref (pixbuf);
   }
 </code></pre>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.IconThemeExt.html"><code>IconThemeExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#108-196' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#118-123' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#109-198' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#119-124' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new icon theme object. Icon theme objects are used
 to lookup up an icon by name in a particular icon theme.
 Usually, you’ll want to use <code>IconTheme::get_default</code>
 or <code>IconTheme::get_for_screen</code> rather than creating
 a new icon theme object for scratch.</p>
-
-<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<h1 id="returns" class="section-header"><a href="#returns">Returns</a></h1>
 <p>the newly created <code>IconTheme</code> object.</p>
-</div><h4 id='method.add_builtin_icon' class="method"><span id='add_builtin_icon.v' class='invisible'><code>pub fn <a href='#method.add_builtin_icon' class='fnname'>add_builtin_icon</a>(icon_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, pixbuf: &amp;<a class="struct" href="../gdk_pixbuf/pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::pixbuf::Pixbuf">Pixbuf</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#150-155' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.add_builtin_icon' class="method"><span id='add_builtin_icon.v' class='invisible'><code>pub fn <a href='#method.add_builtin_icon' class='fnname'>add_builtin_icon</a>(icon_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>, pixbuf: &amp;<a class="struct" href="../gdk_pixbuf/auto/pixbuf/struct.Pixbuf.html" title="struct gdk_pixbuf::auto::pixbuf::Pixbuf">Pixbuf</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#152-157' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Registers a built-in icon for icon theme lookups. The idea
 of built-in icons is to allow an application or library
 that uses themed icons to function requiring files to
 be present in the file system. For instance, the default
 images for all of GTK+’s stock icons are registered
 as built-icons.</p>
-
 <p>In general, if you use <code>IconTheme::add_builtin_icon</code>
 you should also install the icon in the icon theme, so
 that the icon is generally available.</p>
-
 <p>This function will generally be used with pixbufs loaded
 via <code>gdk_pixbuf::Pixbuf::new_from_inline</code>.</p>
-
-<h1 id='deprecated-since-314' class='section-header'><a href='#deprecated-since-314'>Deprecated since 3.14</a></h1>
+<h1 id="deprecated-since-314" class="section-header"><a href="#deprecated-since-314">Deprecated since 3.14</a></h1>
 <p>Use <code>IconThemeExt::add_resource_path</code>
- to add application-specific icons to the icon theme.</p>
-
-<h2 id='icon_name' class='section-header'><a href='#icon_name'><code>icon_name</code></a></h2>
+to add application-specific icons to the icon theme.</p>
+<h2 id="icon_name" class="section-header"><a href="#icon_name"><code>icon_name</code></a></h2>
 <p>the name of the icon to register</p>
-
-<h2 id='size' class='section-header'><a href='#size'><code>size</code></a></h2>
+<h2 id="size" class="section-header"><a href="#size"><code>size</code></a></h2>
 <p>the size in pixels at which to register the icon (different
- images can be registered for the same icon name at different sizes.)</p>
-
-<h2 id='pixbuf' class='section-header'><a href='#pixbuf'><code>pixbuf</code></a></h2>
+images can be registered for the same icon name at different sizes.)</p>
+<h2 id="pixbuf" class="section-header"><a href="#pixbuf"><code>pixbuf</code></a></h2>
 <p><code>gdk_pixbuf::Pixbuf</code> that contains the image to use for <code>icon_name</code></p>
-</div><h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>pub fn <a href='#method.get_default' class='fnname'>get_default</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#166-171' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.get_default' class="method"><span id='get_default.v' class='invisible'><code>pub fn <a href='#method.get_default' class='fnname'>get_default</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#168-173' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Gets the icon theme for the default screen. See
 <code>IconTheme::get_for_screen</code>.</p>
-
-<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<h1 id="returns-1" class="section-header"><a href="#returns-1">Returns</a></h1>
 <p>A unique <code>IconTheme</code> associated with
- the default screen. This icon theme is associated with
- the screen and can be used as long as the screen
- is open. Do not ref or unref it.</p>
-</div><h4 id='method.get_for_screen' class="method"><span id='get_for_screen.v' class='invisible'><code>pub fn <a href='#method.get_for_screen' class='fnname'>get_for_screen</a>(screen: &amp;<a class="struct" href="../gdk/auto/screen/struct.Screen.html" title="struct gdk::auto::screen::Screen">Screen</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#190-195' title='goto source code'>[src]</a></span></h4>
+the default screen. This icon theme is associated with
+the screen and can be used as long as the screen
+is open. Do not ref or unref it.</p>
+</div><h4 id='method.get_for_screen' class="method"><span id='get_for_screen.v' class='invisible'><code>pub fn <a href='#method.get_for_screen' class='fnname'>get_for_screen</a>(screen: &amp;<a class="struct" href="../gdk/auto/screen/struct.Screen.html" title="struct gdk::auto::screen::Screen">Screen</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#192-197' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Gets the icon theme object associated with <code>screen</code>; if this
 function has not previously been called for the given
 screen, a new icon theme object will be created and
@@ -180,19 +183,18 @@ fairly expensive to create, so using this function
 is usually a better choice than calling than <code>IconTheme::new</code>
 and setting the screen yourself; by using this function
 a single icon theme object will be shared between users.</p>
-
-<h2 id='screen' class='section-header'><a href='#screen'><code>screen</code></a></h2>
+<h2 id="screen" class="section-header"><a href="#screen"><code>screen</code></a></h2>
 <p>a <code>gdk::Screen</code></p>
-
-<h1 id='returns-2' class='section-header'><a href='#returns-2'>Returns</a></h1>
+<h1 id="returns-2" class="section-header"><a href="#returns-2">Returns</a></h1>
 <p>A unique <code>IconTheme</code> associated with
- the given screen. This icon theme is associated with
- the screen and can be used as long as the screen
- is open. Do not ref or unref it.</p>
+the given screen. This icon theme is associated with
+the screen and can be used as long as the screen
+is open. Do not ref or unref it.</p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -216,10 +218,17 @@ a single icon theme object will be shared between users.</p>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div><h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#198-202' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#199-201' title='goto source code'>[src]</a></span></h4>
+<div class='impl-items'></div><h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#200-204' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gtk/auto/icon_theme.rs.html#201-203' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
-</div></div></section>
+</div></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gtk/struct.IconTheme.html" title="struct gtk::IconTheme">IconTheme</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -232,20 +241,22 @@ a single icon theme object will be shared between users.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

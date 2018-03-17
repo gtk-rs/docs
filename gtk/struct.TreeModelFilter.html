@@ -10,8 +10,11 @@
     <title>gtk::TreeModelFilter - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct TreeModelFilter</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CTreeModel%3E">IsA&lt;TreeModel&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'TreeModelFilter', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct TreeModelFilter</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CTreeModel%3E">IsA&lt;TreeModel&gt;</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gtk</a></p><script>window.sidebarCurrent = {name: 'TreeModelFilter', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,25 +62,28 @@
                </span></span></h1>
 <pre class='rust struct'>pub struct TreeModelFilter(_, _);</pre><div class='docblock'><p>A <code>TreeModelFilter</code> is a tree model which wraps another tree model,
 and can do the following things:</p>
-
 <ul>
-<li><p>Filter specific rows, based on data from a “visible column”, a column
+<li>
+<p>Filter specific rows, based on data from a “visible column”, a column
 storing booleans indicating whether the row should be filtered or not,
 or based on the return value of a “visible function”, which gets a
 model, iter and user_data and returns a boolean indicating whether the
-row should be filtered or not.</p></li>
-<li><p>Modify the “appearance” of the model, using a modify function.
+row should be filtered or not.</p>
+</li>
+<li>
+<p>Modify the “appearance” of the model, using a modify function.
 This is extremely powerful and allows for just changing some
 values and also for creating a completely different model based
-on the given child model.</p></li>
-<li><p>Set a different root node, also known as a “virtual root”. You can pass
+on the given child model.</p>
+</li>
+<li>
+<p>Set a different root node, also known as a “virtual root”. You can pass
 in a <code>TreePath</code> indicating the root node for the filter at construction
-time.</p></li>
+time.</p>
+</li>
 </ul>
-
 <p>The basic API is similar to <code>TreeModelSort</code>. For an example on its usage,
 see the section on <code>TreeModelSort</code>.</p>
-
 <p>When using <code>TreeModelFilter</code>, it is important to realize that
 <code>TreeModelFilter</code> maintains an internal cache of all nodes which are
 visible in its clients. The cache is likely to be a subtree of the tree
@@ -81,7 +95,6 @@ because of reference counting rule 3, see the <code>TreeModel</code>
 documentation. (Note that e.g. <code>TreeStore</code> does not implement
 reference counting and will always emit all signals, even when
 the receiving node is not visible).</p>
-
 <p>Because of this, limitations for possible visible functions do apply.
 In general, visible functions should only use data or properties from
 the node for which the visibility state must be determined, its siblings
@@ -89,24 +102,21 @@ or its parents. Usually, having a dependency on the state of any child
 node is not possible, unless references are taken on these explicitly.
 When no such reference exists, no signals may be received for these child
 nodes (see reference couting rule number 3 in the <code>TreeModel</code> section).</p>
-
 <p>Determining the visibility state of a given node based on the state
 of its child nodes is a frequently occurring use case. Therefore,
 <code>TreeModelFilter</code> explicitly supports this. For example, when a node
 does not have any children, you might not want the node to be visible.
 As soon as the first row is added to the node’s child level (or the
 last row removed), the node’s visibility should be updated.</p>
-
 <p>This introduces a dependency from the node on its child nodes. In order
 to accommodate this, <code>TreeModelFilter</code> must make sure the necessary
 signals are received from the child model. This is achieved by building,
-for all nodes which are exposed as visible nodes to <code>TreeModelFilter</code>&#39;s
+for all nodes which are exposed as visible nodes to <code>TreeModelFilter</code>'s
 clients, the child level (if any) and take a reference on the first node
 in this level. Furthermore, for every row-inserted, row-changed or
 row-deleted signal (also these which were not handled because the node
 was not cached), <code>TreeModelFilter</code> will check if the visibility state
 of any parent node has changed.</p>
-
 <p>Beware, however, that this explicit support is limited to these two
 cases. For example, if you want a node to be visible only if two nodes
 in a child’s child level (2 levels deeper) are visible, you are on your
@@ -114,8 +124,7 @@ own. In this case, either rely on <code>TreeStore</code> to emit all signals
 because it does not implement reference counting, or for models that
 do implement reference counting, obtain references on these child levels
 yourself.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.TreeModelFilterExt.html"><code>TreeModelFilterExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a>, <a href="trait.TreeModelExt.html"><code>TreeModelExt</code></a></p>
 </div>
                     <h2 id='methods' class='small-section-header'>
@@ -127,6 +136,7 @@ yourself.</p>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -151,7 +161,14 @@ yourself.</p>
 </div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CTreeModel%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.TreeModel.html" title="struct gtk::TreeModel">TreeModel</a>&gt; for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code><a href='#impl-IsA%3CTreeModel%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../gtk/trait.IsA.html" title="trait gtk::IsA">IsA</a>&lt;<a class="struct" href="../gtk/struct.Object.html" title="struct gtk::Object">Object</a>&gt; for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gtk/struct.TreeModelFilter.html" title="struct gtk::TreeModelFilter">TreeModelFilter</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -164,20 +181,22 @@ yourself.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,11 @@
     <title>gio::MenuModel - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct MenuModel</p><div class="block items"><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-IsA%3CMenuModel%3E">IsA&lt;MenuModel&gt;</a><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div></div><p class='location'><a href='index.html'>gio</a></p><script>window.sidebarCurrent = {name: 'MenuModel', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct MenuModel</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-IsA%3CMenuModel%3E">IsA&lt;MenuModel&gt;</a><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-StaticType">StaticType</a><a href="#impl-PartialEq%3CT%3E">PartialEq&lt;T&gt;</a><a href="#impl-Eq">Eq</a><a href="#impl-IsA%3CObject%3E">IsA&lt;Object&gt;</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='index.html'>gio</a></p><script>window.sidebarCurrent = {name: 'MenuModel', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -56,22 +67,17 @@ have submenus associated with them. Both items and sections usually
 have some representation data, such as labels or icons. The type of
 the associated action (ie whether it is stateful, and what kind of
 state it has) can influence the representation of the item.</p>
-
 <p>The conceptual model of menus in <code>MenuModel</code> is hierarchical:
 sections and submenus are again represented by <code>GMenuModels</code>.
 Menus themselves do not define their own roles. Rather, the role
 of a particular <code>MenuModel</code> is defined by the item that references
-it (or, in the case of the &#39;root&#39; menu, is defined by the context
+it (or, in the case of the 'root' menu, is defined by the context
 in which it is used).</p>
-
 <p>As an example, consider the visible portions of this menu:</p>
-
-<h2 id='an-example-menu--menu-example' class='section-header'><a href='#an-example-menu--menu-example'>An example menu # {<code>menu</code>-example}</a></h2>
-<p><img src="menu-example.png" alt=""></p>
-
+<h2 id="an-example-menu--menu-example" class="section-header"><a href="#an-example-menu--menu-example">An example menu # {<code>menu</code>-example}</a></h2>
+<p><img src="menu-example.png" alt="" /></p>
 <p>There are 8 &quot;menus&quot; visible in the screenshot: one menubar, two
 submenus and 5 sections:</p>
-
 <ul>
 <li>the toplevel menubar (containing 4 items)</li>
 <li>the View submenu (containing 3 sections)</li>
@@ -82,40 +88,34 @@ submenus and 5 sections:</p>
 <li>the Sources section (containing 2 items)</li>
 <li>the Markup section (containing 2 items)</li>
 </ul>
-
 <p>The [example][menu-model] illustrates the conceptual connection between
 these 8 menus. Each large block in the figure represents a menu and the
 smaller blocks within the large block represent items in that menu. Some
 items contain references to other menus.</p>
-
-<h2 id='a-menu-example--menu-model' class='section-header'><a href='#a-menu-example--menu-model'>A menu example # {<code>menu</code>-model}</a></h2>
-<p><img src="menu-model.png" alt=""></p>
-
+<h2 id="a-menu-example--menu-model" class="section-header"><a href="#a-menu-example--menu-model">A menu example # {<code>menu</code>-model}</a></h2>
+<p><img src="menu-model.png" alt="" /></p>
 <p>Notice that the separators visible in the [example][menu-example]
 appear nowhere in the [menu model][menu-model]. This is because
 separators are not explicitly represented in the menu model. Instead,
 a separator is inserted between any two non-empty sections of a menu.
 Section items can have labels just like any other item. In that case,
 a display system may show a section header instead of a separator.</p>
-
 <p>The motivation for this abstract model of application controls is
 that modern user interfaces tend to make these controls available
 outside the application. Examples include global menus, jumplists,
-dash boards, etc. To support such uses, it is necessary to &#39;export&#39;
+dash boards, etc. To support such uses, it is necessary to 'export'
 information about actions and their representation in menus, which
 is exactly what the [GActionGroup exporter][gio-GActionGroup-exporter]
 and the [GMenuModel exporter][gio-GMenuModel-exporter] do for
 <code>ActionGroup</code> and <code>MenuModel</code>. The client-side counterparts to
 make use of the exported information are <code>DBusActionGroup</code> and
 <code>DBusMenuModel</code>.</p>
-
 <p>The API of <code>MenuModel</code> is very generic, with iterators for the
 attributes and links of an item, see <code>MenuModelExt::iterate_item_attributes</code>
-and <code>MenuModelExt::iterate_item_links</code>. The &#39;standard&#39; attributes and
+and <code>MenuModelExt::iterate_item_links</code>. The 'standard' attributes and
 link types have predefined names: <code>G_MENU_ATTRIBUTE_LABEL</code>,
 <code>G_MENU_ATTRIBUTE_ACTION</code>, <code>G_MENU_ATTRIBUTE_TARGET</code>, <code>G_MENU_LINK_SECTION</code>
 and <code>G_MENU_LINK_SUBMENU</code>.</p>
-
 <p>Items in a <code>MenuModel</code> represent active controls if they refer to
 an action that can get activated when the user interacts with the
 menu item. The reference to the action is encoded by the string id
@@ -127,45 +127,40 @@ E.g. when the model is exported as the application menu of a
 (and thus come from two different action groups). By convention, the
 application-wide actions have names that start with &quot;app.&quot;, while the
 names of window-specific actions start with &quot;win.&quot;.</p>
-
 <p>While a wide variety of stateful actions is possible, the following
 is the minimum that is expected to be supported by all users of exported
-menu information:
-- an action with no parameter type and no state
-- an action with no parameter type and boolean state
-- an action with string parameter type and string state</p>
-
-<h2 id='stateless' class='section-header'><a href='#stateless'>Stateless</a></h2>
+menu information:</p>
+<ul>
+<li>an action with no parameter type and no state</li>
+<li>an action with no parameter type and boolean state</li>
+<li>an action with string parameter type and string state</li>
+</ul>
+<h2 id="stateless" class="section-header"><a href="#stateless">Stateless</a></h2>
 <p>A stateless action typically corresponds to an ordinary menu item.</p>
-
 <p>Selecting such a menu item will activate the action (with no parameter).</p>
-
-<h2 id='boolean-state' class='section-header'><a href='#boolean-state'>Boolean State</a></h2>
+<h2 id="boolean-state" class="section-header"><a href="#boolean-state">Boolean State</a></h2>
 <p>An action with a boolean state will most typically be used with a &quot;toggle&quot;
 or &quot;switch&quot; menu item. The state can be set directly, but activating the
 action (with no parameter) results in the state being toggled.</p>
-
 <p>Selecting a toggle menu item will activate the action. The menu item should
 be rendered as &quot;checked&quot; when the state is true.</p>
-
-<h2 id='string-parameter-and-state' class='section-header'><a href='#string-parameter-and-state'>String Parameter and State</a></h2>
+<h2 id="string-parameter-and-state" class="section-header"><a href="#string-parameter-and-state">String Parameter and State</a></h2>
 <p>Actions with string parameters and state will most typically be used to
 represent an enumerated choice over the items available for a group of
 radio menu items. Activating the action with a string parameter is
 equivalent to setting that parameter as the state.</p>
-
 <p>Radio menu items, in addition to being associated with the action, will
 have a target value. Selecting that menu item will result in activation
 of the action with the target value as the parameter. The menu item should
 be rendered as &quot;selected&quot; when the state of the action is equal to the
 target value of the menu item.</p>
-
-<h1 id='implements' class='section-header'><a href='#implements'>Implements</a></h1>
+<h1 id="implements" class="section-header"><a href="#implements">Implements</a></h1>
 <p><a href="trait.MenuModelExt.html"><code>MenuModelExt</code></a>, <a href="../glib/object/trait.ObjectExt.html"><code>glib::object::ObjectExt</code></a></p>
 </div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
+            <div id='implementations-list'>
         <h3 id='impl-IsA%3CMenuModel%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a>&gt; for <a class="struct" href="../gio/struct.Menu.html" title="struct gio::Menu">Menu</a></code><a href='#impl-IsA%3CMenuModel%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code></span></h4>
@@ -190,7 +185,14 @@ target value of the menu item.</p>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
 </div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'></span></h3>
 <div class='impl-items'></div><h3 id='impl-IsA%3CObject%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="../glib/object/trait.IsA.html" title="trait glib::object::IsA">IsA</a>&lt;<a class="struct" href="../gio/struct.Object.html" title="struct gio::Object">Object</a>&gt; for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-IsA%3CObject%3E' class='anchor'></a></span><span class='out-of-band'></span></h3>
-<div class='impl-items'></div></section>
+<div class='impl-items'></div></div>
+            <h2 id='synthetic-implementations' class='small-section-header'>
+              Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+            </h2>
+            <div id='synthetic-implementations-list'>
+        <h3 id='impl-Send' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../gio/struct.MenuModel.html" title="struct gio::MenuModel">MenuModel</a></code><a href='#impl-Sync' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -203,20 +205,22 @@ target value of the menu item.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
