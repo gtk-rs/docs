@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["ContextExt",""],["FontExt",""],["FontFaceExt",""],["FontFamilyExt",""],["FontMapExt",""],["FontsetExt",""],["LayoutExt",""],["RendererExt",""]]});
+initSidebarItems({"trait":[["ContextExt",""],["FontExt",""],["FontFaceExt",""],["FontFamilyExt",""],["FontMapExt",""],["FontsetExt",""],["FontsetSimpleExt",""],["LayoutExt",""],["RendererExt",""]]});
