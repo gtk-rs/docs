@@ -1,14 +1,2 @@
 var ALIASES = {};
-ALIASES['bitflags'] = {};
-ALIASES['cairo'] = {};
-ALIASES['cairo_sys'] = {};
-ALIASES['glib'] = {};
-ALIASES['glib_sys'] = {};
-ALIASES['gobject_sys'] = {};
-ALIASES['lazy_static'] = {};
-ALIASES['libc'] = {};
-ALIASES['pango'] = {};
-ALIASES['pango_cairo_sys'] = {};
-ALIASES['pango_sys'] = {};
 ALIASES['pangocairo'] = {};
-ALIASES['x11'] = {};
