@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["get_versions",""],["version_to_string",""]],"struct":[["File","SVG file surface."],["RefWriter",""],["Writer","Writer SVG surface, lets you render to any type implementing `io::Write`."]]});

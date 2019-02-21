@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Binding",""],["BindingFlags",""],["ParamFlags",""]]});
+initSidebarItems({"struct":[["Binding",""],["BindingClass",""],["BindingFlags",""],["ParamFlags",""],["SignalFlags",""]]});
