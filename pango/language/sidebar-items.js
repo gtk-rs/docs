@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Language",""]]});
+initSidebarItems({"struct":[["Language","The `Language` structure is used to represent a language."]]});

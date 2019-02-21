@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/context.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>context.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/context.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>context.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../cairo/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1545,7 +1545,62 @@
 <span id="1545">1545</span>
 <span id="1546">1546</span>
 <span id="1547">1547</span>
-</pre><pre class="rust ">
+<span id="1548">1548</span>
+<span id="1549">1549</span>
+<span id="1550">1550</span>
+<span id="1551">1551</span>
+<span id="1552">1552</span>
+<span id="1553">1553</span>
+<span id="1554">1554</span>
+<span id="1555">1555</span>
+<span id="1556">1556</span>
+<span id="1557">1557</span>
+<span id="1558">1558</span>
+<span id="1559">1559</span>
+<span id="1560">1560</span>
+<span id="1561">1561</span>
+<span id="1562">1562</span>
+<span id="1563">1563</span>
+<span id="1564">1564</span>
+<span id="1565">1565</span>
+<span id="1566">1566</span>
+<span id="1567">1567</span>
+<span id="1568">1568</span>
+<span id="1569">1569</span>
+<span id="1570">1570</span>
+<span id="1571">1571</span>
+<span id="1572">1572</span>
+<span id="1573">1573</span>
+<span id="1574">1574</span>
+<span id="1575">1575</span>
+<span id="1576">1576</span>
+<span id="1577">1577</span>
+<span id="1578">1578</span>
+<span id="1579">1579</span>
+<span id="1580">1580</span>
+<span id="1581">1581</span>
+<span id="1582">1582</span>
+<span id="1583">1583</span>
+<span id="1584">1584</span>
+<span id="1585">1585</span>
+<span id="1586">1586</span>
+<span id="1587">1587</span>
+<span id="1588">1588</span>
+<span id="1589">1589</span>
+<span id="1590">1590</span>
+<span id="1591">1591</span>
+<span id="1592">1592</span>
+<span id="1593">1593</span>
+<span id="1594">1594</span>
+<span id="1595">1595</span>
+<span id="1596">1596</span>
+<span id="1597">1597</span>
+<span id="1598">1598</span>
+<span id="1599">1599</span>
+<span id="1600">1600</span>
+<span id="1601">1601</span>
+<span id="1602">1602</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
@@ -1556,16 +1611,23 @@
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">CString</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">slice</span>;
 <span class="kw">use</span> ::<span class="ident">paths</span>::<span class="ident">Path</span>;
 <span class="kw">use</span> ::<span class="ident">font</span>::{<span class="ident">TextExtents</span>, <span class="ident">TextCluster</span>, <span class="ident">FontExtents</span>, <span class="ident">ScaledFont</span>, <span class="ident">FontOptions</span>, <span class="ident">FontFace</span>, <span class="ident">Glyph</span>};
 <span class="kw">use</span> ::<span class="ident">matrices</span>::{<span class="ident">Matrix</span>, <span class="ident">MatrixTrait</span>};
-<span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">enums</span>::{
+<span class="kw">use</span> ::{
+    <span class="ident">Antialias</span>,
+    <span class="ident">Content</span>,
+    <span class="ident">FillRule</span>,
     <span class="ident">FontSlant</span>,
     <span class="ident">FontWeight</span>,
-    <span class="ident">TextClusterFlags</span>,
+    <span class="ident">LineCap</span>,
+    <span class="ident">LineJoin</span>,
     <span class="ident">Operator</span>,
-    <span class="ident">Content</span>,
+    <span class="ident">TextClusterFlags</span>,
+    <span class="ident">Status</span>,
 };
 <span class="kw">use</span> <span class="ident">Rectangle</span>;
 <span class="kw">use</span> <span class="ident">ffi</span>;
@@ -1574,7 +1636,6 @@
     <span class="ident">cairo_t</span>,
     <span class="ident">cairo_rectangle_list_t</span>,
 };
-<span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">enums</span>::{<span class="ident">Status</span>, <span class="ident">Antialias</span>, <span class="ident">LineCap</span>, <span class="ident">LineJoin</span>, <span class="ident">FillRule</span>};
 <span class="kw">use</span> ::<span class="ident">patterns</span>::{<span class="ident">Pattern</span>, <span class="ident">PatternTrait</span>};
 <span class="kw">use</span> <span class="ident">surface</span>::<span class="ident">Surface</span>;
 
@@ -1586,10 +1647,8 @@
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> [<span class="ident">Rectangle</span>];
 
     <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">Rectangle</span>] {
-        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">slice</span>;
-
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">ptr</span>).<span class="ident">rectangles</span>;
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">ptr</span>).<span class="ident">rectangles</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Rectangle</span>;
             <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">ptr</span>).<span class="ident">num_rectangles</span>;
 
             <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() <span class="op">||</span> <span class="ident">len</span> <span class="op">==</span> <span class="number">0</span> {
@@ -1606,6 +1665,22 @@
         <span class="kw">unsafe</span> {
             <span class="ident">ffi</span>::<span class="ident">cairo_rectangle_list_destroy</span>(<span class="self">self</span>.<span class="ident">ptr</span>);
         }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">RectangleList</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;RectangleList&quot;</span>)
+             .<span class="ident">field</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>)
+             .<span class="ident">finish</span>()
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">RectangleList</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;RectangleList&quot;</span>)
     }
 }
 
@@ -1720,7 +1795,7 @@
     <span class="doccomment">/// Checks whether an error has previously occurred for this context.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Status</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_status</span>(<span class="self">self</span>.<span class="number">0</span>)
+            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_status</span>(<span class="self">self</span>.<span class="number">0</span>))
         }
     }
 
@@ -1795,9 +1870,9 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_group_with_content</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">content</span>: <span class="ident">Content</span>){
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_group_with_content</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">content</span>: <span class="ident">Content</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_push_group_with_content</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">content</span>)
+            <span class="ident">ffi</span>::<span class="ident">cairo_push_group_with_content</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">content</span>.<span class="ident">into</span>())
         }
     }
 
@@ -1909,7 +1984,7 @@
     <span class="doccomment">/// FontOptions::set_antialias().</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_antialias</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">antialias</span> : <span class="ident">Antialias</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_set_antialias</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">antialias</span>)
+            <span class="ident">ffi</span>::<span class="ident">cairo_set_antialias</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">antialias</span>.<span class="ident">into</span>())
         }
         <span class="self">self</span>.<span class="ident">ensure_status</span>()
     }
@@ -1917,7 +1992,7 @@
     <span class="doccomment">/// Gets the current shape antialiasing mode, as set by Context::set_antialias().</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_antialias</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Antialias</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_get_antialias</span>(<span class="self">self</span>.<span class="number">0</span>)
+            <span class="ident">Antialias</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_antialias</span>(<span class="self">self</span>.<span class="number">0</span>))
         }
     }
 
@@ -1987,7 +2062,7 @@
     <span class="doccomment">/// The default fill rule is FillRule::Winding.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_fill_rule</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fill_rule</span> : <span class="ident">FillRule</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_set_fill_rule</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">fill_rule</span>);
+            <span class="ident">ffi</span>::<span class="ident">cairo_set_fill_rule</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">fill_rule</span>.<span class="ident">into</span>());
         }
         <span class="self">self</span>.<span class="ident">ensure_status</span>();
     }
@@ -1995,7 +2070,7 @@
     <span class="doccomment">/// Gets the current fill rule, as set by Context::set_fill_rule().</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_fill_rule</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FillRule</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_get_fill_rule</span>(<span class="self">self</span>.<span class="number">0</span>)
+            <span class="ident">FillRule</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_fill_rule</span>(<span class="self">self</span>.<span class="number">0</span>))
         }
     }
 
@@ -2009,7 +2084,7 @@
     <span class="doccomment">/// The default line cap style is LineCap::Butt.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_line_cap</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">arg</span>: <span class="ident">LineCap</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_set_line_cap</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">arg</span>)
+            <span class="ident">ffi</span>::<span class="ident">cairo_set_line_cap</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">arg</span>.<span class="ident">into</span>())
         }
         <span class="self">self</span>.<span class="ident">ensure_status</span>();
     }
@@ -2017,7 +2092,7 @@
     <span class="doccomment">/// Gets the current line cap style, as set by Context::set_line_cap().</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_line_cap</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">LineCap</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_get_line_cap</span>(<span class="self">self</span>.<span class="number">0</span>)
+            <span class="ident">LineCap</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_line_cap</span>(<span class="self">self</span>.<span class="number">0</span>))
         }
     }
 
@@ -2031,7 +2106,7 @@
     <span class="doccomment">/// The default line join style is LineJoin::Miter.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_line_join</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">arg</span>: <span class="ident">LineJoin</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_set_line_join</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">arg</span>)
+            <span class="ident">ffi</span>::<span class="ident">cairo_set_line_join</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">arg</span>.<span class="ident">into</span>())
         }
         <span class="self">self</span>.<span class="ident">ensure_status</span>();
     }
@@ -2039,7 +2114,7 @@
     <span class="doccomment">/// Gets the current line join style, as set by Context::set_line_join().</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_line_join</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">LineJoin</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_get_line_join</span>(<span class="self">self</span>.<span class="number">0</span>)
+            <span class="ident">LineJoin</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_line_join</span>(<span class="self">self</span>.<span class="number">0</span>))
         }
     }
 
@@ -2107,13 +2182,13 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_operator</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">op</span>: <span class="ident">Operator</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_set_operator</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">op</span>);
+            <span class="ident">ffi</span>::<span class="ident">cairo_set_operator</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">op</span>.<span class="ident">into</span>());
         }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_operator</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Operator</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_get_operator</span>(<span class="self">self</span>.<span class="number">0</span>)
+            <span class="ident">Operator</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_get_operator</span>(<span class="self">self</span>.<span class="number">0</span>))
         }
     }
 
@@ -2228,7 +2303,7 @@
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">rectangle_list</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_copy_clip_rectangle_list</span>(<span class="self">self</span>.<span class="number">0</span>);
 
-            (<span class="kw-2">*</span><span class="ident">rectangle_list</span>).<span class="ident">status</span>.<span class="ident">ensure_valid</span>();
+            <span class="ident">Status</span>::<span class="ident">from</span>((<span class="kw-2">*</span><span class="ident">rectangle_list</span>).<span class="ident">status</span>).<span class="ident">ensure_valid</span>();
 
             <span class="ident">RectangleList</span> {
                 <span class="ident">ptr</span>: <span class="ident">rectangle_list</span>,
@@ -2568,7 +2643,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select_font_face</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">family</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">slant</span>: <span class="ident">FontSlant</span>, <span class="ident">weight</span>: <span class="ident">FontWeight</span>) {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">family</span> <span class="op">=</span> <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">family</span>).<span class="ident">unwrap</span>();
-            <span class="ident">ffi</span>::<span class="ident">cairo_select_font_face</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">family</span>.<span class="ident">as_ptr</span>(), <span class="ident">slant</span>, <span class="ident">weight</span>)
+            <span class="ident">ffi</span>::<span class="ident">cairo_select_font_face</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">family</span>.<span class="ident">as_ptr</span>(), <span class="ident">slant</span>.<span class="ident">into</span>(), <span class="ident">weight</span>.<span class="ident">into</span>())
         }
     }
 
@@ -2701,7 +2776,7 @@
                                         <span class="ident">glyphs</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">c_int</span>,
                                         <span class="ident">clusters</span>.<span class="ident">as_ptr</span>(),
                                         <span class="ident">clusters</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">c_int</span>,
-                                        <span class="ident">cluster_flags</span>)
+                                        <span class="ident">cluster_flags</span>.<span class="ident">into</span>())
         }
     }
 
@@ -3066,6 +3141,41 @@
             <span class="ident">ffi</span>::<span class="ident">cairo_rel_move_to</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">dx</span>, <span class="ident">dy</span>)
         }
     }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path_extents</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>, <span class="ident">f64</span>, <span class="ident">f64</span>) {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x1</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="number">0.0</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">y1</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="number">0.0</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x2</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="number">0.0</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">y2</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="number">0.0</span>;
+
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">cairo_path_extents</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">x1</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">y1</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">x2</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">y2</span>);
+        }
+        (<span class="ident">x1</span>, <span class="ident">y1</span>, <span class="ident">x2</span>, <span class="ident">y2</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v1_16&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tag_begin</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tag_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">attributes</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">tag_name</span> <span class="op">=</span> <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">tag_name</span>).<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">attributes</span> <span class="op">=</span> <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">attributes</span>).<span class="ident">unwrap</span>();
+            <span class="ident">ffi</span>::<span class="ident">cairo_tag_begin</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">tag_name</span>.<span class="ident">as_ptr</span>(), <span class="ident">attributes</span>.<span class="ident">as_ptr</span>())
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v1_16&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tag_end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tag_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">tag_name</span> <span class="op">=</span> <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">tag_name</span>).<span class="ident">unwrap</span>();
+            <span class="ident">ffi</span>::<span class="ident">cairo_tag_end</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">tag_name</span>.<span class="ident">as_ptr</span>())
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Context</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Context&quot;</span>)
+    }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -3073,7 +3183,7 @@
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> ::<span class="ident">image_surface</span>::{<span class="ident">ImageSurface</span>};
     <span class="kw">use</span> ::<span class="ident">patterns</span>::{<span class="ident">LinearGradient</span>};
-    <span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">enums</span>::{<span class="ident">Format</span>};
+    <span class="kw">use</span> ::<span class="ident">enums</span>::{<span class="ident">Format</span>};
 
     <span class="kw">fn</span> <span class="ident">create_ctx</span>() <span class="op">-&gt;</span> <span class="ident">Context</span> {
         <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="ident">ImageSurface</span>::<span class="ident">create</span>(<span class="ident">Format</span>::<span class="ident">ARgb32</span>, <span class="number">10</span>, <span class="number">10</span>).<span class="ident">unwrap</span>();
@@ -3093,5 +3203,5 @@
         <span class="ident">ctx</span>.<span class="ident">set_source</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">pattern</span>);
     }
 }
-</pre>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "cairo";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "cairo";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

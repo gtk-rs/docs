@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../gtk/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -286,7 +286,19 @@
 <span id="286">286</span>
 <span id="287">287</span>
 <span id="288">288</span>
-</pre><pre class="rust ">
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2013-2018, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
@@ -342,26 +354,31 @@
 <span class="doccomment">//! and run the main event loop:</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```no_run</span>
-<span class="doccomment">//! # extern crate gtk;</span>
-<span class="doccomment">//! # use gtk::prelude::*;</span>
-<span class="doccomment">//! # use gtk::{Window, WindowType};</span>
+<span class="doccomment">//! extern crate gtk;</span>
+<span class="doccomment">//! extern crate gio;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // To import all needed traits.</span>
+<span class="doccomment">//! use gtk::prelude::*;</span>
+<span class="doccomment">//! use gio::prelude::*;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! use std::env;</span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! fn main() {</span>
-<span class="doccomment">//!     gtk::init().unwrap();</span>
-<span class="doccomment">//!     // Create the main window.</span>
-<span class="doccomment">//!     let window = Window::new(WindowType::Toplevel);</span>
-<span class="doccomment">//!     // UI initialization.</span>
-<span class="doccomment">//!     // ...</span>
-<span class="doccomment">//!     // Don&#39;t forget to make all widgets visible.</span>
-<span class="doccomment">//!     window.show_all();</span>
-<span class="doccomment">//!     // Handle closing of the window.</span>
-<span class="doccomment">//!     window.connect_delete_event(|_, _| {</span>
-<span class="doccomment">//!         // Stop the main loop.</span>
-<span class="doccomment">//!         gtk::main_quit();</span>
-<span class="doccomment">//!         // Let the default handler destroy the window.</span>
-<span class="doccomment">//!         Inhibit(false)</span>
+<span class="doccomment">//!     let uiapp = gtk::Application::new(&quot;org.gtkrsnotes.demo&quot;,</span>
+<span class="doccomment">//!                                       gio::ApplicationFlags::FLAGS_NONE)</span>
+<span class="doccomment">//!                                  .expect(&quot;Application::new failed&quot;);</span>
+<span class="doccomment">//!     uiapp.connect_activate(|app| {</span>
+<span class="doccomment">//!         // We create the main window.</span>
+<span class="doccomment">//!         let win = gtk::ApplicationWindow::new(app);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!         // Then we set its size and a title.</span>
+<span class="doccomment">//!         win.set_default_size(320, 200);</span>
+<span class="doccomment">//!         win.set_title(&quot;Basic example&quot;);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!         // Don&#39;t forget to make all widgets visible.</span>
+<span class="doccomment">//!         win.show_all();</span>
 <span class="doccomment">//!     });</span>
-<span class="doccomment">//!     // Run the main loop.</span>
-<span class="doccomment">//!     gtk::main();</span>
+<span class="doccomment">//!     uiapp.run(&amp;env::args().collect::&lt;Vec&lt;_&gt;&gt;());</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
@@ -401,9 +418,8 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ## Library versions</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! By default this crate provides only GTK+ 3.4 APIs. You can access more</span>
-<span class="doccomment">//! modern APIs by selecting one of the following features: `v3_6`, `v3_8`,</span>
-<span class="doccomment">//! `v3_10`, `v3_12`, `v3_14`, `v3_16`.</span>
+<span class="doccomment">//! By default this crate provides only GTK+ 3.14 APIs. You can access more</span>
+<span class="doccomment">//! modern APIs by selecting one of the following features: `v3_14`, `v3_16`, etc.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! `Cargo.toml` example:</span>
 <span class="doccomment">//!</span>
@@ -454,6 +470,7 @@
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gobject_sys</span> <span class="kw">as</span> <span class="ident">gobject_ffi</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gtk_sys</span> <span class="kw">as</span> <span class="ident">ffi</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">cairo_sys</span> <span class="kw">as</span> <span class="ident">cairo_ffi</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pango_sys</span> <span class="kw">as</span> <span class="ident">pango_ffi</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">glib</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gio</span>;
@@ -461,6 +478,7 @@
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">gdk_pixbuf</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">cairo</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pango</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">atk</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;futures&quot;</span>)]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">fragile</span>;
@@ -502,23 +520,25 @@
 <span class="kw">mod</span> <span class="ident">app_chooser</span>;
 <span class="kw">mod</span> <span class="ident">application</span>;
 <span class="kw">mod</span> <span class="ident">application_window</span>;
-<span class="kw">mod</span> <span class="ident">assistant</span>;
 <span class="kw">mod</span> <span class="ident">buildable</span>;
 <span class="kw">mod</span> <span class="ident">builder</span>;
 <span class="kw">mod</span> <span class="ident">border</span>;
+<span class="kw">mod</span> <span class="ident">cell_renderer_pixbuf</span>;
 <span class="kw">mod</span> <span class="ident">clipboard</span>;
 <span class="kw">mod</span> <span class="ident">color_button</span>;
 <span class="kw">mod</span> <span class="ident">color_chooser</span>;
+<span class="kw">mod</span> <span class="ident">combo_box</span>;
 <span class="kw">mod</span> <span class="ident">dialog</span>;
 <span class="kw">mod</span> <span class="ident">drag_context</span>;
 <span class="kw">mod</span> <span class="ident">entry_buffer</span>;
-<span class="kw">mod</span> <span class="ident">entry_completion</span>;
 <span class="kw">mod</span> <span class="ident">enums</span>;
 <span class="kw">mod</span> <span class="ident">file_chooser_dialog</span>;
 <span class="kw">mod</span> <span class="ident">fixed</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_18&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
+<span class="kw">mod</span> <span class="ident">flow_box</span>;
 <span class="kw">mod</span> <span class="ident">im_context_simple</span>;
 <span class="kw">mod</span> <span class="ident">invisible</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_10&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_16&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
 <span class="kw">mod</span> <span class="ident">list_box</span>;
 <span class="kw">mod</span> <span class="ident">list_store</span>;
 <span class="kw">mod</span> <span class="ident">menu</span>;
@@ -536,6 +556,8 @@
 <span class="kw">mod</span> <span class="ident">recent_chooser_dialog</span>;
 <span class="kw">mod</span> <span class="ident">recent_data</span>;
 <span class="kw">mod</span> <span class="ident">requisition</span>;
+<span class="kw">mod</span> <span class="ident">response_type</span>;
+<span class="kw">mod</span> <span class="ident">selection_data</span>;
 <span class="kw">mod</span> <span class="ident">signal</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
 <span class="kw">mod</span> <span class="ident">socket</span>;
@@ -545,6 +567,7 @@
 <span class="kw">mod</span> <span class="ident">text_buffer</span>;
 <span class="kw">mod</span> <span class="ident">text_iter</span>;
 <span class="kw">mod</span> <span class="ident">tree_model_filter</span>;
+<span class="kw">mod</span> <span class="ident">tree_model_sort</span>;
 <span class="kw">mod</span> <span class="ident">tree_row_reference</span>;
 <span class="kw">mod</span> <span class="ident">tree_sortable</span>;
 <span class="kw">mod</span> <span class="ident">tree_path</span>;
@@ -571,9 +594,10 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">page_range</span>::<span class="ident">PageRange</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">recent_data</span>::<span class="ident">RecentData</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">requisition</span>::<span class="ident">Requisition</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">response_type</span>::<span class="ident">ResponseType</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">socket</span>::<span class="ident">Socket</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">target_entry</span>::<span class="ident">TargetEntry</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">tree_sortable</span>::<span class="ident">SortColumn</span>;
-</pre>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "gtk";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "gtk";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
