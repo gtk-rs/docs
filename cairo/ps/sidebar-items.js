@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["get_levels",""],["level_to_string",""]],"struct":[["File","PostScript file surface."],["RefWriter",""],["Writer","Writer SVG surface, lets you render to any type implementing `io::Write`."]]});
+initSidebarItems({"fn":[["get_levels",""],["level_to_string",""]],"struct":[["File","A PostScript surface that writes to a file"],["RefWriter","A PostScript surface that writes to a generic `io::Write` type (referencing variant)"],["Writer","A PostScript surface that writes to a generic `io::Write` type (owning variant)"]]});

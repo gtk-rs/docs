@@ -329,6 +329,26 @@
 <span id="329">329</span>
 <span id="330">330</span>
 <span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2013-2018, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -364,6 +384,26 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">windows</span>::<span class="ident">io</span>::{<span class="ident">RawSocket</span>, <span class="ident">AsRawSocket</span>, <span class="ident">IntoRawSocket</span>, <span class="ident">FromRawSocket</span>};
 
 <span class="kw">impl</span> <span class="ident">Socket</span> {
+    <span class="doccomment">/// Creates a new `Socket` from a native file descriptor</span>
+    <span class="doccomment">/// or winsock SOCKET handle.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This reads all the settings from the file descriptor so that</span>
+    <span class="doccomment">/// all properties should work. Note that the file descriptor</span>
+    <span class="doccomment">/// will be set to non-blocking mode, independent on the blocking</span>
+    <span class="doccomment">/// mode of the `Socket`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// On success, the returned `Socket` takes ownership of `fd`. On failure, the</span>
+    <span class="doccomment">/// caller must close `fd` themselves.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Since GLib 2.46, it is no longer a fatal error to call this on a non-socket</span>
+    <span class="doccomment">/// descriptor. Instead, a GError will be set with code `IOErrorEnum::Failed`</span>
+    <span class="doccomment">/// ## `fd`</span>
+    <span class="doccomment">/// a native socket file descriptor.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a `Socket` or `None` on error.</span>
+    <span class="doccomment">///  Free the returned object with `gobject::ObjectExt::unref`.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">unix</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new_from_fd</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">IntoRawFd</span><span class="op">&gt;</span>(<span class="ident">fd</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Socket</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">fd</span> <span class="op">=</span> <span class="ident">fd</span>.<span class="ident">into_raw_fd</span>();

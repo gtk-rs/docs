@@ -449,6 +449,19 @@
 <span id="449">449</span>
 <span id="450">450</span>
 <span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2018-2019, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -491,7 +504,7 @@
     }
 }
 
-<span class="doccomment">/// PDF file surface.</span>
+<span class="doccomment">/// A PDF surface that writes to a file</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">File</span> {
     <span class="ident">inner</span>: <span class="ident">Surface</span>,
@@ -642,7 +655,14 @@
 }
 
 
-<span class="doccomment">/// Writer PDF surface, lets you render to any type implementing `io::Write`.</span>
+<span class="doccomment">/// A PDF surface that writes to a generic `io::Write` type (owning variant)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The `Writer` takes ownership of the write object.</span>
+<span class="doccomment">/// Once you&#39;re done using the surface, you can obtain the write object</span>
+<span class="doccomment">/// back using the `finish()` method.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// If you would like the surface to reference the write object</span>
+<span class="doccomment">/// instead, use `RefWriter`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Writer</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span> {
     <span class="ident">writer</span>: <span class="ident">support</span>::<span class="ident">Writer</span><span class="op">&lt;</span><span class="ident">File</span>, <span class="ident">W</span><span class="op">&gt;</span>,
@@ -724,6 +744,13 @@
 }
 
 
+<span class="doccomment">/// A PDF surface that writes to a generic `io::Write` type (referencing variant)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The `RefWriter` references the write object,</span>
+<span class="doccomment">/// which is why a lifetime parameter is required.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// If you would like the surface to own the write object</span>
+<span class="doccomment">/// instead, use `Writer`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RefWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span> <span class="op">+</span> <span class="lifetime">&#39;w</span><span class="op">&gt;</span> {
     <span class="ident">writer</span>: <span class="ident">support</span>::<span class="ident">RefWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">File</span>, <span class="ident">W</span><span class="op">&gt;</span>,
@@ -741,8 +768,7 @@
     <span class="doccomment">/// use cairo::prelude::*;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let mut file = File::create(&quot;test.pdf&quot;).unwrap();</span>
-    <span class="doccomment">/// let surface = pdf::Stream::new(100.0, 100.0, |data|</span>
-    <span class="doccomment">///     file.write_all(data).map(|_| ()).map_err(|_| ()));</span>
+    <span class="doccomment">/// let surface = pdf::Writer::new(100.0, 100.0, file);</span>
     <span class="doccomment">/// let context = Context::new(&amp;surface);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // Draw things on the context.</span>
