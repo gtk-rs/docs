@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["get_versions",""],["version_to_string",""]],"struct":[["File","PDF file surface."],["RefWriter",""],["Writer","Writer PDF surface, lets you render to any type implementing `io::Write`."]]});
+initSidebarItems({"fn":[["get_versions",""],["version_to_string",""]],"struct":[["File","A PDF surface that writes to a file"],["RefWriter","A PDF surface that writes to a generic `io::Write` type (referencing variant)"],["Writer","A PDF surface that writes to a generic `io::Write` type (owning variant)"]]});

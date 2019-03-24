@@ -44,7 +44,6 @@ you don’t need it.</p>
 </div><h3 id='tymethod.get_header_bar' class='method'><code id='get_header_bar.v'>fn <a href='#tymethod.get_header_bar' class='fnname'>get_header_bar</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt;</code></h3><div class='docblock'><p>Returns the header bar of <code>self</code>. Note that the
 headerbar is only used by the dialog if the
 <code>Dialog:use-header-bar</code> property is <code>true</code>.</p>
-<p>Feature: <code>v3_12</code></p>
 <h1 id="returns-2" class="section-header"><a href="#returns-2">Returns</a></h1>
 <p>the header bar</p>
 </div><h3 id='tymethod.get_response_for_widget' class='method'><code id='get_response_for_widget.v'>fn <a href='#tymethod.get_response_for_widget' class='fnname'>get_response_for_widget</a>&lt;P:&nbsp;<a class="trait" href="../../gtk/prelude/trait.IsA.html" title="trait gtk::prelude::IsA">IsA</a>&lt;<a class="struct" href="../../gtk/struct.Widget.html" title="struct gtk::Widget">Widget</a>&gt;&gt;(&amp;self, widget: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>P) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a></code></h3><div class='docblock'><p>Gets the response id of a widget in the action area
@@ -86,14 +85,17 @@ post-run code won’t know whether the dialog was destroyed or not.</p>
 <p>After <code>DialogExt::run</code> returns, you are responsible for hiding or
 destroying the dialog if you wish to do so.</p>
 <p>Typical usage of this function might be:</p>
-<pre><code class="language-C">  gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+<pre><code class="language-C">  GtkWidget *dialog = gtk_dialog_new ();
+  // Set up dialog...
+
+  int result = gtk_dialog_run (GTK_DIALOG (dialog));
   switch (result)
     {
       case GTK_RESPONSE_ACCEPT:
-         do_application_specific_something ();
+         // do_application_specific_something ();
          break;
       default:
-         do_nothing_since_dialog_was_cancelled ();
+         // do_nothing_since_dialog_was_cancelled ();
          break;
     }
   gtk_widget_destroy (dialog);
