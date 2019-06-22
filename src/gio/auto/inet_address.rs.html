@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/inet_address.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>inet_address.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gio/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/inet_address.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>inet_address.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gio/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -465,23 +465,135 @@
 <span id="465">465</span>
 <span id="466">466</span>
 <span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// This file was generated by gir (https://github.com/gtk-rs/gir)</span>
 <span class="comment">// from gir-files (https://github.com/gtk-rs/gir-files)</span>
 <span class="comment">// DO NOT EDIT</span>
 
-<span class="kw">use</span> <span class="ident">SocketFamily</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">GString</span>;
+<span class="kw">use</span> <span class="ident">gio_sys</span>;
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">Cast</span>;
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">signal</span>::<span class="ident">SignalHandlerId</span>;
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">signal</span>::<span class="ident">connect_raw</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">signal</span>::<span class="ident">SignalHandlerId</span>;
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">glib_ffi</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">GString</span>;
+<span class="kw">use</span> <span class="ident">glib_sys</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">boxed</span>::<span class="ident">Box</span> <span class="kw">as</span> <span class="ident">Box_</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">transmute</span>;
+<span class="kw">use</span> <span class="ident">SocketFamily</span>;
 
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="doccomment">/// `InetAddress` represents an IPv4 or IPv6 internet address. Use</span>
@@ -498,10 +610,10 @@
     <span class="doccomment">/// # Implements</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`InetAddressExt`](trait.InetAddressExt.html), [`glib::object::ObjectExt`](../glib/object/trait.ObjectExt.html)</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InetAddress</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">ffi</span>::<span class="ident">GInetAddressClass</span>, <span class="ident">InetAddressClass</span><span class="op">&gt;</span>);
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InetAddress</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>, <span class="ident">gio_sys</span>::<span class="ident">GInetAddressClass</span>, <span class="ident">InetAddressClass</span><span class="op">&gt;</span>);
 
     <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">g_inet_address_get_type</span>(),
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_type</span>(),
     }
 }
 
@@ -517,9 +629,7 @@
     <span class="doccomment">/// for `family`.</span>
     <span class="doccomment">///  Free the returned object with `gobject::ObjectExt::unref`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_any</span>(<span class="ident">family</span>: <span class="ident">SocketFamily</span>) <span class="op">-&gt;</span> <span class="ident">InetAddress</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_new_any</span>(<span class="ident">family</span>.<span class="ident">to_glib</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_full</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_new_any</span>(<span class="ident">family</span>.<span class="ident">to_glib</span>())) }
     }
 
     <span class="doccomment">/// Parses `string` as an IP address and creates a new `InetAddress`.</span>
@@ -533,7 +643,9 @@
     <span class="doccomment">///  Free the returned object with `gobject::ObjectExt::unref`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_from_string</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">InetAddress</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_new_from_string</span>(<span class="ident">string</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_full</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_new_from_string</span>(
+                <span class="ident">string</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -547,9 +659,7 @@
     <span class="doccomment">/// for `family`.</span>
     <span class="doccomment">///  Free the returned object with `gobject::ObjectExt::unref`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_loopback</span>(<span class="ident">family</span>: <span class="ident">SocketFamily</span>) <span class="op">-&gt;</span> <span class="ident">InetAddress</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_new_loopback</span>(<span class="ident">family</span>.<span class="ident">to_glib</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_full</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_new_loopback</span>(<span class="ident">family</span>.<span class="ident">to_glib</span>())) }
     }
 }
 
@@ -564,368 +674,482 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`InetAddress`](struct.InetAddress.html)</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">InetAddressExt</span>: <span class="lifetime">&#39;static</span> {
-    <span class="doccomment">/// Checks if two `InetAddress` instances are equal, e.g. the same address.</span>
-    <span class="doccomment">/// ## `other_address`</span>
-    <span class="doccomment">/// Another `InetAddress`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` and `other_address` are equal, `false` otherwise.</span>
     <span class="kw">fn</span> <span class="ident">equal</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other_address</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Gets `self`&#39;s family</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `self`&#39;s family</span>
     <span class="kw">fn</span> <span class="ident">get_family</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">SocketFamily</span>;
 
-    <span class="doccomment">/// Tests whether `self` is the &quot;any&quot; address for its family.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` is the &quot;any&quot; address for its family.</span>
     <span class="kw">fn</span> <span class="ident">get_is_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Tests whether `self` is a link-local address (that is, if it</span>
-    <span class="doccomment">/// identifies a host on a local network that is not connected to the</span>
-    <span class="doccomment">/// Internet).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` is a link-local address.</span>
     <span class="kw">fn</span> <span class="ident">get_is_link_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Tests whether `self` is the loopback address for its family.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` is the loopback address for its family.</span>
     <span class="kw">fn</span> <span class="ident">get_is_loopback</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Tests whether `self` is a global multicast address.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` is a global multicast address.</span>
     <span class="kw">fn</span> <span class="ident">get_is_mc_global</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Tests whether `self` is a link-local multicast address.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` is a link-local multicast address.</span>
     <span class="kw">fn</span> <span class="ident">get_is_mc_link_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Tests whether `self` is a node-local multicast address.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` is a node-local multicast address.</span>
     <span class="kw">fn</span> <span class="ident">get_is_mc_node_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Tests whether `self` is an organization-local multicast address.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` is an organization-local multicast address.</span>
     <span class="kw">fn</span> <span class="ident">get_is_mc_org_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Tests whether `self` is a site-local multicast address.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` is a site-local multicast address.</span>
     <span class="kw">fn</span> <span class="ident">get_is_mc_site_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Tests whether `self` is a multicast address.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` is a multicast address.</span>
     <span class="kw">fn</span> <span class="ident">get_is_multicast</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Tests whether `self` is a site-local address such as 10.0.0.1</span>
-    <span class="doccomment">/// (that is, the address identifies a host on a local network that can</span>
-    <span class="doccomment">/// not be reached directly from the Internet, but which may have</span>
-    <span class="doccomment">/// outgoing Internet connectivity via a NAT or firewall).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` is a site-local address.</span>
     <span class="kw">fn</span> <span class="ident">get_is_site_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Gets the size of the native raw binary address for `self`. This</span>
-    <span class="doccomment">/// is the size of the data that you get from `InetAddress::to_bytes`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the number of bytes used for the native version of `self`.</span>
     <span class="kw">fn</span> <span class="ident">get_native_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span>;
 
-    <span class="doccomment">/// Converts `self` to string form.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// a representation of `self` as a string, which should be</span>
-    <span class="doccomment">/// freed after use.</span>
     <span class="kw">fn</span> <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">GString</span>;
 
     <span class="comment">//fn get_property_bytes(&amp;self) -&gt; /*Unimplemented*/Fundamental: Pointer;</span>
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_any_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_is_any_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_link_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_is_link_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_loopback_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_is_loopback_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_global_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_global_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_link_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_link_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_node_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_node_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_org_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_org_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_site_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_site_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_multicast_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_is_multicast_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_site_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_is_site_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;&gt;</span> <span class="ident">InetAddressExt</span> <span class="kw">for</span> <span class="ident">O</span> {
     <span class="kw">fn</span> <span class="ident">equal</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other_address</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_equal</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">other_address</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_equal</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">other_address</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_family</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">SocketFamily</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_family</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_family</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_is_any</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_is_any</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_link_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_is_link_local</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_is_link_local</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_loopback</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_is_loopback</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_is_loopback</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_mc_global</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_is_mc_global</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_is_mc_global</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_mc_link_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_is_mc_link_local</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_is_mc_link_local</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_mc_node_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_is_mc_node_local</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_is_mc_node_local</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_mc_org_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_is_mc_org_local</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_is_mc_org_local</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_mc_site_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_is_mc_site_local</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_is_mc_site_local</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_multicast</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_is_multicast</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_is_multicast</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_site_local</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_get_is_site_local</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_is_site_local</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_native_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">g_inet_address_get_native_size</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>)
-        }
+        <span class="kw">unsafe</span> { <span class="ident">gio_sys</span>::<span class="ident">g_inet_address_get_native_size</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
     <span class="kw">fn</span> <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">GString</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">g_inet_address_to_string</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_full</span>(<span class="ident">gio_sys</span>::<span class="ident">g_inet_address_to_string</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="comment">//fn get_property_bytes(&amp;self) -&gt; /*Unimplemented*/Fundamental: Pointer {</span>
     <span class="comment">//    unsafe {</span>
     <span class="comment">//        let mut value = Value::from_type(&lt;/*Unknown type*/ as StaticType&gt;::static_type());</span>
-    <span class="comment">//        gobject_ffi::g_object_get_property(self.to_glib_none().0 as *mut gobject_ffi::GObject, b&quot;bytes\0&quot;.as_ptr() as *const _, value.to_glib_none_mut().0);</span>
+    <span class="comment">//        gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b&quot;bytes\0&quot;.as_ptr() as *const _, value.to_glib_none_mut().0);</span>
     <span class="comment">//        value.get().unwrap()</span>
     <span class="comment">//    }</span>
     <span class="comment">//}</span>
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_any_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_is_any_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_any_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::is-any\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_any_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::is-any\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_any_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_link_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_is_link_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_link_local_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::is-link-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_link_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::is-link-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_is_link_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_loopback_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_is_loopback_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_loopback_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::is-loopback\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_loopback_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::is-loopback\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_loopback_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_global_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_global_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_mc_global_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::is-mc-global\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_mc_global_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::is-mc-global\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_is_mc_global_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_link_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_link_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_mc_link_local_trampoline</span><span class="op">&lt;</span>
+            <span class="ident">P</span>,
+            <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::is-mc-link-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_mc_link_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::is-mc-link-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_is_mc_link_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_node_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_node_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_mc_node_local_trampoline</span><span class="op">&lt;</span>
+            <span class="ident">P</span>,
+            <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::is-mc-node-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_mc_node_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::is-mc-node-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_is_mc_node_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_org_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_org_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_mc_org_local_trampoline</span><span class="op">&lt;</span>
+            <span class="ident">P</span>,
+            <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::is-mc-org-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_mc_org_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::is-mc-org-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_is_mc_org_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_site_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_is_mc_site_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_mc_site_local_trampoline</span><span class="op">&lt;</span>
+            <span class="ident">P</span>,
+            <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::is-mc-site-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_mc_site_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::is-mc-site-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_is_mc_site_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_multicast_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_is_multicast_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_multicast_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::is-multicast\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_multicast_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::is-multicast\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_is_multicast_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_is_site_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_is_site_local_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_site_local_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GInetAddress</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::is-site-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_is_site_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::is-site-local\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_is_site_local_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_any_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_link_local_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_loopback_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_mc_global_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_mc_link_local_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_mc_node_local_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_mc_org_local_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_mc_site_local_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_multicast_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_is_site_local_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GInetAddress</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">InetAddress</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">InetAddress</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">InetAddress</span> {

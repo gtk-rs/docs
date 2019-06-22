@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/tls_connection.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tls_connection.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gio/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/tls_connection.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tls_connection.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gio/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -555,49 +555,28 @@
 <span id="555">555</span>
 <span id="556">556</span>
 <span id="557">557</span>
-<span id="558">558</span>
-<span id="559">559</span>
-<span id="560">560</span>
-<span id="561">561</span>
-<span id="562">562</span>
-<span id="563">563</span>
-<span id="564">564</span>
-<span id="565">565</span>
-<span id="566">566</span>
-<span id="567">567</span>
-<span id="568">568</span>
-<span id="569">569</span>
-<span id="570">570</span>
-<span id="571">571</span>
-<span id="572">572</span>
-<span id="573">573</span>
-<span id="574">574</span>
-<span id="575">575</span>
-<span id="576">576</span>
-<span id="577">577</span>
-<span id="578">578</span>
-<span id="579">579</span>
-<span id="580">580</span>
-<span id="581">581</span>
-<span id="582">582</span>
-<span id="583">583</span>
-<span id="584">584</span>
-<span id="585">585</span>
-<span id="586">586</span>
-<span id="587">587</span>
-<span id="588">588</span>
-<span id="589">589</span>
-<span id="590">590</span>
-<span id="591">591</span>
-<span id="592">592</span>
-<span id="593">593</span>
-<span id="594">594</span>
-<span id="595">595</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// This file was generated by gir (https://github.com/gtk-rs/gir)</span>
 <span class="comment">// from gir-files (https://github.com/gtk-rs/gir-files)</span>
 <span class="comment">// DO NOT EDIT</span>
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;futures&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">future</span>;
+<span class="kw">use</span> <span class="ident">gio_sys</span>;
+<span class="kw">use</span> <span class="ident">glib</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">Cast</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">signal</span>::<span class="ident">connect_raw</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">signal</span>::<span class="ident">SignalHandlerId</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">StaticType</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">Value</span>;
+<span class="kw">use</span> <span class="ident">glib_sys</span>;
+<span class="kw">use</span> <span class="ident">gobject_sys</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">boxed</span>::<span class="ident">Box</span> <span class="kw">as</span> <span class="ident">Box_</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">transmute</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
 <span class="kw">use</span> <span class="ident">Cancellable</span>;
 <span class="kw">use</span> <span class="ident">Error</span>;
 <span class="kw">use</span> <span class="ident">IOStream</span>;
@@ -606,23 +585,6 @@
 <span class="kw">use</span> <span class="ident">TlsDatabase</span>;
 <span class="kw">use</span> <span class="ident">TlsInteraction</span>;
 <span class="kw">use</span> <span class="ident">TlsRehandshakeMode</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;futures&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">futures_core</span>;
-<span class="kw">use</span> <span class="ident">glib</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">StaticType</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">Value</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">Cast</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">signal</span>::<span class="ident">SignalHandlerId</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">signal</span>::<span class="ident">connect_raw</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">glib_ffi</span>;
-<span class="kw">use</span> <span class="ident">gobject_ffi</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">boxed</span>::<span class="ident">Box</span> <span class="kw">as</span> <span class="ident">Box_</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">transmute</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
 
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="doccomment">/// `TlsConnection` is the base TLS connection class type, which wraps</span>
@@ -635,10 +597,10 @@
     <span class="doccomment">/// # Implements</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`TlsConnectionExt`](trait.TlsConnectionExt.html), [`IOStreamExt`](trait.IOStreamExt.html), [`glib::object::ObjectExt`](../glib/object/trait.ObjectExt.html)</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TlsConnection</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GTlsConnection</span>, <span class="ident">ffi</span>::<span class="ident">GTlsConnectionClass</span>, <span class="ident">TlsConnectionClass</span><span class="op">&gt;</span>) @<span class="ident">extends</span> <span class="ident">IOStream</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TlsConnection</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">gio_sys</span>::<span class="ident">GTlsConnection</span>, <span class="ident">gio_sys</span>::<span class="ident">GTlsConnectionClass</span>, <span class="ident">TlsConnectionClass</span><span class="op">&gt;</span>) @<span class="ident">extends</span> <span class="ident">IOStream</span>;
 
     <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">g_tls_connection_get_type</span>(),
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_get_type</span>(),
     }
 }
 
@@ -650,275 +612,59 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`TlsClientConnection`](struct.TlsClientConnection.html), [`TlsConnection`](struct.TlsConnection.html), [`TlsServerConnection`](struct.TlsServerConnection.html)</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TlsConnectionExt</span>: <span class="lifetime">&#39;static</span> {
-    <span class="doccomment">/// Used by `TlsConnection` implementations to emit the</span>
-    <span class="doccomment">/// `TlsConnection::accept-certificate` signal.</span>
-    <span class="doccomment">/// ## `peer_cert`</span>
-    <span class="doccomment">/// the peer&#39;s `TlsCertificate`</span>
-    <span class="doccomment">/// ## `errors`</span>
-    <span class="doccomment">/// the problems with `peer_cert`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if one of the signal handlers has returned</span>
-    <span class="doccomment">///  `true` to accept `peer_cert`</span>
-    <span class="kw">fn</span> <span class="ident">emit_accept_certificate</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peer_cert</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>, <span class="ident">errors</span>: <span class="ident">TlsCertificateFlags</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
+    <span class="kw">fn</span> <span class="ident">emit_accept_certificate</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span><span class="op">&gt;&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">peer_cert</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>,
+        <span class="ident">errors</span>: <span class="ident">TlsCertificateFlags</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Gets `self`&#39;s certificate, as set by</span>
-    <span class="doccomment">/// `TlsConnectionExt::set_certificate`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `self`&#39;s certificate, or `None`</span>
     <span class="kw">fn</span> <span class="ident">get_certificate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Gets the certificate database that `self` uses to verify</span>
-    <span class="doccomment">/// peer certificates. See `TlsConnectionExt::set_database`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the certificate database that `self` uses or `None`</span>
     <span class="kw">fn</span> <span class="ident">get_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TlsDatabase</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Get the object that will be used to interact with the user. It will be used</span>
-    <span class="doccomment">/// for things like prompting the user for passwords. If `None` is returned, then</span>
-    <span class="doccomment">/// no user interaction will occur for this connection.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The interaction object.</span>
     <span class="kw">fn</span> <span class="ident">get_interaction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TlsInteraction</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Gets `self`&#39;s peer&#39;s certificate after the handshake has completed.</span>
-    <span class="doccomment">/// (It is not set during the emission of</span>
-    <span class="doccomment">/// `TlsConnection::accept-certificate`.)</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `self`&#39;s peer&#39;s certificate, or `None`</span>
     <span class="kw">fn</span> <span class="ident">get_peer_certificate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Gets the errors associated with validating `self`&#39;s peer&#39;s</span>
-    <span class="doccomment">/// certificate, after the handshake has completed. (It is not set</span>
-    <span class="doccomment">/// during the emission of `TlsConnection::accept-certificate`.)</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `self`&#39;s peer&#39;s certificate errors</span>
     <span class="kw">fn</span> <span class="ident">get_peer_certificate_errors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">TlsCertificateFlags</span>;
 
-    <span class="doccomment">/// Gets `self` rehandshaking mode. See</span>
-    <span class="doccomment">/// `TlsConnectionExt::set_rehandshake_mode` for details.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `self`&#39;s rehandshaking mode</span>
     <span class="kw">fn</span> <span class="ident">get_rehandshake_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">TlsRehandshakeMode</span>;
 
-    <span class="doccomment">/// Tests whether or not `self` expects a proper TLS close notification</span>
-    <span class="doccomment">/// when the connection is closed. See</span>
-    <span class="doccomment">/// `TlsConnectionExt::set_require_close_notify` for details.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if `self` requires a proper TLS close</span>
-    <span class="doccomment">/// notification.</span>
     <span class="kw">fn</span> <span class="ident">get_require_close_notify</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Attempts a TLS handshake on `self`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// On the client side, it is never necessary to call this method;</span>
-    <span class="doccomment">/// although the connection needs to perform a handshake after</span>
-    <span class="doccomment">/// connecting (or after sending a &quot;STARTTLS&quot;-type command) and may</span>
-    <span class="doccomment">/// need to rehandshake later if the server requests it,</span>
-    <span class="doccomment">/// `TlsConnection` will handle this for you automatically when you try</span>
-    <span class="doccomment">/// to send or receive data on the connection. However, you can call</span>
-    <span class="doccomment">/// `TlsConnectionExt::handshake` manually if you want to know for sure</span>
-    <span class="doccomment">/// whether the initial handshake succeeded or failed (as opposed to</span>
-    <span class="doccomment">/// just immediately trying to write to `self`&#39;s output stream, in which</span>
-    <span class="doccomment">/// case if it fails, it may not be possible to tell if it failed</span>
-    <span class="doccomment">/// before or after completing the handshake).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Likewise, on the server side, although a handshake is necessary at</span>
-    <span class="doccomment">/// the beginning of the communication, you do not need to call this</span>
-    <span class="doccomment">/// function explicitly unless you want clearer error reporting.</span>
-    <span class="doccomment">/// However, you may call `TlsConnectionExt::handshake` later on to</span>
-    <span class="doccomment">/// rehandshake, if TLS 1.2 or older is in use. With TLS 1.3, the</span>
-    <span class="doccomment">/// behavior is undefined but guaranteed to be reasonable and</span>
-    <span class="doccomment">/// nondestructive, so most older code should be expected to continue to</span>
-    <span class="doccomment">/// work without changes.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `TlsConnection::accept_certificate` may be emitted during the</span>
-    <span class="doccomment">/// handshake.</span>
-    <span class="doccomment">/// ## `cancellable`</span>
-    <span class="doccomment">/// a `Cancellable`, or `None`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// success or failure</span>
-    <span class="kw">fn</span> <span class="ident">handshake</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Cancellable</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>, <span class="ident">Q</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">P</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cancellable</span>: <span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">handshake</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Cancellable</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cancellable</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">P</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Asynchronously performs a TLS handshake on `self`. See</span>
-    <span class="doccomment">/// `TlsConnectionExt::handshake` for more information.</span>
-    <span class="doccomment">/// ## `io_priority`</span>
-    <span class="doccomment">/// the [I/O priority][io-priority] of the request</span>
-    <span class="doccomment">/// ## `cancellable`</span>
-    <span class="doccomment">/// a `Cancellable`, or `None`</span>
-    <span class="doccomment">/// ## `callback`</span>
-    <span class="doccomment">/// callback to call when the handshake is complete</span>
-    <span class="doccomment">/// ## `user_data`</span>
-    <span class="doccomment">/// the data to pass to the callback function</span>
-    <span class="kw">fn</span> <span class="ident">handshake_async</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Cancellable</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>, <span class="ident">Q</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">P</span><span class="op">&gt;&gt;</span>, <span class="ident">R</span>: <span class="ident">FnOnce</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">io_priority</span>: <span class="ident">glib</span>::<span class="ident">Priority</span>, <span class="ident">cancellable</span>: <span class="ident">Q</span>, <span class="ident">callback</span>: <span class="ident">R</span>);
+    <span class="kw">fn</span> <span class="ident">handshake_async</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Cancellable</span><span class="op">&gt;</span>, <span class="ident">Q</span>: <span class="ident">FnOnce</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">io_priority</span>: <span class="ident">glib</span>::<span class="ident">Priority</span>,
+        <span class="ident">cancellable</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">P</span><span class="op">&gt;</span>,
+        <span class="ident">callback</span>: <span class="ident">Q</span>,
+    );
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;futures&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">handshake_async_future</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">io_priority</span>: <span class="ident">glib</span>::<span class="ident">Priority</span>) <span class="op">-&gt;</span> <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">futures_core</span>::<span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="self">Self</span>, ()), <span class="ident">Error</span> <span class="op">=</span> (<span class="self">Self</span>, <span class="ident">Error</span>)<span class="op">&gt;&gt;</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Clone</span>;
+    <span class="kw">fn</span> <span class="ident">handshake_async_future</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">io_priority</span>: <span class="ident">glib</span>::<span class="ident">Priority</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">future</span>::<span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;&gt;</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Unpin</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// This sets the certificate that `self` will present to its peer</span>
-    <span class="doccomment">/// during the TLS handshake. For a `TlsServerConnection`, it is</span>
-    <span class="doccomment">/// mandatory to set this, and that will normally be done at construct</span>
-    <span class="doccomment">/// time.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For a `TlsClientConnection`, this is optional. If a handshake fails</span>
-    <span class="doccomment">/// with `TlsError::CertificateRequired`, that means that the server</span>
-    <span class="doccomment">/// requires a certificate, and if you try connecting again, you should</span>
-    <span class="doccomment">/// call this method first. You can call</span>
-    <span class="doccomment">/// `TlsClientConnection::get_accepted_cas` on the failed connection</span>
-    <span class="doccomment">/// to get a list of Certificate Authorities that the server will</span>
-    <span class="doccomment">/// accept certificates from.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// (It is also possible that a server will allow the connection with</span>
-    <span class="doccomment">/// or without a certificate; in that case, if you don&#39;t provide a</span>
-    <span class="doccomment">/// certificate, you can tell that the server requested one by the fact</span>
-    <span class="doccomment">/// that `TlsClientConnection::get_accepted_cas` will return</span>
-    <span class="doccomment">/// non-`None`.)</span>
-    <span class="doccomment">/// ## `certificate`</span>
-    <span class="doccomment">/// the certificate to use for `self`</span>
     <span class="kw">fn</span> <span class="ident">set_certificate</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">certificate</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>);
 
-    <span class="doccomment">/// Sets the certificate database that is used to verify peer certificates.</span>
-    <span class="doccomment">/// This is set to the default database by default. See</span>
-    <span class="doccomment">/// `TlsBackend::get_default_database`. If set to `None`, then</span>
-    <span class="doccomment">/// peer certificate validation will always set the</span>
-    <span class="doccomment">/// `TlsCertificateFlags::UnknownCa` error (meaning</span>
-    <span class="doccomment">/// `TlsConnection::accept-certificate` will always be emitted on</span>
-    <span class="doccomment">/// client-side connections, unless that bit is not set in</span>
-    <span class="doccomment">/// `TlsClientConnection:validation-flags`).</span>
-    <span class="doccomment">/// ## `database`</span>
-    <span class="doccomment">/// a `TlsDatabase`</span>
     <span class="kw">fn</span> <span class="ident">set_database</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsDatabase</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>);
 
-    <span class="doccomment">/// Set the object that will be used to interact with the user. It will be used</span>
-    <span class="doccomment">/// for things like prompting the user for passwords.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The `interaction` argument will normally be a derived subclass of</span>
-    <span class="doccomment">/// `TlsInteraction`. `None` can also be provided if no user interaction</span>
-    <span class="doccomment">/// should occur for this connection.</span>
-    <span class="doccomment">/// ## `interaction`</span>
-    <span class="doccomment">/// an interaction object, or `None`</span>
-    <span class="kw">fn</span> <span class="ident">set_interaction</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsInteraction</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>, <span class="ident">Q</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">P</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">interaction</span>: <span class="ident">Q</span>);
+    <span class="kw">fn</span> <span class="ident">set_interaction</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsInteraction</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">interaction</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">P</span><span class="op">&gt;</span>);
 
-    <span class="doccomment">/// Sets how `self` behaves with respect to rehandshaking requests, when</span>
-    <span class="doccomment">/// TLS 1.2 or older is in use.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `TlsRehandshakeMode::Never` means that it will never agree to</span>
-    <span class="doccomment">/// rehandshake after the initial handshake is complete. (For a client,</span>
-    <span class="doccomment">/// this means it will refuse rehandshake requests from the server, and</span>
-    <span class="doccomment">/// for a server, this means it will close the connection with an error</span>
-    <span class="doccomment">/// if the client attempts to rehandshake.)</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `TlsRehandshakeMode::Safely` means that the connection will allow a</span>
-    <span class="doccomment">/// rehandshake only if the other end of the connection supports the</span>
-    <span class="doccomment">/// TLS `renegotiation_info` extension. This is the default behavior,</span>
-    <span class="doccomment">/// but means that rehandshaking will not work against older</span>
-    <span class="doccomment">/// implementations that do not support that extension.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `TlsRehandshakeMode::Unsafely` means that the connection will allow</span>
-    <span class="doccomment">/// rehandshaking even without the `renegotiation_info` extension. On</span>
-    <span class="doccomment">/// the server side in particular, this is not recommended, since it</span>
-    <span class="doccomment">/// leaves the server open to certain attacks. However, this mode is</span>
-    <span class="doccomment">/// necessary if you need to allow renegotiation with older client</span>
-    <span class="doccomment">/// software.</span>
-    <span class="doccomment">/// ## `mode`</span>
-    <span class="doccomment">/// the rehandshaking mode</span>
     <span class="kw">fn</span> <span class="ident">set_rehandshake_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">TlsRehandshakeMode</span>);
 
-    <span class="doccomment">/// Sets whether or not `self` expects a proper TLS close notification</span>
-    <span class="doccomment">/// before the connection is closed. If this is `true` (the default),</span>
-    <span class="doccomment">/// then `self` will expect to receive a TLS close notification from its</span>
-    <span class="doccomment">/// peer before the connection is closed, and will return a</span>
-    <span class="doccomment">/// `TlsError::Eof` error if the connection is closed without proper</span>
-    <span class="doccomment">/// notification (since this may indicate a network error, or</span>
-    <span class="doccomment">/// man-in-the-middle attack).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In some protocols, the application will know whether or not the</span>
-    <span class="doccomment">/// connection was closed cleanly based on application-level data</span>
-    <span class="doccomment">/// (because the application-level data includes a length field, or is</span>
-    <span class="doccomment">/// somehow self-delimiting); in this case, the close notify is</span>
-    <span class="doccomment">/// redundant and sometimes omitted. (TLS 1.1 explicitly allows this;</span>
-    <span class="doccomment">/// in TLS 1.0 it is technically an error, but often done anyway.) You</span>
-    <span class="doccomment">/// can use `TlsConnectionExt::set_require_close_notify` to tell `self`</span>
-    <span class="doccomment">/// to allow an &quot;unannounced&quot; connection close, in which case the close</span>
-    <span class="doccomment">/// will show up as a 0-length read, as in a non-TLS</span>
-    <span class="doccomment">/// `SocketConnection`, and it is up to the application to check that</span>
-    <span class="doccomment">/// the data has been fully received.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Note that this only affects the behavior when the peer closes the</span>
-    <span class="doccomment">/// connection; when the application calls `IOStreamExt::close` itself</span>
-    <span class="doccomment">/// on `self`, this will send a close notification regardless of the</span>
-    <span class="doccomment">/// setting of this property. If you explicitly want to do an unclean</span>
-    <span class="doccomment">/// close, you can close `self`&#39;s `TlsConnection:base-io-stream` rather</span>
-    <span class="doccomment">/// than closing `self` itself, but note that this may only be done when no other</span>
-    <span class="doccomment">/// operations are pending on `self` or the base I/O stream.</span>
-    <span class="doccomment">/// ## `require_close_notify`</span>
-    <span class="doccomment">/// whether or not to require close notification</span>
     <span class="kw">fn</span> <span class="ident">set_require_close_notify</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">require_close_notify</span>: <span class="ident">bool</span>);
 
     <span class="kw">fn</span> <span class="ident">get_property_base_io_stream</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">IOStream</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Emitted during the TLS handshake after the peer certificate has</span>
-    <span class="doccomment">/// been received. You can examine `peer_cert`&#39;s certification path by</span>
-    <span class="doccomment">/// calling `TlsCertificateExt::get_issuer` on it.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For a client-side connection, `peer_cert` is the server&#39;s</span>
-    <span class="doccomment">/// certificate, and the signal will only be emitted if the</span>
-    <span class="doccomment">/// certificate was not acceptable according to `conn`&#39;s</span>
-    <span class="doccomment">/// `TlsClientConnection:validation_flags`. If you would like the</span>
-    <span class="doccomment">/// certificate to be accepted despite `errors`, return `true` from the</span>
-    <span class="doccomment">/// signal handler. Otherwise, if no handler accepts the certificate,</span>
-    <span class="doccomment">/// the handshake will fail with `TlsError::BadCertificate`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For a server-side connection, `peer_cert` is the certificate</span>
-    <span class="doccomment">/// presented by the client, if this was requested via the server&#39;s</span>
-    <span class="doccomment">/// `TlsServerConnection:authentication_mode`. On the server side,</span>
-    <span class="doccomment">/// the signal is always emitted when the client presents a</span>
-    <span class="doccomment">/// certificate, and the certificate will only be accepted if a</span>
-    <span class="doccomment">/// handler returns `true`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Note that if this signal is emitted as part of asynchronous I/O</span>
-    <span class="doccomment">/// in the main thread, then you should not attempt to interact with</span>
-    <span class="doccomment">/// the user before returning from the signal handler. If you want to</span>
-    <span class="doccomment">/// let the user decide whether or not to accept the certificate, you</span>
-    <span class="doccomment">/// would have to return `false` from the signal handler on the first</span>
-    <span class="doccomment">/// attempt, and then after the connection attempt returns a</span>
-    <span class="doccomment">/// `TlsError::Handshake`, you can interact with the user, and if</span>
-    <span class="doccomment">/// the user decides to accept the certificate, remember that fact,</span>
-    <span class="doccomment">/// create a new connection, and return `true` from the signal handler</span>
-    <span class="doccomment">/// the next time.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If you are doing I/O in another thread, you do not</span>
-    <span class="doccomment">/// need to worry about this, and can simply block in the signal</span>
-    <span class="doccomment">/// handler until the UI thread returns an answer.</span>
-    <span class="doccomment">/// ## `peer_cert`</span>
-    <span class="doccomment">/// the peer&#39;s `TlsCertificate`</span>
-    <span class="doccomment">/// ## `errors`</span>
-    <span class="doccomment">/// the problems with `peer_cert`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` to accept `peer_cert` (which will also</span>
-    <span class="doccomment">/// immediately end the signal emission). `false` to allow the signal</span>
-    <span class="doccomment">/// emission to continue, which will cause the handshake to fail if</span>
-    <span class="doccomment">/// no one else overrides it.</span>
-    <span class="kw">fn</span> <span class="ident">connect_accept_certificate</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="ident">TlsCertificate</span>, <span class="ident">TlsCertificateFlags</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_accept_certificate</span><span class="op">&lt;</span>
+        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="ident">TlsCertificate</span>, <span class="ident">TlsCertificateFlags</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
     <span class="kw">fn</span> <span class="ident">connect_property_certificate_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
@@ -926,107 +672,168 @@
 
     <span class="kw">fn</span> <span class="ident">connect_property_interaction_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_peer_certificate_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_peer_certificate_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_peer_certificate_errors_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_peer_certificate_errors_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_rehandshake_mode_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_rehandshake_mode_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 
-    <span class="kw">fn</span> <span class="ident">connect_property_require_close_notify_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
+    <span class="kw">fn</span> <span class="ident">connect_property_require_close_notify_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;&gt;</span> <span class="ident">TlsConnectionExt</span> <span class="kw">for</span> <span class="ident">O</span> {
-    <span class="kw">fn</span> <span class="ident">emit_accept_certificate</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peer_cert</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>, <span class="ident">errors</span>: <span class="ident">TlsCertificateFlags</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">emit_accept_certificate</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span><span class="op">&gt;&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">peer_cert</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>,
+        <span class="ident">errors</span>: <span class="ident">TlsCertificateFlags</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_tls_connection_emit_accept_certificate</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">peer_cert</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">errors</span>.<span class="ident">to_glib</span>()))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_emit_accept_certificate</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">peer_cert</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">errors</span>.<span class="ident">to_glib</span>(),
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_certificate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">g_tls_connection_get_certificate</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_get_certificate</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TlsDatabase</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">g_tls_connection_get_database</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_get_database</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_interaction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TlsInteraction</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">g_tls_connection_get_interaction</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_get_interaction</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_peer_certificate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">g_tls_connection_get_peer_certificate</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_get_peer_certificate</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_peer_certificate_errors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">TlsCertificateFlags</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_tls_connection_get_peer_certificate_errors</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_get_peer_certificate_errors</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_rehandshake_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">TlsRehandshakeMode</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_tls_connection_get_rehandshake_mode</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_get_rehandshake_mode</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_require_close_notify</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_tls_connection_get_require_close_notify</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_get_require_close_notify</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">handshake</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Cancellable</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>, <span class="ident">Q</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">P</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cancellable</span>: <span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">cancellable</span> <span class="op">=</span> <span class="ident">cancellable</span>.<span class="ident">into</span>();
+    <span class="kw">fn</span> <span class="ident">handshake</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Cancellable</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cancellable</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">P</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">g_tls_connection_handshake</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">cancellable</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_ref</span>()).<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">error</span>);
-            <span class="kw">if</span> <span class="ident">error</span>.<span class="ident">is_null</span>() { <span class="prelude-val">Ok</span>(()) } <span class="kw">else</span> { <span class="prelude-val">Err</span>(<span class="ident">from_glib_full</span>(<span class="ident">error</span>)) }
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_handshake</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">cancellable</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_ref</span>()).<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">error</span>,
+            );
+            <span class="kw">if</span> <span class="ident">error</span>.<span class="ident">is_null</span>() {
+                <span class="prelude-val">Ok</span>(())
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">from_glib_full</span>(<span class="ident">error</span>))
+            }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">handshake_async</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Cancellable</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>, <span class="ident">Q</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">P</span><span class="op">&gt;&gt;</span>, <span class="ident">R</span>: <span class="ident">FnOnce</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">io_priority</span>: <span class="ident">glib</span>::<span class="ident">Priority</span>, <span class="ident">cancellable</span>: <span class="ident">Q</span>, <span class="ident">callback</span>: <span class="ident">R</span>) {
-        <span class="kw">let</span> <span class="ident">cancellable</span> <span class="op">=</span> <span class="ident">cancellable</span>.<span class="ident">into</span>();
-        <span class="kw">let</span> <span class="ident">user_data</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">callback</span>);
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">handshake_async_trampoline</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">FnOnce</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">_source_object</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gobject_ffi</span>::<span class="ident">GObject</span>, <span class="ident">res</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GAsyncResult</span>, <span class="ident">user_data</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>) {
+    <span class="kw">fn</span> <span class="ident">handshake_async</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Cancellable</span><span class="op">&gt;</span>, <span class="ident">Q</span>: <span class="ident">FnOnce</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">io_priority</span>: <span class="ident">glib</span>::<span class="ident">Priority</span>,
+        <span class="ident">cancellable</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">P</span><span class="op">&gt;</span>,
+        <span class="ident">callback</span>: <span class="ident">Q</span>,
+    ) {
+        <span class="kw">let</span> <span class="ident">user_data</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">callback</span>);
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">handshake_async_trampoline</span><span class="op">&lt;</span>
+            <span class="ident">Q</span>: <span class="ident">FnOnce</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="op">&gt;</span>(
+            <span class="ident">_source_object</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gobject_sys</span>::<span class="ident">GObject</span>,
+            <span class="ident">res</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GAsyncResult</span>,
+            <span class="ident">user_data</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">g_tls_connection_handshake_finish</span>(<span class="ident">_source_object</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="ident">res</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">error</span>);
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">error</span>.<span class="ident">is_null</span>() { <span class="prelude-val">Ok</span>(()) } <span class="kw">else</span> { <span class="prelude-val">Err</span>(<span class="ident">from_glib_full</span>(<span class="ident">error</span>)) };
-            <span class="kw">let</span> <span class="ident">callback</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">from_raw</span>(<span class="ident">user_data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_handshake_finish</span>(
+                <span class="ident">_source_object</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="ident">res</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">error</span>,
+            );
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">error</span>.<span class="ident">is_null</span>() {
+                <span class="prelude-val">Ok</span>(())
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">from_glib_full</span>(<span class="ident">error</span>))
+            };
+            <span class="kw">let</span> <span class="ident">callback</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">from_raw</span>(<span class="ident">user_data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
             <span class="ident">callback</span>(<span class="ident">result</span>);
         }
-        <span class="kw">let</span> <span class="ident">callback</span> <span class="op">=</span> <span class="ident">handshake_async_trampoline</span>::<span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>;
+        <span class="kw">let</span> <span class="ident">callback</span> <span class="op">=</span> <span class="ident">handshake_async_trampoline</span>::<span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span>;
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">g_tls_connection_handshake_async</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">io_priority</span>.<span class="ident">to_glib</span>(), <span class="ident">cancellable</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_ref</span>()).<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="prelude-val">Some</span>(<span class="ident">callback</span>), <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">user_data</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
+            <span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_handshake_async</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">io_priority</span>.<span class="ident">to_glib</span>(),
+                <span class="ident">cancellable</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_ref</span>()).<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">callback</span>),
+                <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">user_data</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+            );
         }
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;futures&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">handshake_async_future</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">io_priority</span>: <span class="ident">glib</span>::<span class="ident">Priority</span>) <span class="op">-&gt;</span> <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">futures_core</span>::<span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="self">Self</span>, ()), <span class="ident">Error</span> <span class="op">=</span> (<span class="self">Self</span>, <span class="ident">Error</span>)<span class="op">&gt;&gt;</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Clone</span> {
-        <span class="kw">use</span> <span class="ident">GioFuture</span>;
+    <span class="kw">fn</span> <span class="ident">handshake_async_future</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">io_priority</span>: <span class="ident">glib</span>::<span class="ident">Priority</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">future</span>::<span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;&gt;</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Unpin</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">fragile</span>::<span class="ident">Fragile</span>;
+        <span class="kw">use</span> <span class="ident">GioFuture</span>;
 
         <span class="ident">GioFuture</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">obj</span>, <span class="ident">send</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">cancellable</span> <span class="op">=</span> <span class="ident">Cancellable</span>::<span class="ident">new</span>();
             <span class="kw">let</span> <span class="ident">send</span> <span class="op">=</span> <span class="ident">Fragile</span>::<span class="ident">new</span>(<span class="ident">send</span>);
-            <span class="kw">let</span> <span class="ident">obj_clone</span> <span class="op">=</span> <span class="ident">Fragile</span>::<span class="ident">new</span>(<span class="ident">obj</span>.<span class="ident">clone</span>());
-            <span class="ident">obj</span>.<span class="ident">handshake_async</span>(
-                 <span class="ident">io_priority</span>,
-                 <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">cancellable</span>),
-                 <span class="kw">move</span> <span class="op">|</span><span class="ident">res</span><span class="op">|</span> {
-                     <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">obj_clone</span>.<span class="ident">into_inner</span>();
-                     <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">res</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> (<span class="ident">obj</span>.<span class="ident">clone</span>(), <span class="ident">v</span>)).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> (<span class="ident">obj</span>.<span class="ident">clone</span>(), <span class="ident">v</span>));
-                     <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">send</span>.<span class="ident">into_inner</span>().<span class="ident">send</span>(<span class="ident">res</span>);
-                 },
-            );
+            <span class="ident">obj</span>.<span class="ident">handshake_async</span>(<span class="ident">io_priority</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">cancellable</span>), <span class="kw">move</span> <span class="op">|</span><span class="ident">res</span><span class="op">|</span> {
+                <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">send</span>.<span class="ident">into_inner</span>().<span class="ident">send</span>(<span class="ident">res</span>);
+            });
 
             <span class="ident">cancellable</span>
         })
@@ -1034,154 +841,271 @@
 
     <span class="kw">fn</span> <span class="ident">set_certificate</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">certificate</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">g_tls_connection_set_certificate</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">certificate</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>);
+            <span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_set_certificate</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">certificate</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            );
         }
     }
 
     <span class="kw">fn</span> <span class="ident">set_database</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsDatabase</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">g_tls_connection_set_database</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">database</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>);
+            <span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_set_database</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">database</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            );
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">set_interaction</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsInteraction</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>, <span class="ident">Q</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">P</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">interaction</span>: <span class="ident">Q</span>) {
-        <span class="kw">let</span> <span class="ident">interaction</span> <span class="op">=</span> <span class="ident">interaction</span>.<span class="ident">into</span>();
+    <span class="kw">fn</span> <span class="ident">set_interaction</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsInteraction</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">interaction</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">P</span><span class="op">&gt;</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">g_tls_connection_set_interaction</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">interaction</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_ref</span>()).<span class="ident">to_glib_none</span>().<span class="number">0</span>);
+            <span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_set_interaction</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">interaction</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_ref</span>()).<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            );
         }
     }
 
     <span class="kw">fn</span> <span class="ident">set_rehandshake_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">TlsRehandshakeMode</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">g_tls_connection_set_rehandshake_mode</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">mode</span>.<span class="ident">to_glib</span>());
+            <span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_set_rehandshake_mode</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">mode</span>.<span class="ident">to_glib</span>(),
+            );
         }
     }
 
     <span class="kw">fn</span> <span class="ident">set_require_close_notify</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">require_close_notify</span>: <span class="ident">bool</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">g_tls_connection_set_require_close_notify</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">require_close_notify</span>.<span class="ident">to_glib</span>());
+            <span class="ident">gio_sys</span>::<span class="ident">g_tls_connection_set_require_close_notify</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">require_close_notify</span>.<span class="ident">to_glib</span>(),
+            );
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_property_base_io_stream</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">IOStream</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">from_type</span>(<span class="op">&lt;</span><span class="ident">IOStream</span> <span class="kw">as</span> <span class="ident">StaticType</span><span class="op">&gt;</span>::<span class="ident">static_type</span>());
-            <span class="ident">gobject_ffi</span>::<span class="ident">g_object_get_property</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gobject_ffi</span>::<span class="ident">GObject</span>, <span class="string">b&quot;base-io-stream\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>, <span class="ident">value</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>);
+            <span class="ident">gobject_sys</span>::<span class="ident">g_object_get_property</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gobject_sys</span>::<span class="ident">GObject</span>,
+                <span class="string">b&quot;base-io-stream\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="ident">value</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+            );
             <span class="ident">value</span>.<span class="ident">get</span>()
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_accept_certificate</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="ident">TlsCertificate</span>, <span class="ident">TlsCertificateFlags</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_accept_certificate</span><span class="op">&lt;</span>
+        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="ident">TlsCertificate</span>, <span class="ident">TlsCertificateFlags</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">accept_certificate_trampoline</span><span class="op">&lt;</span>
+            <span class="ident">P</span>,
+            <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>, <span class="kw-2">&amp;</span><span class="ident">TlsCertificate</span>, <span class="ident">TlsCertificateFlags</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GTlsConnection</span>,
+            <span class="ident">peer_cert</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GTlsCertificate</span>,
+            <span class="ident">errors</span>: <span class="ident">gio_sys</span>::<span class="ident">GTlsCertificateFlags</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="op">-&gt;</span> <span class="ident">glib_sys</span>::<span class="ident">gboolean</span>
+        <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(
+                <span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>(),
+                <span class="kw-2">&amp;</span><span class="ident">from_glib_borrow</span>(<span class="ident">peer_cert</span>),
+                <span class="ident">from_glib</span>(<span class="ident">errors</span>),
+            )
+            .<span class="ident">to_glib</span>()
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;accept-certificate\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">accept_certificate_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;accept-certificate\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">accept_certificate_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
     <span class="kw">fn</span> <span class="ident">connect_property_certificate_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_certificate_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GTlsConnection</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::certificate\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_certificate_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::certificate\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_certificate_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
     <span class="kw">fn</span> <span class="ident">connect_property_database_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_database_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GTlsConnection</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::database\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_database_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::database\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_database_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
     <span class="kw">fn</span> <span class="ident">connect_property_interaction_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_interaction_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GTlsConnection</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::interaction\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_interaction_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::interaction\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_interaction_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_peer_certificate_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_peer_certificate_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_peer_certificate_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GTlsConnection</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::peer-certificate\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_peer_certificate_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::peer-certificate\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_peer_certificate_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_peer_certificate_errors_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_peer_certificate_errors_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_peer_certificate_errors_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GTlsConnection</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::peer-certificate-errors\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_peer_certificate_errors_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::peer-certificate-errors\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_peer_certificate_errors_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_rehandshake_mode_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_rehandshake_mode_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_rehandshake_mode_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GTlsConnection</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::rehandshake-mode\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_rehandshake_mode_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::rehandshake-mode\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_rehandshake_mode_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">connect_property_require_close_notify_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">fn</span> <span class="ident">connect_property_require_close_notify_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">f</span>: <span class="ident">F</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_require_close_notify_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GTlsConnection</span>,
+            <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+            <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) <span class="kw">where</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span>,
+        {
+            <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">f</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">F</span>);
+            <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
+        }
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">f</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-            <span class="ident">connect_raw</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="string">b&quot;notify::require-close-notify\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">notify_require_close_notify_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)), <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>))
+            <span class="ident">connect_raw</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+                <span class="string">b&quot;notify::require-close-notify\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(
+                    <span class="ident">notify_require_close_notify_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                )),
+                <span class="ident">Box_</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
+            )
         }
     }
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">accept_certificate_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>, <span class="kw-2">&amp;</span><span class="ident">TlsCertificate</span>, <span class="ident">TlsCertificateFlags</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GTlsConnection</span>, <span class="ident">peer_cert</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GTlsCertificate</span>, <span class="ident">errors</span>: <span class="ident">ffi</span>::<span class="ident">GTlsCertificateFlags</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>) <span class="op">-&gt;</span> <span class="ident">glib_ffi</span>::<span class="ident">gboolean</span>
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>(), <span class="kw-2">&amp;</span><span class="ident">from_glib_borrow</span>(<span class="ident">peer_cert</span>), <span class="ident">from_glib</span>(<span class="ident">errors</span>)).<span class="ident">to_glib</span>()
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_certificate_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GTlsConnection</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_database_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GTlsConnection</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_interaction_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GTlsConnection</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_peer_certificate_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GTlsConnection</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_peer_certificate_errors_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GTlsConnection</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_rehandshake_mode_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GTlsConnection</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
-}
-
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_require_close_notify_trampoline</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GTlsConnection</span>, <span class="ident">_param_spec</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>, <span class="ident">f</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>)
-<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TlsConnection</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">F</span> <span class="op">=</span> <span class="ident">transmute</span>(<span class="ident">f</span>);
-    <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">TlsConnection</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>())
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">TlsConnection</span> {

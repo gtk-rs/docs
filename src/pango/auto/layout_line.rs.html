@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/layout_line.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>layout_line.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../pango/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/layout_line.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>layout_line.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../pango/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -153,16 +153,44 @@
 <span id="153">153</span>
 <span id="154">154</span>
 <span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// This file was generated by gir (https://github.com/gtk-rs/gir)</span>
 <span class="comment">// from gir-files (https://github.com/gtk-rs/gir-files)</span>
 <span class="comment">// DO NOT EDIT</span>
 
-<span class="kw">use</span> <span class="ident">Rectangle</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">pango_sys</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">Rectangle</span>;
 
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="doccomment">/// The `LayoutLine` structure represents one of the lines resulting</span>
@@ -174,12 +202,12 @@
     <span class="doccomment">/// Routines for rendering PangoLayout objects are provided in</span>
     <span class="doccomment">/// code specific to each rendering system.</span>
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LayoutLine</span>(<span class="ident">Shared</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">PangoLayoutLine</span><span class="op">&gt;</span>);
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LayoutLine</span>(<span class="ident">Shared</span><span class="op">&lt;</span><span class="ident">pango_sys</span>::<span class="ident">PangoLayoutLine</span><span class="op">&gt;</span>);
 
     <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="kw-2">ref</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">pango_layout_line_ref</span>(<span class="ident">ptr</span>),
-        <span class="ident">unref</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">pango_layout_line_unref</span>(<span class="ident">ptr</span>),
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">pango_layout_line_get_type</span>(),
+        <span class="kw-2">ref</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">pango_sys</span>::<span class="ident">pango_layout_line_ref</span>(<span class="ident">ptr</span>),
+        <span class="ident">unref</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">pango_sys</span>::<span class="ident">pango_layout_line_unref</span>(<span class="ident">ptr</span>),
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">pango_sys</span>::<span class="ident">pango_layout_line_get_type</span>(),
     }
 }
 
@@ -197,7 +225,11 @@
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ink_rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="ident">uninitialized</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">logical_rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">ffi</span>::<span class="ident">pango_layout_line_get_extents</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">ink_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">logical_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>);
+            <span class="ident">pango_sys</span>::<span class="ident">pango_layout_line_get_extents</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">ink_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">logical_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+            );
             (<span class="ident">ink_rect</span>, <span class="ident">logical_rect</span>)
         }
     }
@@ -217,7 +249,11 @@
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ink_rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="ident">uninitialized</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">logical_rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">ffi</span>::<span class="ident">pango_layout_line_get_pixel_extents</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">ink_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">logical_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>);
+            <span class="ident">pango_sys</span>::<span class="ident">pango_layout_line_get_pixel_extents</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">ink_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">logical_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+            );
             (<span class="ident">ink_rect</span>, <span class="ident">logical_rect</span>)
         }
     }
@@ -253,7 +289,13 @@
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ranges</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n_ranges</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">ffi</span>::<span class="ident">pango_layout_line_get_x_ranges</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">start_index</span>, <span class="ident">end_index</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ranges</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">n_ranges</span>);
+            <span class="ident">pango_sys</span>::<span class="ident">pango_layout_line_get_x_ranges</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">start_index</span>,
+                <span class="ident">end_index</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ranges</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">n_ranges</span>,
+            );
             <span class="ident">FromGlibContainer</span>::<span class="ident">from_glib_full_num</span>(<span class="ident">ranges</span>, <span class="ident">n_ranges</span> <span class="kw">as</span> <span class="ident">usize</span>)
         }
     }
@@ -270,7 +312,12 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">index_to_x</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index_</span>: <span class="ident">i32</span>, <span class="ident">trailing</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x_pos</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">ffi</span>::<span class="ident">pango_layout_line_index_to_x</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">index_</span>, <span class="ident">trailing</span>.<span class="ident">to_glib</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">x_pos</span>);
+            <span class="ident">pango_sys</span>::<span class="ident">pango_layout_line_index_to_x</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">index_</span>,
+                <span class="ident">trailing</span>.<span class="ident">to_glib</span>(),
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">x_pos</span>,
+            );
             <span class="ident">x_pos</span>
         }
     }
@@ -304,8 +351,17 @@
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index_</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">trailing</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
-            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">pango_layout_line_x_to_index</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">x_pos</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">index_</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">trailing</span>));
-            <span class="kw">if</span> <span class="ident">ret</span> { <span class="prelude-val">Some</span>((<span class="ident">index_</span>, <span class="ident">trailing</span>)) } <span class="kw">else</span> { <span class="prelude-val">None</span> }
+            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">from_glib</span>(<span class="ident">pango_sys</span>::<span class="ident">pango_layout_line_x_to_index</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">x_pos</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">index_</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">trailing</span>,
+            ));
+            <span class="kw">if</span> <span class="ident">ret</span> {
+                <span class="prelude-val">Some</span>((<span class="ident">index_</span>, <span class="ident">trailing</span>))
+            } <span class="kw">else</span> {
+                <span class="prelude-val">None</span>
+            }
         }
     }
 }

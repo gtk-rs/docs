@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/tool_shell.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tool_shell.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gtk/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/tool_shell.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tool_shell.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gtk/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -129,59 +129,16 @@
 <span id="129">129</span>
 <span id="130">130</span>
 <span id="131">131</span>
-<span id="132">132</span>
-<span id="133">133</span>
-<span id="134">134</span>
-<span id="135">135</span>
-<span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
-<span id="167">167</span>
-<span id="168">168</span>
-<span id="169">169</span>
-<span id="170">170</span>
-<span id="171">171</span>
-<span id="172">172</span>
-<span id="173">173</span>
-<span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
-<span id="179">179</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// This file was generated by gir (https://github.com/gtk-rs/gir)</span>
 <span class="comment">// from gir-files (https://github.com/gtk-rs/gir-files)</span>
 <span class="comment">// DO NOT EDIT</span>
 
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">gtk_sys</span>;
+<span class="kw">use</span> <span class="ident">pango</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">Buildable</span>;
 <span class="kw">use</span> <span class="ident">IconSize</span>;
 <span class="kw">use</span> <span class="ident">Orientation</span>;
@@ -189,11 +146,6 @@
 <span class="kw">use</span> <span class="ident">SizeGroup</span>;
 <span class="kw">use</span> <span class="ident">ToolbarStyle</span>;
 <span class="kw">use</span> <span class="ident">Widget</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">pango</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="doccomment">/// The `ToolShell` interface allows container widgets to provide additional</span>
@@ -202,10 +154,10 @@
     <span class="doccomment">/// # Implements</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`ToolShellExt`](trait.ToolShellExt.html), [`WidgetExt`](trait.WidgetExt.html), [`glib::object::ObjectExt`](../glib/object/trait.ObjectExt.html), [`BuildableExt`](trait.BuildableExt.html), [`WidgetExtManual`](prelude/trait.WidgetExtManual.html), [`BuildableExtManual`](prelude/trait.BuildableExtManual.html)</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ToolShell</span>(<span class="ident">Interface</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GtkToolShell</span><span class="op">&gt;</span>) @<span class="ident">requires</span> <span class="ident">Widget</span>, <span class="ident">Buildable</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ToolShell</span>(<span class="ident">Interface</span><span class="op">&lt;</span><span class="ident">gtk_sys</span>::<span class="ident">GtkToolShell</span><span class="op">&gt;</span>) @<span class="ident">requires</span> <span class="ident">Widget</span>, <span class="ident">Buildable</span>;
 
     <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">gtk_tool_shell_get_type</span>(),
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">gtk_sys</span>::<span class="ident">gtk_tool_shell_get_type</span>(),
     }
 }
 
@@ -217,137 +169,89 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`ToolItemGroup`](struct.ToolItemGroup.html), [`ToolShell`](struct.ToolShell.html), [`Toolbar`](struct.Toolbar.html)</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ToolShellExt</span>: <span class="lifetime">&#39;static</span> {
-    <span class="doccomment">/// Retrieves the current ellipsize mode for the tool shell. Tool items must not</span>
-    <span class="doccomment">/// call this function directly, but rely on `ToolItemExt::get_ellipsize_mode`</span>
-    <span class="doccomment">/// instead.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the current ellipsize mode of `self`</span>
     <span class="kw">fn</span> <span class="ident">get_ellipsize_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">pango</span>::<span class="ident">EllipsizeMode</span>;
 
-    <span class="doccomment">/// Retrieves the icon size for the tool shell. Tool items must not call this</span>
-    <span class="doccomment">/// function directly, but rely on `ToolItemExt::get_icon_size` instead.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the current size (`IconSize`) for icons of `self`</span>
     <span class="kw">fn</span> <span class="ident">get_icon_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">IconSize</span>;
 
-    <span class="doccomment">/// Retrieves the current orientation for the tool shell. Tool items must not</span>
-    <span class="doccomment">/// call this function directly, but rely on `ToolItemExt::get_orientation`</span>
-    <span class="doccomment">/// instead.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the current orientation of `self`</span>
     <span class="kw">fn</span> <span class="ident">get_orientation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Orientation</span>;
 
-    <span class="doccomment">/// Returns the relief style of buttons on `self`. Tool items must not call this</span>
-    <span class="doccomment">/// function directly, but rely on `ToolItemExt::get_relief_style` instead.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The relief style of buttons on `self`.</span>
     <span class="kw">fn</span> <span class="ident">get_relief_style</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ReliefStyle</span>;
 
-    <span class="doccomment">/// Retrieves whether the tool shell has text, icons, or both. Tool items must</span>
-    <span class="doccomment">/// not call this function directly, but rely on `ToolItemExt::get_toolbar_style`</span>
-    <span class="doccomment">/// instead.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the current style of `self`</span>
     <span class="kw">fn</span> <span class="ident">get_style</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ToolbarStyle</span>;
 
-    <span class="doccomment">/// Retrieves the current text alignment for the tool shell. Tool items must not</span>
-    <span class="doccomment">/// call this function directly, but rely on `ToolItemExt::get_text_alignment`</span>
-    <span class="doccomment">/// instead.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the current text alignment of `self`</span>
     <span class="kw">fn</span> <span class="ident">get_text_alignment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f32</span>;
 
-    <span class="doccomment">/// Retrieves the current text orientation for the tool shell. Tool items must not</span>
-    <span class="doccomment">/// call this function directly, but rely on `ToolItemExt::get_text_orientation`</span>
-    <span class="doccomment">/// instead.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the current text orientation of `self`</span>
     <span class="kw">fn</span> <span class="ident">get_text_orientation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Orientation</span>;
 
-    <span class="doccomment">/// Retrieves the current text size group for the tool shell. Tool items must not</span>
-    <span class="doccomment">/// call this function directly, but rely on `ToolItemExt::get_text_size_group`</span>
-    <span class="doccomment">/// instead.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the current text size group of `self`</span>
     <span class="kw">fn</span> <span class="ident">get_text_size_group</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SizeGroup</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Calling this function signals the tool shell that the overflow menu item for</span>
-    <span class="doccomment">/// tool items have changed. If there is an overflow menu and if it is visible</span>
-    <span class="doccomment">/// when this function it called, the menu will be rebuilt.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Tool items must not call this function directly, but rely on</span>
-    <span class="doccomment">/// `ToolItemExt::rebuild_menu` instead.</span>
     <span class="kw">fn</span> <span class="ident">rebuild_menu</span>(<span class="kw-2">&amp;</span><span class="self">self</span>);
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">ToolShell</span><span class="op">&gt;&gt;</span> <span class="ident">ToolShellExt</span> <span class="kw">for</span> <span class="ident">O</span> {
     <span class="kw">fn</span> <span class="ident">get_ellipsize_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">pango</span>::<span class="ident">EllipsizeMode</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tool_shell_get_ellipsize_mode</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tool_shell_get_ellipsize_mode</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_icon_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">IconSize</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tool_shell_get_icon_size</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tool_shell_get_icon_size</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_orientation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Orientation</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tool_shell_get_orientation</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tool_shell_get_orientation</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_relief_style</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ReliefStyle</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tool_shell_get_relief_style</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tool_shell_get_relief_style</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_style</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ToolbarStyle</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tool_shell_get_style</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tool_shell_get_style</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_text_alignment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f32</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_tool_shell_get_text_alignment</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>)
-        }
+        <span class="kw">unsafe</span> { <span class="ident">gtk_sys</span>::<span class="ident">gtk_tool_shell_get_text_alignment</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
     <span class="kw">fn</span> <span class="ident">get_text_orientation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Orientation</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tool_shell_get_text_orientation</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tool_shell_get_text_orientation</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_text_size_group</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SizeGroup</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tool_shell_get_text_size_group</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tool_shell_get_text_size_group</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">rebuild_menu</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_tool_shell_rebuild_menu</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_tool_shell_rebuild_menu</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>);
         }
     }
 }
