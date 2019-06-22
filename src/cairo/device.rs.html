@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/device.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>device.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../cairo/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/device.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>device.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../cairo/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -319,52 +319,21 @@
 <span id="319">319</span>
 <span id="320">320</span>
 <span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
-<span id="346">346</span>
-<span id="347">347</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2015-2016, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">CString</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 
+<span class="kw">use</span> <span class="ident">enums</span>::{<span class="ident">Content</span>, <span class="ident">DeviceType</span>, <span class="ident">ScriptMode</span>, <span class="ident">Status</span>};
+<span class="kw">use</span> <span class="ident">ffi</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_glib&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
-<span class="kw">use</span> ::<span class="ident">enums</span>::{
-    <span class="ident">Content</span>,
-    <span class="ident">DeviceType</span>,
-    <span class="ident">ScriptMode</span>,
-    <span class="ident">Status</span>,
-};
-<span class="kw">use</span> ::<span class="ident">surface</span>::<span class="ident">Surface</span>;
-<span class="kw">use</span> ::<span class="ident">recording_surface</span>::<span class="ident">RecordingSurface</span>;
+<span class="kw">use</span> <span class="ident">recording_surface</span>::<span class="ident">RecordingSurface</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">surface</span>::<span class="ident">Surface</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Device</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_device_t</span>, <span class="ident">bool</span>);
@@ -405,26 +374,25 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_recording_surface</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">surface</span>: <span class="kw-2">&amp;</span><span class="ident">RecordingSurface</span>) <span class="op">-&gt;</span> <span class="ident">Status</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_script_from_recording_surface</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(),
-                                                                  <span class="ident">surface</span>.<span class="ident">to_raw_none</span>()))
+            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_script_from_recording_surface</span>(
+                <span class="self">self</span>.<span class="ident">to_raw_none</span>(),
+                <span class="ident">surface</span>.<span class="ident">to_raw_none</span>(),
+            ))
         }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ScriptMode</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ScriptMode</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_script_get_mode</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ScriptMode</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_script_get_mode</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">ScriptMode</span>) {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_script_set_mode</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(), <span class="ident">mode</span>.<span class="ident">into</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_script_set_mode</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(), <span class="ident">mode</span>.<span class="ident">into</span>()) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">surface_create</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">content</span>: <span class="ident">Content</span>, <span class="ident">width</span>: <span class="ident">f64</span>, <span class="ident">height</span>: <span class="ident">f64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Surface</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_script_surface_create</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(), <span class="ident">content</span>.<span class="ident">into</span>(), <span class="ident">width</span>, <span class="ident">height</span>);
+            <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span>
+                <span class="ident">ffi</span>::<span class="ident">cairo_script_surface_create</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(), <span class="ident">content</span>.<span class="ident">into</span>(), <span class="ident">width</span>, <span class="ident">height</span>);
             <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">is_null</span>() {
                 <span class="prelude-val">None</span>
             } <span class="kw">else</span> {
@@ -435,7 +403,10 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">surface_create_for_target</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="ident">Surface</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Surface</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_script_surface_create_for_target</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(), <span class="ident">target</span>.<span class="ident">to_raw_none</span>());
+            <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_script_surface_create_for_target</span>(
+                <span class="self">self</span>.<span class="ident">to_raw_none</span>(),
+                <span class="ident">target</span>.<span class="ident">to_raw_none</span>(),
+            );
             <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">is_null</span>() {
                 <span class="prelude-val">None</span>
             } <span class="kw">else</span> {
@@ -453,77 +424,53 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Status</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_device_status</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_device_status</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_device_finish</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_finish</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_device_flush</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_flush</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">DeviceType</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">DeviceType</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_device_get_type</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">DeviceType</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_device_get_type</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())) }
     }
 
     <span class="comment">// Maybe improve this API?</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">acquire</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Status</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_device_acquire</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_device_acquire</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())) }
     }
 
     <span class="comment">// Maybe improve this API?</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">release</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_device_release</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_release</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">observer_elapsed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f64</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">observer_fill_elapsed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f64</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_fill_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_fill_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">observer_glyphs_elapsed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f64</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_glyphs_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_glyphs_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">observer_mask_elapsed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f64</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_mask_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_mask_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">observer_paint_elapsed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f64</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_paint_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_paint_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">observer_stroke_elapsed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f64</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_stroke_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_observer_stroke_elapsed</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;xlib&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;xcb&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
@@ -533,9 +480,11 @@
                 <span class="ident">DeviceType</span>::<span class="ident">Xlib</span> <span class="op">=&gt;</span> {
                     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;xlib&quot;</span>)]</span>
                     {
-                        <span class="ident">ffi</span>::<span class="ident">cairo_xlib_device_debug_cap_xrender_version</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(),
-                                                                         <span class="ident">major_version</span>,
-                                                                         <span class="ident">minor_version</span>)
+                        <span class="ident">ffi</span>::<span class="ident">cairo_xlib_device_debug_cap_xrender_version</span>(
+                            <span class="self">self</span>.<span class="ident">to_raw_none</span>(),
+                            <span class="ident">major_version</span>,
+                            <span class="ident">minor_version</span>,
+                        )
                     }
                     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;xlib&quot;</span>))]</span>
                     {
@@ -545,18 +494,18 @@
                 <span class="ident">DeviceType</span>::<span class="ident">Xcb</span> <span class="op">=&gt;</span> {
                     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;xcb&quot;</span>)]</span>
                     {
-                        <span class="ident">ffi</span>::<span class="ident">cairo_xcb_device_debug_cap_xrender_version</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(),
-                                                                        <span class="ident">major_version</span>,
-                                                                        <span class="ident">minor_version</span>)
+                        <span class="ident">ffi</span>::<span class="ident">cairo_xcb_device_debug_cap_xrender_version</span>(
+                            <span class="self">self</span>.<span class="ident">to_raw_none</span>(),
+                            <span class="ident">major_version</span>,
+                            <span class="ident">minor_version</span>,
+                        )
                     }
                     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;xcb&quot;</span>))]</span>
                     {
                         <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;you need to enable \&quot;xcb\&quot; feature&quot;</span>)
                     }
                 }
-                <span class="ident">d</span> <span class="op">=&gt;</span> {
-                    <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;invalid device type: {}&quot;</span>, <span class="ident">d</span>)
-                }
+                <span class="ident">d</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;invalid device type: {}&quot;</span>, <span class="ident">d</span>),
             }
         }
     }
@@ -585,9 +534,7 @@
                         <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;you need to enable \&quot;xcb\&quot; feature&quot;</span>)
                     }
                 }
-                <span class="ident">d</span> <span class="op">=&gt;</span> {
-                    <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;invalid device type: {}&quot;</span>, <span class="ident">d</span>)
-                }
+                <span class="ident">d</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;invalid device type: {}&quot;</span>, <span class="ident">d</span>),
             }
         }
     }
@@ -616,11 +563,14 @@
                         <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;you need to enable \&quot;xcb\&quot; feature&quot;</span>)
                     }
                 }
-                <span class="ident">d</span> <span class="op">=&gt;</span> {
-                    <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;invalid device type: {}&quot;</span>, <span class="ident">d</span>)
-                }
+                <span class="ident">d</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;invalid device type: {}&quot;</span>, <span class="ident">d</span>),
             }
         }
+    }
+
+    <span class="macro">user_data_methods</span><span class="macro">!</span> {
+        <span class="ident">ffi</span>::<span class="ident">cairo_device_get_user_data</span>,
+        <span class="ident">ffi</span>::<span class="ident">cairo_device_set_user_data</span>,
     }
 }
 
@@ -635,9 +585,7 @@
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">to_glib_full</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_device_t</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_device_reference</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_reference</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 }
 
@@ -666,13 +614,11 @@
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_glib&quot;</span>)]</span>
-<span class="macro">gvalue_impl</span><span class="macro">!</span>(<span class="ident">Device</span>, <span class="ident">ffi</span>::<span class="ident">cairo_device_t</span>, <span class="ident">ffi</span>::<span class="ident">gobject</span>::<span class="ident">cairo_gobject_device_get_type</span>);
-
-<span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Device</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Device</span> {
-    <span class="kw">fn</span> <span class="ident">as_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Device</span> {
-        <span class="self">self</span>
-    }
-}
+<span class="macro">gvalue_impl</span><span class="macro">!</span>(
+    <span class="ident">Device</span>,
+    <span class="ident">ffi</span>::<span class="ident">cairo_device_t</span>,
+    <span class="ident">ffi</span>::<span class="ident">gobject</span>::<span class="ident">cairo_gobject_device_get_type</span>
+);
 
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Device</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Device</span> {
@@ -683,7 +629,9 @@
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Device</span> {
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="number">1</span> {
-            <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_device_destroy</span>(<span class="self">self</span>.<span class="number">0</span>); }
+            <span class="kw">unsafe</span> {
+                <span class="ident">ffi</span>::<span class="ident">cairo_device_destroy</span>(<span class="self">self</span>.<span class="number">0</span>);
+            }
         }
     }
 }

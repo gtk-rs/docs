@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/main_context_channel.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>main_context_channel.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../glib/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/main_context_channel.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>main_context_channel.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../glib/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -874,40 +874,54 @@
 <span id="874">874</span>
 <span id="875">875</span>
 <span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2019, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
 <span class="comment">// Licensed under the MIT license, see the LICENSE file or &lt;http://opensource.org/licenses/MIT&gt;</span>
 
+<span class="kw">use</span> <span class="ident">get_thread_id</span>;
+<span class="kw">use</span> <span class="ident">glib_sys</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">RefCell</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">mpsc</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">Condvar</span>, <span class="ident">Mutex</span>};
-
+<span class="kw">use</span> <span class="ident">translate</span>::{<span class="ident">mut_override</span>, <span class="ident">FromGlibPtrFull</span>, <span class="ident">FromGlibPtrNone</span>, <span class="ident">ToGlib</span>, <span class="ident">ToGlibPtr</span>};
 <span class="kw">use</span> <span class="ident">Continue</span>;
 <span class="kw">use</span> <span class="ident">MainContext</span>;
 <span class="kw">use</span> <span class="ident">Priority</span>;
 <span class="kw">use</span> <span class="ident">Source</span>;
 <span class="kw">use</span> <span class="ident">SourceId</span>;
 
-<span class="kw">use</span> <span class="ident">get_thread_id</span>;
-
-<span class="kw">use</span> <span class="ident">ffi</span> <span class="kw">as</span> <span class="ident">glib_ffi</span>;
-<span class="kw">use</span> <span class="ident">translate</span>::{<span class="ident">mut_override</span>, <span class="ident">FromGlibPtrFull</span>, <span class="ident">FromGlibPtrNone</span>, <span class="ident">ToGlib</span>, <span class="ident">ToGlibPtr</span>};
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">enum</span> <span class="ident">ChannelSourceState</span> {
     <span class="ident">NotAttached</span>,
-    <span class="ident">Attached</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_ffi</span>::<span class="ident">GSource</span>),
+    <span class="ident">Attached</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_sys</span>::<span class="ident">GSource</span>),
     <span class="ident">Destroyed</span>,
 }
 
 <span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">ChannelSourceState</span> {}
 <span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">ChannelSourceState</span> {}
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">struct</span> <span class="ident">ChannelInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="ident">queue</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     <span class="ident">source</span>: <span class="ident">ChannelSourceState</span>,
@@ -919,7 +933,7 @@
             <span class="ident">ChannelSourceState</span>::<span class="ident">Destroyed</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
             <span class="comment">// Receiver exists but is already destroyed</span>
             <span class="ident">ChannelSourceState</span>::<span class="ident">Attached</span>(<span class="ident">source</span>)
-                <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">glib_ffi</span>::<span class="ident">g_source_is_destroyed</span>(<span class="ident">source</span>) } <span class="op">!=</span> <span class="ident">glib_ffi</span>::<span class="ident">GFALSE</span> <span class="op">=&gt;</span>
+                <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">glib_sys</span>::<span class="ident">g_source_is_destroyed</span>(<span class="ident">source</span>) } <span class="op">!=</span> <span class="ident">glib_sys</span>::<span class="ident">GFALSE</span> <span class="op">=&gt;</span>
             {
                 <span class="bool-val">true</span>
             }
@@ -933,7 +947,7 @@
     <span class="kw">fn</span> <span class="ident">set_ready_time</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ready_time</span>: <span class="ident">i64</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ChannelSourceState</span>::<span class="ident">Attached</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">source</span> {
             <span class="kw">unsafe</span> {
-                <span class="ident">glib_ffi</span>::<span class="ident">g_source_set_ready_time</span>(<span class="ident">source</span>, <span class="ident">ready_time</span>);
+                <span class="ident">glib_sys</span>::<span class="ident">g_source_set_ready_time</span>(<span class="ident">source</span>, <span class="ident">ready_time</span>);
             }
         }
     }
@@ -942,7 +956,7 @@
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">source</span> {
             <span class="comment">// Receiver exists and is not destroyed yet</span>
             <span class="ident">ChannelSourceState</span>::<span class="ident">Attached</span>(<span class="ident">source</span>)
-                <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">glib_ffi</span>::<span class="ident">g_source_is_destroyed</span>(<span class="ident">source</span>) <span class="op">==</span> <span class="ident">glib_ffi</span>::<span class="ident">GFALSE</span> } <span class="op">=&gt;</span>
+                <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">glib_sys</span>::<span class="ident">g_source_is_destroyed</span>(<span class="ident">source</span>) <span class="op">==</span> <span class="ident">glib_sys</span>::<span class="ident">GFALSE</span> } <span class="op">=&gt;</span>
             {
                 <span class="prelude-val">Some</span>(<span class="kw">unsafe</span> { <span class="ident">Source</span>::<span class="ident">from_glib_none</span>(<span class="ident">source</span>) })
             }
@@ -951,13 +965,11 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">struct</span> <span class="ident">ChannelBound</span> {
     <span class="ident">bound</span>: <span class="ident">usize</span>,
     <span class="ident">cond</span>: <span class="ident">Condvar</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">Arc</span><span class="op">&lt;</span>(<span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">ChannelInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ChannelBound</span><span class="op">&gt;</span>)<span class="op">&gt;</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
@@ -1097,47 +1109,47 @@
 
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
 <span class="kw">struct</span> <span class="ident">ChannelSource</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Continue</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
-    <span class="ident">source</span>: <span class="ident">glib_ffi</span>::<span class="ident">GSource</span>,
+    <span class="ident">source</span>: <span class="ident">glib_sys</span>::<span class="ident">GSource</span>,
     <span class="ident">thread_id</span>: <span class="ident">usize</span>,
-    <span class="ident">source_funcs</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">glib_ffi</span>::<span class="ident">GSourceFuncs</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">source_funcs</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">glib_sys</span>::<span class="ident">GSourceFuncs</span><span class="op">&gt;&gt;</span>,
     <span class="ident">channel</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>,
     <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span>,
 }
 
 <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">prepare</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
-    <span class="ident">source</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_ffi</span>::<span class="ident">GSource</span>,
+    <span class="ident">source</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_sys</span>::<span class="ident">GSource</span>,
     <span class="ident">timeout</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">i32</span>,
-) <span class="op">-&gt;</span> <span class="ident">glib_ffi</span>::<span class="ident">gboolean</span> {
+) <span class="op">-&gt;</span> <span class="ident">glib_sys</span>::<span class="ident">gboolean</span> {
     <span class="kw-2">*</span><span class="ident">timeout</span> <span class="op">=</span> <span class="op">-</span><span class="number">1</span>;
 
     <span class="comment">// We&#39;re always ready when the ready time was set to 0. There</span>
     <span class="comment">// will be at least one item or the senders are disconnected now</span>
-    <span class="kw">if</span> <span class="ident">glib_ffi</span>::<span class="ident">g_source_get_ready_time</span>(<span class="ident">source</span>) <span class="op">==</span> <span class="number">0</span> {
-        <span class="ident">glib_ffi</span>::<span class="ident">GTRUE</span>
+    <span class="kw">if</span> <span class="ident">glib_sys</span>::<span class="ident">g_source_get_ready_time</span>(<span class="ident">source</span>) <span class="op">==</span> <span class="number">0</span> {
+        <span class="ident">glib_sys</span>::<span class="ident">GTRUE</span>
     } <span class="kw">else</span> {
-        <span class="ident">glib_ffi</span>::<span class="ident">GFALSE</span>
+        <span class="ident">glib_sys</span>::<span class="ident">GFALSE</span>
     }
 }
 
-<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">check</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">source</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_ffi</span>::<span class="ident">GSource</span>) <span class="op">-&gt;</span> <span class="ident">glib_ffi</span>::<span class="ident">gboolean</span> {
+<span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">check</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">source</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_sys</span>::<span class="ident">GSource</span>) <span class="op">-&gt;</span> <span class="ident">glib_sys</span>::<span class="ident">gboolean</span> {
     <span class="comment">// We&#39;re always ready when the ready time was set to 0. There</span>
     <span class="comment">// will be at least one item or the senders are disconnected now</span>
-    <span class="kw">if</span> <span class="ident">glib_ffi</span>::<span class="ident">g_source_get_ready_time</span>(<span class="ident">source</span>) <span class="op">==</span> <span class="number">0</span> {
-        <span class="ident">glib_ffi</span>::<span class="ident">GTRUE</span>
+    <span class="kw">if</span> <span class="ident">glib_sys</span>::<span class="ident">g_source_get_ready_time</span>(<span class="ident">source</span>) <span class="op">==</span> <span class="number">0</span> {
+        <span class="ident">glib_sys</span>::<span class="ident">GTRUE</span>
     } <span class="kw">else</span> {
-        <span class="ident">glib_ffi</span>::<span class="ident">GFALSE</span>
+        <span class="ident">glib_sys</span>::<span class="ident">GFALSE</span>
     }
 }
 
 <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">dispatch</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Continue</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
-    <span class="ident">source</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_ffi</span>::<span class="ident">GSource</span>,
-    <span class="ident">callback</span>: <span class="ident">glib_ffi</span>::<span class="ident">GSourceFunc</span>,
-    <span class="ident">_user_data</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>,
-) <span class="op">-&gt;</span> <span class="ident">glib_ffi</span>::<span class="ident">gboolean</span> {
+    <span class="ident">source</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_sys</span>::<span class="ident">GSource</span>,
+    <span class="ident">callback</span>: <span class="ident">glib_sys</span>::<span class="ident">GSourceFunc</span>,
+    <span class="ident">_user_data</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+) <span class="op">-&gt;</span> <span class="ident">glib_sys</span>::<span class="ident">gboolean</span> {
     <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span>(<span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ChannelSource</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>);
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">callback</span>.<span class="ident">is_none</span>());
 
-    <span class="ident">glib_ffi</span>::<span class="ident">g_source_set_ready_time</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">source</span>.<span class="ident">source</span>, <span class="op">-</span><span class="number">1</span>);
+    <span class="ident">glib_sys</span>::<span class="ident">g_source_set_ready_time</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">source</span>.<span class="ident">source</span>, <span class="op">-</span><span class="number">1</span>);
 
     <span class="comment">// Check the thread to ensure we&#39;re only ever called from the same thread</span>
     <span class="macro">assert_eq</span><span class="macro">!</span>(
@@ -1156,24 +1168,24 @@
     <span class="kw">loop</span> {
         <span class="kw">match</span> <span class="ident">channel</span>.<span class="ident">try_recv</span>() {
             <span class="prelude-val">Err</span>(<span class="ident">mpsc</span>::<span class="ident">TryRecvError</span>::<span class="ident">Empty</span>) <span class="op">=&gt;</span> <span class="kw">break</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">mpsc</span>::<span class="ident">TryRecvError</span>::<span class="ident">Disconnected</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">glib_ffi</span>::<span class="ident">G_SOURCE_REMOVE</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">mpsc</span>::<span class="ident">TryRecvError</span>::<span class="ident">Disconnected</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">glib_sys</span>::<span class="ident">G_SOURCE_REMOVE</span>,
             <span class="prelude-val">Ok</span>(<span class="ident">item</span>) <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">callback</span> <span class="op">=</span> <span class="ident">source</span>
                     .<span class="ident">callback</span>
                     .<span class="ident">as_mut</span>()
                     .<span class="ident">expect</span>(<span class="string">&quot;ChannelSource called before Receiver was attached&quot;</span>);
                 <span class="kw">if</span> (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">callback</span>.<span class="ident">borrow_mut</span>())(<span class="ident">item</span>) <span class="op">==</span> <span class="ident">Continue</span>(<span class="bool-val">false</span>) {
-                    <span class="kw">return</span> <span class="ident">glib_ffi</span>::<span class="ident">G_SOURCE_REMOVE</span>;
+                    <span class="kw">return</span> <span class="ident">glib_sys</span>::<span class="ident">G_SOURCE_REMOVE</span>;
                 }
             }
         }
     }
 
-    <span class="ident">glib_ffi</span>::<span class="ident">G_SOURCE_CONTINUE</span>
+    <span class="ident">glib_sys</span>::<span class="ident">G_SOURCE_CONTINUE</span>
 }
 
 <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">finalize</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Continue</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
-    <span class="ident">source</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_ffi</span>::<span class="ident">GSource</span>,
+    <span class="ident">source</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_sys</span>::<span class="ident">GSource</span>,
 ) {
     <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span>(<span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ChannelSource</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>);
 
@@ -1201,8 +1213,19 @@
 <span class="doccomment">/// See [`MainContext::channel()`] for how to create such a `Sender`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`MainContext::channel()`]: struct.MainContext.html#method.channel</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>);
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Sender&quot;</span>).<span class="ident">finish</span>()
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="ident">Sender</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>())
+    }
+}
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Sends a value to the channel.</span>
@@ -1231,7 +1254,7 @@
 
             <span class="comment">// Drop the channel and wake up the source/receiver</span>
             <span class="ident">drop</span>(<span class="ident">channel</span>);
-            <span class="ident">glib_ffi</span>::<span class="ident">g_source_set_ready_time</span>(<span class="ident">source</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="number">0</span>);
+            <span class="ident">glib_sys</span>::<span class="ident">g_source_set_ready_time</span>(<span class="ident">source</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="number">0</span>);
         }
     }
 }
@@ -1243,8 +1266,19 @@
 <span class="doccomment">/// See [`MainContext::sync_channel()`] for how to create such a `SyncSender`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`MainContext::sync_channel()`]: struct.MainContext.html#method.sync_channel</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>);
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;SyncSender&quot;</span>).<span class="ident">finish</span>()
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="ident">SyncSender</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>())
+    }
+}
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Sends a value to the channel and blocks if the channel is full.</span>
@@ -1278,7 +1312,7 @@
 
             <span class="comment">// Drop the channel and wake up the source/receiver</span>
             <span class="ident">drop</span>(<span class="ident">channel</span>);
-            <span class="ident">glib_ffi</span>::<span class="ident">g_source_set_ready_time</span>(<span class="ident">source</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="number">0</span>);
+            <span class="ident">glib_sys</span>::<span class="ident">g_source_set_ready_time</span>(<span class="ident">source</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="number">0</span>);
         }
     }
 }
@@ -1291,8 +1325,13 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`MainContext::channel()`]: struct.MainContext.html#method.channel</span>
 <span class="doccomment">/// [`MainContext::sync_channel()`]: struct.MainContext.html#method.sync_channel</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>, <span class="ident">Priority</span>);
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Receiver&quot;</span>).<span class="ident">finish</span>()
+    }
+}
 
 <span class="comment">// It&#39;s safe to send the Receiver to other threads for attaching it as</span>
 <span class="comment">// long as the items to be sent can also be sent between threads.</span>
@@ -1321,16 +1360,15 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This function panics if called from a thread that is not the owner of the provided</span>
     <span class="doccomment">/// `context`, or, if `None` is provided, of the thread default main context.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">attach</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">P</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">MainContext</span><span class="op">&gt;&gt;</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Continue</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">attach</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Continue</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">context</span>: <span class="ident">P</span>,
+        <span class="ident">context</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">MainContext</span><span class="op">&gt;</span>,
         <span class="ident">func</span>: <span class="ident">F</span>,
     ) <span class="op">-&gt;</span> <span class="ident">SourceId</span> {
-        <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">into</span>();
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;Receiver without channel&quot;</span>);
 
-            <span class="kw">let</span> <span class="ident">source_funcs</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">glib_ffi</span>::<span class="ident">GSourceFuncs</span> {
+            <span class="kw">let</span> <span class="ident">source_funcs</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">glib_sys</span>::<span class="ident">GSourceFuncs</span> {
                 <span class="ident">check</span>: <span class="prelude-val">Some</span>(<span class="ident">check</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>),
                 <span class="ident">prepare</span>: <span class="prelude-val">Some</span>(<span class="ident">prepare</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>),
                 <span class="ident">dispatch</span>: <span class="prelude-val">Some</span>(<span class="ident">dispatch</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>),
@@ -1339,7 +1377,7 @@
                 <span class="ident">closure_marshal</span>: <span class="prelude-val">None</span>,
             });
 
-            <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">glib_ffi</span>::<span class="ident">g_source_new</span>(
+            <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">glib_sys</span>::<span class="ident">g_source_new</span>(
                 <span class="ident">mut_override</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">source_funcs</span>),
                 <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">ChannelSource</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;&gt;</span>() <span class="kw">as</span> <span class="ident">u32</span>,
             ) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ChannelSource</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>;
@@ -1350,10 +1388,10 @@
                 <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">source</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> (<span class="ident">channel</span>.<span class="number">0</span>).<span class="number">0</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
 
-                <span class="ident">glib_ffi</span>::<span class="ident">g_source_set_priority</span>(<span class="ident">mut_override</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>.<span class="ident">source</span>), <span class="self">self</span>.<span class="number">1</span>.<span class="ident">to_glib</span>());
+                <span class="ident">glib_sys</span>::<span class="ident">g_source_set_priority</span>(<span class="ident">mut_override</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>.<span class="ident">source</span>), <span class="self">self</span>.<span class="number">1</span>.<span class="ident">to_glib</span>());
 
                 <span class="comment">// We&#39;re immediately ready if the queue is not empty or if no sender is left at this point</span>
-                <span class="ident">glib_ffi</span>::<span class="ident">g_source_set_ready_time</span>(
+                <span class="ident">glib_sys</span>::<span class="ident">g_source_set_ready_time</span>(
                     <span class="ident">mut_override</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>.<span class="ident">source</span>),
                     <span class="kw">if</span> <span class="op">!</span><span class="ident">inner</span>.<span class="ident">queue</span>.<span class="ident">is_empty</span>() <span class="op">||</span> <span class="ident">Arc</span>::<span class="ident">strong_count</span>(<span class="kw-2">&amp;</span><span class="ident">channel</span>.<span class="number">0</span>) <span class="op">==</span> <span class="number">1</span> {
                         <span class="number">0</span>
@@ -1374,16 +1412,14 @@
             }
 
             <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">Source</span>::<span class="ident">from_glib_full</span>(<span class="ident">mut_override</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">*</span><span class="ident">source</span>).<span class="ident">source</span>));
-            <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">context</span>) <span class="op">=</span> <span class="ident">context</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">context</span>) <span class="op">=</span> <span class="ident">context</span> {
                 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">context</span>.<span class="ident">is_owner</span>());
-                <span class="ident">source</span>.<span class="ident">attach</span>(<span class="ident">context</span>)
+                <span class="ident">source</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="ident">context</span>))
             } <span class="kw">else</span> {
                 <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">MainContext</span>::<span class="ident">ref_thread_default</span>();
                 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">context</span>.<span class="ident">is_owner</span>());
-                <span class="ident">source</span>.<span class="ident">attach</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>)
-            };
-
-            <span class="ident">id</span>
+                <span class="ident">source</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">context</span>))
+            }
         }
     }
 }
@@ -1454,7 +1490,7 @@
         <span class="kw">let</span> <span class="ident">sum</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="number">0</span>));
         <span class="kw">let</span> <span class="ident">sum_clone</span> <span class="op">=</span> <span class="ident">sum</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">l_clone</span> <span class="op">=</span> <span class="ident">l</span>.<span class="ident">clone</span>();
-        <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
+        <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="kw">move</span> <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
             <span class="kw-2">*</span><span class="ident">sum_clone</span>.<span class="ident">borrow_mut</span>() <span class="op">+=</span> <span class="ident">item</span>;
             <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">sum_clone</span>.<span class="ident">borrow</span>() <span class="op">==</span> <span class="number">6</span> {
                 <span class="ident">l_clone</span>.<span class="ident">quit</span>();
@@ -1490,7 +1526,7 @@
         }
 
         <span class="kw">let</span> <span class="ident">helper</span> <span class="op">=</span> <span class="ident">Helper</span>(<span class="ident">l</span>.<span class="ident">clone</span>());
-        <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>, <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+        <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">helper</span>;
 
             <span class="ident">Continue</span>(<span class="bool-val">true</span>)
@@ -1517,7 +1553,7 @@
 
         <span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">MainContext</span>::<span class="ident">channel</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>(<span class="ident">Priority</span>::<span class="ident">default</span>());
 
-        <span class="kw">let</span> <span class="ident">source_id</span> <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>, <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Continue</span>(<span class="bool-val">true</span>));
+        <span class="kw">let</span> <span class="ident">source_id</span> <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Continue</span>(<span class="bool-val">true</span>));
 
         <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">find_source_by_id</span>(<span class="kw-2">&amp;</span><span class="ident">source_id</span>).<span class="ident">unwrap</span>();
         <span class="ident">source</span>.<span class="ident">destroy</span>();
@@ -1542,7 +1578,7 @@
 
         <span class="kw">let</span> <span class="ident">dropped</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="bool-val">false</span>));
         <span class="kw">let</span> <span class="ident">helper</span> <span class="op">=</span> <span class="ident">Helper</span>(<span class="ident">dropped</span>.<span class="ident">clone</span>());
-        <span class="kw">let</span> <span class="ident">source_id</span> <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>, <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="ident">source_id</span> <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">_helper</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">helper</span>;
             <span class="ident">Continue</span>(<span class="bool-val">true</span>)
         });
@@ -1569,7 +1605,7 @@
         <span class="kw">let</span> <span class="ident">sum</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="number">0</span>));
         <span class="kw">let</span> <span class="ident">sum_clone</span> <span class="op">=</span> <span class="ident">sum</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">l_clone</span> <span class="op">=</span> <span class="ident">l</span>.<span class="ident">clone</span>();
-        <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
+        <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="kw">move</span> <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
             <span class="kw-2">*</span><span class="ident">sum_clone</span>.<span class="ident">borrow_mut</span>() <span class="op">+=</span> <span class="ident">item</span>;
             <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">sum_clone</span>.<span class="ident">borrow</span>() <span class="op">==</span> <span class="number">6</span> {
                 <span class="ident">l_clone</span>.<span class="ident">quit</span>();
@@ -1618,7 +1654,7 @@
         <span class="kw">let</span> <span class="ident">sum</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="number">0</span>));
         <span class="kw">let</span> <span class="ident">sum_clone</span> <span class="op">=</span> <span class="ident">sum</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">l_clone</span> <span class="op">=</span> <span class="ident">l</span>.<span class="ident">clone</span>();
-        <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
+        <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="kw">move</span> <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
             <span class="kw-2">*</span><span class="ident">sum_clone</span>.<span class="ident">borrow_mut</span>() <span class="op">+=</span> <span class="ident">item</span>;
             <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">sum_clone</span>.<span class="ident">borrow</span>() <span class="op">==</span> <span class="number">6</span> {
                 <span class="ident">l_clone</span>.<span class="ident">quit</span>();
@@ -1720,7 +1756,7 @@
         <span class="kw">let</span> <span class="ident">sum</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="number">0</span>));
         <span class="kw">let</span> <span class="ident">sum_clone</span> <span class="op">=</span> <span class="ident">sum</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">l_clone</span> <span class="op">=</span> <span class="ident">l</span>.<span class="ident">clone</span>();
-        <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
+        <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="kw">move</span> <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
             <span class="comment">// We consumed one item so there should be one item on</span>
             <span class="comment">// the other receiver now.</span>
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">unwrap</span>();

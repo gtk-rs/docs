@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/clipboard.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>clipboard.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gtk/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/clipboard.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>clipboard.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gtk/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -411,217 +411,24 @@
 <span id="411">411</span>
 <span id="412">412</span>
 <span id="413">413</span>
-<span id="414">414</span>
-<span id="415">415</span>
-<span id="416">416</span>
-<span id="417">417</span>
-<span id="418">418</span>
-<span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
-<span id="435">435</span>
-<span id="436">436</span>
-<span id="437">437</span>
-<span id="438">438</span>
-<span id="439">439</span>
-<span id="440">440</span>
-<span id="441">441</span>
-<span id="442">442</span>
-<span id="443">443</span>
-<span id="444">444</span>
-<span id="445">445</span>
-<span id="446">446</span>
-<span id="447">447</span>
-<span id="448">448</span>
-<span id="449">449</span>
-<span id="450">450</span>
-<span id="451">451</span>
-<span id="452">452</span>
-<span id="453">453</span>
-<span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
-<span id="462">462</span>
-<span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
-<span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
-<span id="484">484</span>
-<span id="485">485</span>
-<span id="486">486</span>
-<span id="487">487</span>
-<span id="488">488</span>
-<span id="489">489</span>
-<span id="490">490</span>
-<span id="491">491</span>
-<span id="492">492</span>
-<span id="493">493</span>
-<span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
-<span id="504">504</span>
-<span id="505">505</span>
-<span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
-<span id="557">557</span>
-<span id="558">558</span>
-<span id="559">559</span>
-<span id="560">560</span>
-<span id="561">561</span>
-<span id="562">562</span>
-<span id="563">563</span>
-<span id="564">564</span>
-<span id="565">565</span>
-<span id="566">566</span>
-<span id="567">567</span>
-<span id="568">568</span>
-<span id="569">569</span>
-<span id="570">570</span>
-<span id="571">571</span>
-<span id="572">572</span>
-<span id="573">573</span>
-<span id="574">574</span>
-<span id="575">575</span>
-<span id="576">576</span>
-<span id="577">577</span>
-<span id="578">578</span>
-<span id="579">579</span>
-<span id="580">580</span>
-<span id="581">581</span>
-<span id="582">582</span>
-<span id="583">583</span>
-<span id="584">584</span>
-<span id="585">585</span>
-<span id="586">586</span>
-<span id="587">587</span>
-<span id="588">588</span>
-<span id="589">589</span>
-<span id="590">590</span>
-<span id="591">591</span>
-<span id="592">592</span>
-<span id="593">593</span>
-<span id="594">594</span>
-<span id="595">595</span>
-<span id="596">596</span>
-<span id="597">597</span>
-<span id="598">598</span>
-<span id="599">599</span>
-<span id="600">600</span>
-<span id="601">601</span>
-<span id="602">602</span>
-<span id="603">603</span>
-<span id="604">604</span>
-<span id="605">605</span>
-<span id="606">606</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// This file was generated by gir (https://github.com/gtk-rs/gir)</span>
 <span class="comment">// from gir-files (https://github.com/gtk-rs/gir-files)</span>
 <span class="comment">// DO NOT EDIT</span>
 
-<span class="kw">use</span> <span class="ident">SelectionData</span>;
-<span class="kw">use</span> <span class="ident">TextBuffer</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
 <span class="kw">use</span> <span class="ident">gdk</span>;
 <span class="kw">use</span> <span class="ident">gdk_pixbuf</span>;
 <span class="kw">use</span> <span class="ident">glib</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">GString</span>;
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">GString</span>;
+<span class="kw">use</span> <span class="ident">gtk_sys</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">boxed</span>::<span class="ident">Box</span> <span class="kw">as</span> <span class="ident">Box_</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">SelectionData</span>;
+<span class="kw">use</span> <span class="ident">TextBuffer</span>;
 
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="doccomment">/// The `Clipboard` object represents a clipboard of data shared</span>
@@ -685,10 +492,10 @@
     <span class="doccomment">/// # Implements</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`glib::object::ObjectExt`](../glib/object/trait.ObjectExt.html)</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Clipboard</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GtkClipboard</span>, <span class="ident">ClipboardClass</span><span class="op">&gt;</span>);
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Clipboard</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">gtk_sys</span>::<span class="ident">GtkClipboard</span>, <span class="ident">ClipboardClass</span><span class="op">&gt;</span>);
 
     <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">gtk_clipboard_get_type</span>(),
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_get_type</span>(),
     }
 }
 
@@ -700,7 +507,7 @@
     <span class="doccomment">/// clipboard may be owned by someone else.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_clipboard_clear</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_clear</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>);
         }
     }
 
@@ -710,9 +517,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the `gdk::Display` associated with `self`</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">gdk</span>::<span class="ident">Display</span><span class="op">&gt;</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_get_display</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_get_display</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
     <span class="doccomment">/// If the clipboard contents callbacks were set with</span>
@@ -725,9 +530,7 @@
     <span class="doccomment">/// the owner of the clipboard, if any;</span>
     <span class="doccomment">///  otherwise `None`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_owner</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">glib</span>::<span class="ident">Object</span><span class="op">&gt;</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_get_owner</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_get_owner</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
     <span class="doccomment">/// Gets the selection that this clipboard is for.</span>
@@ -740,9 +543,7 @@
     <span class="doccomment">/// the selection</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_selection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">gdk</span>::<span class="ident">Atom</span><span class="op">&gt;</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_get_selection</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_get_selection</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
     <span class="doccomment">/// Requests the contents of clipboard as the given target.</span>
@@ -757,9 +558,17 @@
     <span class="doccomment">///  `selection_data` will be negative.</span>
     <span class="doccomment">/// ## `user_data`</span>
     <span class="doccomment">/// user data to pass to `callback`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_contents</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">SelectionData</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>, <span class="ident">callback</span>: <span class="ident">P</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_contents</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">SelectionData</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>,
+        <span class="ident">callback</span>: <span class="ident">P</span>,
+    ) {
         <span class="kw">let</span> <span class="ident">callback_data</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">callback</span>);
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">callback_func</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">SelectionData</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">clipboard</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GtkClipboard</span>, <span class="ident">selection_data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GtkSelectionData</span>, <span class="ident">data</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>) {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">callback_func</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">SelectionData</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">clipboard</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gtk_sys</span>::<span class="ident">GtkClipboard</span>,
+            <span class="ident">selection_data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gtk_sys</span>::<span class="ident">GtkSelectionData</span>,
+            <span class="ident">data</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) {
             <span class="kw">let</span> <span class="ident">clipboard</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">clipboard</span>);
             <span class="kw">let</span> <span class="ident">selection_data</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">selection_data</span>);
             <span class="kw">let</span> <span class="ident">callback</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">from_raw</span>(<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
@@ -768,27 +577,22 @@
         <span class="kw">let</span> <span class="ident">callback</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback_func</span>::<span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw">_</span>);
         <span class="kw">let</span> <span class="ident">super_callback0</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">callback_data</span>;
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_clipboard_request_contents</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">target</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">callback</span>, <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">super_callback0</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_request_contents</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">target</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">callback</span>,
+                <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">super_callback0</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+            );
         }
     }
 
-    <span class="doccomment">/// Requests the contents of the clipboard as image. When the image is</span>
-    <span class="doccomment">/// later received, it will be converted to a `gdk_pixbuf::Pixbuf`, and</span>
-    <span class="doccomment">/// `callback` will be called.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The `pixbuf` parameter to `callback` will contain the resulting</span>
-    <span class="doccomment">/// `gdk_pixbuf::Pixbuf` if the request succeeded, or `None` if it failed. This</span>
-    <span class="doccomment">/// could happen for various reasons, in particular if the clipboard</span>
-    <span class="doccomment">/// was empty or if the contents of the clipboard could not be</span>
-    <span class="doccomment">/// converted into an image.</span>
-    <span class="doccomment">/// ## `callback`</span>
-    <span class="doccomment">/// a function to call when the image is received,</span>
-    <span class="doccomment">///  or the retrieval fails. (It will always be called one way or the other.)</span>
-    <span class="doccomment">/// ## `user_data`</span>
-    <span class="doccomment">/// user data to pass to `callback`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_image</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">gdk_pixbuf</span>::<span class="ident">Pixbuf</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">P</span>) {
         <span class="kw">let</span> <span class="ident">callback_data</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">callback</span>);
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">callback_func</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">gdk_pixbuf</span>::<span class="ident">Pixbuf</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">clipboard</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GtkClipboard</span>, <span class="ident">pixbuf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gdk_pixbuf_ffi</span>::<span class="ident">GdkPixbuf</span>, <span class="ident">data</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>) {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">callback_func</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">gdk_pixbuf</span>::<span class="ident">Pixbuf</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">clipboard</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gtk_sys</span>::<span class="ident">GtkClipboard</span>,
+            <span class="ident">pixbuf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gdk_pixbuf_sys</span>::<span class="ident">GdkPixbuf</span>,
+            <span class="ident">data</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) {
             <span class="kw">let</span> <span class="ident">clipboard</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">clipboard</span>);
             <span class="kw">let</span> <span class="ident">pixbuf</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">pixbuf</span>);
             <span class="kw">let</span> <span class="ident">callback</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">from_raw</span>(<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
@@ -797,407 +601,217 @@
         <span class="kw">let</span> <span class="ident">callback</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback_func</span>::<span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw">_</span>);
         <span class="kw">let</span> <span class="ident">super_callback0</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">callback_data</span>;
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_clipboard_request_image</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">callback</span>, <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">super_callback0</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_request_image</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">callback</span>,
+                <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">super_callback0</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+            );
         }
     }
 
-    <span class="doccomment">/// Requests the contents of the clipboard as rich text. When the rich</span>
-    <span class="doccomment">/// text is later received, `callback` will be called.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The `text` parameter to `callback` will contain the resulting rich</span>
-    <span class="doccomment">/// text if the request succeeded, or `None` if it failed. The `length`</span>
-    <span class="doccomment">/// parameter will contain `text`’s length. This function can fail for</span>
-    <span class="doccomment">/// various reasons, in particular if the clipboard was empty or if the</span>
-    <span class="doccomment">/// contents of the clipboard could not be converted into rich text form.</span>
-    <span class="doccomment">/// ## `buffer`</span>
-    <span class="doccomment">/// a `TextBuffer`</span>
-    <span class="doccomment">/// ## `callback`</span>
-    <span class="doccomment">/// a function to call when the text is received,</span>
-    <span class="doccomment">///  or the retrieval fails. (It will always be called one way or the other.)</span>
-    <span class="doccomment">/// ## `user_data`</span>
-    <span class="doccomment">/// user data to pass to `callback`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_rich_text</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TextBuffer</span><span class="op">&gt;</span>, <span class="ident">Q</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>, <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">usize</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>, <span class="ident">callback</span>: <span class="ident">Q</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_rich_text</span><span class="op">&lt;</span>
+        <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TextBuffer</span><span class="op">&gt;</span>,
+        <span class="ident">Q</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">usize</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>,
+        <span class="ident">callback</span>: <span class="ident">Q</span>,
+    ) {
         <span class="kw">let</span> <span class="ident">callback_data</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">callback</span>);
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">callback_func</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TextBuffer</span><span class="op">&gt;</span>, <span class="ident">Q</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>, <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">usize</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">clipboard</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GtkClipboard</span>, <span class="ident">format</span>: <span class="ident">gdk_ffi</span>::<span class="ident">GdkAtom</span>, <span class="ident">text</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc</span>::<span class="ident">c_char</span>, <span class="ident">length</span>: <span class="ident">libc</span>::<span class="ident">size_t</span>, <span class="ident">data</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>) {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">callback_func</span><span class="op">&lt;</span>
+            <span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TextBuffer</span><span class="op">&gt;</span>,
+            <span class="ident">Q</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">usize</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="op">&gt;</span>(
+            <span class="ident">clipboard</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gtk_sys</span>::<span class="ident">GtkClipboard</span>,
+            <span class="ident">format</span>: <span class="ident">gdk_sys</span>::<span class="ident">GdkAtom</span>,
+            <span class="ident">text</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc</span>::<span class="ident">c_char</span>,
+            <span class="ident">length</span>: <span class="ident">libc</span>::<span class="ident">size_t</span>,
+            <span class="ident">data</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) {
             <span class="kw">let</span> <span class="ident">clipboard</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">clipboard</span>);
             <span class="kw">let</span> <span class="ident">format</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">format</span>);
-            <span class="kw">let</span> <span class="ident">text</span>: <span class="ident">GString</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">text</span>);
+            <span class="kw">let</span> <span class="ident">text</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GString</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">text</span>);
+            <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">as_ref</span>();
             <span class="kw">let</span> <span class="ident">callback</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">from_raw</span>(<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
-            (<span class="kw-2">*</span><span class="ident">callback</span>)(<span class="kw-2">&amp;</span><span class="ident">clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">format</span>, <span class="ident">text</span>.<span class="ident">as_str</span>(), <span class="ident">length</span>);
+            (<span class="kw-2">*</span><span class="ident">callback</span>)(<span class="kw-2">&amp;</span><span class="ident">clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">format</span>, <span class="ident">text</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">as_str</span>()), <span class="ident">length</span>);
         }
         <span class="kw">let</span> <span class="ident">callback</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback_func</span>::<span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">Q</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw">_</span>);
         <span class="kw">let</span> <span class="ident">super_callback0</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">callback_data</span>;
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_clipboard_request_rich_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">callback</span>, <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">super_callback0</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_request_rich_text</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">callback</span>,
+                <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">super_callback0</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+            );
         }
     }
 
-    <span class="doccomment">/// Requests the contents of the clipboard as text. When the text is</span>
-    <span class="doccomment">/// later received, it will be converted to UTF-8 if necessary, and</span>
-    <span class="doccomment">/// `callback` will be called.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The `text` parameter to `callback` will contain the resulting text if</span>
-    <span class="doccomment">/// the request succeeded, or `None` if it failed. This could happen for</span>
-    <span class="doccomment">/// various reasons, in particular if the clipboard was empty or if the</span>
-    <span class="doccomment">/// contents of the clipboard could not be converted into text form.</span>
-    <span class="doccomment">/// ## `callback`</span>
-    <span class="doccomment">/// a function to call when the text is received,</span>
-    <span class="doccomment">///  or the retrieval fails. (It will always be called one way or the other.)</span>
-    <span class="doccomment">/// ## `user_data`</span>
-    <span class="doccomment">/// user data to pass to `callback`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_text</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">P</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_text</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">P</span>) {
         <span class="kw">let</span> <span class="ident">callback_data</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">callback</span>);
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">callback_func</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">clipboard</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">GtkClipboard</span>, <span class="ident">text</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc</span>::<span class="ident">c_char</span>, <span class="ident">data</span>: <span class="ident">glib_ffi</span>::<span class="ident">gpointer</span>) {
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">callback_func</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="ident">Clipboard</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+            <span class="ident">clipboard</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gtk_sys</span>::<span class="ident">GtkClipboard</span>,
+            <span class="ident">text</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc</span>::<span class="ident">c_char</span>,
+            <span class="ident">data</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
+        ) {
             <span class="kw">let</span> <span class="ident">clipboard</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">clipboard</span>);
-            <span class="kw">let</span> <span class="ident">text</span>: <span class="ident">GString</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">text</span>);
+            <span class="kw">let</span> <span class="ident">text</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GString</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">text</span>);
+            <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">as_ref</span>();
             <span class="kw">let</span> <span class="ident">callback</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box_</span>::<span class="ident">from_raw</span>(<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
-            (<span class="kw-2">*</span><span class="ident">callback</span>)(<span class="kw-2">&amp;</span><span class="ident">clipboard</span>, <span class="ident">text</span>.<span class="ident">as_str</span>());
+            (<span class="kw-2">*</span><span class="ident">callback</span>)(<span class="kw-2">&amp;</span><span class="ident">clipboard</span>, <span class="ident">text</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">as_str</span>()));
         }
         <span class="kw">let</span> <span class="ident">callback</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback_func</span>::<span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw">_</span>);
         <span class="kw">let</span> <span class="ident">super_callback0</span>: <span class="ident">Box_</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">callback_data</span>;
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_clipboard_request_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">callback</span>, <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">super_callback0</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_request_text</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">callback</span>,
+                <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">super_callback0</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
+            );
         }
     }
 
-    <span class="doccomment">/// Sets the contents of the clipboard to the given `gdk_pixbuf::Pixbuf`.</span>
-    <span class="doccomment">/// GTK+ will take responsibility for responding for requests</span>
-    <span class="doccomment">/// for the image, and for converting the image into the</span>
-    <span class="doccomment">/// requested format.</span>
-    <span class="doccomment">/// ## `pixbuf`</span>
-    <span class="doccomment">/// a `gdk_pixbuf::Pixbuf`</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_image</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pixbuf</span>: <span class="kw-2">&amp;</span><span class="ident">gdk_pixbuf</span>::<span class="ident">Pixbuf</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_clipboard_set_image</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">pixbuf</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_set_image</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">pixbuf</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>);
         }
     }
 
-    <span class="doccomment">/// Sets the contents of the clipboard to the given UTF-8 string. GTK+ will</span>
-    <span class="doccomment">/// make a copy of the text and take responsibility for responding</span>
-    <span class="doccomment">/// for requests for the text, and for converting the text into</span>
-    <span class="doccomment">/// the requested format.</span>
-    <span class="doccomment">/// ## `text`</span>
-    <span class="doccomment">/// a UTF-8 string.</span>
-    <span class="doccomment">/// ## `len`</span>
-    <span class="doccomment">/// length of `text`, in bytes, or -1, in which case</span>
-    <span class="doccomment">///  the length will be determined with `strlen`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
         <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">i32</span>;
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_clipboard_set_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">text</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">len</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_set_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">text</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">len</span>);
         }
     }
 
-    <span class="doccomment">/// Stores the current clipboard data somewhere so that it will stay</span>
-    <span class="doccomment">/// around after the application has quit.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">store</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_clipboard_store</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_store</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>);
         }
     }
 
-    <span class="doccomment">/// Requests the contents of the clipboard using the given target.</span>
-    <span class="doccomment">/// This function waits for the data to be received using the main</span>
-    <span class="doccomment">/// loop, so events, timeouts, etc, may be dispatched during the wait.</span>
-    <span class="doccomment">/// ## `target`</span>
-    <span class="doccomment">/// an atom representing the form into which the clipboard</span>
-    <span class="doccomment">///  owner should convert the selection.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// a newly-allocated `SelectionData` object or `None`</span>
-    <span class="doccomment">///  if retrieving the given target failed. If non-`None`,</span>
-    <span class="doccomment">///  this value must be freed with `SelectionData::free`</span>
-    <span class="doccomment">///  when you are finished with it.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_contents</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SelectionData</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_for_contents</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">target</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_full</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_for_contents</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">target</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
-    <span class="doccomment">/// Requests the contents of the clipboard as image and converts</span>
-    <span class="doccomment">/// the result to a `gdk_pixbuf::Pixbuf`. This function waits for</span>
-    <span class="doccomment">/// the data to be received using the main loop, so events,</span>
-    <span class="doccomment">/// timeouts, etc, may be dispatched during the wait.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// a newly-allocated `gdk_pixbuf::Pixbuf`</span>
-    <span class="doccomment">///  object which must be disposed with `gobject::ObjectExt::unref`, or</span>
-    <span class="doccomment">///  `None` if retrieving the selection data failed. (This could</span>
-    <span class="doccomment">///  happen for various reasons, in particular if the clipboard</span>
-    <span class="doccomment">///  was empty or if the contents of the clipboard could not be</span>
-    <span class="doccomment">///  converted into an image.)</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_image</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">gdk_pixbuf</span>::<span class="ident">Pixbuf</span><span class="op">&gt;</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_for_image</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_full</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_for_image</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class="doccomment">/// Requests the contents of the clipboard as rich text. This function</span>
-    <span class="doccomment">/// waits for the data to be received using the main loop, so events,</span>
-    <span class="doccomment">/// timeouts, etc, may be dispatched during the wait.</span>
-    <span class="doccomment">/// ## `buffer`</span>
-    <span class="doccomment">/// a `TextBuffer`</span>
-    <span class="doccomment">/// ## `format`</span>
-    <span class="doccomment">/// return location for the format of the returned data</span>
-    <span class="doccomment">/// ## `length`</span>
-    <span class="doccomment">/// return location for the length of the returned data</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// a</span>
-    <span class="doccomment">///  newly-allocated binary block of data which must be</span>
-    <span class="doccomment">///  freed with `g_free`, or `None` if retrieving the</span>
-    <span class="doccomment">///  selection data failed. (This could happen for various</span>
-    <span class="doccomment">///  reasons, in particular if the clipboard was empty or</span>
-    <span class="doccomment">///  if the contents of the clipboard could not be</span>
-    <span class="doccomment">///  converted into text form.)</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_rich_text</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TextBuffer</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">-&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">gdk</span>::<span class="ident">Atom</span>) {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">format</span> <span class="op">=</span> <span class="ident">gdk</span>::<span class="ident">Atom</span>::<span class="ident">uninitialized</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
-            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">FromGlibContainer</span>::<span class="ident">from_glib_full_num</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_for_rich_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">format</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">length</span>), <span class="ident">length</span> <span class="kw">as</span> <span class="ident">usize</span>);
+            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">FromGlibContainer</span>::<span class="ident">from_glib_full_num</span>(
+                <span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_for_rich_text</span>(
+                    <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                    <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                    <span class="ident">format</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">length</span>,
+                ),
+                <span class="ident">length</span> <span class="kw">as</span> <span class="ident">usize</span>,
+            );
             (<span class="ident">ret</span>, <span class="ident">format</span>)
         }
     }
 
-    <span class="doccomment">/// Returns a list of targets that are present on the clipboard, or `None`</span>
-    <span class="doccomment">/// if there aren’t any targets available. The returned list must be</span>
-    <span class="doccomment">/// freed with `g_free`.</span>
-    <span class="doccomment">/// This function waits for the data to be received using the main</span>
-    <span class="doccomment">/// loop, so events, timeouts, etc, may be dispatched during the wait.</span>
-    <span class="doccomment">/// ## `targets`</span>
-    <span class="doccomment">/// location</span>
-    <span class="doccomment">///  to store an array of targets. The result stored here must</span>
-    <span class="doccomment">///  be freed with `g_free`.</span>
-    <span class="doccomment">/// ## `n_targets`</span>
-    <span class="doccomment">/// location to store number of items in `targets`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if any targets are present on the clipboard,</span>
-    <span class="doccomment">///  otherwise `false`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_targets</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">gdk</span>::<span class="ident">Atom</span><span class="op">&gt;&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">targets</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n_targets</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
-            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_for_targets</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">targets</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">n_targets</span>));
-            <span class="kw">if</span> <span class="ident">ret</span> { <span class="prelude-val">Some</span>(<span class="ident">FromGlibContainer</span>::<span class="ident">from_glib_container_num</span>(<span class="ident">targets</span>, <span class="ident">n_targets</span> <span class="kw">as</span> <span class="ident">usize</span>)) } <span class="kw">else</span> { <span class="prelude-val">None</span> }
+            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_for_targets</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">targets</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">n_targets</span>,
+            ));
+            <span class="kw">if</span> <span class="ident">ret</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">FromGlibContainer</span>::<span class="ident">from_glib_container_num</span>(
+                    <span class="ident">targets</span>,
+                    <span class="ident">n_targets</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                ))
+            } <span class="kw">else</span> {
+                <span class="prelude-val">None</span>
+            }
         }
     }
 
-    <span class="doccomment">/// Requests the contents of the clipboard as text and converts</span>
-    <span class="doccomment">/// the result to UTF-8 if necessary. This function waits for</span>
-    <span class="doccomment">/// the data to be received using the main loop, so events,</span>
-    <span class="doccomment">/// timeouts, etc, may be dispatched during the wait.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// a newly-allocated UTF-8 string which must</span>
-    <span class="doccomment">///  be freed with `g_free`, or `None` if retrieving</span>
-    <span class="doccomment">///  the selection data failed. (This could happen</span>
-    <span class="doccomment">///  for various reasons, in particular if the</span>
-    <span class="doccomment">///  clipboard was empty or if the contents of the</span>
-    <span class="doccomment">///  clipboard could not be converted into text form.)</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GString</span><span class="op">&gt;</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_for_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_full</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_for_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class="doccomment">/// Requests the contents of the clipboard as URIs. This function waits</span>
-    <span class="doccomment">/// for the data to be received using the main loop, so events,</span>
-    <span class="doccomment">/// timeouts, etc, may be dispatched during the wait.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///  a newly-allocated `None`-terminated array of strings which must</span>
-    <span class="doccomment">///  be freed with `g_strfreev`, or `None` if retrieving the</span>
-    <span class="doccomment">///  selection data failed. (This could happen for various reasons,</span>
-    <span class="doccomment">///  in particular if the clipboard was empty or if the contents of</span>
-    <span class="doccomment">///  the clipboard could not be converted into URI form.)</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_uris</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GString</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">FromGlibPtrContainer</span>::<span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_for_uris</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">FromGlibPtrContainer</span>::<span class="ident">from_glib_full</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_for_uris</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
-    <span class="doccomment">/// Test to see if there is an image available to be pasted</span>
-    <span class="doccomment">/// This is done by requesting the TARGETS atom and checking</span>
-    <span class="doccomment">/// if it contains any of the supported image targets. This function</span>
-    <span class="doccomment">/// waits for the data to be received using the main loop, so events,</span>
-    <span class="doccomment">/// timeouts, etc, may be dispatched during the wait.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This function is a little faster than calling</span>
-    <span class="doccomment">/// `Clipboard::wait_for_image` since it doesn’t need to retrieve</span>
-    <span class="doccomment">/// the actual image data.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` is there is an image available, `false` otherwise.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_is_image_available</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_is_image_available</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_is_image_available</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
-    <span class="doccomment">/// Test to see if there is rich text available to be pasted</span>
-    <span class="doccomment">/// This is done by requesting the TARGETS atom and checking</span>
-    <span class="doccomment">/// if it contains any of the supported rich text targets. This function</span>
-    <span class="doccomment">/// waits for the data to be received using the main loop, so events,</span>
-    <span class="doccomment">/// timeouts, etc, may be dispatched during the wait.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This function is a little faster than calling</span>
-    <span class="doccomment">/// `Clipboard::wait_for_rich_text` since it doesn’t need to retrieve</span>
-    <span class="doccomment">/// the actual text.</span>
-    <span class="doccomment">/// ## `buffer`</span>
-    <span class="doccomment">/// a `TextBuffer`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` is there is rich text available, `false` otherwise.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_is_rich_text_available</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TextBuffer</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_is_rich_text_available</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_is_rich_text_available</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
-    <span class="doccomment">/// Checks if a clipboard supports pasting data of a given type. This</span>
-    <span class="doccomment">/// function can be used to determine if a “Paste” menu item should be</span>
-    <span class="doccomment">/// insensitive or not.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If you want to see if there’s text available on the clipboard, use</span>
-    <span class="doccomment">/// gtk_clipboard_wait_is_text_available () instead.</span>
-    <span class="doccomment">/// ## `target`</span>
-    <span class="doccomment">/// A `gdk::Atom` indicating which target to look for.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if the target is available, `false` otherwise.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_is_target_available</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_is_target_available</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">target</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_is_target_available</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">target</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
-    <span class="doccomment">/// Test to see if there is text available to be pasted</span>
-    <span class="doccomment">/// This is done by requesting the TARGETS atom and checking</span>
-    <span class="doccomment">/// if it contains any of the supported text targets. This function</span>
-    <span class="doccomment">/// waits for the data to be received using the main loop, so events,</span>
-    <span class="doccomment">/// timeouts, etc, may be dispatched during the wait.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This function is a little faster than calling</span>
-    <span class="doccomment">/// `Clipboard::wait_for_text` since it doesn’t need to retrieve</span>
-    <span class="doccomment">/// the actual text.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` is there is text available, `false` otherwise.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_is_text_available</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_is_text_available</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_is_text_available</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
-    <span class="doccomment">/// Test to see if there is a list of URIs available to be pasted</span>
-    <span class="doccomment">/// This is done by requesting the TARGETS atom and checking</span>
-    <span class="doccomment">/// if it contains the URI targets. This function</span>
-    <span class="doccomment">/// waits for the data to be received using the main loop, so events,</span>
-    <span class="doccomment">/// timeouts, etc, may be dispatched during the wait.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This function is a little faster than calling</span>
-    <span class="doccomment">/// `Clipboard::wait_for_uris` since it doesn’t need to retrieve</span>
-    <span class="doccomment">/// the actual URI data.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` is there is an URI list available, `false` otherwise.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_is_uris_available</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_wait_is_uris_available</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_wait_is_uris_available</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
-    <span class="doccomment">/// Returns the clipboard object for the given selection.</span>
-    <span class="doccomment">/// See `Clipboard::get_for_display` for complete details.</span>
-    <span class="doccomment">/// ## `selection`</span>
-    <span class="doccomment">/// a `gdk::Atom` which identifies the clipboard to use</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the appropriate clipboard object. If no clipboard</span>
-    <span class="doccomment">///  already exists, a new one will be created. Once a clipboard</span>
-    <span class="doccomment">///  object has been created, it is persistent and, since it is</span>
-    <span class="doccomment">///  owned by GTK+, must not be freed or unreffed.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">selection</span>: <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>) <span class="op">-&gt;</span> <span class="ident">Clipboard</span> {
         <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_get</span>(<span class="ident">selection</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_get</span>(<span class="ident">selection</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class="doccomment">/// Returns the default clipboard object for use with cut/copy/paste menu items</span>
-    <span class="doccomment">/// and keyboard shortcuts.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Feature: `v3_16`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## `display`</span>
-    <span class="doccomment">/// the `gdk::Display` for which the clipboard is to be retrieved.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the default clipboard object.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_16&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;dox&quot;</span>))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_default</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Display</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Clipboard</span><span class="op">&gt;</span> {
         <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_get_default</span>(<span class="ident">display</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_get_default</span>(<span class="ident">display</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
-    <span class="doccomment">/// Returns the clipboard object for the given selection.</span>
-    <span class="doccomment">/// Cut/copy/paste menu items and keyboard shortcuts should use</span>
-    <span class="doccomment">/// the default clipboard, returned by passing `GDK_SELECTION_CLIPBOARD` for `selection`.</span>
-    <span class="doccomment">/// (`GDK_NONE` is supported as a synonym for GDK_SELECTION_CLIPBOARD</span>
-    <span class="doccomment">/// for backwards compatibility reasons.)</span>
-    <span class="doccomment">/// The currently-selected object or text should be provided on the clipboard</span>
-    <span class="doccomment">/// identified by `GDK_SELECTION_PRIMARY`. Cut/copy/paste menu items</span>
-    <span class="doccomment">/// conceptually copy the contents of the `GDK_SELECTION_PRIMARY` clipboard</span>
-    <span class="doccomment">/// to the default clipboard, i.e. they copy the selection to what the</span>
-    <span class="doccomment">/// user sees as the clipboard.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// (Passing `GDK_NONE` is the same as using `gdk_atom_intern</span>
-    <span class="doccomment">/// (&quot;CLIPBOARD&quot;, FALSE)`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// See the</span>
-    <span class="doccomment">/// [FreeDesktop Clipboard Specification](http://www.freedesktop.org/Standards/clipboards-spec)</span>
-    <span class="doccomment">/// for a detailed discussion of the “CLIPBOARD” vs. “PRIMARY”</span>
-    <span class="doccomment">/// selections under the X window system. On Win32 the</span>
-    <span class="doccomment">/// `GDK_SELECTION_PRIMARY` clipboard is essentially ignored.)</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// It’s possible to have arbitrary named clipboards; if you do invent</span>
-    <span class="doccomment">/// new clipboards, you should prefix the selection name with an</span>
-    <span class="doccomment">/// underscore (because the ICCCM requires that nonstandard atoms are</span>
-    <span class="doccomment">/// underscore-prefixed), and namespace it as well. For example,</span>
-    <span class="doccomment">/// if your application called “Foo” has a special-purpose</span>
-    <span class="doccomment">/// clipboard, you might call it “_FOO_SPECIAL_CLIPBOARD”.</span>
-    <span class="doccomment">/// ## `display`</span>
-    <span class="doccomment">/// the `gdk::Display` for which the clipboard is to be retrieved or created.</span>
-    <span class="doccomment">/// ## `selection`</span>
-    <span class="doccomment">/// a `gdk::Atom` which identifies the clipboard to use.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the appropriate clipboard object. If no</span>
-    <span class="doccomment">///  clipboard already exists, a new one will be created. Once a clipboard</span>
-    <span class="doccomment">///  object has been created, it is persistent and, since it is owned by</span>
-    <span class="doccomment">///  GTK+, must not be freed or unrefd.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_for_display</span>(<span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Display</span>, <span class="ident">selection</span>: <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>) <span class="op">-&gt;</span> <span class="ident">Clipboard</span> {
         <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_clipboard_get_for_display</span>(<span class="ident">display</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">selection</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_clipboard_get_for_display</span>(
+                <span class="ident">display</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">selection</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 

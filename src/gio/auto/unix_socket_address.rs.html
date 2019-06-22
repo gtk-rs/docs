@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/unix_socket_address.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>unix_socket_address.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gio/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/unix_socket_address.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>unix_socket_address.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gio/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -127,45 +127,21 @@
 <span id="127">127</span>
 <span id="128">128</span>
 <span id="129">129</span>
-<span id="130">130</span>
-<span id="131">131</span>
-<span id="132">132</span>
-<span id="133">133</span>
-<span id="134">134</span>
-<span id="135">135</span>
-<span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// This file was generated by gir (https://github.com/gtk-rs/gir)</span>
 <span class="comment">// from gir-files (https://github.com/gtk-rs/gir-files)</span>
 <span class="comment">// DO NOT EDIT</span>
 
+<span class="kw">use</span> <span class="ident">gio_sys</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">StaticType</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">Value</span>;
+<span class="kw">use</span> <span class="ident">gobject_sys</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">SocketAddress</span>;
 <span class="kw">use</span> <span class="ident">SocketConnectable</span>;
 <span class="kw">use</span> <span class="ident">UnixSocketAddressType</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">StaticType</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">Value</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">gobject_ffi</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="doccomment">/// Support for UNIX-domain (also known as local) sockets.</span>
@@ -186,20 +162,20 @@
     <span class="doccomment">/// # Implements</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`UnixSocketAddressExt`](trait.UnixSocketAddressExt.html), [`SocketAddressExt`](trait.SocketAddressExt.html), [`glib::object::ObjectExt`](../glib/object/trait.ObjectExt.html), [`SocketConnectableExt`](trait.SocketConnectableExt.html), [`UnixSocketAddressExtManual`](prelude/trait.UnixSocketAddressExtManual.html)</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UnixSocketAddress</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GUnixSocketAddress</span>, <span class="ident">ffi</span>::<span class="ident">GUnixSocketAddressClass</span>, <span class="ident">UnixSocketAddressClass</span><span class="op">&gt;</span>) @<span class="ident">extends</span> <span class="ident">SocketAddress</span>, @<span class="ident">implements</span> <span class="ident">SocketConnectable</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UnixSocketAddress</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">gio_sys</span>::<span class="ident">GUnixSocketAddress</span>, <span class="ident">gio_sys</span>::<span class="ident">GUnixSocketAddressClass</span>, <span class="ident">UnixSocketAddressClass</span><span class="op">&gt;</span>) @<span class="ident">extends</span> <span class="ident">SocketAddress</span>, @<span class="ident">implements</span> <span class="ident">SocketConnectable</span>;
 
     <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">g_unix_socket_address_get_type</span>(),
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">gio_sys</span>::<span class="ident">g_unix_socket_address_get_type</span>(),
     }
 }
 
 <span class="kw">impl</span> <span class="ident">UnixSocketAddress</span> {
     <span class="comment">//pub fn new_abstract(path: /*Unimplemented*/&amp;CArray TypeId { ns_id: 0, id: 10 }) -&gt; UnixSocketAddress {</span>
-    <span class="comment">//    unsafe { TODO: call ffi::g_unix_socket_address_new_abstract() }</span>
+    <span class="comment">//    unsafe { TODO: call gio_sys:g_unix_socket_address_new_abstract() }</span>
     <span class="comment">//}</span>
 
     <span class="comment">//pub fn new_with_type(path: /*Unimplemented*/&amp;CArray TypeId { ns_id: 0, id: 10 }, type_: UnixSocketAddressType) -&gt; UnixSocketAddress {</span>
-    <span class="comment">//    unsafe { TODO: call ffi::g_unix_socket_address_new_with_type() }</span>
+    <span class="comment">//    unsafe { TODO: call gio_sys:g_unix_socket_address_new_with_type() }</span>
     <span class="comment">//}</span>
 
     <span class="doccomment">/// Checks if abstract UNIX domain socket names are supported.</span>
@@ -208,9 +184,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// `true` if supported, `false` otherwise</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">abstract_names_supported</span>() <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_unix_socket_address_abstract_names_supported</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_unix_socket_address_abstract_names_supported</span>()) }
     }
 }
 
@@ -225,40 +199,12 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`UnixSocketAddress`](struct.UnixSocketAddress.html)</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">UnixSocketAddressExt</span>: <span class="lifetime">&#39;static</span> {
-    <span class="doccomment">/// Gets `self`&#39;s type.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// a `UnixSocketAddressType`</span>
     <span class="kw">fn</span> <span class="ident">get_address_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">UnixSocketAddressType</span>;
 
-    <span class="doccomment">/// Tests if `self` is abstract.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Deprecated</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Use `UnixSocketAddressExt::get_address_type`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if the address is abstract, `false` otherwise</span>
     <span class="kw">fn</span> <span class="ident">get_is_abstract</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// Gets the length of `self`&#39;s path.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For details, see `UnixSocketAddress::get_path`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the length of the path</span>
     <span class="kw">fn</span> <span class="ident">get_path_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span>;
 
-    <span class="doccomment">/// Whether or not this is an abstract address</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Deprecated</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Use `UnixSocketAddress:address-type`, which</span>
-    <span class="doccomment">/// distinguishes between zero-padded and non-zero-padded</span>
-    <span class="doccomment">/// abstract addresses.</span>
     <span class="kw">fn</span> <span class="ident">get_property_abstract</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
     <span class="comment">//fn get_property_path_as_array(&amp;self) -&gt; /*Ignored*/Option&lt;glib::ByteArray&gt;;</span>
@@ -267,26 +213,32 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">UnixSocketAddress</span><span class="op">&gt;&gt;</span> <span class="ident">UnixSocketAddressExt</span> <span class="kw">for</span> <span class="ident">O</span> {
     <span class="kw">fn</span> <span class="ident">get_address_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">UnixSocketAddressType</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_unix_socket_address_get_address_type</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_unix_socket_address_get_address_type</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_is_abstract</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">g_unix_socket_address_get_is_abstract</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gio_sys</span>::<span class="ident">g_unix_socket_address_get_is_abstract</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_path_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">g_unix_socket_address_get_path_len</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>)
-        }
+        <span class="kw">unsafe</span> { <span class="ident">gio_sys</span>::<span class="ident">g_unix_socket_address_get_path_len</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
     <span class="kw">fn</span> <span class="ident">get_property_abstract</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">from_type</span>(<span class="op">&lt;</span><span class="ident">bool</span> <span class="kw">as</span> <span class="ident">StaticType</span><span class="op">&gt;</span>::<span class="ident">static_type</span>());
-            <span class="ident">gobject_ffi</span>::<span class="ident">g_object_get_property</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gobject_ffi</span>::<span class="ident">GObject</span>, <span class="string">b&quot;abstract\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>, <span class="ident">value</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>);
+            <span class="ident">gobject_sys</span>::<span class="ident">g_object_get_property</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gobject_sys</span>::<span class="ident">GObject</span>,
+                <span class="string">b&quot;abstract\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>,
+                <span class="ident">value</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+            );
             <span class="ident">value</span>.<span class="ident">get</span>().<span class="ident">unwrap</span>()
         }
     }
@@ -294,7 +246,7 @@
     <span class="comment">//fn get_property_path_as_array(&amp;self) -&gt; /*Ignored*/Option&lt;glib::ByteArray&gt; {</span>
     <span class="comment">//    unsafe {</span>
     <span class="comment">//        let mut value = Value::from_type(&lt;/*Unknown type*/ as StaticType&gt;::static_type());</span>
-    <span class="comment">//        gobject_ffi::g_object_get_property(self.to_glib_none().0 as *mut gobject_ffi::GObject, b&quot;path-as-array\0&quot;.as_ptr() as *const _, value.to_glib_none_mut().0);</span>
+    <span class="comment">//        gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b&quot;path-as-array\0&quot;.as_ptr() as *const _, value.to_glib_none_mut().0);</span>
     <span class="comment">//        value.get()</span>
     <span class="comment">//    }</span>
     <span class="comment">//}</span>

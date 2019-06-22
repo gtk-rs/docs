@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/selection_data.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>selection_data.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gtk/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/selection_data.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>selection_data.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gtk/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -290,29 +290,72 @@
 <span id="290">290</span>
 <span id="291">291</span>
 <span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// This file was generated by gir (https://github.com/gtk-rs/gir)</span>
 <span class="comment">// from gir-files (https://github.com/gtk-rs/gir-files)</span>
 <span class="comment">// DO NOT EDIT</span>
 
-<span class="kw">use</span> <span class="ident">TextBuffer</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
 <span class="kw">use</span> <span class="ident">gdk</span>;
 <span class="kw">use</span> <span class="ident">gdk_pixbuf</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">GString</span>;
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">GString</span>;
+<span class="kw">use</span> <span class="ident">gtk_sys</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">TextBuffer</span>;
 
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SelectionData</span>(<span class="ident">Boxed</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GtkSelectionData</span><span class="op">&gt;</span>);
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SelectionData</span>(<span class="ident">Boxed</span><span class="op">&lt;</span><span class="ident">gtk_sys</span>::<span class="ident">GtkSelectionData</span><span class="op">&gt;</span>);
 
     <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="ident">copy</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">gtk_selection_data_copy</span>(<span class="ident">mut_override</span>(<span class="ident">ptr</span>)),
-        <span class="ident">free</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">gtk_selection_data_free</span>(<span class="ident">ptr</span>),
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_type</span>(),
+        <span class="ident">copy</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_copy</span>(<span class="ident">mut_override</span>(<span class="ident">ptr</span>)),
+        <span class="ident">free</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_free</span>(<span class="ident">ptr</span>),
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_type</span>(),
     }
 }
 
@@ -324,7 +367,9 @@
     <span class="doccomment">/// the data type of the selection.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_data_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">gdk</span>::<span class="ident">Atom</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_data_type</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_data_type</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -335,7 +380,9 @@
     <span class="doccomment">/// the display of the selection.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">gdk</span>::<span class="ident">Display</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_display</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_display</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -345,9 +392,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the format of the selection.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_format</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)
-        }
+        <span class="kw">unsafe</span> { <span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_format</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
     <span class="doccomment">/// Retrieves the length of the raw data of the selection.</span>
@@ -356,9 +401,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the length of the data of the selection.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_length</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_length</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)
-        }
+        <span class="kw">unsafe</span> { <span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_length</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
     <span class="doccomment">/// Gets the contents of the selection data as a `gdk_pixbuf::Pixbuf`.</span>
@@ -372,7 +415,9 @@
     <span class="doccomment">///  `gobject::ObjectExt::unref`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_pixbuf</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">gdk_pixbuf</span>::<span class="ident">Pixbuf</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_pixbuf</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_full</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_pixbuf</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -383,7 +428,9 @@
     <span class="doccomment">/// the selection `gdk::Atom` of the selection data.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_selection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">gdk</span>::<span class="ident">Atom</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_selection</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_selection</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -394,7 +441,9 @@
     <span class="doccomment">/// the target of the selection.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_target</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">gdk</span>::<span class="ident">Atom</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_target</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_target</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -417,8 +466,19 @@
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">targets</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n_atoms</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
-            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_targets</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">targets</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">n_atoms</span>));
-            <span class="kw">if</span> <span class="ident">ret</span> { <span class="prelude-val">Some</span>(<span class="ident">FromGlibContainer</span>::<span class="ident">from_glib_container_num</span>(<span class="ident">targets</span>, <span class="ident">n_atoms</span> <span class="kw">as</span> <span class="ident">usize</span>)) } <span class="kw">else</span> { <span class="prelude-val">None</span> }
+            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_targets</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">targets</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">n_atoms</span>,
+            ));
+            <span class="kw">if</span> <span class="ident">ret</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">FromGlibContainer</span>::<span class="ident">from_glib_container_num</span>(
+                    <span class="ident">targets</span>,
+                    <span class="ident">n_atoms</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                ))
+            } <span class="kw">else</span> {
+                <span class="prelude-val">None</span>
+            }
         }
     }
 
@@ -431,9 +491,7 @@
     <span class="doccomment">///  allocated string containing the converted text, otherwise `None`.</span>
     <span class="doccomment">///  If the result is non-`None` it must be freed with `g_free`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GString</span><span class="op">&gt;</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_full</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
     <span class="doccomment">/// Gets the contents of the selection data as array of URIs.</span>
@@ -447,7 +505,9 @@
     <span class="doccomment">///  non-`None` it must be freed with `g_strfreev`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_uris</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GString</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">FromGlibPtrContainer</span>::<span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_get_uris</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">FromGlibPtrContainer</span>::<span class="ident">from_glib_full</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_get_uris</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -465,7 +525,13 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">type_</span>: <span class="kw-2">&amp;</span><span class="ident">gdk</span>::<span class="ident">Atom</span>, <span class="ident">format</span>: <span class="ident">i32</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) {
         <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">i32</span>;
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_selection_data_set</span>(<span class="ident">mut_override</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>), <span class="ident">type_</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">format</span>, <span class="ident">data</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">length</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_set</span>(
+                <span class="ident">mut_override</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>),
+                <span class="ident">type_</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">format</span>,
+                <span class="ident">data</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">length</span>,
+            );
         }
     }
 
@@ -481,7 +547,10 @@
     <span class="doccomment">///  otherwise `false`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_pixbuf</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pixbuf</span>: <span class="kw-2">&amp;</span><span class="ident">gdk_pixbuf</span>::<span class="ident">Pixbuf</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_set_pixbuf</span>(<span class="ident">mut_override</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>), <span class="ident">pixbuf</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_set_pixbuf</span>(
+                <span class="ident">mut_override</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>),
+                <span class="ident">pixbuf</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -500,7 +569,11 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">str</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">str</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">i32</span>;
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_set_text</span>(<span class="ident">mut_override</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>), <span class="ident">str</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">len</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_set_text</span>(
+                <span class="ident">mut_override</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>),
+                <span class="ident">str</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">len</span>,
+            ))
         }
     }
 
@@ -517,7 +590,10 @@
     <span class="doccomment">///  otherwise `false`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_uris</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">uris</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_set_uris</span>(<span class="ident">mut_override</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>), <span class="ident">uris</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_set_uris</span>(
+                <span class="ident">mut_override</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>),
+                <span class="ident">uris</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -534,7 +610,10 @@
     <span class="doccomment">///  and a suitable target for images is included, otherwise `false`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">targets_include_image</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">writable</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_targets_include_image</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">writable</span>.<span class="ident">to_glib</span>()))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_targets_include_image</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">writable</span>.<span class="ident">to_glib</span>(),
+            ))
         }
     }
 
@@ -551,7 +630,10 @@
     <span class="doccomment">///  otherwise `false`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">targets_include_rich_text</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TextBuffer</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_targets_include_rich_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_targets_include_rich_text</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">buffer</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -565,7 +647,9 @@
     <span class="doccomment">///  and a suitable target for text is included, otherwise `false`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">targets_include_text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_targets_include_text</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_targets_include_text</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
@@ -579,7 +663,9 @@
     <span class="doccomment">///  and a suitable target for URI lists is included, otherwise `false`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">targets_include_uri</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_selection_data_targets_include_uri</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_selection_data_targets_include_uri</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 }

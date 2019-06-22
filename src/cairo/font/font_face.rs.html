@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/font/font_face.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>font_face.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../cairo/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/font/font_face.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>font_face.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../cairo/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -134,40 +134,14 @@
 <span id="134">134</span>
 <span id="135">135</span>
 <span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
-<span id="156">156</span>
 </pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="ident">ffi</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_glib&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_char</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::{<span class="ident">CString</span>, <span class="ident">CStr</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::{<span class="ident">CStr</span>, <span class="ident">CString</span>};
 
-<span class="kw">use</span> ::<span class="ident">enums</span>::{
-    <span class="ident">FontSlant</span>,
-    <span class="ident">FontType</span>,
-    <span class="ident">FontWeight</span>,
-    <span class="ident">FtSynthesize</span>,
-    <span class="ident">Status</span>,
-};
+<span class="kw">use</span> <span class="ident">enums</span>::{<span class="ident">FontSlant</span>, <span class="ident">FontType</span>, <span class="ident">FontWeight</span>, <span class="ident">FtSynthesize</span>, <span class="ident">Status</span>};
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_glib&quot;</span>)]</span>
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
@@ -189,9 +163,11 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">toy_create</span>(<span class="ident">family</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">slant</span>: <span class="ident">FontSlant</span>, <span class="ident">weight</span>: <span class="ident">FontWeight</span>) <span class="op">-&gt;</span> <span class="ident">FontFace</span> {
         <span class="kw">let</span> <span class="ident">font_face</span>: <span class="ident">FontFace</span> <span class="op">=</span> <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">family</span> <span class="op">=</span> <span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">family</span>).<span class="ident">unwrap</span>();
-            <span class="ident">FontFace</span>::<span class="ident">from_raw_full</span>(<span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_create</span>(<span class="ident">family</span>.<span class="ident">as_ptr</span>(),
-                                                                    <span class="ident">slant</span>.<span class="ident">into</span>(),
-                                                                    <span class="ident">weight</span>.<span class="ident">into</span>()))
+            <span class="ident">FontFace</span>::<span class="ident">from_raw_full</span>(<span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_create</span>(
+                <span class="ident">family</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">slant</span>.<span class="ident">into</span>(),
+                <span class="ident">weight</span>.<span class="ident">into</span>(),
+            ))
         };
         <span class="ident">font_face</span>.<span class="ident">ensure_status</span>();
         <span class="ident">font_face</span>
@@ -230,58 +206,45 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">toy_get_family</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">to_optional_string</span>(<span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_get_family</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">to_optional_string</span>(<span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_get_family</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">toy_get_slant</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontSlant</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">FontSlant</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_get_slant</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">FontSlant</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_get_slant</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">toy_get_weight</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontWeight</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">FontWeight</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_get_weight</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">FontWeight</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_toy_font_face_get_weight</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ensure_status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_font_face_status</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        };
+        <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_font_face_status</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) };
         <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">status</span>).<span class="ident">ensure_valid</span>()
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontType</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">FontType</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_font_face_get_type</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">FontType</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_font_face_get_type</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_reference_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_font_face_get_reference_count</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) <span class="kw">as</span> <span class="ident">usize</span>
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_font_face_get_reference_count</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) <span class="kw">as</span> <span class="ident">usize</span> }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_synthesize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FtSynthesize</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">FtSynthesize</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_ft_font_face_get_synthesize</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()))
-        }
+        <span class="kw">unsafe</span> { <span class="ident">FtSynthesize</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_ft_font_face_get_synthesize</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_synthesize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">synth_flags</span>: <span class="ident">FtSynthesize</span>) {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_ft_font_face_set_synthesize</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(), <span class="ident">synth_flags</span>.<span class="ident">into</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_ft_font_face_set_synthesize</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(), <span class="ident">synth_flags</span>.<span class="ident">into</span>()) }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unset_synthesize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">synth_flags</span>: <span class="ident">FtSynthesize</span>) {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">cairo_ft_font_face_unset_synthesize</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(), <span class="ident">synth_flags</span>.<span class="ident">into</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_ft_font_face_unset_synthesize</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>(), <span class="ident">synth_flags</span>.<span class="ident">into</span>()) }
+    }
+
+    <span class="macro">user_data_methods</span><span class="macro">!</span> {
+        <span class="ident">ffi</span>::<span class="ident">cairo_font_face_get_user_data</span>,
+        <span class="ident">ffi</span>::<span class="ident">cairo_font_face_set_user_data</span>,
     }
 }
 
@@ -297,9 +260,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_glib&quot;</span>))]</span>
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">FontFace</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FontFace</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">FontFace</span>::<span class="ident">from_raw_none</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">FontFace</span>::<span class="ident">from_raw_none</span>(<span class="self">self</span>.<span class="ident">to_raw_none</span>()) }
     }
 }
 
@@ -310,6 +271,5 @@
         <span class="prelude-val">Some</span>(<span class="ident">String</span>::<span class="ident">from_utf8_lossy</span>(<span class="ident">CStr</span>::<span class="ident">from_ptr</span>(<span class="ident">str</span>).<span class="ident">to_bytes</span>()).<span class="ident">into_owned</span>())
     }
 }
-
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "cairo";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

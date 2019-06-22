@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/tree_model_sort.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tree_model_sort.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gtk/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/tree_model_sort.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tree_model_sort.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gtk/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -227,60 +227,20 @@
 <span id="227">227</span>
 <span id="228">228</span>
 <span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
-<span id="251">251</span>
-<span id="252">252</span>
-<span id="253">253</span>
-<span id="254">254</span>
-<span id="255">255</span>
-<span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// This file was generated by gir (https://github.com/gtk-rs/gir)</span>
 <span class="comment">// from gir-files (https://github.com/gtk-rs/gir-files)</span>
 <span class="comment">// DO NOT EDIT</span>
 
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">gtk_sys</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">TreeDragSource</span>;
 <span class="kw">use</span> <span class="ident">TreeIter</span>;
 <span class="kw">use</span> <span class="ident">TreeModel</span>;
 <span class="kw">use</span> <span class="ident">TreePath</span>;
 <span class="kw">use</span> <span class="ident">TreeSortable</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="doccomment">/// The `TreeModelSort` is a model which implements the `TreeSortable`</span>
@@ -383,10 +343,10 @@
     <span class="doccomment">/// # Implements</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`TreeModelSortExt`](trait.TreeModelSortExt.html), [`glib::object::ObjectExt`](../glib/object/trait.ObjectExt.html), [`TreeDragSourceExt`](trait.TreeDragSourceExt.html), [`TreeModelExt`](trait.TreeModelExt.html), [`TreeSortableExt`](trait.TreeSortableExt.html), [`TreeSortableExtManual`](prelude/trait.TreeSortableExtManual.html)</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TreeModelSort</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">GtkTreeModelSort</span>, <span class="ident">ffi</span>::<span class="ident">GtkTreeModelSortClass</span>, <span class="ident">TreeModelSortClass</span><span class="op">&gt;</span>) @<span class="ident">implements</span> <span class="ident">TreeDragSource</span>, <span class="ident">TreeModel</span>, <span class="ident">TreeSortable</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TreeModelSort</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">gtk_sys</span>::<span class="ident">GtkTreeModelSort</span>, <span class="ident">gtk_sys</span>::<span class="ident">GtkTreeModelSortClass</span>, <span class="ident">TreeModelSortClass</span><span class="op">&gt;</span>) @<span class="ident">implements</span> <span class="ident">TreeDragSource</span>, <span class="ident">TreeModel</span>, <span class="ident">TreeSortable</span>;
 
     <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">gtk_tree_model_sort_get_type</span>(),
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">gtk_sys</span>::<span class="ident">gtk_tree_model_sort_get_type</span>(),
     }
 }
 
@@ -398,136 +358,96 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`TreeModelSort`](struct.TreeModelSort.html)</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TreeModelSortExt</span>: <span class="lifetime">&#39;static</span> {
-    <span class="doccomment">/// This function should almost never be called. It clears the `self`</span>
-    <span class="doccomment">/// of any cached iterators that haven’t been reffed with</span>
-    <span class="doccomment">/// `TreeModel::ref_node`. This might be useful if the child model being</span>
-    <span class="doccomment">/// sorted is static (and doesn’t change often) and there has been a lot of</span>
-    <span class="doccomment">/// unreffed access to nodes. As a side effect of this function, all unreffed</span>
-    <span class="doccomment">/// iters will be invalid.</span>
     <span class="kw">fn</span> <span class="ident">clear_cache</span>(<span class="kw-2">&amp;</span><span class="self">self</span>);
 
-    <span class="doccomment">/// Sets `sort_iter` to point to the row in `self` that corresponds to</span>
-    <span class="doccomment">/// the row pointed at by `child_iter`. If `sort_iter` was not set, `false`</span>
-    <span class="doccomment">/// is returned. Note: a boolean is only returned since 2.14.</span>
-    <span class="doccomment">/// ## `sort_iter`</span>
-    <span class="doccomment">/// An uninitialized `TreeIter`.</span>
-    <span class="doccomment">/// ## `child_iter`</span>
-    <span class="doccomment">/// A valid `TreeIter` pointing to a row on the child model</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true`, if `sort_iter` was set, i.e. if `sort_iter` is a</span>
-    <span class="doccomment">/// valid iterator pointer to a visible row in the child model.</span>
     <span class="kw">fn</span> <span class="ident">convert_child_iter_to_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">child_iter</span>: <span class="kw-2">&amp;</span><span class="ident">TreeIter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TreeIter</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Converts `child_path` to a path relative to `self`. That is,</span>
-    <span class="doccomment">/// `child_path` points to a path in the child model. The returned path will</span>
-    <span class="doccomment">/// point to the same row in the sorted model. If `child_path` isn’t a valid</span>
-    <span class="doccomment">/// path on the child model, then `None` is returned.</span>
-    <span class="doccomment">/// ## `child_path`</span>
-    <span class="doccomment">/// A `TreePath` to convert</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// A newly allocated `TreePath`, or `None`</span>
     <span class="kw">fn</span> <span class="ident">convert_child_path_to_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">child_path</span>: <span class="kw-2">&amp;</span><span class="ident">TreePath</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TreePath</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Sets `child_iter` to point to the row pointed to by `sorted_iter`.</span>
-    <span class="doccomment">/// ## `child_iter`</span>
-    <span class="doccomment">/// An uninitialized `TreeIter`</span>
-    <span class="doccomment">/// ## `sorted_iter`</span>
-    <span class="doccomment">/// A valid `TreeIter` pointing to a row on `self`.</span>
     <span class="kw">fn</span> <span class="ident">convert_iter_to_child_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sorted_iter</span>: <span class="kw-2">&amp;</span><span class="ident">TreeIter</span>) <span class="op">-&gt;</span> <span class="ident">TreeIter</span>;
 
-    <span class="doccomment">/// Converts `sorted_path` to a path on the child model of `self`.</span>
-    <span class="doccomment">/// That is, `sorted_path` points to a location in `self`. The</span>
-    <span class="doccomment">/// returned path will point to the same location in the model not being</span>
-    <span class="doccomment">/// sorted. If `sorted_path` does not point to a location in the child model,</span>
-    <span class="doccomment">/// `None` is returned.</span>
-    <span class="doccomment">/// ## `sorted_path`</span>
-    <span class="doccomment">/// A `TreePath` to convert</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// A newly allocated `TreePath`, or `None`</span>
     <span class="kw">fn</span> <span class="ident">convert_path_to_child_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sorted_path</span>: <span class="kw-2">&amp;</span><span class="ident">TreePath</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TreePath</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Returns the model the `TreeModelSort` is sorting.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// the &quot;child model&quot; being sorted</span>
     <span class="kw">fn</span> <span class="ident">get_model</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">TreeModel</span>;
 
-    <span class="doccomment">/// &gt; This function is slow. Only use it for debugging and/or testing</span>
-    <span class="doccomment">/// &gt; purposes.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Checks if the given iter is a valid iter for this `TreeModelSort`.</span>
-    <span class="doccomment">/// ## `iter`</span>
-    <span class="doccomment">/// A `TreeIter`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Returns</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `true` if the iter is valid, `false` if the iter is invalid.</span>
     <span class="kw">fn</span> <span class="ident">iter_is_valid</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">iter</span>: <span class="kw-2">&amp;</span><span class="ident">TreeIter</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class="doccomment">/// This resets the default sort function to be in the “unsorted” state. That</span>
-    <span class="doccomment">/// is, it is in the same order as the child model. It will re-sort the model</span>
-    <span class="doccomment">/// to be in the same order as the child model only if the `TreeModelSort`</span>
-    <span class="doccomment">/// is in “unsorted” state.</span>
     <span class="kw">fn</span> <span class="ident">reset_default_sort_func</span>(<span class="kw-2">&amp;</span><span class="self">self</span>);
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">TreeModelSort</span><span class="op">&gt;&gt;</span> <span class="ident">TreeModelSortExt</span> <span class="kw">for</span> <span class="ident">O</span> {
     <span class="kw">fn</span> <span class="ident">clear_cache</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_tree_model_sort_clear_cache</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_tree_model_sort_clear_cache</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>);
         }
     }
 
     <span class="kw">fn</span> <span class="ident">convert_child_iter_to_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">child_iter</span>: <span class="kw-2">&amp;</span><span class="ident">TreeIter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TreeIter</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sort_iter</span> <span class="op">=</span> <span class="ident">TreeIter</span>::<span class="ident">uninitialized</span>();
-            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tree_model_sort_convert_child_iter_to_iter</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">sort_iter</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">mut_override</span>(<span class="ident">child_iter</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)));
-            <span class="kw">if</span> <span class="ident">ret</span> { <span class="prelude-val">Some</span>(<span class="ident">sort_iter</span>) } <span class="kw">else</span> { <span class="prelude-val">None</span> }
+            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tree_model_sort_convert_child_iter_to_iter</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">sort_iter</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">mut_override</span>(<span class="ident">child_iter</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>),
+            ));
+            <span class="kw">if</span> <span class="ident">ret</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">sort_iter</span>)
+            } <span class="kw">else</span> {
+                <span class="prelude-val">None</span>
+            }
         }
     }
 
     <span class="kw">fn</span> <span class="ident">convert_child_path_to_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">child_path</span>: <span class="kw-2">&amp;</span><span class="ident">TreePath</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TreePath</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tree_model_sort_convert_child_path_to_path</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">mut_override</span>(<span class="ident">child_path</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)))
+            <span class="ident">from_glib_full</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tree_model_sort_convert_child_path_to_path</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">mut_override</span>(<span class="ident">child_path</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>),
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">convert_iter_to_child_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sorted_iter</span>: <span class="kw-2">&amp;</span><span class="ident">TreeIter</span>) <span class="op">-&gt;</span> <span class="ident">TreeIter</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child_iter</span> <span class="op">=</span> <span class="ident">TreeIter</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">ffi</span>::<span class="ident">gtk_tree_model_sort_convert_iter_to_child_iter</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">child_iter</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">mut_override</span>(<span class="ident">sorted_iter</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>));
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_tree_model_sort_convert_iter_to_child_iter</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">child_iter</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">mut_override</span>(<span class="ident">sorted_iter</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>),
+            );
             <span class="ident">child_iter</span>
         }
     }
 
     <span class="kw">fn</span> <span class="ident">convert_path_to_child_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sorted_path</span>: <span class="kw-2">&amp;</span><span class="ident">TreePath</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TreePath</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tree_model_sort_convert_path_to_child_path</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">mut_override</span>(<span class="ident">sorted_path</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)))
+            <span class="ident">from_glib_full</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tree_model_sort_convert_path_to_child_path</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">mut_override</span>(<span class="ident">sorted_path</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>),
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">get_model</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">TreeModel</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_none</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tree_model_sort_get_model</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>))
+            <span class="ident">from_glib_none</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tree_model_sort_get_model</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">iter_is_valid</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">iter</span>: <span class="kw-2">&amp;</span><span class="ident">TreeIter</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">from_glib</span>(<span class="ident">ffi</span>::<span class="ident">gtk_tree_model_sort_iter_is_valid</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">mut_override</span>(<span class="ident">iter</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)))
+            <span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_tree_model_sort_iter_is_valid</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">mut_override</span>(<span class="ident">iter</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>),
+            ))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">reset_default_sort_func</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">gtk_tree_model_sort_reset_default_sort_func</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>);
+            <span class="ident">gtk_sys</span>::<span class="ident">gtk_tree_model_sort_reset_default_sort_func</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>);
         }
     }
 }

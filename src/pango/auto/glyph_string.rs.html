@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/glyph_string.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>glyph_string.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../pango/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/glyph_string.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>glyph_string.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../pango/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -174,18 +174,53 @@
 <span id="174">174</span>
 <span id="175">175</span>
 <span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// This file was generated by gir (https://github.com/gtk-rs/gir)</span>
 <span class="comment">// from gir-files (https://github.com/gtk-rs/gir-files)</span>
 <span class="comment">// DO NOT EDIT</span>
 
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
+<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">pango_sys</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">Analysis</span>;
 <span class="kw">use</span> <span class="ident">Font</span>;
 <span class="kw">use</span> <span class="ident">Rectangle</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">object</span>::<span class="ident">IsA</span>;
-<span class="kw">use</span> <span class="ident">glib</span>::<span class="ident">translate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 
 <span class="macro">glib_wrapper</span><span class="macro">!</span> {
     <span class="doccomment">/// The `GlyphString` structure is used to store strings</span>
@@ -193,12 +228,12 @@
     <span class="doccomment">/// The storage for the glyph information is owned</span>
     <span class="doccomment">/// by the structure which simplifies memory management.</span>
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">Hash</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GlyphString</span>(<span class="ident">Boxed</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">PangoGlyphString</span><span class="op">&gt;</span>);
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GlyphString</span>(<span class="ident">Boxed</span><span class="op">&lt;</span><span class="ident">pango_sys</span>::<span class="ident">PangoGlyphString</span><span class="op">&gt;</span>);
 
     <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="ident">copy</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">pango_glyph_string_copy</span>(<span class="ident">mut_override</span>(<span class="ident">ptr</span>)),
-        <span class="ident">free</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">pango_glyph_string_free</span>(<span class="ident">ptr</span>),
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">ffi</span>::<span class="ident">pango_glyph_string_get_type</span>(),
+        <span class="ident">copy</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">pango_sys</span>::<span class="ident">pango_glyph_string_copy</span>(<span class="ident">mut_override</span>(<span class="ident">ptr</span>)),
+        <span class="ident">free</span> <span class="op">=&gt;</span> <span class="op">|</span><span class="ident">ptr</span><span class="op">|</span> <span class="ident">pango_sys</span>::<span class="ident">pango_glyph_string_free</span>(<span class="ident">ptr</span>),
+        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">pango_sys</span>::<span class="ident">pango_glyph_string_get_type</span>(),
     }
 }
 
@@ -210,9 +245,7 @@
     <span class="doccomment">/// the newly allocated `GlyphString`, which</span>
     <span class="doccomment">///  should be freed with `GlyphString::free`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">GlyphString</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">from_glib_full</span>(<span class="ident">ffi</span>::<span class="ident">pango_glyph_string_new</span>())
-        }
+        <span class="kw">unsafe</span> { <span class="ident">from_glib_full</span>(<span class="ident">pango_sys</span>::<span class="ident">pango_glyph_string_new</span>()) }
     }
 
     <span class="doccomment">/// Compute the logical and ink extents of a glyph string. See the documentation</span>
@@ -230,7 +263,12 @@
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ink_rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="ident">uninitialized</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">logical_rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">ffi</span>::<span class="ident">pango_glyph_string_extents</span>(<span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">font</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">ink_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">logical_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>);
+            <span class="ident">pango_sys</span>::<span class="ident">pango_glyph_string_extents</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">font</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">ink_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">logical_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+            );
             (<span class="ident">ink_rect</span>, <span class="ident">logical_rect</span>)
         }
     }
@@ -254,17 +292,29 @@
     <span class="doccomment">/// rectangle used to</span>
     <span class="doccomment">///  store the logical extents of the glyph string range or</span>
     <span class="doccomment">///  `None` to indicate that the result is not needed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extents_range</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Font</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">start</span>: <span class="ident">i32</span>, <span class="ident">end</span>: <span class="ident">i32</span>, <span class="ident">font</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">-&gt;</span> (<span class="ident">Rectangle</span>, <span class="ident">Rectangle</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extents_range</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Font</span><span class="op">&gt;&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">start</span>: <span class="ident">i32</span>,
+        <span class="ident">end</span>: <span class="ident">i32</span>,
+        <span class="ident">font</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>,
+    ) <span class="op">-&gt;</span> (<span class="ident">Rectangle</span>, <span class="ident">Rectangle</span>) {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ink_rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="ident">uninitialized</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">logical_rect</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">ffi</span>::<span class="ident">pango_glyph_string_extents_range</span>(<span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">start</span>, <span class="ident">end</span>, <span class="ident">font</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">ink_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">logical_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>);
+            <span class="ident">pango_sys</span>::<span class="ident">pango_glyph_string_extents_range</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">start</span>,
+                <span class="ident">end</span>,
+                <span class="ident">font</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">ink_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">logical_rect</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+            );
             (<span class="ident">ink_rect</span>, <span class="ident">logical_rect</span>)
         }
     }
 
     <span class="comment">//pub fn get_logical_widths(&amp;mut self, text: &amp;str, embedding_level: i32, logical_widths: &amp;[i32]) {</span>
-    <span class="comment">//    unsafe { TODO: call ffi::pango_glyph_string_get_logical_widths() }</span>
+    <span class="comment">//    unsafe { TODO: call pango_sys:pango_glyph_string_get_logical_widths() }</span>
     <span class="comment">//}</span>
 
     <span class="doccomment">/// Computes the logical width of the glyph string as can also be computed</span>
@@ -276,9 +326,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the logical width of the glyph string.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_width</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">pango_glyph_string_get_width</span>(<span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>)
-        }
+        <span class="kw">unsafe</span> { <span class="ident">pango_sys</span>::<span class="ident">pango_glyph_string_get_width</span>(<span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>) }
     }
 
     <span class="doccomment">/// Converts from character position to x position. (X position</span>
@@ -297,11 +345,25 @@
     <span class="doccomment">///  or end (`true`) of the character.</span>
     <span class="doccomment">/// ## `x_pos`</span>
     <span class="doccomment">/// location to store result</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">index_to_x</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">analysis</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Analysis</span>, <span class="ident">index_</span>: <span class="ident">i32</span>, <span class="ident">trailing</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">index_to_x</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">analysis</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Analysis</span>,
+        <span class="ident">index_</span>: <span class="ident">i32</span>,
+        <span class="ident">trailing</span>: <span class="ident">bool</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">i32</span> {
         <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">i32</span>;
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x_pos</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">ffi</span>::<span class="ident">pango_glyph_string_index_to_x</span>(<span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">text</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">length</span>, <span class="ident">analysis</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">index_</span>, <span class="ident">trailing</span>.<span class="ident">to_glib</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">x_pos</span>);
+            <span class="ident">pango_sys</span>::<span class="ident">pango_glyph_string_index_to_x</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">text</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">length</span>,
+                <span class="ident">analysis</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">index_</span>,
+                <span class="ident">trailing</span>.<span class="ident">to_glib</span>(),
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">x_pos</span>,
+            );
             <span class="ident">x_pos</span>
         }
     }
@@ -311,7 +373,7 @@
     <span class="doccomment">/// the new length of the string.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_size</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">new_len</span>: <span class="ident">i32</span>) {
         <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">pango_glyph_string_set_size</span>(<span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">new_len</span>);
+            <span class="ident">pango_sys</span>::<span class="ident">pango_glyph_string_set_size</span>(<span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">new_len</span>);
         }
     }
 
@@ -340,7 +402,15 @@
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index_</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">trailing</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
-            <span class="ident">ffi</span>::<span class="ident">pango_glyph_string_x_to_index</span>(<span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">text</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">length</span>, <span class="ident">analysis</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>, <span class="ident">x_pos</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">index_</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">trailing</span>);
+            <span class="ident">pango_sys</span>::<span class="ident">pango_glyph_string_x_to_index</span>(
+                <span class="self">self</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">text</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+                <span class="ident">length</span>,
+                <span class="ident">analysis</span>.<span class="ident">to_glib_none_mut</span>().<span class="number">0</span>,
+                <span class="ident">x_pos</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">index_</span>,
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">trailing</span>,
+            );
             (<span class="ident">index_</span>, <span class="ident">trailing</span>)
         }
     }
