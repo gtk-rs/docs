@@ -173,6 +173,43 @@
 <span id="173">173</span>
 <span id="174">174</span>
 <span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2013-2018, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -197,6 +234,20 @@
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">stream</span>::<span class="ident">Stream</span>;
 
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PollableInputStreamExtManual</span>: <span class="ident">Sized</span> {
+    <span class="doccomment">/// Creates a `glib::Source` that triggers when `self` can be read, or</span>
+    <span class="doccomment">/// `cancellable` is triggered or an error occurs. The callback on the</span>
+    <span class="doccomment">/// source is of the `GPollableSourceFunc` type.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// As with `PollableInputStream::is_readable`, it is possible that</span>
+    <span class="doccomment">/// the stream may not actually be readable even after the source</span>
+    <span class="doccomment">/// triggers, so you should use `PollableInputStream::read_nonblocking`</span>
+    <span class="doccomment">/// rather than `InputStream::read` from the callback.</span>
+    <span class="doccomment">/// ## `cancellable`</span>
+    <span class="doccomment">/// a `Cancellable`, or `None`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// a new `glib::Source`</span>
     <span class="kw">fn</span> <span class="ident">create_source</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">cancellable</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Cancellable</span><span class="op">&gt;</span>,
@@ -221,6 +272,29 @@
         <span class="ident">priority</span>: <span class="ident">glib</span>::<span class="ident">Priority</span>,
     ) <span class="op">-&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Unpin</span><span class="op">&gt;</span>;
 
+    <span class="doccomment">/// Attempts to read up to `count` bytes from `self` into `buffer`, as</span>
+    <span class="doccomment">/// with `InputStream::read`. If `self` is not currently readable,</span>
+    <span class="doccomment">/// this will immediately return `IOErrorEnum::WouldBlock`, and you can</span>
+    <span class="doccomment">/// use `PollableInputStream::create_source` to create a `glib::Source`</span>
+    <span class="doccomment">/// that will be triggered when `self` is readable.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that since this method never blocks, you cannot actually</span>
+    <span class="doccomment">/// use `cancellable` to cancel it. However, it will return an error</span>
+    <span class="doccomment">/// if `cancellable` has already been cancelled when you call, which</span>
+    <span class="doccomment">/// may happen if you call this method after a source triggers due</span>
+    <span class="doccomment">/// to having been cancelled.</span>
+    <span class="doccomment">/// ## `buffer`</span>
+    <span class="doccomment">/// a buffer to</span>
+    <span class="doccomment">///  read data into (which should be at least `count` bytes long).</span>
+    <span class="doccomment">/// ## `count`</span>
+    <span class="doccomment">/// the number of bytes you want to read</span>
+    <span class="doccomment">/// ## `cancellable`</span>
+    <span class="doccomment">/// a `Cancellable`, or `None`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// the number of bytes read, or -1 on error (including</span>
+    <span class="doccomment">///  `IOErrorEnum::WouldBlock`).</span>
     <span class="kw">fn</span> <span class="ident">read_nonblocking</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
