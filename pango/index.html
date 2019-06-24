@@ -110,7 +110,7 @@ position of the resulting glyphs can be made.</p>
 iterate over the visual extents of a <code>Layout</code>.</p>
 </td></tr><tr class='module-item'><td><a class="struct" href="struct.LayoutLine.html" title='pango::LayoutLine struct'>LayoutLine</a></td><td class='docblock-short'><p>The <code>LayoutLine</code> structure represents one of the lines resulting
 from laying out a paragraph via <code>Layout</code>. <code>LayoutLine</code>
-structures are obtained by calling <code>LayoutExt::get_line</code> and
+structures are obtained by calling <code>Layout::get_line</code> and
 are only valid until the text, attributes, or settings of the
 parent <code>Layout</code> are modified.</p>
 </td></tr><tr class='module-item'><td><a class="struct" href="struct.Matrix.html" title='pango::Matrix struct'>Matrix</a></td><td class='docblock-short'><p>A structure specifying a transformation between user-space
@@ -124,8 +124,65 @@ of tab stops. Each tab stop has an alignment and a position.</p>
 </td></tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table><tr class='module-item'><td><a class="enum" href="enum.Alignment.html" title='pango::Alignment enum'>Alignment</a></td><td class='docblock-short'><p>A <code>Alignment</code> describes how to align the lines of a <code>Layout</code> within the
 available space. If the <code>Layout</code> is set to justify
-using <code>LayoutExt::set_justify</code>, this only has effect for partial lines.</p>
-</td></tr><tr class='module-item'><td><a class="enum" href="enum.AttrType.html" title='pango::AttrType enum'>AttrType</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.BidiType.html" title='pango::BidiType enum'>BidiType</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.CoverageLevel.html" title='pango::CoverageLevel enum'>CoverageLevel</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.Direction.html" title='pango::Direction enum'>Direction</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.EllipsizeMode.html" title='pango::EllipsizeMode enum'>EllipsizeMode</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.Gravity.html" title='pango::Gravity enum'>Gravity</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.GravityHint.html" title='pango::GravityHint enum'>GravityHint</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.RenderPart.html" title='pango::RenderPart enum'>RenderPart</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.Script.html" title='pango::Script enum'>Script</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.Stretch.html" title='pango::Stretch enum'>Stretch</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.Style.html" title='pango::Style enum'>Style</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.TabAlign.html" title='pango::TabAlign enum'>TabAlign</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.Underline.html" title='pango::Underline enum'>Underline</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.Variant.html" title='pango::Variant enum'>Variant</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.Weight.html" title='pango::Weight enum'>Weight</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="enum" href="enum.WrapMode.html" title='pango::WrapMode enum'>WrapMode</a></td><td class='docblock-short'></td></tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+using <code>Layout::set_justify</code>, this only has effect for partial lines.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.AttrType.html" title='pango::AttrType enum'>AttrType</a></td><td class='docblock-short'><p>The <code>AttrType</code>
+distinguishes between different types of attributes. Along with the
+predefined values, it is possible to allocate additional values
+for custom attributes using <code>AttrType::register</code>. The predefined
+values are given below. The type of structure used to store the
+attribute is listed in parentheses after the description.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.BidiType.html" title='pango::BidiType enum'>BidiType</a></td><td class='docblock-short'><p>The <code>BidiType</code> type represents the bidirectional character
+type of a Unicode character as specified by the
+<ulink url="http://www.unicode.org/reports/tr9/">Unicode bidirectional algorithm<code>&lt;/ulink&gt;</code>.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.CoverageLevel.html" title='pango::CoverageLevel enum'>CoverageLevel</a></td><td class='docblock-short'><p>Used to indicate how well a font can represent a particular Unicode
+character point for a particular script.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.Direction.html" title='pango::Direction enum'>Direction</a></td><td class='docblock-short'><p>The <code>Direction</code> type represents a direction in the
+Unicode bidirectional algorithm; not every value in this
+enumeration makes sense for every usage of <code>Direction</code>;
+for example, the return value of <code>pango_unichar_direction</code>
+and <code>pango_find_base_dir</code> cannot be <code>Direction::WeakLtr</code>
+or <code>Direction::WeakRtl</code>, since every character is either
+neutral or has a strong direction; on the other hand
+<code>Direction::Neutral</code> doesn't make sense to pass
+to <code>pango_itemize_with_base_dir</code>.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.EllipsizeMode.html" title='pango::EllipsizeMode enum'>EllipsizeMode</a></td><td class='docblock-short'><p>The <code>EllipsizeMode</code> type describes what sort of (if any)
+ellipsization should be applied to a line of text. In
+the ellipsization process characters are removed from the
+text in order to make it fit to a given width and replaced
+with an ellipsis.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.Gravity.html" title='pango::Gravity enum'>Gravity</a></td><td class='docblock-short'><p>The <code>Gravity</code> type represents the orientation of glyphs in a segment
+of text. This is useful when rendering vertical text layouts. In
+those situations, the layout is rotated using a non-identity PangoMatrix,
+and then glyph orientation is controlled using <code>Gravity</code>.
+Not every value in this enumeration makes sense for every usage of
+<code>Gravity</code>; for example, <code>Gravity::Auto</code> only can be passed to
+<code>Context::set_base_gravity</code> and can only be returned by
+<code>Context::get_base_gravity</code>.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.GravityHint.html" title='pango::GravityHint enum'>GravityHint</a></td><td class='docblock-short'><p>The <code>GravityHint</code> defines how horizontal scripts should behave in a
+vertical context. That is, English excerpt in a vertical paragraph for
+example.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.RenderPart.html" title='pango::RenderPart enum'>RenderPart</a></td><td class='docblock-short'><p><code>RenderPart</code> defines different items to render for such
+purposes as setting colors.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.Script.html" title='pango::Script enum'>Script</a></td><td class='docblock-short'><p>The <code>Script</code> enumeration identifies different writing
+systems. The values correspond to the names as defined in the
+Unicode standard.
+Note that new types may be added in the future. Applications should be ready
+to handle unknown values. This enumeration is interchangeable with
+<code>glib::UnicodeScript</code>. See <ulink
+url="http://www.unicode.org/reports/tr24/">Unicode Standard Annex
+<code>24</code>: Script names<code>&lt;/ulink&gt;</code>.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.Stretch.html" title='pango::Stretch enum'>Stretch</a></td><td class='docblock-short'><p>An enumeration specifying the width of the font relative to other designs
+within a family.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.Style.html" title='pango::Style enum'>Style</a></td><td class='docblock-short'><p>An enumeration specifying the various slant styles possible for a font.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.TabAlign.html" title='pango::TabAlign enum'>TabAlign</a></td><td class='docblock-short'><p>A <code>TabAlign</code> specifies where a tab stop appears relative to the text.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.Underline.html" title='pango::Underline enum'>Underline</a></td><td class='docblock-short'><p>The <code>Underline</code> enumeration is used to specify
+whether text should be underlined, and if so, the type
+of underlining.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.Variant.html" title='pango::Variant enum'>Variant</a></td><td class='docblock-short'><p>An enumeration specifying capitalization variant of the font.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.Weight.html" title='pango::Weight enum'>Weight</a></td><td class='docblock-short'><p>An enumeration specifying the weight (boldness) of a font. This is a numerical
+value ranging from 100 to 1000, but there are some predefined values:</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.WrapMode.html" title='pango::WrapMode enum'>WrapMode</a></td><td class='docblock-short'><p>A <code>WrapMode</code> describes how to wrap the lines of a <code>Layout</code> to the desired width.</p>
+</td></tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
 <table><tr class='module-item'><td><a class="constant" href="constant.NONE_ENGINE_LANG.html" title='pango::NONE_ENGINE_LANG constant'>NONE_ENGINE_LANG</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.NONE_ENGINE_SHAPE.html" title='pango::NONE_ENGINE_SHAPE constant'>NONE_ENGINE_SHAPE</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.NONE_FONT.html" title='pango::NONE_FONT constant'>NONE_FONT</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.NONE_FONTSET.html" title='pango::NONE_FONTSET constant'>NONE_FONTSET</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.NONE_FONT_FACE.html" title='pango::NONE_FONT_FACE constant'>NONE_FONT_FACE</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.NONE_FONT_FAMILY.html" title='pango::NONE_FONT_FAMILY constant'>NONE_FONT_FAMILY</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.NONE_FONT_MAP.html" title='pango::NONE_FONT_MAP constant'>NONE_FONT_MAP</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.NONE_RENDERER.html" title='pango::NONE_RENDERER constant'>NONE_RENDERER</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.SCALE.html" title='pango::SCALE constant'>SCALE</a></td><td class='docblock-short'></td></tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table><tr class='module-item'><td><a class="trait" href="trait.FontExt.html" title='pango::FontExt trait'>FontExt</a></td><td class='docblock-short'><p>Trait containing all <code>Font</code> methods.</p>
 </td></tr><tr class='module-item'><td><a class="trait" href="trait.FontFaceExt.html" title='pango::FontFaceExt trait'>FontFaceExt</a></td><td class='docblock-short'><p>Trait containing all <code>FontFace</code> methods.</p>
