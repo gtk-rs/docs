@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["application",""],["application_window",""],["bin",""],["box_",""],["container",""],["dialog",""],["event_box",""],["header_bar",""],["prelude",""],["stack",""],["widget",""],["window",""]]});
+initSidebarItems({"mod":[["application",""],["prelude",""]]});
