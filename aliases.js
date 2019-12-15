@@ -1,1 +1,2 @@
-var ALIASES={};ALIASES["pangocairo"]={};
+var ALIASES = {};
+ALIASES["pangocairo"] = {};
