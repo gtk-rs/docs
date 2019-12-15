@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/screen.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>screen.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gdk/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/auto/screen.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>screen.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gdk/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -801,7 +801,7 @@
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Screen</span>(<span class="ident">Object</span><span class="op">&lt;</span><span class="ident">gdk_sys</span>::<span class="ident">GdkScreen</span>, <span class="ident">ScreenClass</span><span class="op">&gt;</span>);
 
     <span class="kw">match</span> <span class="kw">fn</span> {
-        <span class="ident">get_type</span> <span class="op">=&gt;</span> <span class="op">||</span> <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_type</span>(),
+        <span class="ident">get_type</span> <span class="op">=</span><span class="op">&gt;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_type</span>(),
     }
 }
 
@@ -829,7 +829,7 @@
     <span class="doccomment">/// the currently active window,</span>
     <span class="doccomment">///  or `None`.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_active_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Window</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_active_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Window</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> { <span class="ident">from_glib_full</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_active_window</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
@@ -838,7 +838,7 @@
     <span class="doccomment">/// # Returns</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// the display to which `self` belongs</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Display</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_display</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Display</span> {
         <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_display</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
@@ -854,7 +854,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the height of `self` in pixels.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_height</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
@@ -872,7 +872,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the heigth of `self` in millimeters.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_height_mm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_height_mm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_height_mm</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
@@ -891,7 +891,7 @@
     <span class="doccomment">/// the monitor number in which the point (`x`,`y`) lies, or</span>
     <span class="doccomment">///  a monitor close to (`x`,`y`) if the point is not in any monitor.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_at_point</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>: <span class="ident">i32</span>, <span class="ident">y</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_at_point</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>: <span class="ident">i32</span>, <span class="ident">y</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_monitor_at_point</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">x</span>, <span class="ident">y</span>) }
     }
 
@@ -910,7 +910,7 @@
     <span class="doccomment">///  or if `window` does not intersect any monitors, a monitor,</span>
     <span class="doccomment">///  close to `window`.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_at_window</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Window</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_at_window</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Window</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_monitor_at_window</span>(
                 <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
@@ -939,7 +939,7 @@
     <span class="doccomment">/// a `Rectangle` to be filled with</span>
     <span class="doccomment">///  the monitor geometry</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_geometry</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">Rectangle</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_geometry</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Rectangle</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dest</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="ident">uninitialized</span>();
             <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_monitor_geometry</span>(
@@ -963,7 +963,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the height of the monitor, or -1 if not available</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_height_mm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_height_mm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_monitor_height_mm</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">monitor_num</span>) }
     }
 
@@ -982,7 +982,7 @@
     <span class="doccomment">/// a newly-allocated string containing the name</span>
     <span class="doccomment">///  of the monitor, or `None` if the name cannot be determined</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_plug_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GString</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_plug_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GString</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">from_glib_full</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_monitor_plug_name</span>(
                 <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
@@ -1009,7 +1009,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the scale factor</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_scale_factor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_scale_factor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_monitor_scale_factor</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">monitor_num</span>) }
     }
 
@@ -1025,7 +1025,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the width of the monitor, or -1 if not available</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_width_mm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_width_mm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_monitor_width_mm</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">monitor_num</span>) }
     }
 
@@ -1054,7 +1054,7 @@
     <span class="doccomment">/// a `Rectangle` to be filled with</span>
     <span class="doccomment">///  the monitor workarea</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_workarea</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="ident">Rectangle</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_monitor_workarea</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">monitor_num</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Rectangle</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dest</span> <span class="op">=</span> <span class="ident">Rectangle</span>::<span class="ident">uninitialized</span>();
             <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_monitor_workarea</span>(
@@ -1076,7 +1076,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// number of monitors which `self` consists of</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_n_monitors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_n_monitors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_n_monitors</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
@@ -1090,7 +1090,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the index</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_number</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_number</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_number</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
@@ -1111,7 +1111,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// An integer index for the primary monitor, or 0 if none is configured.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_primary_monitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_primary_monitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_primary_monitor</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
@@ -1122,7 +1122,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the current resolution, or -1 if no resolution</span>
     <span class="doccomment">/// has been set.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_resolution</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">f64</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_resolution</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_resolution</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
@@ -1145,7 +1145,7 @@
     <span class="doccomment">/// a visual to use for windows</span>
     <span class="doccomment">///  with an alpha channel or `None` if the capability is not</span>
     <span class="doccomment">///  available.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_rgba_visual</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Visual</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_rgba_visual</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Visual</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_rgba_visual</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
@@ -1154,7 +1154,7 @@
     <span class="doccomment">/// # Returns</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// the root window</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_root_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Window</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_root_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Window</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_root_window</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
@@ -1165,7 +1165,7 @@
     <span class="doccomment">/// # Returns</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// the system visual</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_system_visual</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Visual</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_system_visual</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Visual</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_system_visual</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
@@ -1180,7 +1180,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">///</span>
     <span class="doccomment">///  list of toplevel windows, free with `glib::List::free`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_toplevel_windows</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Window</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_toplevel_windows</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Window</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">FromGlibPtrContainer</span>::<span class="ident">from_glib_container</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_toplevel_windows</span>(
                 <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
@@ -1200,7 +1200,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the width of `self` in pixels.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_width</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_width</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
@@ -1218,7 +1218,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the width of `self` in millimeters.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_width_mm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_width_mm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_width_mm</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>) }
     }
 
@@ -1242,7 +1242,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// a</span>
     <span class="doccomment">///  list of ``GdkWindows`` for the current window stack, or `None`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_window_stack</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Window</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_window_stack</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Window</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">FromGlibPtrContainer</span>::<span class="ident">from_glib_full</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_window_stack</span>(
                 <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
@@ -1261,7 +1261,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Whether windows with RGBA visuals can reasonably be</span>
     <span class="doccomment">/// expected to have their alpha channels drawn correctly on the screen.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_composited</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_composited</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">unsafe</span> { <span class="ident">from_glib</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_is_composited</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
@@ -1276,7 +1276,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">///</span>
     <span class="doccomment">///  a list of visuals; the list must be freed, but not its contents</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_visuals</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Visual</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">list_visuals</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Visual</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="ident">FromGlibPtrContainer</span>::<span class="ident">from_glib_container</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_list_visuals</span>(
                 <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>,
@@ -1294,7 +1294,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// a newly allocated string, free with `g_free`</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">make_display_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">GString</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">make_display_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">GString</span> {
         <span class="kw">unsafe</span> { <span class="ident">from_glib_full</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_make_display_name</span>(<span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span>)) }
     }
 
@@ -1329,7 +1329,7 @@
     <span class="comment">//    unsafe {</span>
     <span class="comment">//        let mut value = Value::from_type(&lt;/*Unknown type*/ as StaticType&gt;::static_type());</span>
     <span class="comment">//        gobject_sys::g_object_get_property(self.as_ptr() as *mut gobject_sys::GObject, b&quot;font-options\0&quot;.as_ptr() as *const _, value.to_glib_none_mut().0);</span>
-    <span class="comment">//        value.get().unwrap()</span>
+    <span class="comment">//        value.get().expect(&quot;Return Value for property `font-options` getter&quot;).unwrap()</span>
     <span class="comment">//    }</span>
     <span class="comment">//}</span>
 
@@ -1340,7 +1340,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// a `Screen`, or `None` if</span>
     <span class="doccomment">///  there is no default display.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_default</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Screen</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Screen</span><span class="op">&gt;</span> {
         <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
         <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_get_default</span>()) }
     }
@@ -1357,7 +1357,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the height of the default screen in pixels.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">height</span>() <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">height</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_height</span>() }
     }
@@ -1374,7 +1374,7 @@
     <span class="doccomment">/// the height of the default screen in millimeters,</span>
     <span class="doccomment">/// though it is not always correct.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">height_mm</span>() <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">height_mm</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_height_mm</span>() }
     }
@@ -1391,7 +1391,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// the width of the default screen in pixels.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">width</span>() <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">width</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_width</span>() }
     }
@@ -1408,14 +1408,14 @@
     <span class="doccomment">/// the width of the default screen in millimeters,</span>
     <span class="doccomment">/// though it is not always correct.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;v3_22&quot;</span>, <span class="ident">deprecated</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">width_mm</span>() <span class="op">-&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">width_mm</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
         <span class="macro">assert_initialized_main_thread</span><span class="macro">!</span>();
         <span class="kw">unsafe</span> { <span class="ident">gdk_sys</span>::<span class="ident">gdk_screen_width_mm</span>() }
     }
 
     <span class="doccomment">/// The ::composited-changed signal is emitted when the composited</span>
     <span class="doccomment">/// status of the screen changes</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_composited_changed</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_composited_changed</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SignalHandlerId</span> {
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">composited_changed_trampoline</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
             <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gdk_sys</span>::<span class="ident">GdkScreen</span>,
             <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
@@ -1439,7 +1439,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Only for X11 and OS X for now. A future implementation for Win32</span>
     <span class="doccomment">/// may be a possibility.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_monitors_changed</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_monitors_changed</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SignalHandlerId</span> {
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">monitors_changed_trampoline</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
             <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gdk_sys</span>::<span class="ident">GdkScreen</span>,
             <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
@@ -1460,7 +1460,7 @@
 
     <span class="doccomment">/// The ::size-changed signal is emitted when the pixel width or</span>
     <span class="doccomment">/// height of a screen changes.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_size_changed</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_size_changed</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SignalHandlerId</span> {
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">size_changed_trampoline</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
             <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gdk_sys</span>::<span class="ident">GdkScreen</span>,
             <span class="ident">f</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
@@ -1482,7 +1482,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_property_font_options_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">f</span>: <span class="ident">F</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SignalHandlerId</span> {
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_font_options_trampoline</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
             <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gdk_sys</span>::<span class="ident">GdkScreen</span>,
             <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
@@ -1505,7 +1505,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_property_resolution_notify</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">f</span>: <span class="ident">F</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">SignalHandlerId</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SignalHandlerId</span> {
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">notify_resolution_trampoline</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Screen</span>) <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
             <span class="ident">this</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gdk_sys</span>::<span class="ident">GdkScreen</span>,
             <span class="ident">_param_spec</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
@@ -1527,9 +1527,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Screen</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Screen&quot;</span>)
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "gdk";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "gdk";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
