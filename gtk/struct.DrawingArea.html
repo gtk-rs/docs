@@ -29,39 +29,22 @@ the expose event, and that drawing is implicitly clipped to the exposed
 area. If you want to have a theme-provided background, you need
 to call <code>gtk_render_background</code> in your ::draw method.</p>
 <h2 id="simple-drawingarea-usage" class="section-header"><a href="#simple-drawingarea-usage">Simple <code>DrawingArea</code> usage</a></h2>
-<pre><code class="language-C">gboolean
-draw_callback (GtkWidget *widget, cairo_t *cr, gpointer data)
-{
-  guint width, height;
-  GdkRGBA color;
-  GtkStyleContext *context;
-
-  context = gtk_widget_get_style_context (widget);
-
-  width = gtk_widget_get_allocated_width (widget);
-  height = gtk_widget_get_allocated_height (widget);
-
-  gtk_render_background (context, cr, 0, 0, width, height);
-
-  cairo_arc (cr,
-             width / 2.0, height / 2.0,
-             MIN (width, height) / 2.0,
-             0, 2 * G_PI);
-
-  gtk_style_context_get_color (context,
-                               gtk_style_context_get_state (context),
-                               &amp;color);
-  gdk_cairo_set_source_rgba (cr, &amp;color);
-
-  cairo_fill (cr);
-
- return FALSE;
-}
-[...]
-  GtkWidget *drawing_area = gtk_drawing_area_new ();
-  gtk_widget_set_size_request (drawing_area, 100, 100);
-  g_signal_connect (G_OBJECT (drawing_area), &quot;draw&quot;,
-                    G_CALLBACK (draw_callback), NULL);
+<pre><code class="language-Rust">let drawing_area = DrawingArea::new();
+drawing_area.set_size_request(100,100);
+drawing_area.connect_draw(|widget,cairo_context| {
+    let context = widget.get_style_context();
+    let width = widget.get_allocated_width();
+    let height = widget.get_allocated_height();
+    let color = context.get_color(context.get_state());
+            
+    gtk::render_background(&context,cairo_context, 0.0, 0.0, width as f64, height as f64);
+    cairo_context.arc((width/2) as f64, (height/2) as f64, 
+                      50.0, 0.0, 2.0*std::f64::consts::PI);
+    cairo_context.set_source_rgba(color.red, color.green, color.blue, 1.0);             
+    cairo_context.fill();
+            
+    return Inhibit(false);      
+});
 </code></pre>
 <p>Draw signals are normally delivered when a drawing area first comes
 onscreen, or when it’s covered by another window and then uncovered.
