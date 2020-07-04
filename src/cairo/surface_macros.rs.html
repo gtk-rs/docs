@@ -93,6 +93,10 @@
 <span id="93">93</span>
 <span id="94">94</span>
 <span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// e.g. declare_surface(ImageSurface, SurfaceType::Image)</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">declare_surface</span> {
@@ -115,9 +119,9 @@
         <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">surf_name</span> {
             <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw_full</span>(
                 <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_surface_t</span>,
-            ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">surf_name</span>, <span class="ident">Status</span><span class="op">&gt;</span> {
+            ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">surf_name</span>, ::<span class="ident">error</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="ident">Surface</span>::<span class="ident">from_raw_full</span>(<span class="ident">ptr</span>)<span class="question-mark">?</span>;
-                <span class="self">Self</span>::<span class="ident">try_from</span>(<span class="ident">surface</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Status</span>::<span class="ident">SurfaceTypeMismatch</span>)
+                <span class="self">Self</span>::<span class="ident">try_from</span>(<span class="ident">surface</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ::<span class="ident">error</span>::<span class="ident">Error</span>::<span class="ident">SurfaceTypeMismatch</span>)
             }
         }
 
@@ -148,8 +152,12 @@
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_glib&quot;</span>)]</span>
         <span class="kw">impl</span> <span class="ident">FromGlibPtrBorrow</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_surface_t</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">surf_name</span> {
             <span class="attribute">#[<span class="ident">inline</span>]</span>
-            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_borrow</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_surface_t</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">surf_name</span> {
-                <span class="self">Self</span>::<span class="ident">try_from</span>(<span class="ident">from_glib_borrow</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Surface</span><span class="op">&gt;</span>(<span class="ident">ptr</span>)).<span class="ident">unwrap</span>()
+            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_borrow</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_surface_t</span>) <span class="op">-</span><span class="op">&gt;</span> ::<span class="ident">Borrowed</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">surf_name</span><span class="op">&gt;</span> {
+                <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Surface</span><span class="op">&gt;</span>(<span class="ident">ptr</span>);
+                <span class="kw">let</span> <span class="ident">surface</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">try_from</span>(<span class="ident">surface</span>.<span class="ident">into_inner</span>())
+                    .<span class="ident">map_err</span>(<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">forget</span>)
+                    .<span class="ident">unwrap</span>();
+                ::<span class="ident">Borrowed</span>::<span class="ident">new</span>(<span class="ident">surface</span>)
             }
         }
 
@@ -190,4 +198,4 @@
     };
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "cairo";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "cairo";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

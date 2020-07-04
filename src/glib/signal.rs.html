@@ -109,6 +109,7 @@
 <span id="109">109</span>
 <span id="110">110</span>
 <span id="111">111</span>
+<span id="112">112</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2015, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -121,18 +122,19 @@
 <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_char</span>, <span class="ident">c_ulong</span>, <span class="ident">c_void</span>};
 <span class="kw">use</span> <span class="ident">object</span>::<span class="ident">ObjectType</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">num</span>::<span class="ident">NonZeroU64</span>;
 <span class="kw">use</span> <span class="ident">translate</span>::{<span class="ident">from_glib</span>, <span class="ident">FromGlib</span>, <span class="ident">ToGlib</span>, <span class="ident">ToGlibPtr</span>};
 
 <span class="doccomment">/// The id of a signal that is returned by `connect`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SignalHandlerId</span>(<span class="ident">c_ulong</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SignalHandlerId</span>(<span class="ident">NonZeroU64</span>);
 
 <span class="kw">impl</span> <span class="ident">ToGlib</span> <span class="kw">for</span> <span class="ident">SignalHandlerId</span> {
     <span class="kw">type</span> <span class="ident">GlibType</span> <span class="op">=</span> <span class="ident">c_ulong</span>;
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">to_glib</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_ulong</span> {
-        <span class="self">self</span>.<span class="number">0</span>
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>() <span class="kw">as</span> <span class="ident">c_ulong</span>
     }
 }
 
@@ -140,7 +142,7 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from_glib</span>(<span class="ident">val</span>: <span class="ident">c_ulong</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SignalHandlerId</span> {
         <span class="macro">assert_ne</span><span class="macro">!</span>(<span class="ident">val</span>, <span class="number">0</span>);
-        <span class="ident">SignalHandlerId</span>(<span class="ident">val</span>)
+        <span class="ident">SignalHandlerId</span>(<span class="kw">unsafe</span> { <span class="ident">NonZeroU64</span>::<span class="ident">new_unchecked</span>(<span class="ident">val</span> <span class="kw">as</span> <span class="ident">u64</span>) })
     }
 }
 
@@ -222,4 +224,4 @@
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "glib";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "glib";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

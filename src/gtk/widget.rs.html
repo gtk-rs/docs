@@ -398,6 +398,44 @@
 <span id="398">398</span>
 <span id="399">399</span>
 <span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2015-2016, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -622,6 +660,29 @@
     <span class="doccomment">/// ## `events`</span>
     <span class="doccomment">/// event mask</span>
     <span class="kw">fn</span> <span class="ident">set_events</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">events</span>: <span class="ident">gdk</span>::<span class="ident">EventMask</span>);
+
+    <span class="comment">// rustdoc-stripper-ignore-next</span>
+    <span class="doccomment">/// Calls `gtk_widget_destroy()` on this widget.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Utility function; intended to be connected to the `Widget::delete-event`</span>
+    <span class="doccomment">/// signal on a `Window`. The function calls `WidgetExt::hide` on its</span>
+    <span class="doccomment">/// argument, then returns `true`. If connected to ::delete-event, the</span>
+    <span class="doccomment">/// result is that clicking the close button for a window (on the</span>
+    <span class="doccomment">/// window frame, top right corner usually) will hide but not destroy</span>
+    <span class="doccomment">/// the window. By default, GTK+ destroys windows when ::delete-event</span>
+    <span class="doccomment">/// is received.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Returns</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `true`</span>
+    <span class="doccomment">/// # Safety</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This will not necessarily entirely remove the widget from existence but</span>
+    <span class="doccomment">/// you must *NOT* query the widget&#39;s state subsequently.  Do not call this</span>
+    <span class="doccomment">/// yourself unless you really mean to.</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">destroy</span>(<span class="kw-2">&amp;</span><span class="self">self</span>);
+
+    <span class="kw">fn</span> <span class="ident">hide_on_delete</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Inhibit</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Widget</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">WidgetExtManual</span> <span class="kw">for</span> <span class="ident">O</span> {
@@ -691,7 +752,7 @@
             <span class="ident">T</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Widget</span><span class="op">&gt;</span>,
         {
             <span class="ident">f</span>(
-                <span class="kw-2">&amp;</span><span class="ident">Widget</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>(),
+                <span class="kw-2">&amp;</span><span class="ident">Widget</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast_ref</span>(),
                 <span class="kw-2">&amp;</span><span class="ident">from_glib_borrow</span>(<span class="ident">event</span>),
             )
             .<span class="ident">to_glib</span>()
@@ -701,7 +762,9 @@
             <span class="ident">connect_raw</span>(
                 <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
                 <span class="string">b&quot;map-event\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">event_any_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)),
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>()<span class="op">&gt;</span>(
+                    <span class="ident">event_any_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> (),
+                )),
                 <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
             )
         }
@@ -720,7 +783,7 @@
             <span class="ident">T</span>: <span class="ident">IsA</span><span class="op">&lt;</span><span class="ident">Widget</span><span class="op">&gt;</span>,
         {
             <span class="ident">f</span>(
-                <span class="kw-2">&amp;</span><span class="ident">Widget</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast</span>(),
+                <span class="kw-2">&amp;</span><span class="ident">Widget</span>::<span class="ident">from_glib_borrow</span>(<span class="ident">this</span>).<span class="ident">unsafe_cast_ref</span>(),
                 <span class="kw-2">&amp;</span><span class="ident">from_glib_borrow</span>(<span class="ident">event</span>),
             )
             .<span class="ident">to_glib</span>()
@@ -730,7 +793,9 @@
             <span class="ident">connect_raw</span>(
                 <span class="self">self</span>.<span class="ident">to_glib_none</span>().<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
                 <span class="string">b&quot;unmap-event\0&quot;</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>(<span class="ident">event_any_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">usize</span>)),
+                <span class="prelude-val">Some</span>(<span class="ident">transmute</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>()<span class="op">&gt;</span>(
+                    <span class="ident">event_any_trampoline</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> (),
+                )),
                 <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">f</span>),
             )
         }
@@ -750,11 +815,10 @@
             <span class="ident">frame_clock</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gdk_sys</span>::<span class="ident">GdkFrameClock</span>,
             <span class="ident">user_data</span>: <span class="ident">glib_sys</span>::<span class="ident">gpointer</span>,
         ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">glib_sys</span>::<span class="ident">gboolean</span> {
-            <span class="kw">let</span> <span class="ident">widget</span>: <span class="ident">Widget</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">widget</span>);
-            <span class="kw">let</span> <span class="ident">widget</span> <span class="op">=</span> <span class="ident">widget</span>.<span class="ident">downcast</span>().<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">widget</span>: <span class="ident">Borrowed</span><span class="op">&lt;</span><span class="ident">Widget</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">widget</span>);
             <span class="kw">let</span> <span class="ident">frame_clock</span> <span class="op">=</span> <span class="ident">from_glib_borrow</span>(<span class="ident">frame_clock</span>);
             <span class="kw">let</span> <span class="ident">callback</span>: <span class="kw-2">&amp;</span><span class="ident">P</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">user_data</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
-            <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">callback</span>)(<span class="kw-2">&amp;</span><span class="ident">widget</span>, <span class="kw-2">&amp;</span><span class="ident">frame_clock</span>);
+            <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">callback</span>)(<span class="kw-2">&amp;</span><span class="ident">widget</span>.<span class="ident">unsafe_cast_ref</span>(), <span class="kw-2">&amp;</span><span class="ident">frame_clock</span>);
             <span class="ident">res</span>.<span class="ident">to_glib</span>()
         }
         <span class="kw">let</span> <span class="ident">callback</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">callback_func</span>::<span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">P</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw">_</span>);
@@ -798,6 +862,18 @@
             <span class="ident">gtk_sys</span>::<span class="ident">gtk_widget_set_events</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>, <span class="ident">events</span>.<span class="ident">to_glib</span>() <span class="kw">as</span> <span class="ident">i32</span>);
         }
     }
+
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">destroy</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="ident">gtk_sys</span>::<span class="ident">gtk_widget_destroy</span>(<span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>);
+    }
+
+    <span class="kw">fn</span> <span class="ident">hide_on_delete</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Inhibit</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">Inhibit</span>(<span class="ident">from_glib</span>(<span class="ident">gtk_sys</span>::<span class="ident">gtk_widget_hide_on_delete</span>(
+                <span class="self">self</span>.<span class="ident">as_ref</span>().<span class="ident">to_glib_none</span>().<span class="number">0</span>,
+            )))
+        }
+    }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "gtk";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "gtk";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

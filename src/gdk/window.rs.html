@@ -308,6 +308,7 @@
 <span id="308">308</span>
 <span id="309">309</span>
 <span id="310">310</span>
+<span id="311">311</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -321,6 +322,7 @@
 <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_char</span>, <span class="ident">c_int</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
 <span class="kw">use</span> <span class="ident">Cursor</span>;
+<span class="kw">use</span> <span class="ident">EventMask</span>;
 <span class="kw">use</span> <span class="ident">Visual</span>;
 <span class="kw">use</span> <span class="ident">Window</span>;
 
@@ -328,7 +330,7 @@
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WindowAttr</span> {
     <span class="kw">pub</span> <span class="ident">title</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">event_mask</span>: <span class="ident">i32</span>,
+    <span class="kw">pub</span> <span class="ident">event_mask</span>: <span class="ident">EventMask</span>,
     <span class="kw">pub</span> <span class="ident">x</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">y</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">width</span>: <span class="ident">i32</span>,
@@ -346,7 +348,7 @@
         <span class="macro">skip_assert_initialized</span><span class="macro">!</span>();
         <span class="ident">WindowAttr</span> {
             <span class="ident">title</span>: <span class="prelude-val">None</span>,
-            <span class="ident">event_mask</span>: <span class="number">0</span>,
+            <span class="ident">event_mask</span>: <span class="ident">EventMask</span>::<span class="ident">empty</span>(),
             <span class="ident">x</span>: <span class="prelude-val">None</span>,
             <span class="ident">y</span>: <span class="prelude-val">None</span>,
             <span class="ident">width</span>: <span class="number">400</span>,
@@ -405,7 +407,7 @@
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">attrs</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">gdk_sys</span>::<span class="ident">GdkWindowAttr</span> {
             <span class="ident">title</span>: <span class="ident">title</span>.<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>,
-            <span class="ident">event_mask</span>: <span class="self">self</span>.<span class="ident">event_mask</span>,
+            <span class="ident">event_mask</span>: <span class="self">self</span>.<span class="ident">event_mask</span>.<span class="ident">bits</span>() <span class="kw">as</span> <span class="ident">i32</span>,
             <span class="ident">x</span>: <span class="self">self</span>.<span class="ident">x</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>),
             <span class="ident">y</span>: <span class="self">self</span>.<span class="ident">y</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>),
             <span class="ident">width</span>: <span class="self">self</span>.<span class="ident">width</span>,
@@ -620,4 +622,4 @@
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "gdk";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "gdk";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

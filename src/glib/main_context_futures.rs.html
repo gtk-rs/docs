@@ -400,22 +400,6 @@
 <span id="400">400</span>
 <span id="401">401</span>
 <span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
-<span id="408">408</span>
-<span id="409">409</span>
-<span id="410">410</span>
-<span id="411">411</span>
-<span id="412">412</span>
-<span id="413">413</span>
-<span id="414">414</span>
-<span id="415">415</span>
-<span id="416">416</span>
-<span id="417">417</span>
-<span id="418">418</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2018, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -429,7 +413,7 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">pin</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
-<span class="kw">use</span> <span class="ident">translate</span>::{<span class="ident">from_glib_full</span>, <span class="ident">from_glib_none</span>, <span class="ident">mut_override</span>, <span class="ident">ToGlib</span>};
+<span class="kw">use</span> <span class="ident">translate</span>::{<span class="ident">from_glib_borrow</span>, <span class="ident">from_glib_full</span>, <span class="ident">mut_override</span>, <span class="ident">Borrowed</span>, <span class="ident">ToGlib</span>};
 <span class="kw">use</span> <span class="ident">ThreadGuard</span>;
 
 <span class="kw">use</span> <span class="ident">MainContext</span>;
@@ -467,8 +451,8 @@
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
 <span class="kw">struct</span> <span class="ident">TaskSource</span> {
     <span class="ident">source</span>: <span class="ident">glib_sys</span>::<span class="ident">GSource</span>,
-    <span class="ident">future</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FutureWrapper</span><span class="op">&gt;</span>,
-    <span class="ident">waker</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Waker</span><span class="op">&gt;</span>,
+    <span class="ident">future</span>: <span class="ident">FutureWrapper</span>,
+    <span class="ident">waker</span>: <span class="ident">Waker</span>,
 }
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">type_complexity</span>)]</span>
@@ -500,10 +484,10 @@
 
         <span class="comment">// This will panic if the future was a local future and is dropped from</span>
         <span class="comment">// a different thread than where it was created.</span>
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">source</span>).<span class="ident">future</span>.<span class="ident">take</span>();
+        <span class="ident">ptr</span>::<span class="ident">drop_in_place</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="kw-2">*</span><span class="ident">source</span>).<span class="ident">future</span>);
 
         <span class="comment">// Drop the waker to unref the underlying GSource</span>
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">source</span>).<span class="ident">waker</span>.<span class="ident">take</span>();
+        <span class="ident">ptr</span>::<span class="ident">drop_in_place</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="kw-2">*</span><span class="ident">source</span>).<span class="ident">waker</span>);
     }
 }
 
@@ -591,11 +575,11 @@
 
             {
                 <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span>(<span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">TaskSource</span>);
-                <span class="ident">ptr</span>::<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">source</span>.<span class="ident">future</span>, <span class="prelude-val">Some</span>(<span class="ident">future</span>));
+                <span class="ident">ptr</span>::<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">source</span>.<span class="ident">future</span>, <span class="ident">future</span>);
 
                 <span class="comment">// This creates a new reference to the waker source.</span>
                 <span class="kw">let</span> <span class="ident">waker</span> <span class="op">=</span> <span class="ident">Waker</span>::<span class="ident">from_raw</span>(<span class="ident">WakerSource</span>::<span class="ident">clone_raw</span>(<span class="ident">waker_source</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> ()));
-                <span class="ident">ptr</span>::<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">source</span>.<span class="ident">waker</span>, <span class="prelude-val">Some</span>(<span class="ident">waker</span>));
+                <span class="ident">ptr</span>::<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">source</span>.<span class="ident">waker</span>, <span class="ident">waker</span>);
             }
 
             <span class="comment">// Set ready time to 0 so that the source is immediately dispatched</span>
@@ -613,41 +597,22 @@
 
     <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="kw">_</span>;
-        <span class="kw">let</span> <span class="ident">waker</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">waker</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;TaskSource polled after being finalized&quot;</span>);
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">future</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">future</span> {
-            <span class="kw">let</span> <span class="ident">executor</span>: <span class="ident">MainContext</span> <span class="op">=</span>
-                <span class="kw">unsafe</span> { <span class="ident">from_glib_none</span>(<span class="ident">glib_sys</span>::<span class="ident">g_source_get_context</span>(<span class="ident">mut_override</span>(<span class="ident">source</span>))) };
+        <span class="kw">let</span> <span class="ident">executor</span>: <span class="ident">Borrowed</span><span class="op">&lt;</span><span class="ident">MainContext</span><span class="op">&gt;</span> <span class="op">=</span>
+            <span class="kw">unsafe</span> { <span class="ident">from_glib_borrow</span>(<span class="ident">glib_sys</span>::<span class="ident">g_source_get_context</span>(<span class="ident">mut_override</span>(<span class="ident">source</span>))) };
 
-            <span class="macro">assert</span><span class="macro">!</span>(
-                <span class="ident">executor</span>.<span class="ident">is_owner</span>(),
-                <span class="string">&quot;Polling futures only allowed if the thread is owning the MainContext&quot;</span>
-            );
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">executor</span>.<span class="ident">is_owner</span>(),
+            <span class="string">&quot;Polling futures only allowed if the thread is owning the MainContext&quot;</span>
+        );
 
-            <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">executor</span>.<span class="ident">with_thread_default</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">enter</span> <span class="op">=</span> <span class="ident">futures_executor</span>::<span class="ident">enter</span>().<span class="ident">unwrap</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">Context</span>::<span class="ident">from_waker</span>(<span class="ident">waker</span>);
+        <span class="ident">executor</span>.<span class="ident">with_thread_default</span>(<span class="op">|</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">_enter</span> <span class="op">=</span> <span class="ident">futures_executor</span>::<span class="ident">enter</span>().<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">Context</span>::<span class="ident">from_waker</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">waker</span>);
 
-                <span class="comment">// This will panic if the future was a local future and is called from</span>
-                <span class="comment">// a different thread than where it was created.</span>
-                <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">future</span>.<span class="ident">poll_unpin</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">context</span>);
-
-                <span class="ident">drop</span>(<span class="ident">enter</span>);
-
-                <span class="ident">res</span>
-            });
-
-            <span class="comment">// If the future has resolved now drop it here already.</span>
-            <span class="kw">if</span> <span class="ident">res</span>.<span class="ident">is_ready</span>() {
-                <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">future</span>.<span class="ident">take</span>();
-            }
-
-            <span class="ident">res</span>
-        } <span class="kw">else</span> {
-            <span class="ident">Poll</span>::<span class="ident">Ready</span>(())
-        }
+            <span class="comment">// This will panic if the future was a local future and is called from</span>
+            <span class="comment">// a different thread than where it was created.</span>
+            <span class="self">self</span>.<span class="ident">future</span>.<span class="ident">poll_unpin</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">context</span>)
+        })
     }
 }
 
@@ -787,7 +752,10 @@
 
                     <span class="ident">futures_util</span>::<span class="ident">future</span>::<span class="ident">ok</span>(())
                 })
-                .<span class="ident">then</span>(<span class="op">|</span><span class="ident">res</span><span class="op">|</span> <span class="ident">futures_util</span>::<span class="ident">future</span>::<span class="ident">ready</span>(<span class="ident">res</span>.<span class="ident">unwrap</span>())),
+                .<span class="ident">then</span>(<span class="op">|</span><span class="ident">res</span><span class="op">|</span> {
+                    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">is_ok</span>());
+                    <span class="ident">futures_util</span>::<span class="ident">future</span>::<span class="ident">ready</span>(())
+                }),
         );
 
         <span class="ident">thread</span>::<span class="ident">spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
@@ -796,7 +764,7 @@
 
         <span class="ident">o_sender</span>.<span class="ident">send</span>(()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">recv</span>().<span class="ident">unwrap</span>();
+        <span class="ident">receiver</span>.<span class="ident">recv</span>().<span class="ident">unwrap</span>();
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -836,4 +804,4 @@
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "glib";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "glib";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

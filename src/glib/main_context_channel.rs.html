@@ -843,15 +843,6 @@
 <span id="843">843</span>
 <span id="844">844</span>
 <span id="845">845</span>
-<span id="846">846</span>
-<span id="847">847</span>
-<span id="848">848</span>
-<span id="849">849</span>
-<span id="850">850</span>
-<span id="851">851</span>
-<span id="852">852</span>
-<span id="853">853</span>
-<span id="854">854</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2019, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -1138,7 +1129,7 @@
 <span class="doccomment">/// See [`MainContext::channel()`] for how to create such a `Sender`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`MainContext::channel()`]: struct.MainContext.html#method.channel</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
@@ -1148,24 +1139,20 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">Sender</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ref</span>())
+        <span class="ident">Sender</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">channel</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">channel</span>) <span class="op">=</span> <span class="ident">channel</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> (<span class="ident">channel</span>.<span class="number">0</span>).<span class="number">0</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-            <span class="ident">inner</span>.<span class="ident">num_senders</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-            <span class="ident">Sender</span>(<span class="prelude-val">Some</span>(<span class="ident">channel</span>.<span class="ident">clone</span>()))
-        } <span class="kw">else</span> {
-            <span class="ident">Sender</span>(<span class="prelude-val">None</span>)
-        }
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> (<span class="ident">channel</span>.<span class="number">0</span>).<span class="number">0</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="ident">inner</span>.<span class="ident">num_senders</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="ident">Sender</span>(<span class="ident">channel</span>.<span class="ident">clone</span>())
     }
 
     <span class="doccomment">/// Sends a value to the channel.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc</span>::<span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ref</span>().<span class="ident">expect</span>(<span class="string">&quot;Sender with no channel&quot;</span>).<span class="ident">send</span>(<span class="ident">t</span>)
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">send</span>(<span class="ident">t</span>)
     }
 }
 
@@ -1173,8 +1160,7 @@
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="comment">// Decrease the number of senders and wake up the channel if this</span>
         <span class="comment">// was the last sender that was dropped.</span>
-        <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;Sender with no channel&quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> (<span class="ident">channel</span>.<span class="number">0</span>).<span class="number">0</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> ((<span class="self">self</span>.<span class="number">0</span>).<span class="number">0</span>).<span class="number">0</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="ident">inner</span>.<span class="ident">num_senders</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
         <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">num_senders</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
             <span class="ident">inner</span>.<span class="ident">set_ready_time</span>(<span class="number">0</span>);
@@ -1189,7 +1175,7 @@
 <span class="doccomment">/// See [`MainContext::sync_channel()`] for how to create such a `SyncSender`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`MainContext::sync_channel()`]: struct.MainContext.html#method.sync_channel</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
@@ -1199,29 +1185,25 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">SyncSender</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ref</span>())
+        <span class="ident">SyncSender</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">channel</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">channel</span>) <span class="op">=</span> <span class="ident">channel</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> (<span class="ident">channel</span>.<span class="number">0</span>).<span class="number">0</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-            <span class="ident">inner</span>.<span class="ident">num_senders</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-            <span class="ident">SyncSender</span>(<span class="prelude-val">Some</span>(<span class="ident">channel</span>.<span class="ident">clone</span>()))
-        } <span class="kw">else</span> {
-            <span class="ident">SyncSender</span>(<span class="prelude-val">None</span>)
-        }
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">channel</span>: <span class="kw-2">&amp;</span><span class="ident">Channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> (<span class="ident">channel</span>.<span class="number">0</span>).<span class="number">0</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="ident">inner</span>.<span class="ident">num_senders</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="ident">SyncSender</span>(<span class="ident">channel</span>.<span class="ident">clone</span>())
     }
 
     <span class="doccomment">/// Sends a value to the channel and blocks if the channel is full.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc</span>::<span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ref</span>().<span class="ident">expect</span>(<span class="string">&quot;Sender with no channel&quot;</span>).<span class="ident">send</span>(<span class="ident">t</span>)
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">send</span>(<span class="ident">t</span>)
     }
 
     <span class="doccomment">/// Sends a value to the channel.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">t</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">mpsc</span>::<span class="ident">TrySendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ref</span>().<span class="ident">expect</span>(<span class="string">&quot;Sender with no channel&quot;</span>).<span class="ident">try_send</span>(<span class="ident">t</span>)
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">try_send</span>(<span class="ident">t</span>)
     }
 }
 
@@ -1229,8 +1211,7 @@
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="comment">// Decrease the number of senders and wake up the channel if this</span>
         <span class="comment">// was the last sender that was dropped.</span>
-        <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;Sender with no channel&quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> (<span class="ident">channel</span>.<span class="number">0</span>).<span class="number">0</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> ((<span class="self">self</span>.<span class="number">0</span>).<span class="number">0</span>).<span class="number">0</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
         <span class="ident">inner</span>.<span class="ident">num_senders</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
         <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">num_senders</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
             <span class="ident">inner</span>.<span class="ident">set_ready_time</span>(<span class="number">0</span>);
@@ -1361,7 +1342,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">priority</span>: <span class="ident">Priority</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
         <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="ident">Channel</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>);
         <span class="kw">let</span> <span class="ident">receiver</span> <span class="op">=</span> <span class="ident">Receiver</span>(<span class="prelude-val">Some</span>(<span class="ident">channel</span>.<span class="ident">clone</span>()), <span class="ident">priority</span>);
-        <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="ident">Sender</span>::<span class="ident">new</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">channel</span>));
+        <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="ident">Sender</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">channel</span>);
 
         (<span class="ident">sender</span>, <span class="ident">receiver</span>)
     }
@@ -1383,7 +1364,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sync_channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">priority</span>: <span class="ident">Priority</span>, <span class="ident">bound</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
         <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="ident">Channel</span>::<span class="ident">new</span>(<span class="prelude-val">Some</span>(<span class="ident">bound</span>));
         <span class="kw">let</span> <span class="ident">receiver</span> <span class="op">=</span> <span class="ident">Receiver</span>(<span class="prelude-val">Some</span>(<span class="ident">channel</span>.<span class="ident">clone</span>()), <span class="ident">priority</span>);
-        <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="ident">SyncSender</span>::<span class="ident">new</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">channel</span>));
+        <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="ident">SyncSender</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">channel</span>);
 
         (<span class="ident">sender</span>, <span class="ident">receiver</span>)
     }
@@ -1394,6 +1375,7 @@
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">RefCell</span>;
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">rc</span>::<span class="ident">Rc</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">Ordering</span>};
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">thread</span>;
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>;
     <span class="kw">use</span> <span class="ident">MainLoop</span>;
@@ -1489,14 +1471,14 @@
 
         <span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">MainContext</span>::<span class="ident">channel</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>(<span class="ident">Priority</span>::<span class="ident">default</span>());
 
-        <span class="kw">struct</span> <span class="ident">Helper</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span>);
+        <span class="kw">struct</span> <span class="ident">Helper</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span>);
         <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Helper</span> {
             <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-                <span class="kw-2">*</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>() <span class="op">=</span> <span class="bool-val">true</span>;
+                <span class="self">self</span>.<span class="number">0</span>.<span class="ident">store</span>(<span class="bool-val">true</span>, <span class="ident">Ordering</span>::<span class="ident">Relaxed</span>);
             }
         }
 
-        <span class="kw">let</span> <span class="ident">dropped</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="bool-val">false</span>));
+        <span class="kw">let</span> <span class="ident">dropped</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">AtomicBool</span>::<span class="ident">new</span>(<span class="bool-val">false</span>));
         <span class="kw">let</span> <span class="ident">helper</span> <span class="op">=</span> <span class="ident">Helper</span>(<span class="ident">dropped</span>.<span class="ident">clone</span>());
         <span class="kw">let</span> <span class="ident">source_id</span> <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">_helper</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">helper</span>;
@@ -1509,7 +1491,7 @@
         <span class="comment">// This should drop the closure</span>
         <span class="ident">drop</span>(<span class="ident">source</span>);
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">dropped</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>(), <span class="bool-val">true</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">dropped</span>.<span class="ident">load</span>(<span class="ident">Ordering</span>::<span class="ident">Relaxed</span>));
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sender</span>.<span class="ident">send</span>(<span class="number">1</span>), <span class="prelude-val">Err</span>(<span class="ident">mpsc</span>::<span class="ident">SendError</span>(<span class="number">1</span>)));
     }
 
@@ -1553,7 +1535,7 @@
         <span class="comment">// Wait until the channel is full, and then another</span>
         <span class="comment">// 50ms to make sure the sender is blocked now and</span>
         <span class="comment">// can wake up properly once an item was consumed</span>
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">unwrap</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">is_ok</span>());
         <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">50</span>));
         <span class="ident">l</span>.<span class="ident">run</span>();
 
@@ -1596,7 +1578,7 @@
             <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">4</span>.. {
                 <span class="comment">// This will block at some point until the</span>
                 <span class="comment">// receiver is removed from the main context</span>
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">i</span>) {
+                <span class="kw">if</span> <span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">i</span>).<span class="ident">is_err</span>() {
                     <span class="kw">break</span>;
                 }
             }
@@ -1605,7 +1587,7 @@
         <span class="comment">// Wait until the channel is full, and then another</span>
         <span class="comment">// 50ms to make sure the sender is blocked now and</span>
         <span class="comment">// can wake up properly once an item was consumed</span>
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">unwrap</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">is_ok</span>());
         <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">50</span>));
         <span class="ident">l</span>.<span class="ident">run</span>();
 
@@ -1637,7 +1619,7 @@
         <span class="comment">// Wait until the channel is full, and then another</span>
         <span class="comment">// 50ms to make sure the sender is blocked now and</span>
         <span class="comment">// can wake up properly once an item was consumed</span>
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">unwrap</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">is_ok</span>());
         <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">50</span>));
         <span class="ident">drop</span>(<span class="ident">receiver</span>);
         <span class="ident">thread</span>.<span class="ident">join</span>().<span class="ident">unwrap</span>();
@@ -1667,7 +1649,7 @@
         <span class="comment">// Wait until the thread is started, then wait another 50ms and</span>
         <span class="comment">// during that time it must not have proceeded yet to send the</span>
         <span class="comment">// second item because we did not yet receive the first item.</span>
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">unwrap</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">is_ok</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">wait_receiver</span>.<span class="ident">recv_timeout</span>(<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">50</span>)),
             <span class="prelude-val">Err</span>(<span class="ident">mpsc</span>::<span class="ident">RecvTimeoutError</span>::<span class="ident">Timeout</span>)
@@ -1679,7 +1661,7 @@
         <span class="ident">receiver</span>.<span class="ident">attach</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="kw">move</span> <span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
             <span class="comment">// We consumed one item so there should be one item on</span>
             <span class="comment">// the other receiver now.</span>
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">unwrap</span>();
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">wait_receiver</span>.<span class="ident">recv</span>().<span class="ident">is_ok</span>());
             <span class="kw-2">*</span><span class="ident">sum_clone</span>.<span class="ident">borrow_mut</span>() <span class="op">+</span><span class="op">=</span> <span class="ident">item</span>;
             <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">sum_clone</span>.<span class="ident">borrow</span>() <span class="op">=</span><span class="op">=</span> <span class="number">6</span> {
                 <span class="comment">// But as we didn&#39;t consume the next one yet, there must be no</span>
@@ -1708,4 +1690,4 @@
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "glib";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "glib";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
