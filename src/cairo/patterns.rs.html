@@ -499,6 +499,9 @@
 <span id="499">499</span>
 <span id="500">500</span>
 <span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -507,7 +510,8 @@
 <span class="doccomment">//! Sources for drawing</span>
 
 <span class="kw">use</span> <span class="ident">enums</span>::<span class="ident">MeshCorner</span>;
-<span class="kw">use</span> <span class="ident">enums</span>::{<span class="ident">Extend</span>, <span class="ident">Filter</span>, <span class="ident">PatternType</span>, <span class="ident">Status</span>};
+<span class="kw">use</span> <span class="ident">enums</span>::{<span class="ident">Extend</span>, <span class="ident">Filter</span>, <span class="ident">PatternType</span>};
+<span class="kw">use</span> <span class="ident">error</span>::<span class="ident">Error</span>;
 <span class="kw">use</span> <span class="ident">ffi</span>;
 <span class="kw">use</span> <span class="ident">ffi</span>::{<span class="ident">cairo_pattern_t</span>, <span class="ident">cairo_surface_t</span>};
 <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_double</span>, <span class="ident">c_int</span>, <span class="ident">c_uint</span>};
@@ -515,6 +519,7 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Deref</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">utils</span>::<span class="ident">status_to_result</span>;
 <span class="kw">use</span> {<span class="ident">Matrix</span>, <span class="ident">Path</span>, <span class="ident">Surface</span>};
 
 <span class="comment">// See http://cairographics.org/manual/bindings-patterns.html for more info</span>
@@ -552,14 +557,6 @@
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_type</span>(<span class="self">self</span>.<span class="ident">pointer</span>).<span class="ident">into</span>() }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ensure_status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">status</span>().<span class="ident">ensure_valid</span>();
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Status</span> {
-        <span class="kw">unsafe</span> { <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_pattern_status</span>(<span class="self">self</span>.<span class="ident">pointer</span>)) }
-    }
-
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_reference_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">isize</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_reference_count</span>(<span class="self">self</span>.<span class="ident">pointer</span>) <span class="kw">as</span> <span class="ident">isize</span> }
     }
@@ -590,6 +587,11 @@
             <span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_matrix</span>(<span class="self">self</span>.<span class="ident">pointer</span>, <span class="ident">matrix</span>.<span class="ident">mut_ptr</span>());
         }
         <span class="ident">matrix</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_pattern_status</span>(<span class="self">self</span>.<span class="ident">pointer</span>) };
+        <span class="ident">status_to_result</span>(<span class="ident">status</span>)
     }
 }
 
@@ -680,14 +682,14 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">blue</span> <span class="op">=</span> <span class="number">0.0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">alpha</span> <span class="op">=</span> <span class="number">0.0</span>;
 
-            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_rgba</span>(
+            <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_rgba</span>(
                 <span class="self">self</span>.<span class="ident">pointer</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">red</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">green</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">blue</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">alpha</span>,
-            ))
-            .<span class="ident">ensure_valid</span>();
+            );
+            <span class="ident">status_to_result</span>(<span class="ident">status</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get_rgba&quot;</span>);
 
             (<span class="ident">red</span>, <span class="ident">green</span>, <span class="ident">blue</span>, <span class="ident">alpha</span>)
         }
@@ -711,9 +713,9 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_color_stop_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">isize</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">count</span> <span class="op">=</span> <span class="number">0</span>;
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_color_stop_count</span>(<span class="self">self</span>.<span class="ident">pointer</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">count</span>);
+            <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_color_stop_count</span>(<span class="self">self</span>.<span class="ident">pointer</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">count</span>);
 
-            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">result</span>).<span class="ident">ensure_valid</span>(); <span class="comment">// Not sure if these are needed</span>
+            <span class="ident">status_to_result</span>(<span class="ident">status</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get_color_stop_count&quot;</span>);
             <span class="ident">count</span> <span class="kw">as</span> <span class="ident">isize</span>
         }
     }
@@ -726,7 +728,7 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">blue</span> <span class="op">=</span> <span class="number">0.0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">alpha</span> <span class="op">=</span> <span class="number">0.0</span>;
 
-            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_color_stop_rgba</span>(
+            <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_color_stop_rgba</span>(
                 <span class="self">self</span>.<span class="ident">pointer</span>,
                 <span class="ident">index</span> <span class="kw">as</span> <span class="ident">c_int</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">offset</span>,
@@ -734,8 +736,8 @@
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">green</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">blue</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">alpha</span>,
-            ))
-            .<span class="ident">ensure_valid</span>();
+            );
+            <span class="ident">status_to_result</span>(<span class="ident">status</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get_color_stop_rgba&quot;</span>);
             (<span class="ident">offset</span>, <span class="ident">red</span>, <span class="ident">green</span>, <span class="ident">blue</span>, <span class="ident">alpha</span>)
         }
     }
@@ -783,14 +785,14 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x1</span> <span class="op">=</span> <span class="number">0.0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">y1</span> <span class="op">=</span> <span class="number">0.0</span>;
 
-            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_linear_points</span>(
+            <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_linear_points</span>(
                 <span class="self">self</span>.<span class="ident">pointer</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">x0</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">y0</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">x1</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">y1</span>,
-            ))
-            .<span class="ident">ensure_valid</span>();
+            );
+            <span class="ident">status_to_result</span>(<span class="ident">status</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get linear points&quot;</span>);
             (<span class="ident">x0</span>, <span class="ident">y0</span>, <span class="ident">x1</span>, <span class="ident">y1</span>)
         }
     }
@@ -816,7 +818,7 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">y1</span> <span class="op">=</span> <span class="number">0.0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r1</span> <span class="op">=</span> <span class="number">0.0</span>;
 
-            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_radial_circles</span>(
+            <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_radial_circles</span>(
                 <span class="self">self</span>.<span class="ident">pointer</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">x0</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">y0</span>,
@@ -824,8 +826,8 @@
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">x1</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">y1</span>,
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">r1</span>,
-            ))
-            .<span class="ident">ensure_valid</span>();
+            );
+            <span class="ident">status_to_result</span>(<span class="ident">status</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get radial circles&quot;</span>);
             (<span class="ident">x0</span>, <span class="ident">y0</span>, <span class="ident">r0</span>, <span class="ident">x1</span>, <span class="ident">y1</span>, <span class="ident">r1</span>)
         }
     }
@@ -845,11 +847,8 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_surface</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Surface</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">surface_ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_surface_t</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">null_mut</span>();
-            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_surface</span>(
-                <span class="self">self</span>.<span class="ident">pointer</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">surface_ptr</span>,
-            ))
-            .<span class="ident">ensure_valid</span>();
+            <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_pattern_get_surface</span>(<span class="self">self</span>.<span class="ident">pointer</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">surface_ptr</span>);
+            <span class="ident">status_to_result</span>(<span class="ident">status</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get the surface&quot;</span>);
             <span class="ident">Surface</span>::<span class="ident">from_raw_none</span>(<span class="ident">surface_ptr</span>)
         }
     }
@@ -864,32 +863,32 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">begin_patch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_mesh_pattern_begin_patch</span>(<span class="self">self</span>.<span class="ident">pointer</span>) }
-        <span class="self">self</span>.<span class="ident">ensure_status</span>();
+        <span class="self">self</span>.<span class="ident">status</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to begin_patch&quot;</span>);
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">end_patch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_mesh_pattern_end_patch</span>(<span class="self">self</span>.<span class="ident">pointer</span>) }
-        <span class="self">self</span>.<span class="ident">ensure_status</span>();
+        <span class="self">self</span>.<span class="ident">status</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to end_patch&quot;</span>);
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">move_to</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>: <span class="ident">f64</span>, <span class="ident">y</span>: <span class="ident">f64</span>) {
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_mesh_pattern_move_to</span>(<span class="self">self</span>.<span class="ident">pointer</span>, <span class="ident">x</span>, <span class="ident">y</span>) }
-        <span class="self">self</span>.<span class="ident">ensure_status</span>();
+        <span class="self">self</span>.<span class="ident">status</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to move to&quot;</span>);
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">line_to</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>: <span class="ident">f64</span>, <span class="ident">y</span>: <span class="ident">f64</span>) {
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_mesh_pattern_line_to</span>(<span class="self">self</span>.<span class="ident">pointer</span>, <span class="ident">x</span>, <span class="ident">y</span>) }
-        <span class="self">self</span>.<span class="ident">ensure_status</span>();
+        <span class="self">self</span>.<span class="ident">status</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to line to&quot;</span>);
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">curve_to</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x1</span>: <span class="ident">f64</span>, <span class="ident">y1</span>: <span class="ident">f64</span>, <span class="ident">x2</span>: <span class="ident">f64</span>, <span class="ident">y2</span>: <span class="ident">f64</span>, <span class="ident">x3</span>: <span class="ident">f64</span>, <span class="ident">y3</span>: <span class="ident">f64</span>) {
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_mesh_pattern_curve_to</span>(<span class="self">self</span>.<span class="ident">pointer</span>, <span class="ident">x1</span>, <span class="ident">y1</span>, <span class="ident">x2</span>, <span class="ident">y2</span>, <span class="ident">x3</span>, <span class="ident">y3</span>) }
-        <span class="self">self</span>.<span class="ident">ensure_status</span>();
+        <span class="self">self</span>.<span class="ident">status</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to curve to&quot;</span>);
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_control_point</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">corner</span>: <span class="ident">MeshCorner</span>, <span class="ident">x</span>: <span class="ident">f64</span>, <span class="ident">y</span>: <span class="ident">f64</span>) {
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">cairo_mesh_pattern_set_control_point</span>(<span class="self">self</span>.<span class="ident">pointer</span>, <span class="ident">corner</span>.<span class="ident">into</span>(), <span class="ident">x</span>, <span class="ident">y</span>) }
-        <span class="self">self</span>.<span class="ident">ensure_status</span>();
+        <span class="self">self</span>.<span class="ident">status</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to set control point&quot;</span>);
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_control_point</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">patch_num</span>: <span class="ident">usize</span>, <span class="ident">corner</span>: <span class="ident">MeshCorner</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>) {
@@ -905,7 +904,7 @@
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">y</span>,
             )
         };
-        <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">status</span>).<span class="ident">ensure_valid</span>();
+        <span class="ident">status_to_result</span>(<span class="ident">status</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get control point&quot;</span>);
         (<span class="ident">x</span>, <span class="ident">y</span>)
     }
 
@@ -919,7 +918,7 @@
                 <span class="ident">blue</span>,
             )
         }
-        <span class="self">self</span>.<span class="ident">ensure_status</span>();
+        <span class="self">self</span>.<span class="ident">status</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to set corner color rgb&quot;</span>);
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_corner_color_rgba</span>(
@@ -940,7 +939,7 @@
                 <span class="ident">alpha</span>,
             )
         }
-        <span class="self">self</span>.<span class="ident">ensure_status</span>();
+        <span class="self">self</span>.<span class="ident">status</span>().<span class="ident">expect</span>(<span class="string">&quot;Failed to set corner color rgba&quot;</span>);
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_corner_color_rgba</span>(
@@ -964,18 +963,15 @@
                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">alpha</span>,
             )
         };
-        <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">status</span>).<span class="ident">ensure_valid</span>();
+        <span class="ident">status_to_result</span>(<span class="ident">status</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get mesh corner color&quot;</span>);
         (<span class="ident">red</span>, <span class="ident">green</span>, <span class="ident">blue</span>, <span class="ident">alpha</span>)
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_patch_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">count</span>: <span class="ident">c_uint</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">unsafe</span> {
-            <span class="ident">Status</span>::<span class="ident">from</span>(<span class="ident">ffi</span>::<span class="ident">cairo_mesh_pattern_get_patch_count</span>(
-                <span class="self">self</span>.<span class="ident">pointer</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">count</span>,
-            ))
-            .<span class="ident">ensure_valid</span>();
+            <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">cairo_mesh_pattern_get_patch_count</span>(<span class="self">self</span>.<span class="ident">pointer</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">count</span>);
+            <span class="ident">status_to_result</span>(<span class="ident">status</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get mesh patch count&quot;</span>)
         }
         <span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>
     }
@@ -987,8 +983,18 @@
                 <span class="ident">patch_num</span> <span class="kw">as</span> <span class="ident">c_uint</span>,
             ))
         };
-        <span class="ident">path</span>.<span class="ident">ensure_status</span>();
+        <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">cairo_path_t</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">as_ptr</span>();
+            (<span class="kw-2">*</span><span class="ident">ptr</span>).<span class="ident">status</span>
+        };
+        <span class="ident">status_to_result</span>(<span class="ident">status</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to get the mesh path&quot;</span>);
         <span class="ident">path</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Mesh</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Mesh</span> {
+        <span class="ident">Mesh</span>::<span class="ident">new</span>()
     }
 }
 
@@ -1002,4 +1008,4 @@
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">LinearGradient</span>::<span class="ident">try_from</span>(<span class="ident">pattern</span>).<span class="ident">is_ok</span>());
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "cairo";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "cairo";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

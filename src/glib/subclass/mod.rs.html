@@ -196,6 +196,79 @@
 <span id="196">196</span>
 <span id="197">197</span>
 <span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2017-2018, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -215,24 +288,85 @@
 <span class="doccomment">//! use glib::subclass;</span>
 <span class="doccomment">//! use glib::subclass::prelude::*;</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! use std::cell::RefCell;</span>
+<span class="doccomment">//! use std::cell::{Cell, RefCell};</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #[derive(Debug, Eq, PartialEq, Clone, Copy, GEnum)]</span>
+<span class="doccomment">//! #[repr(u32)]</span>
+<span class="doccomment">//! // type_name: GType name of the GEnum (mandatory)</span>
+<span class="doccomment">//! #[genum(type_name = &quot;SimpleObjectAnimal&quot;)]</span>
+<span class="doccomment">//! enum Animal {</span>
+<span class="doccomment">//!   Goat = 0,</span>
+<span class="doccomment">//!   #[genum(name = &quot;The Dog&quot;)]</span>
+<span class="doccomment">//!   Dog = 1,</span>
+<span class="doccomment">//!   // name: the name of the GEnumValue (optional, default to the enum name in CamelCase</span>
+<span class="doccomment">//!   // nick: the nick of the GEnumValue (optional, default to the enum name in kebab-case</span>
+<span class="doccomment">//!   #[genum(name = &quot;The Cat&quot;, nick = &quot;chat&quot;)]</span>
+<span class="doccomment">//!   Cat = 2,</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl Default for Animal {</span>
+<span class="doccomment">//!     fn default() -&gt; Self {</span>
+<span class="doccomment">//!         Animal::Goat</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #[gflags(&quot;MyFlags&quot;)]</span>
+<span class="doccomment">//! enum MyFlags {</span>
+<span class="doccomment">//!     #[gflags(name = &quot;Flag A&quot;, nick = &quot;nick-a&quot;)]</span>
+<span class="doccomment">//!     A = 0b00000001,</span>
+<span class="doccomment">//!     #[gflags(name = &quot;Flag B&quot;)]</span>
+<span class="doccomment">//!     B = 0b00000010,</span>
+<span class="doccomment">//!     #[gflags(skip)]</span>
+<span class="doccomment">//!     AB = Self::A.bits() | Self::B.bits(),</span>
+<span class="doccomment">//!     C = 0b00000100,</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl Default for MyFlags {</span>
+<span class="doccomment">//!     fn default() -&gt; Self {</span>
+<span class="doccomment">//!         MyFlags::A</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! // Static array for defining the properties of the new type.</span>
-<span class="doccomment">//! static PROPERTIES: [subclass::Property; 1] = [subclass::Property(&quot;name&quot;, |name| {</span>
-<span class="doccomment">//!     glib::ParamSpec::string(</span>
-<span class="doccomment">//!         name,</span>
-<span class="doccomment">//!         &quot;Name&quot;,</span>
-<span class="doccomment">//!         &quot;Name of this object&quot;,</span>
-<span class="doccomment">//!         None,</span>
-<span class="doccomment">//!         glib::ParamFlags::READWRITE,</span>
-<span class="doccomment">//!     )</span>
-<span class="doccomment">//! })];</span>
+<span class="doccomment">//! static PROPERTIES: [subclass::Property; 3] = [</span>
+<span class="doccomment">//!     subclass::Property(&quot;name&quot;, |name| {</span>
+<span class="doccomment">//!         glib::ParamSpec::string(</span>
+<span class="doccomment">//!             name,</span>
+<span class="doccomment">//!             &quot;Name&quot;,</span>
+<span class="doccomment">//!             &quot;Name of this object&quot;,</span>
+<span class="doccomment">//!             None,</span>
+<span class="doccomment">//!             glib::ParamFlags::READWRITE,</span>
+<span class="doccomment">//!         )</span>
+<span class="doccomment">//!     }),</span>
+<span class="doccomment">//!     subclass::Property(&quot;animal&quot;, |name| {</span>
+<span class="doccomment">//!         glib::ParamSpec::enum_(</span>
+<span class="doccomment">//!             name,</span>
+<span class="doccomment">//!             &quot;Animal&quot;,</span>
+<span class="doccomment">//!             &quot;Animal&quot;,</span>
+<span class="doccomment">//!             Animal::static_type(),</span>
+<span class="doccomment">//!             Animal::default() as i32,</span>
+<span class="doccomment">//!             glib::ParamFlags::READWRITE,</span>
+<span class="doccomment">//!         )</span>
+<span class="doccomment">//!     }),</span>
+<span class="doccomment">//!     subclass::Property(&quot;flags&quot;, |name| {</span>
+<span class="doccomment">//!         glib::ParamSpec::flags(</span>
+<span class="doccomment">//!             name,</span>
+<span class="doccomment">//!             &quot;Flags&quot;,</span>
+<span class="doccomment">//!             &quot;Flags&quot;,</span>
+<span class="doccomment">//!             MyFlags::static_type(),</span>
+<span class="doccomment">//!             MyFlags::default().bits(),</span>
+<span class="doccomment">//!             glib::ParamFlags::READWRITE,</span>
+<span class="doccomment">//!         )</span>
+<span class="doccomment">//!     }),</span>
+<span class="doccomment">//! ];</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! // This is the struct containing all state carried with</span>
 <span class="doccomment">//! // the new type. Generally this has to make use of</span>
 <span class="doccomment">//! // interior mutability.</span>
 <span class="doccomment">//! pub struct SimpleObject {</span>
 <span class="doccomment">//!     name: RefCell&lt;Option&lt;String&gt;&gt;,</span>
+<span class="doccomment">//!     animal: Cell&lt;Animal&gt;,</span>
+<span class="doccomment">//!     flags: Cell&lt;MyFlags&gt;,</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! // ObjectSubclass is the trait that defines the new type and</span>
@@ -268,6 +402,8 @@
 <span class="doccomment">//!     fn new() -&gt; Self {</span>
 <span class="doccomment">//!         Self {</span>
 <span class="doccomment">//!             name: RefCell::new(None),</span>
+<span class="doccomment">//!             animal: Cell::new(Animal::default()),</span>
+<span class="doccomment">//!             flags: Cell::new(MyFlags::default()),</span>
 <span class="doccomment">//!         }</span>
 <span class="doccomment">//!     }</span>
 <span class="doccomment">//! }</span>
@@ -288,7 +424,19 @@
 <span class="doccomment">//!                     .get()</span>
 <span class="doccomment">//!                     .expect(&quot;type conformity checked by `Object::set_property`&quot;);</span>
 <span class="doccomment">//!                 self.name.replace(name);</span>
-<span class="doccomment">//!             }</span>
+<span class="doccomment">//!             },</span>
+<span class="doccomment">//!             subclass::Property(&quot;animal&quot;, ..) =&gt; {</span>
+<span class="doccomment">//!                 let animal = value</span>
+<span class="doccomment">//!                     .get()</span>
+<span class="doccomment">//!                     .expect(&quot;type conformity checked by `Object::set_property`&quot;);</span>
+<span class="doccomment">//!                 self.animal.replace(animal.unwrap());</span>
+<span class="doccomment">//!             },</span>
+<span class="doccomment">//!             subclass::Property(&quot;flags&quot;, ..) =&gt; {</span>
+<span class="doccomment">//!                 let flags = value</span>
+<span class="doccomment">//!                     .get()</span>
+<span class="doccomment">//!                     .expect(&quot;type conformity checked by `Object::set_property`&quot;);</span>
+<span class="doccomment">//!                 self.flags.replace(flags.unwrap());</span>
+<span class="doccomment">//!             },</span>
 <span class="doccomment">//!             _ =&gt; unimplemented!(),</span>
 <span class="doccomment">//!         }</span>
 <span class="doccomment">//!     }</span>
@@ -300,6 +448,8 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//!         match *prop {</span>
 <span class="doccomment">//!             subclass::Property(&quot;name&quot;, ..) =&gt; Ok(self.name.borrow().to_value()),</span>
+<span class="doccomment">//!             subclass::Property(&quot;animal&quot;, ..) =&gt; Ok(self.animal.get().to_value()),</span>
+<span class="doccomment">//!             subclass::Property(&quot;flags&quot;, ..) =&gt; Ok(self.flags.get().to_value()),</span>
 <span class="doccomment">//!             _ =&gt; unimplemented!(),</span>
 <span class="doccomment">//!         }</span>
 <span class="doccomment">//!     }</span>
@@ -325,6 +475,14 @@
 <span class="doccomment">//!         obj.get_property(&quot;name&quot;).unwrap().get::&lt;&amp;str&gt;(),</span>
 <span class="doccomment">//!         Ok(Some(&quot;test&quot;))</span>
 <span class="doccomment">//!     );</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     assert_eq!(obj.get_property(&quot;animal&quot;).unwrap().get::&lt;Animal&gt;(), Ok(Some(Animal::Goat)));</span>
+<span class="doccomment">//!     obj.set_property(&quot;animal&quot;, &amp;Animal::Cat).unwrap();</span>
+<span class="doccomment">//!     assert_eq!(obj.get_property(&quot;animal&quot;).unwrap().get::&lt;Animal&gt;(), Ok(Some(Animal::Cat)));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     assert_eq!(obj.get_property(&quot;flags&quot;).unwrap().get::&lt;MyFlags&gt;(), Ok(Some(MyFlags::A)));</span>
+<span class="doccomment">//!     obj.set_property(&quot;flags&quot;, &amp;MyFlags::B).unwrap();</span>
+<span class="doccomment">//!     assert_eq!(obj.get_property(&quot;flags&quot;).unwrap().get::&lt;MyFlags&gt;(), Ok(Some(MyFlags::B)));</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
@@ -340,21 +498,9 @@
 <span class="doccomment">//! use glib::subclass;</span>
 <span class="doccomment">//! use glib::subclass::prelude::*;</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! #[derive(Clone, Debug, PartialEq, Eq)]</span>
+<span class="doccomment">//! #[derive(Clone, Debug, PartialEq, Eq, GBoxed)]</span>
+<span class="doccomment">//! #[gboxed(type_name = &quot;MyBoxed&quot;)]</span>
 <span class="doccomment">//! struct MyBoxed(String);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! impl BoxedType for MyBoxed {</span>
-<span class="doccomment">//!     // This type name must be unique per process.</span>
-<span class="doccomment">//!     const NAME: &amp;&#39;static str = &quot;MyBoxed&quot;;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     // This macro defines a</span>
-<span class="doccomment">//!     //   fn get_type() -&gt; glib::Type</span>
-<span class="doccomment">//!     // function</span>
-<span class="doccomment">//!     glib_boxed_type!();</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! // This macro derives some traits on the struct</span>
-<span class="doccomment">//! glib_boxed_derive_traits!(MyBoxed);</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! pub fn main() {</span>
 <span class="doccomment">//!     assert_ne!(glib::Type::Invalid, MyBoxed::get_type());</span>
@@ -396,4 +542,4 @@
     <span class="ident">register_type</span>, <span class="ident">InitializingType</span>, <span class="ident">SignalClassHandlerToken</span>, <span class="ident">SignalInvocationHint</span>, <span class="ident">TypeData</span>,
 };
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "glib";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "glib";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

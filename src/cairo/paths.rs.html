@@ -245,11 +245,6 @@
 <span id="245">245</span>
 <span id="246">246</span>
 <span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
-<span id="251">251</span>
-<span id="252">252</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2013-2015, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -257,30 +252,25 @@
 
 <span class="doccomment">//! Creating paths and manipulating path data</span>
 
-<span class="kw">use</span> <span class="ident">enums</span>::{<span class="ident">PathDataType</span>, <span class="ident">Status</span>};
+<span class="kw">use</span> <span class="ident">enums</span>::<span class="ident">PathDataType</span>;
 <span class="kw">use</span> <span class="ident">ffi</span>;
 <span class="kw">use</span> <span class="ident">ffi</span>::<span class="ident">cairo_path_t</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Iterator</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
 
 <span class="doccomment">/// Paths are the most basic drawing tools and are primarily used to implicitly generate simple masks.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Path</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_path_t</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Path</span>(<span class="ident">ptr</span>::<span class="ident">NonNull</span><span class="op">&lt;</span><span class="ident">cairo_path_t</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span> <span class="ident">Path</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_path_t</span> {
-        <span class="self">self</span>.<span class="number">0</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ensure_status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_path_t</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_ptr</span>();
-            <span class="ident">Status</span>::<span class="ident">from</span>((<span class="kw-2">*</span><span class="ident">ptr</span>).<span class="ident">status</span>).<span class="ident">ensure_valid</span>()
-        }
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ptr</span>()
     }
 
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw_full</span>(<span class="ident">pointer</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">cairo_path_t</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Path</span> {
-        <span class="ident">Path</span>(<span class="ident">pointer</span>)
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">pointer</span>.<span class="ident">is_null</span>());
+        <span class="ident">Path</span>(<span class="ident">ptr</span>::<span class="ident">NonNull</span>::<span class="ident">new_unchecked</span>(<span class="ident">pointer</span>))
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PathSegments</span> {
@@ -504,4 +494,4 @@
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "cairo";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "cairo";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

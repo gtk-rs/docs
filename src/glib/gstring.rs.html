@@ -495,6 +495,31 @@
 <span id="495">495</span>
 <span id="496">496</span>
 <span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2018, The Gtk-rs Project Developers.</span>
 <span class="comment">// See the COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -519,36 +544,63 @@
 <span class="kw">use</span> <span class="ident">value</span>::{<span class="ident">FromValueOptional</span>, <span class="ident">SetValue</span>, <span class="ident">SetValueOptional</span>, <span class="ident">Value</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">GString</span> {
-    <span class="ident">ForeignOwned</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CString</span><span class="op">&gt;</span>),
-    <span class="ident">Borrowed</span>(<span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">usize</span>),
-    <span class="ident">Owned</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">usize</span>),
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GString</span>(<span class="ident">Inner</span>);
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">enum</span> <span class="ident">Inner</span> {
+    <span class="ident">Native</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CString</span><span class="op">&gt;</span>),
+    <span class="ident">Foreign</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">usize</span>),
 }
 
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">GString</span> {}
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">GString</span> {}
+
 <span class="kw">impl</span> <span class="ident">GString</span> {
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="doccomment">/// Create a new GString from a glib-originated string, taking ownership.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Safety</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The provided string must be a valid C string (i.e. `&#39;0&#39;` terminated).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The provided pointer must be allocated by glib such that `g_free(ptr)`</span>
+    <span class="doccomment">/// is valid, as the `GString` will call `g_free(ptr)` on drop.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// It is essential that noone else free this pointer as it owned by the</span>
+    <span class="doccomment">/// returned `GString`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The underlying string must not be mutated, in particular in terms of</span>
+    <span class="doccomment">/// length, underneath the `GString` instance.</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">ptr</span>.<span class="ident">is_null</span>());
-        <span class="ident">GString</span>::<span class="ident">Owned</span>(<span class="ident">ptr</span>, <span class="ident">libc</span>::<span class="ident">strlen</span>(<span class="ident">ptr</span>))
+        <span class="ident">GString</span>(<span class="ident">Inner</span>::<span class="ident">Foreign</span>(<span class="ident">ptr</span>, <span class="ident">libc</span>::<span class="ident">strlen</span>(<span class="ident">ptr</span>)))
     }
 
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new_borrowed</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="doccomment">/// Create a new GString from a glib-originated string, borrowing it rather</span>
+    <span class="doccomment">/// than taking ownership.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Safety</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The provided string must be a valid C string (i.e. `&#39;0&#39;` terminated).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// It is essential that noone else free this pointer as it owned by the</span>
+    <span class="doccomment">/// returned `GString` until the borrow is dropped.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The underlying string must not be mutated, in particular in terms of</span>
+    <span class="doccomment">/// length, underneath the `GString` instance for the duration of the borrow.</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new_borrowed</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Borrowed</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">ptr</span>.<span class="ident">is_null</span>());
-        <span class="ident">GString</span>::<span class="ident">Borrowed</span>(<span class="ident">ptr</span>, <span class="ident">libc</span>::<span class="ident">strlen</span>(<span class="ident">ptr</span>))
+        <span class="ident">Borrowed</span>::<span class="ident">new</span>(<span class="ident">GString</span>(<span class="ident">Inner</span>::<span class="ident">Foreign</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>, <span class="ident">libc</span>::<span class="ident">strlen</span>(<span class="ident">ptr</span>))))
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw">let</span> <span class="ident">cstr</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">GString</span>::<span class="ident">Borrowed</span>(<span class="ident">ptr</span>, <span class="ident">length</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> {
+            <span class="ident">GString</span>(<span class="ident">Inner</span>::<span class="ident">Foreign</span>(<span class="ident">ptr</span>, <span class="ident">length</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> {
                 <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">slice</span>::<span class="ident">from_raw_parts</span>(<span class="kw-2">*</span><span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="ident">length</span> <span class="op">+</span> <span class="number">1</span>);
                 <span class="ident">CStr</span>::<span class="ident">from_bytes_with_nul_unchecked</span>(<span class="ident">bytes</span>)
             },
-            <span class="ident">GString</span>::<span class="ident">Owned</span>(<span class="ident">ptr</span>, <span class="ident">length</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> {
-                <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">slice</span>::<span class="ident">from_raw_parts</span>(<span class="kw-2">*</span><span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="ident">length</span> <span class="op">+</span> <span class="number">1</span>);
-                <span class="ident">CStr</span>::<span class="ident">from_bytes_with_nul_unchecked</span>(<span class="ident">bytes</span>)
-            },
-            <span class="ident">GString</span>::<span class="ident">ForeignOwned</span>(<span class="ident">cstring</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">cstring</span>
+            <span class="ident">GString</span>(<span class="ident">Inner</span>::<span class="ident">Native</span>(<span class="ident">cstring</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">cstring</span>
                 .<span class="ident">as_ref</span>()
-                .<span class="ident">expect</span>(<span class="string">&quot;ForeignOwned shouldn&#39;t be empty&quot;</span>)
+                .<span class="ident">expect</span>(<span class="string">&quot;Native shouldn&#39;t be empty&quot;</span>)
                 .<span class="ident">as_c_str</span>(),
         };
         <span class="ident">cstr</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>()
@@ -557,7 +609,7 @@
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">GString</span> {
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">GString</span>::<span class="ident">Owned</span>(<span class="ident">ptr</span>, <span class="ident">_len</span>) <span class="op">=</span> <span class="self">self</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">GString</span>(<span class="ident">Inner</span>::<span class="ident">Foreign</span>(<span class="ident">ptr</span>, <span class="ident">_len</span>)) <span class="op">=</span> <span class="self">self</span> {
             <span class="kw">unsafe</span> {
                 <span class="ident">glib_sys</span>::<span class="ident">g_free</span>(<span class="kw-2">*</span><span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
             }
@@ -574,15 +626,12 @@
 <span class="kw">impl</span> <span class="ident">hash</span>::<span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">GString</span> {
     <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">hash</span>::<span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) {
         <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">GString</span>::<span class="ident">Borrowed</span>(<span class="ident">ptr</span>, <span class="ident">length</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> {
+            <span class="ident">GString</span>(<span class="ident">Inner</span>::<span class="ident">Foreign</span>(<span class="ident">ptr</span>, <span class="ident">length</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> {
                 <span class="ident">slice</span>::<span class="ident">from_raw_parts</span>(<span class="kw-2">*</span><span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="ident">length</span> <span class="op">+</span> <span class="number">1</span>)
             },
-            <span class="ident">GString</span>::<span class="ident">Owned</span>(<span class="ident">ptr</span>, <span class="ident">length</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">unsafe</span> {
-                <span class="ident">slice</span>::<span class="ident">from_raw_parts</span>(<span class="kw-2">*</span><span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="ident">length</span> <span class="op">+</span> <span class="number">1</span>)
-            },
-            <span class="ident">GString</span>::<span class="ident">ForeignOwned</span>(<span class="ident">cstring</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">cstring</span>
+            <span class="ident">GString</span>(<span class="ident">Inner</span>::<span class="ident">Native</span>(<span class="ident">cstring</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">cstring</span>
                 .<span class="ident">as_ref</span>()
-                .<span class="ident">expect</span>(<span class="string">&quot;ForeignOwned shouldn&#39;t be empty&quot;</span>)
+                .<span class="ident">expect</span>(<span class="string">&quot;Native shouldn&#39;t be empty&quot;</span>)
                 .<span class="ident">as_bytes</span>(),
         };
         <span class="ident">state</span>.<span class="ident">write</span>(<span class="ident">bytes</span>);
@@ -698,10 +747,10 @@
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GString</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw-2">mut</span> <span class="ident">s</span>: <span class="ident">GString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">GString</span>::<span class="ident">ForeignOwned</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">cstring</span>) <span class="op">=</span> <span class="ident">s</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">GString</span>(<span class="ident">Inner</span>::<span class="ident">Native</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">cstring</span>)) <span class="op">=</span> <span class="ident">s</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">cstring</span>
                 .<span class="ident">take</span>()
-                .<span class="ident">expect</span>(<span class="string">&quot;ForeignOwned shouldn&#39;t be empty&quot;</span>)
+                .<span class="ident">expect</span>(<span class="string">&quot;Native shouldn&#39;t be empty&quot;</span>)
                 .<span class="ident">into_string</span>()
             {
                 <span class="kw">return</span> <span class="ident">s</span>;
@@ -751,7 +800,7 @@
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">CString</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GString</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">CString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">GString</span>::<span class="ident">ForeignOwned</span>(<span class="prelude-val">Some</span>(<span class="ident">s</span>))
+        <span class="ident">GString</span>(<span class="ident">Inner</span>::<span class="ident">Native</span>(<span class="prelude-val">Some</span>(<span class="ident">s</span>)))
     }
 }
 
@@ -816,7 +865,7 @@
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">impl</span> <span class="ident">FromGlibPtrBorrow</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GString</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_borrow</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_borrow</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Borrowed</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="ident">GString</span>::<span class="ident">new_borrowed</span>(<span class="ident">ptr</span>)
     }
 }
@@ -824,7 +873,7 @@
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">impl</span> <span class="ident">FromGlibPtrBorrow</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GString</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_borrow</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_borrow</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Borrowed</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="ident">GString</span>::<span class="ident">new_borrowed</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>)
     }
 }
@@ -832,7 +881,7 @@
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">impl</span> <span class="ident">FromGlibPtrBorrow</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">i8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GString</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_borrow</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">i8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_glib_borrow</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">i8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Borrowed</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="ident">GString</span>::<span class="ident">new_borrowed</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>)
     }
 }
@@ -917,6 +966,7 @@
 <span class="macro">impl_from_glib_container_as_vec_string</span><span class="macro">!</span>(<span class="ident">GString</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>);
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">blacklisted_name</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="ident">glib_sys</span>;
     <span class="kw">use</span> <span class="ident">gstring</span>::<span class="ident">GString</span>;
@@ -975,7 +1025,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_vec_u8_to_gstring</span>() {
-        <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="string">&quot;foo&quot;</span>.<span class="ident">as_bytes</span>();
+        <span class="kw">let</span> <span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;foo&quot;</span>;
         <span class="kw">let</span> <span class="ident">s</span>: <span class="ident">GString</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">from</span>(<span class="ident">v</span>).<span class="ident">into</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>.<span class="ident">as_str</span>(), <span class="string">&quot;foo&quot;</span>);
     }
@@ -994,4 +1044,4 @@
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "glib";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "glib";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
