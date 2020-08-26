@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/subclass/application.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>application.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gio/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/subclass/application.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>application.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../gio/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
+                <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -587,7 +588,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ArgumentList</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">arguments</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">arguments</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">ptr</span>: <span class="ident">arguments</span>,
             <span class="ident">items</span>: <span class="kw">unsafe</span> { <span class="ident">FromGlibPtrContainer</span>::<span class="ident">from_glib_none</span>(<span class="ident">ptr</span>::<span class="ident">read</span>(<span class="ident">arguments</span>)) },
@@ -602,7 +603,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">idx</span>: <span class="ident">usize</span>) {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">n_args</span> <span class="op">=</span> <span class="ident">glib_sys</span>::<span class="ident">g_strv_length</span>(<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">ptr</span>) <span class="kw">as</span> <span class="ident">usize</span>;
-            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">n_args</span> <span class="op">=</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">items</span>.<span class="ident">len</span>());
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">n_args</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">items</span>.<span class="ident">len</span>());
             <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">idx</span> <span class="op">&lt;</span> <span class="ident">n_args</span>);
 
             <span class="self">self</span>.<span class="ident">items</span>.<span class="ident">remove</span>(<span class="ident">idx</span>);
@@ -620,19 +621,19 @@
 <span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">ArgumentList</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> [<span class="ident">OsString</span>];
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Target</span> {
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Target</span> {
         <span class="self">self</span>.<span class="ident">items</span>.<span class="ident">as_slice</span>()
     }
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">ArgumentList</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">items</span>.<span class="ident">fmt</span>(<span class="ident">formatter</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">convert</span>::<span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ArgumentList</span> {
-    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">convert</span>::<span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">ArgumentList</span> {
+    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">items</span>
     }
 }
@@ -654,7 +655,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>,
         <span class="ident">command_line</span>: <span class="kw-2">&amp;</span>::<span class="ident">ApplicationCommandLine</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
+    ) <span class="op">-&gt;</span> <span class="ident">i32</span> {
         <span class="self">self</span>.<span class="ident">parent_command_line</span>(<span class="ident">application</span>, <span class="ident">command_line</span>)
     }
 
@@ -662,7 +663,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>,
         <span class="ident">arguments</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ArgumentList</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">parent_local_command_line</span>(<span class="ident">application</span>, <span class="ident">arguments</span>)
     }
 
@@ -686,7 +687,7 @@
         <span class="self">self</span>.<span class="ident">parent_startup</span>(<span class="ident">application</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">handle_local_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">VariantDict</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">fn</span> <span class="ident">handle_local_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">VariantDict</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
         <span class="self">self</span>.<span class="ident">parent_handle_local_options</span>(<span class="ident">application</span>, <span class="ident">options</span>)
     }
 }
@@ -699,18 +700,18 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>,
         <span class="ident">command_line</span>: <span class="kw-2">&amp;</span>::<span class="ident">ApplicationCommandLine</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span>;
+    ) <span class="op">-&gt;</span> <span class="ident">i32</span>;
     <span class="kw">fn</span> <span class="ident">parent_local_command_line</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>,
         <span class="ident">arguments</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ArgumentList</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>;
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>;
     <span class="kw">fn</span> <span class="ident">parent_open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span>[::<span class="ident">File</span>], <span class="ident">hint</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>);
     <span class="kw">fn</span> <span class="ident">parent_quit_mainloop</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>);
     <span class="kw">fn</span> <span class="ident">parent_run_mainloop</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>);
     <span class="kw">fn</span> <span class="ident">parent_shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>);
     <span class="kw">fn</span> <span class="ident">parent_startup</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>);
-    <span class="kw">fn</span> <span class="ident">parent_handle_local_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">VariantDict</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span>;
+    <span class="kw">fn</span> <span class="ident">parent_handle_local_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">VariantDict</span>) <span class="op">-&gt;</span> <span class="ident">i32</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ApplicationImpl</span> <span class="op">+</span> <span class="ident">ObjectImpl</span><span class="op">&gt;</span> <span class="ident">ApplicationImplExt</span> <span class="kw">for</span> <span class="ident">T</span> {
@@ -751,7 +752,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>,
         <span class="ident">command_line</span>: <span class="kw-2">&amp;</span>::<span class="ident">ApplicationCommandLine</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
+    ) <span class="op">-&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_type_data</span>();
             <span class="kw">let</span> <span class="ident">parent_class</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">as_ref</span>().<span class="ident">get_parent_class</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GApplicationClass</span>;
@@ -766,7 +767,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>,
         <span class="ident">arguments</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ArgumentList</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_type_data</span>();
             <span class="kw">let</span> <span class="ident">parent_class</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">as_ref</span>().<span class="ident">get_parent_class</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GApplicationClass</span>;
@@ -783,8 +784,8 @@
             <span class="ident">arguments</span>.<span class="ident">refresh</span>();
 
             <span class="kw">match</span> <span class="ident">res</span> {
-                <span class="ident">glib_sys</span>::<span class="ident">GFALSE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">exit_status</span>),
+                <span class="ident">glib_sys</span>::<span class="ident">GFALSE</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">exit_status</span>),
             }
         }
     }
@@ -849,7 +850,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parent_handle_local_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">VariantDict</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
+    <span class="kw">fn</span> <span class="ident">parent_handle_local_options</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">VariantDict</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_type_data</span>();
             <span class="kw">let</span> <span class="ident">parent_class</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">as_ref</span>().<span class="ident">get_parent_class</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GApplicationClass</span>;
@@ -865,7 +866,7 @@
 
 <span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ObjectSubclass</span> <span class="op">+</span> <span class="ident">ApplicationImpl</span><span class="op">&gt;</span> <span class="ident">IsSubclassable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ApplicationClass</span> {
     <span class="kw">fn</span> <span class="ident">override_vfuncs</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="op">&lt;</span><span class="ident">glib</span>::<span class="ident">ObjectClass</span> <span class="kw">as</span> <span class="ident">IsSubclassable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>::<span class="ident">override_vfuncs</span>(<span class="self">self</span>);
+        <span class="op">&lt;</span><span class="ident">glib</span>::<span class="ident">ObjectClass</span> <span class="kw">as</span> <span class="ident">IsSubclassable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>::<span class="ident">override_vfuncs</span>(<span class="self">self</span>);
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">klass</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span>(<span class="self">self</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="self">Self</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GApplicationClass</span>);
             <span class="ident">klass</span>.<span class="ident">activate</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">application_activate</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
@@ -921,7 +922,7 @@
 <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">application_command_line</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ObjectSubclass</span><span class="op">&gt;</span>(
     <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GApplication</span>,
     <span class="ident">command_line</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GApplicationCommandLine</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span>
+) <span class="op">-&gt;</span> <span class="ident">i32</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">ApplicationImpl</span>,
 {
@@ -935,7 +936,7 @@
     <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GApplication</span>,
     <span class="ident">arguments</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>,
     <span class="ident">exit_status</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">i32</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">glib_sys</span>::<span class="ident">gboolean</span>
+) <span class="op">-&gt;</span> <span class="ident">glib_sys</span>::<span class="ident">gboolean</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">ApplicationImpl</span>,
 {
@@ -948,11 +949,11 @@
     <span class="ident">args</span>.<span class="ident">refresh</span>();
 
     <span class="kw">match</span> <span class="ident">res</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">ret</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">ret</span>) <span class="op">=&gt;</span> {
             <span class="ident">ptr</span>::<span class="ident">write</span>(<span class="ident">exit_status</span>, <span class="ident">ret</span>);
             <span class="ident">glib_sys</span>::<span class="ident">GTRUE</span>
         }
-        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">glib_sys</span>::<span class="ident">GFALSE</span>,
+        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">glib_sys</span>::<span class="ident">GFALSE</span>,
     }
 }
 <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">application_open</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ObjectSubclass</span><span class="op">&gt;</span>(
@@ -1018,7 +1019,7 @@
 <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">application_handle_local_options</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ObjectSubclass</span><span class="op">&gt;</span>(
     <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">gio_sys</span>::<span class="ident">GApplication</span>,
     <span class="ident">options</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">glib_sys</span>::<span class="ident">GVariantDict</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>
+) <span class="op">-&gt;</span> <span class="ident">c_int</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">ApplicationImpl</span>,
 {
@@ -1048,7 +1049,7 @@
 
         <span class="macro">glib_object_subclass</span><span class="macro">!</span>();
 
-        <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
             <span class="self">Self</span>
         }
     }
@@ -1062,7 +1063,7 @@
             <span class="kw-2">&amp;</span><span class="self">self</span>,
             <span class="ident">_application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>,
             <span class="ident">arguments</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ArgumentList</span>,
-        ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
+        ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rm</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
 
             <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">line</span>) <span class="kw">in</span> <span class="ident">arguments</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
@@ -1086,7 +1087,7 @@
             <span class="kw-2">&amp;</span><span class="self">self</span>,
             <span class="ident">_application</span>: <span class="kw-2">&amp;</span><span class="ident">Application</span>,
             <span class="ident">cmd_line</span>: <span class="kw-2">&amp;</span>::<span class="ident">ApplicationCommandLine</span>,
-        ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">i32</span> {
+        ) <span class="op">-&gt;</span> <span class="ident">i32</span> {
             <span class="kw">let</span> <span class="ident">arguments</span> <span class="op">=</span> <span class="ident">cmd_line</span>.<span class="ident">get_arguments</span>();
 
             <span class="kw">for</span> <span class="ident">arg</span> <span class="kw">in</span> <span class="ident">arguments</span> {
@@ -1114,7 +1115,7 @@
 
         <span class="ident">app</span>.<span class="ident">set_inactivity_timeout</span>(<span class="number">10000</span>);
 
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">app</span>.<span class="ident">run</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;--local&quot;</span>.<span class="ident">to_string</span>()]) <span class="op">=</span><span class="op">=</span> <span class="ident">EXIT_STATUS</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">app</span>.<span class="ident">run</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;--local&quot;</span>.<span class="ident">to_string</span>()]) <span class="op">==</span> <span class="ident">EXIT_STATUS</span>);
     }
 }
 </pre></div>
