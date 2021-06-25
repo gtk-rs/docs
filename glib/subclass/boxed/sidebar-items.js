@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["register_boxed_type","Register a boxed `glib::Type` ID for `T`."]],"struct":[["Boxed","Wrapper struct for storing any `BoxedType` in `glib::Value`."]],"trait":[["BoxedType","Trait for defining boxed types."]]});
